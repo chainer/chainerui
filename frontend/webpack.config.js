@@ -76,6 +76,9 @@ module.exports = {
       }
     ]
   },
+  resolve: {
+    extensions: ['*', '.js', '.jsx', '.es6']
+  },
   devtool: NODE_PROD ? false : 'inline-source-map',
   target: 'web',
   plugins: [

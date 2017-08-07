@@ -1,4 +1,5 @@
 import React from 'react';
+import ExperimentsTable from '../components/ExperimentsTable';
 
 
 class ChainerUIContainer extends React.Component {
@@ -6,7 +7,10 @@ class ChainerUIContainer extends React.Component {
   render() {
     return (
       <div className="chainer-ui-container">
-        <h1>chainer-ui</h1>
+        <div className="container">
+          <h1>chainer-ui</h1>
+          <ExperimentsTable />
+        </div>
       </div>
     );
   }
