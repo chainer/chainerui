@@ -21,6 +21,8 @@ def explore_project_dir():
 
     experiments = []
 
+    result_index = 1
+
     _experiment_names = os.listdir(project_root)
     experiment_names = [f for f in _experiment_names if os.path.isdir(os.path.join(project_root, f))]
 
@@ -31,12 +33,13 @@ def explore_project_dir():
         result_names = [f for f in _result_names if os.path.isdir(os.path.join(*[project_root, experiment_name, f]))]
         filterd_result_names = [f for f in result_names if re.search(result_file_pattern, f, re.IGNORECASE)]
 
-        for result_index, result_name in enumerate(filterd_result_names):
+        for result_name in filterd_result_names:
             result_log_file = os.path.join(*[project_root, experiment_name, result_name, 'log'])
 
             if os.path.isfile(result_log_file):
                 with open(result_log_file) as json_data:
-                    results.append({'id': result_index + 1, 'name': result_name, 'logs': json.load(json_data), 'args': {}})
+                    results.append({'id': result_index , 'name': result_name, 'logs': json.load(json_data), 'args': {}})
+                    result_index += 1
 
         experiments.append({'id': experiment_index + 1, 'name': experiment_name, 'results': results})
 
