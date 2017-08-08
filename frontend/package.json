@@ -1,11 +1,11 @@
 {
-  "name": "chainer-ui",
+  "name": "chainer_ui",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rm -Rf ../chainer-ui/static/js/* ../chainer-ui/static/css/* && NODE_ENV=production webpack --config webpack.config.js --progress --profile",
-    "start": "rm -Rf ../chainer-ui/static/js/* ../chainer-ui/static/css/* && webpack-dev-server --config webpack.server.config.js",
+    "build": "rm -Rf ../chainer_ui/static/js/* ../chainer_ui/static/css/* && NODE_ENV=production webpack --config webpack.config.js --progress --profile",
+    "start": "rm -Rf ../chainer_ui/static/js/* ../chainer_ui/static/css/* && webpack-dev-server --config webpack.server.config.js",
     "lint": "eslint --fix app || exit 0"
   },
   "devDependencies": {

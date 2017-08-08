@@ -10,13 +10,13 @@ const nodeModulePath = path.resolve(path.dirname(__dirname), 'node_modules');
 
 module.exports = {
   entry: {
-    'chainer-ui': ['./src/index.jsx'],
+    'chainer_ui': ['./src/index.jsx'],
     vendor: Object.keys(require('./package.json').dependencies).concat([
       'bootstrap/dist/css/bootstrap.css'
     ])
   },
   output: {
-    path: path.resolve(path.dirname(__dirname), '../chainer-ui/static/js'),
+    path: path.resolve(path.dirname(__dirname), '../chainer_ui/static/js'),
     filename: `${filename}.js`
   },
   module: {
@@ -90,7 +90,7 @@ module.exports = {
       jQuery: 'jquery',
     }),
     new HtmlWebpackPlugin({
-      title: 'chainer-ui'
+      title: 'chainer_ui'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
