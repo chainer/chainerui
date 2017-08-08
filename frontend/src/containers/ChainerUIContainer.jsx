@@ -12,20 +12,22 @@ class ChainerUIContainer extends React.Component {
 
     this.state = {
       experiments: sampleExperiments.experiments,
-      logKeys: ['main/loss'],
+      resultIds: [1, 2, 3],
+      logKey: 'main/loss',
     };
 
   }
 
   render() {
-    const { experiments, logKeys } = this.state;
+    const { experiments, resultIds, logKey } = this.state;
     return (
       <div className="chainer-ui-container">
         <div className="container">
           <h1>chainer-ui</h1>
           <LogVisualizer
             experiments={experiments}
-            keys={logKeys}
+            resultIds={resultIds}
+            logKey={logKey}
           />
           <ExperimentsTable
             experiments={experiments}

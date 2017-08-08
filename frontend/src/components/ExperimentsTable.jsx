@@ -16,20 +16,20 @@ class ExperimentsTable extends React.Component {
     const { experiments } = this.props;
     let resultRows = experiments.map((experiment, i) => {
       if (experiment.results.length === 0) {
-        const key = 'result-row-' + experiment.name + '-' + 0;
+        const key = 'result-row-' + experiment.id;
         return (<ResultRow xpName={experiment.name} key={key} />);
       }
       return experiment.results.map((result, i) => {
-        const key = 'result-row-' + experiment.name + '-' + i;
-        console.log(key);
-        return (<ResultRow xpName={experiment.name} result={result} key={'result-row-' + i} />);
+        const key = 'result-row-' + experiment.id + '-' + result.id;
+        return (<ResultRow xpName={experiment.name} result={result} key={key} />);
       });
     });
     return (
       <table className="table table-hover">
         <thead>
           <tr>
-            <th>Experiment Name</th>
+            <th>experiment name</th>
+            <th>result name</th>
             <th>timestamp</th>
             <th>args</th>
             <th>epoch</th>

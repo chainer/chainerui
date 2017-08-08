@@ -17,6 +17,7 @@ class ResultRow extends React.Component {
     return (
       <tr>
         <td>{ xpName }</td>
+        <td>{ result.name }</td>
         <td>timestamp</td>
         <td></td>
         <td>{ lastLog.epoch }</td>
