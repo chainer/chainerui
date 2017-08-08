@@ -13,10 +13,11 @@ class ChainerUIContainer extends React.Component {
 
     this.getLogKeys = this.getLogKeys.bind(this);
     this.handleCangeLogKey = this.handleCangeLogKey.bind(this);
+    this.handleToggleResult = this.handleToggleResult.bind(this);
 
     this.state = {
       experiments: sampleExperiments.experiments,
-      resultIds: [1, 2, 3],
+      resultIds: [],
       logKey: '',
     };
 
@@ -40,6 +41,19 @@ class ChainerUIContainer extends React.Component {
   handleCangeLogKey(e) {
     this.setState({
       logKey: e.target.value,
+    });
+  }
+
+  handleToggleResult(resultId, isToggleed) {
+    const { resultIds } = this.state;
+    let newResultIds = [];
+    if (isToggleed) {
+      newResultIds = resultIds.concat(resultId);
+    } else {
+      newResultIds = resultIds.filter((resId) => { return (resId != resultId); });
+    }
+    this.setState({
+      resultIds: newResultIds,
     });
   }
 
@@ -70,6 +84,8 @@ class ChainerUIContainer extends React.Component {
           </div>
           <ExperimentsTable
             experiments={experiments}
+            selectedResultIds={resultIds}
+            onToggleResult={this.handleToggleResult}
           />
         </div>
       </div>

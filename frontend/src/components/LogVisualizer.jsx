@@ -15,13 +15,11 @@ class LogVisualizer extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-
-    this.state = {};
-
   }
 
   render() {
     const { experiments, resultIds, logKey } = this.props;
+
     const results = {};
     let maxLogLength = 0;
     experiments.forEach((experiment, i) => {
@@ -30,8 +28,7 @@ class LogVisualizer extends React.Component {
         maxLogLength = Math.max(maxLogLength, result.logs.length);
       });
     });
-    console.log(results);
-    console.log(maxLogLength);
+
     let data = [];
     for (let i = 0; i < maxLogLength; i++) {
       const iteration = results[Object.keys(results)[0]].logs[i].iteration;
@@ -42,11 +39,20 @@ class LogVisualizer extends React.Component {
       });
       data.push(dataItem);
     }
-    console.log(data);
+
     const lineElems = resultIds.map((resultId) => {
       const result = results[resultId];
       const key = 'line-' + resultId;
-      return (<Line type="monotone" dataKey={result.name} stroke={'#'+Math.floor(Math.random()*16777215).toString(16)} key={key} />);
+      return (
+        <Line
+          type="monotone"
+          dataKey={result.name}
+          stroke={'#'+Math.floor(Math.random()*16777215).toString(16)}
+          connectNulls={true}
+          isAnimationActive={false}
+          key={key}
+        />
+      );
     });
 
     return (
