@@ -20,7 +20,15 @@
       "name": "mnist",
       "results": [
         {
-          "args": {},
+          "args": {
+            "batchsize": 100,
+            "epoch": 3,
+            "frequency": -1,
+            "gpu": -1,
+            "out": "result",
+            "resume": "",
+            "unit": 1000
+          },
           "id": 1,
           "logs": [
             {
@@ -207,7 +215,15 @@
           "name": "result"
         },
         {
-          "args": {},
+          "args": {
+            "batchsize": 100,
+            "epoch": 3,
+            "frequency": -1,
+            "gpu": -1,
+            "out": "result",
+            "resume": "",
+            "unit": 1000
+          },
           "id": 2,
           "logs": [
             {

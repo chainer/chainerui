@@ -11,7 +11,7 @@ class ChainerUIContainer extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.getLogKeys = this.getLogKeys.bind(this);
+    this.getLogAndArgsKeys = this.getLogAndArgsKeys.bind(this);
     this.handleCangeLogKey = this.handleCangeLogKey.bind(this);
     this.handleToggleResult = this.handleToggleResult.bind(this);
 
@@ -23,9 +23,10 @@ class ChainerUIContainer extends React.Component {
 
   }
 
-  getLogKeys() {
+  getLogAndArgsKeys() {
     const { experiments } = this.state;
     let logKeysSet = {};
+    let argKeysSet = {};
     experiments.forEach((experiment) => {
       experiment.results.forEach((result) => {
         result.logs.forEach((log) => {
@@ -33,9 +34,15 @@ class ChainerUIContainer extends React.Component {
             logKeysSet[logKey] = true;
           });
         });
+        Object.keys(result.args).forEach((argKey) => {
+          argKeysSet[argKey] = true;
+        });
       });
     });
-    return Object.keys(logKeysSet);
+    return {
+      logKeys: Object.keys(logKeysSet),
+      argKeys: Object.keys(argKeysSet),
+    }
   }
 
   handleCangeLogKey(e) {
@@ -59,7 +66,7 @@ class ChainerUIContainer extends React.Component {
 
   render() {
     const { experiments, resultIds, logKey } = this.state;
-    const logKeys = this.getLogKeys();
+    const { logKeys, argKeys } = this.getLogAndArgsKeys();
 
     return (
       <div className="chainer-ui-container">
@@ -77,7 +84,7 @@ class ChainerUIContainer extends React.Component {
             <div className="col-sm-3">
               <LogKeySelector
                 logKey={logKey}
-                logKeys={this.getLogKeys()}
+                logKeys={logKeys}
                 onChangeLogKey={this.handleCangeLogKey}
               />
             </div>
@@ -85,6 +92,7 @@ class ChainerUIContainer extends React.Component {
           <ExperimentsTable
             experiments={experiments}
             selectedResultIds={resultIds}
+            argKeys={argKeys}
             onToggleResult={this.handleToggleResult}
           />
         </div>

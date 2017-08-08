@@ -16,21 +16,26 @@ class ExperimentsTable extends React.Component {
   }
 
   render() {
-    const { experiments, selectedResultIds } = this.props;
+    const { experiments, selectedResultIds, argKeys } = this.props;
     let selectedResultIdsSet = {};
     selectedResultIds.forEach((resultId) => { selectedResultIdsSet[resultId] = true; });
 
-    let resultRows = experiments.map((experiment, i) => {
+    const argKeyHeaderElems = argKeys.map((argKey) => {
+      return (<th key={'args-'+ argKey}><span className="glyphicon glyphicon-cog"></span>{argKey}</th>);
+    });
+
+    const resultRows = experiments.map((experiment, i) => {
       if (experiment.results.length === 0) {
         // experiment with no results
         const key = 'result-row-' + experiment.id;
-        return (<ResultRow xpName={experiment.name} key={key} />);
+        return (<ResultRow xpName={experiment.name} argKeys={argKeys} key={key} />);
       }
       return experiment.results.map((result, i) => {
         const key = 'result-row-' + experiment.id + '-' + result.id;
         return (
           <ResultRow
             xpName={experiment.name}
+            argKeys={argKeys}
             result={result}
             selected={selectedResultIdsSet[result.id]}
             onToggle={this.handleToggleResult}
@@ -39,6 +44,7 @@ class ExperimentsTable extends React.Component {
         );
       });
     });
+
     return (
       <table className="table table-hover">
         <thead>
@@ -46,8 +52,7 @@ class ExperimentsTable extends React.Component {
             <th></th>
             <th>experiment name</th>
             <th>result name</th>
-            <th>timestamp</th>
-            <th>args</th>
+            {argKeyHeaderElems}
             <th>epoch</th>
             <th>iteration</th>
             <th>elapsed_time</th>
@@ -65,10 +70,12 @@ class ExperimentsTable extends React.Component {
 ExperimentsTable.propTypes = {
   experiments: PropTypes.array.isRequired,
   selectedResultIds: PropTypes.array,
+  argKeys: PropTypes.array,
   onToggleResult: PropTypes.func,
 };
 ExperimentsTable.defaultProps = {
   selectedResultIds: [],
+  argKeys: [],
   onToggleResult: () => {},
 }
 

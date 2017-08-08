@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
+const emptyStr = '-';
+
 class ResultRow extends React.Component {
 
   constructor(props, context) {
@@ -16,9 +18,15 @@ class ResultRow extends React.Component {
   }
 
   render() {
-    const { xpName, result, selected, onToggle } = this.props;
-    const { logs } = result;
+    const { xpName, argKeys, result, selected, onToggle } = this.props;
+    const { logs, args } = result;
     const lastLog = logs[logs.length - 1] || {};
+
+    const argKeyElems = argKeys.map((argKey) => {
+      const content = (argKey in result.args) ? result.args[argKey] : emptyStr;
+      return (<td key={'args-' + argKey}>{content}</td>);
+    });
+
     return (
       <tr>
         <td>
@@ -26,8 +34,7 @@ class ResultRow extends React.Component {
         </td>
         <td>{ xpName }</td>
         <td>{ result.name }</td>
-        <td>{ Date.now() }</td>
-        <td></td>
+        {argKeyElems}
         <td>{ lastLog.epoch }</td>
         <td>{ lastLog.iteration }</td>
         <td>{ lastLog.elapsed_time }</td>
@@ -39,12 +46,13 @@ class ResultRow extends React.Component {
 
 ResultRow.propTypes = {
   xpName: PropTypes.string.isRequired,
+  argKeys: PropTypes.array.isRequired,
   result: PropTypes.object,
   selected: PropTypes.bool,
   onToggle: PropTypes.func,
 };
 ResultRow.defaultProps = {
-  result: { logs: [] },
+  result: { logs: [], args: {} },
   selected: false,
   onToggle: () => {},
 };

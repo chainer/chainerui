@@ -12,7 +12,6 @@ class LogKeySelector extends React.Component {
     const { logKey, logKeys, onChangeLogKey } = this.props;
     let options = [(<option disabled value="" key=""> -- select a key -- </option>)];
     options = options.concat(logKeys.map((key) => {
-      console.log(key);
       return (<option value={key} key={key}>{key}</option>);
     }));
     return (
