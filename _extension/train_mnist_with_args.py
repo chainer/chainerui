@@ -27,8 +27,6 @@ from chainer.training import trigger as trigger_module
 
 class ArgsReport(extension.Extension):
     def __init__(self, args, trigger=(1, 'epoch'), log_name='args'):
-        print('args extension')
-        print(json.dumps(vars(args)))
         self._log_name = log_name
         self._trigger = trigger_module.get_trigger(trigger)
         self._args = vars(args)
