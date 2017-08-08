@@ -16,7 +16,7 @@ module.exports = {
     ])
   },
   output: {
-    path: path.resolve(path.dirname(__dirname), '../chainer_ui/static/js'),
+    path: path.resolve(path.dirname(__dirname), 'chainer_ui/static/dist'),
     filename: `${filename}.js`
   },
   module: {
@@ -60,7 +60,7 @@ module.exports = {
                   require('autoprefixer')({
                     browsers: ['last 2 versions']
                   }),
-                  ...(NODE_PROD ? require('./postcss.plugins.production') : [])
+                  // ...(NODE_PROD ? require('./postcss.plugins.production') : [])
                 ]
               }
             }
@@ -100,7 +100,7 @@ module.exports = {
     new ExtractTextWebpackPlugin(`${filename}.css`, {
       allChunks: true
     }),
-    ...(NODE_PROD ? require('./plugins.production') : [])
+    // ...(NODE_PROD ? require('./plugins.production') : [])
   ],
   node: {
     __dirname: false,
