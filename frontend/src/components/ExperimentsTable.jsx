@@ -2,28 +2,18 @@ import React from 'react';
 import ResultRow from './ResultRow';
 
 
-const sampleExperiments = require('../utils/sample_api_response.json');
-
 class ExperimentsTable extends React.Component {
 
   constructor(props, context) {
     super(props, context);
 
-    this.requestExperiments = this.requestExperiments.bind(this);
-
     this.state = {
-      experiments: [],
     };
 
-    this.requestExperiments();
-  }
-
-  requestExperiments() {
-    this.state.experiments = sampleExperiments.experiments;
   }
 
   render() {
-    const { experiments } = this.state;
+    const { experiments } = this.props;
     let resultRows = experiments.map((experiment, i) => {
       if (experiment.results.length === 0) {
         const key = 'result-row-' + experiment.name + '-' + 0;

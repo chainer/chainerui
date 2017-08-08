@@ -90,7 +90,7 @@ module.exports = {
       jQuery: 'jquery',
     }),
     new HtmlWebpackPlugin({
-      title: 'Hello World!'
+      title: 'chainer-ui'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
