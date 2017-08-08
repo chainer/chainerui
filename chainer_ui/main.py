@@ -18,9 +18,7 @@ def get_experiments():
 
 def explore_project_dir():
     result_file_pattern = "\Aresult*"
-
     experiments = []
-
     result_index = 1
 
     _experiment_names = os.listdir(project_root)
@@ -34,12 +32,20 @@ def explore_project_dir():
         filterd_result_names = [f for f in result_names if re.search(result_file_pattern, f, re.IGNORECASE)]
 
         for result_name in filterd_result_names:
-            result_log_file = os.path.join(*[project_root, experiment_name, result_name, 'log'])
+            result = {'id': result_index , 'name': result_name, 'logs': [], 'args': {}}
+            result_index += 1
+        
+            result_args_file = os.path.join(*[project_root, experiment_name, result_name, 'args'])
+            if os.path.isfile(result_args_file):
+                with open(result_args_file) as json_data:
+                    result['args'] = json.load(json_data)
 
+            result_log_file = os.path.join(*[project_root, experiment_name, result_name, 'log'])
             if os.path.isfile(result_log_file):
                 with open(result_log_file) as json_data:
-                    results.append({'id': result_index , 'name': result_name, 'logs': json.load(json_data), 'args': {}})
-                    result_index += 1
+                    result['logs'] = json.load(json_data)
+
+            results.append(result)
 
         experiments.append({'id': experiment_index + 1, 'name': experiment_name, 'results': results})
 
