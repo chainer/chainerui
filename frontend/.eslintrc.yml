@@ -1,0 +1,20 @@
+---
+root: true
+
+env:
+  browser: true
+  es6: true
+
+parser: babel-eslint
+
+extends:
+  - airbnb
+
+rules:
+  arrow-parens:
+    - error
+    - always
+  comma-dangle:
+    - error
+    - never
+
