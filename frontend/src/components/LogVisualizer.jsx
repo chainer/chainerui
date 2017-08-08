@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   LineChart,
   Line,
@@ -64,6 +65,12 @@ class LogVisualizer extends React.Component {
   }
 
 }
+
+LogVisualizer.propTypes = {
+  experiments: PropTypes.array.isRequired,
+  resultIds: PropTypes.array.isRequired,
+  logKey: PropTypes.string,
+};
 
 export default LogVisualizer;
 

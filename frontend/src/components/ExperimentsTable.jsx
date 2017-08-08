@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ResultRow from './ResultRow';
 
 
@@ -6,10 +7,6 @@ class ExperimentsTable extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-
-    this.state = {
-    };
-
   }
 
   render() {
@@ -45,6 +42,10 @@ class ExperimentsTable extends React.Component {
   }
 
 }
+
+ExperimentsTable.propTypes = {
+  experiments: PropTypes.array.isRequired,
+};
 
 export default ExperimentsTable;
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 
 class ResultRow extends React.Component {
@@ -18,7 +19,7 @@ class ResultRow extends React.Component {
       <tr>
         <td>{ xpName }</td>
         <td>{ result.name }</td>
-        <td>timestamp</td>
+        <td>{ Date.now() }</td>
         <td></td>
         <td>{ lastLog.epoch }</td>
         <td>{ lastLog.iteration }</td>
@@ -30,10 +31,9 @@ class ResultRow extends React.Component {
 }
 
 ResultRow.propTypes = {
-  xpName: React.PropTypes.string.isRequired,
-  result: React.PropTypes.object,
+  xpName: PropTypes.string.isRequired,
+  result: PropTypes.object,
 };
-
 ResultRow.defaultProps = {
   result: { logs: [] },
 };
