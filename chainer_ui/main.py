@@ -8,6 +8,7 @@ from flask_apscheduler import APScheduler
 app = Flask(__name__)
 project_root = os.environ.get('CHAINER_UI_TARGET_ROOT')
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -34,7 +35,7 @@ def explore_project_dir():
         for result_name in filterd_result_names:
             result = {'id': result_index , 'name': result_name, 'logs': [], 'args': {}}
             result_index += 1
-        
+
             result_args_file = os.path.join(*[project_root, experiment_name, result_name, 'args'])
             if os.path.isfile(result_args_file):
                 with open(result_args_file) as json_data:

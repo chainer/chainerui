@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const NODE_PROD = (NODE_ENV === 'production');
-const filename = NODE_PROD ? '[name]-[chunkhash:7]' : '[name]';
+const filename = '[name]';
 const nodeModulePath = path.resolve(path.dirname(__dirname), 'node_modules');
 
 module.exports = {
@@ -71,7 +71,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/,
         loader: 'file-loader',
         options: {
-          name: NODE_PROD ? '[name]-[hash:7].[ext]' : '[name].[ext]'
+          name: '[name].[ext]'
         }
       }
     ]
