@@ -20,20 +20,21 @@ const LogVisualizer = (props) => {
     experiment.results.forEach((result) => {
       results[result.id] = result;
       results[result.id].experimentName = experiment.name;
+      results[result.id].logs = result.logs || [];
       maxLogLength = Math.max(maxLogLength, result.logs.length);
     });
   });
 
   const data = [];
-  for (let i = 0; i < maxLogLength; i += 1) {
-    const iteration = results[Object.keys(results)[0]].logs[i].iteration;
-    const dataItem = { iteration };
-    resultIds.forEach((resultId) => {
-      const result = results[resultId];
-      dataItem[result.id] = result.logs[i][logKey];
+  resultIds.forEach((resultId) => {
+    const result = results[resultId];
+    result.logs.forEach((log) => {
+      const iteration = log.iteration;
+      const dataItem = { iteration };
+      dataItem[resultId] = log[logKey];
+      data.push(dataItem);
     });
-    data.push(dataItem);
-  }
+  });
 
   const lineElems = resultIds.map((resultId) => {
     const result = results[resultId];
