@@ -2,25 +2,48 @@ import React from 'react';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import LogKeySelector from '../components/LogKeySelector';
+import path from 'path';
 
 
-const sampleExperiments = require('../utils/sample_api_response.json');
+const apiEndpoint = '/api/v1';
 
 class ChainerUIContainer extends React.Component {
 
   constructor(props, context) {
     super(props, context);
 
+    this.requestExperiments = this.requestExperiments.bind(this);
     this.getLogAndArgsKeys = this.getLogAndArgsKeys.bind(this);
     this.handleCangeLogKey = this.handleCangeLogKey.bind(this);
     this.handleToggleResult = this.handleToggleResult.bind(this);
 
     this.state = {
-      experiments: sampleExperiments.experiments,
+      experiments: [],
       resultIds: [],
       logKey: '',
     };
 
+    this.requestExperiments();
+  }
+
+  requestExperiments() {
+    const url = path.resolve(apiEndpoint, 'experiments');
+    $.ajax({
+      url: url,
+      type: "GET",
+      dataType: "json",
+    })
+      .done(function(data, textStatus, jqXHR) {
+        console.log(data);
+        this.setState({
+          experiments: data.experiments,
+        });
+      }.bind(this))
+      .fail(function(jqXHR, textStatus, errorThrown) {
+        console.error(jqXHR);
+      }.bind(this))
+      .always(function() {
+      }.bind(this));
   }
 
   getLogAndArgsKeys() {
