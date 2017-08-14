@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-class AxisKeySelector extends React.Component {
+class AxisConfigurator extends React.Component {
   constructor(props) {
     super(props);
 
@@ -18,6 +18,7 @@ class AxisKeySelector extends React.Component {
 
   render() {
     const { title, axisKey, axisKeys } = this.props;
+
     let options = [(<option disabled value="" key=""> -- select a key -- </option>)];
     options = options.concat(axisKeys.map((key) => (<option value={key} key={key}>{key}</option>)));
     return (
@@ -35,19 +36,19 @@ class AxisKeySelector extends React.Component {
   }
 }
 
-AxisKeySelector.propTypes = {
+AxisConfigurator.propTypes = {
   axisName: PropTypes.string.isRequired,
   title: PropTypes.string,
   axisKey: PropTypes.string,
   axisKeys: PropTypes.arrayOf(PropTypes.string),
   onChangeAxisKey: PropTypes.func
 };
-AxisKeySelector.defaultProps = {
+AxisConfigurator.defaultProps = {
   title: '',
   axisKey: '',
   axisKeys: [],
   onChangeAxisKey: () => {}
 };
 
-export default AxisKeySelector;
+export default AxisConfigurator;
 

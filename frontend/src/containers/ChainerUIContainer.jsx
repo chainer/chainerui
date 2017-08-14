@@ -3,7 +3,7 @@ import $ from 'jquery';
 import path from 'path';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
-import AxisKeySelector from '../components/AxisKeySelector';
+import AxisConfigurator from '../components/AxisConfigurator';
 
 
 const apiEndpoint = '/api/v1';
@@ -12,7 +12,7 @@ class ChainerUIContainer extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.getLogAndArgsKeys = this.getLogAndArgsKeys.bind(this);
+    this.getStats = this.getStats.bind(this);
     this.requestExperiments = this.requestExperiments.bind(this);
     this.handleCangeXAxisKey = this.handleCangeXAxisKey.bind(this);
     this.handleCangeLogKey = this.handleCangeLogKey.bind(this);
@@ -28,15 +28,25 @@ class ChainerUIContainer extends React.Component {
     this.requestExperiments();
   }
 
-  getLogAndArgsKeys() {
+  getStats() {
     const { experiments } = this.state;
     const logKeysSet = {};
     const argKeysSet = {};
+    const valueRanges = {};
     experiments.forEach((experiment) => {
       experiment.results.forEach((result) => {
         result.logs.forEach((log) => {
           Object.keys(log).forEach((logKey) => {
             logKeysSet[logKey] = true;
+            if (valueRanges[logKey] == null) {
+              valueRanges[logKey] = {
+                min: Math.min(0, log[logKey]),
+                max: log[logKey]
+              };
+            } else {
+              valueRanges[logKey].min = Math.min(valueRanges[logKey].min, log[logKey]);
+              valueRanges[logKey].max = Math.max(valueRanges[logKey].max, log[logKey]);
+            }
           });
         });
         Object.keys(result.args).forEach((argKey) => {
@@ -46,7 +56,8 @@ class ChainerUIContainer extends React.Component {
     });
     return {
       logKeys: Object.keys(logKeysSet),
-      argKeys: Object.keys(argKeysSet)
+      argKeys: Object.keys(argKeysSet),
+      valueRanges
     };
   }
 
@@ -87,7 +98,7 @@ class ChainerUIContainer extends React.Component {
 
   render() {
     const { experiments, resultIds, xAxisKey, logKey } = this.state;
-    const { logKeys, argKeys } = this.getLogAndArgsKeys();
+    const { logKeys, argKeys } = this.getStats();
     const xAxisKeys = ['iteration', 'epoch', 'elapsed_time'];
 
     return (
@@ -102,14 +113,14 @@ class ChainerUIContainer extends React.Component {
             />
           </div>
           <div className="col-sm-3">
-            <AxisKeySelector
+            <AxisConfigurator
               axisName="y"
               title="Y axis:"
               axisKey={logKey}
               axisKeys={logKeys}
               onChangeAxisKey={this.handleCangeLogKey}
             />
-            <AxisKeySelector
+            <AxisConfigurator
               axisName="x"
               title="X axis:"
               axisKey={xAxisKey}

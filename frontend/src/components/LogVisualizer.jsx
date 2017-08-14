@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   LineChart,
   Line,
+  Brush,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -64,7 +65,8 @@ const LogVisualizer = (props) => {
         data={data}
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
-        <XAxis type="number" dataKey={xAxisKey} domain={[0, 'dataMax']} />
+        <XAxis type="number" dataKey={xAxisKey} />
+        <Brush dataKey={xAxisKey} height={20} stroke="#8884d8" />
         <YAxis />
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip />
