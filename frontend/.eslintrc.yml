@@ -8,7 +8,9 @@ env:
 parser: babel-eslint
 
 extends:
-  - airbnb
+  - eslint-config-airbnb-base
+  - eslint-config-airbnb-base/rules/strict
+  - eslint-config-airbnb/rules/react
 
 rules:
   arrow-parens:

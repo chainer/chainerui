@@ -1,32 +1,35 @@
 import React from 'react';
+import $ from 'jquery';
+import path from 'path';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import LogKeySelector from '../components/LogKeySelector';
 
 
-const sampleExperiments = require('../utils/sample_api_response.json');
+const apiEndpoint = '/api/v1';
 
 class ChainerUIContainer extends React.Component {
-
   constructor(props, context) {
     super(props, context);
 
     this.getLogAndArgsKeys = this.getLogAndArgsKeys.bind(this);
+    this.requestExperiments = this.requestExperiments.bind(this);
     this.handleCangeLogKey = this.handleCangeLogKey.bind(this);
     this.handleToggleResult = this.handleToggleResult.bind(this);
 
     this.state = {
-      experiments: sampleExperiments.experiments,
+      experiments: [],
       resultIds: [],
-      logKey: '',
+      logKey: ''
     };
 
+    this.requestExperiments();
   }
 
   getLogAndArgsKeys() {
     const { experiments } = this.state;
-    let logKeysSet = {};
-    let argKeysSet = {};
+    const logKeysSet = {};
+    const argKeysSet = {};
     experiments.forEach((experiment) => {
       experiment.results.forEach((result) => {
         result.logs.forEach((log) => {
@@ -41,13 +44,27 @@ class ChainerUIContainer extends React.Component {
     });
     return {
       logKeys: Object.keys(logKeysSet),
-      argKeys: Object.keys(argKeysSet),
-    }
+      argKeys: Object.keys(argKeysSet)
+    };
+  }
+
+  requestExperiments() {
+    const url = path.resolve(apiEndpoint, 'experiments');
+    $.ajax({
+      url,
+      type: 'GET',
+      dataType: 'json'
+    })
+      .done((data) => {
+        this.setState({
+          experiments: data.experiments
+        });
+      });
   }
 
   handleCangeLogKey(e) {
     this.setState({
-      logKey: e.target.value,
+      logKey: e.target.value
     });
   }
 
@@ -57,10 +74,10 @@ class ChainerUIContainer extends React.Component {
     if (isToggleed) {
       newResultIds = resultIds.concat(resultId);
     } else {
-      newResultIds = resultIds.filter((resId) => { return (resId != resultId); });
+      newResultIds = resultIds.filter((resId) => (resId !== resultId));
     }
     this.setState({
-      resultIds: newResultIds,
+      resultIds: newResultIds
     });
   }
 
@@ -70,36 +87,31 @@ class ChainerUIContainer extends React.Component {
 
     return (
       <div className="chainer-ui-container">
-        <div className="container">
-          <h1>chainer_ui</h1>
-          <hr />
-          <div className="row">
-            <div className="col-sm-9">
-              <LogVisualizer
-                experiments={experiments}
-                resultIds={resultIds}
-                logKey={logKey}
-              />
-            </div>
-            <div className="col-sm-3">
-              <LogKeySelector
-                logKey={logKey}
-                logKeys={logKeys}
-                onChangeLogKey={this.handleCangeLogKey}
-              />
-            </div>
+        <div className="row">
+          <div className="col-sm-9">
+            <LogVisualizer
+              experiments={experiments}
+              resultIds={resultIds}
+              logKey={logKey}
+            />
           </div>
-          <ExperimentsTable
-            experiments={experiments}
-            selectedResultIds={resultIds}
-            argKeys={argKeys}
-            onToggleResult={this.handleToggleResult}
-          />
+          <div className="col-sm-3">
+            <LogKeySelector
+              logKey={logKey}
+              logKeys={logKeys}
+              onChangeLogKey={this.handleCangeLogKey}
+            />
+          </div>
         </div>
+        <ExperimentsTable
+          experiments={experiments}
+          selectedResultIds={resultIds}
+          argKeys={argKeys}
+          onToggleResult={this.handleToggleResult}
+        />
       </div>
     );
   }
-
 }
 
 export default ChainerUIContainer;

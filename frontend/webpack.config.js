@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const NODE_PROD = (NODE_ENV === 'production');
-const filename = NODE_PROD ? '[name]-[chunkhash:7]' : '[name]';
+const filename = '[name]';
 const nodeModulePath = path.resolve(path.dirname(__dirname), 'node_modules');
 
 module.exports = {
@@ -16,14 +16,14 @@ module.exports = {
     ])
   },
   output: {
-    path: path.resolve(path.dirname(__dirname), '../chainer_ui/static/js'),
+    path: path.resolve(path.dirname(__dirname), 'chainer_ui/static/dist'),
     filename: `${filename}.js`
   },
   module: {
     rules: [
       {
         enforce: 'pre',
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: nodeModulePath,
         loader: 'eslint-loader',
         options: {
@@ -60,7 +60,7 @@ module.exports = {
                   require('autoprefixer')({
                     browsers: ['last 2 versions']
                   }),
-                  ...(NODE_PROD ? require('./postcss.plugins.production') : [])
+                  // ...(NODE_PROD ? require('./postcss.plugins.production') : [])
                 ]
               }
             }
@@ -71,7 +71,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/,
         loader: 'file-loader',
         options: {
-          name: NODE_PROD ? '[name]-[hash:7].[ext]' : '[name].[ext]'
+          name: '[name].[ext]'
         }
       }
     ]
@@ -79,7 +79,7 @@ module.exports = {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.es6']
   },
-  devtool: NODE_PROD ? false : 'inline-source-map',
+  devtool: NODE_PROD ? false : 'source-map',
   target: 'web',
   plugins: [
     new webpack.DefinePlugin({
@@ -100,7 +100,7 @@ module.exports = {
     new ExtractTextWebpackPlugin(`${filename}.css`, {
       allChunks: true
     }),
-    ...(NODE_PROD ? require('./plugins.production') : [])
+    // ...(NODE_PROD ? require('./plugins.production') : [])
   ],
   node: {
     __dirname: false,

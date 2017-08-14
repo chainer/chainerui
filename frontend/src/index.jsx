@@ -4,10 +4,7 @@ import { AppContainer } from 'react-hot-loader';
 import ChainerUIContainer from './containers/ChainerUIContainer';
 
 
-let appNode = document.createElement('div');
-document.body.appendChild(appNode);
-
-const render = Component => {
+const render = (Component, appNode) => {
   ReactDOM.render(
     <AppContainer>
       <Component />
@@ -16,9 +13,17 @@ const render = Component => {
   );
 };
 
-render(ChainerUIContainer);
-
 if (module.hot) {
-  module.hot.accept('./containers/ChainerUIContainer', () => { render(ChainerUIContainer) });
+  const appNode = document.createElement('div');
+  document.body.appendChild(appNode);
+  render(ChainerUIContainer, appNode);
+  module.hot.accept('./containers/ChainerUIContainer', () => { render(ChainerUIContainer, appNode); });
+} else {
+  document.addEventListener('DOMContentLoaded', () => {
+    const appNode = document.getElementById('chainer_ui-root');
+    if (appNode) {
+      render(ChainerUIContainer, appNode);
+    }
+  });
 }
 

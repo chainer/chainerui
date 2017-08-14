@@ -4,9 +4,26 @@ import os
 import json
 
 import argparse
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, url_for
+from flask_apscheduler import APScheduler
 
 APP = Flask(__name__)
+
+
+# static url cache buster
+@APP.context_processor
+def override_url_for():
+    return dict(url_for=dated_url_for)
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        filename = values.get('filename', None)
+        if filename:
+            file_path = os.path.join(APP.root_path,
+                                     endpoint, filename)
+            values['_'] = int(os.stat(file_path).st_mtime)
+    return url_for(endpoint, **values)
+
 
 @APP.route('/')
 def index():
