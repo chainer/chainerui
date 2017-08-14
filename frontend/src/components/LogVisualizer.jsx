@@ -25,16 +25,18 @@ const LogVisualizer = (props) => {
     });
   });
 
-  const data = [];
+  const dataDict = {};
   resultIds.forEach((resultId) => {
     const result = results[resultId];
     result.logs.forEach((log) => {
-      const dataItem = {};
-      dataItem[xAxisKey] = log[xAxisKey];
-      dataItem[resultId] = log[logKey];
-      data.push(dataItem);
+      if (dataDict[log[xAxisKey]] == null) {
+        dataDict[log[xAxisKey]] = {};
+        dataDict[log[xAxisKey]][xAxisKey] = log[xAxisKey];
+      }
+      dataDict[log[xAxisKey]][resultId] = log[logKey];
     });
   });
+  const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
   const lineElems = resultIds.map((resultId) => {
     const result = results[resultId];
