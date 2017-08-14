@@ -3,10 +3,10 @@
 import os
 import json
 
+import argparse
 from flask import Flask, render_template, jsonify
 
 APP = Flask(__name__)
-PROJECT_ROOT = os.environ.get('CHAINER_UI_TARGET_ROOT')
 
 @APP.route('/')
 def index():
@@ -23,16 +23,16 @@ def explore_project_dir():
     experiments = []
     result_index = 1
 
-    _experiment_names = os.listdir(PROJECT_ROOT)
+    _experiment_names = os.listdir(APP.config['TARGET_DIR'])
     experiment_names = [
-        f for f in _experiment_names if os.path.isdir(os.path.join(PROJECT_ROOT, f))
+        f for f in _experiment_names if os.path.isdir(os.path.join(APP.config['TARGET_DIR'], f))
     ]
     filterd_experiment_names = [f for f in experiment_names if f[0] not in ['.', '_']]
 
     for experiment_index, experiment_name in enumerate(filterd_experiment_names):
         results = []
 
-        results_path = os.path.join(*[PROJECT_ROOT, experiment_name, 'results'])
+        results_path = os.path.join(*[APP.config['TARGET_DIR'], experiment_name, 'results'])
 
         if os.path.isdir(results_path):
 
@@ -66,4 +66,9 @@ def explore_project_dir():
     return {'experiments': experiments}
 
 if __name__ == '__main__':
+    PARSER = argparse.ArgumentParser(description='chainer ui')
+    PARSER.add_argument('-d', '--dir', required=True, type=str, help='target directory')
+    ARGS = PARSER.parse_args()
+
+    APP.config['TARGET_DIR'] = ARGS.dir
     APP.run()
