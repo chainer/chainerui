@@ -79,7 +79,7 @@ module.exports = {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.es6']
   },
-  devtool: NODE_PROD ? false : 'inline-source-map',
+  devtool: NODE_PROD ? false : 'source-map',
   target: 'web',
   plugins: [
     new webpack.DefinePlugin({

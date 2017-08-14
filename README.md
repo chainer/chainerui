@@ -1,7 +1,9 @@
 # intern-chainer-ui
 
 ## Server side
+
 ### Usage
+
 ```
 pip install -r requirements.txt
 cd chainer_ui
@@ -9,6 +11,7 @@ python main.py -d path/to/experiments
 ```
 
 ### Directory Structure example
+
 ```
 CHAINER_UI_TARGET_ROOT
 ├── mnist
@@ -31,3 +34,13 @@ CHAINER_UI_TARGET_ROOT
             ├── args
             └── log
 ```
+
+
+## Client side (only for development)
+
+```bash
+cd frontend
+npm install
+npm run build:watch
+```
+
