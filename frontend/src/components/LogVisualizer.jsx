@@ -7,75 +7,82 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
+  Legend
 } from 'recharts';
 
 
-class LogVisualizer extends React.Component {
+const LogVisualizer = (props) => {
+  const { experiments, resultIds, logKey } = props;
 
-  constructor(props, context) {
-    super(props, context);
-  }
-
-  render() {
-    const { experiments, resultIds, logKey } = this.props;
-
-    const results = {};
-    let maxLogLength = 0;
-    experiments.forEach((experiment, i) => {
-      experiment.results.forEach((result, j) => {
-        results[result.id] = result;
-        maxLogLength = Math.max(maxLogLength, result.logs.length);
-      });
+  const results = {};
+  let maxLogLength = 0;
+  experiments.forEach((experiment) => {
+    experiment.results.forEach((result) => {
+      results[result.id] = result;
+      results[result.id].experimentName = experiment.name;
+      maxLogLength = Math.max(maxLogLength, result.logs.length);
     });
+  });
 
-    let data = [];
-    for (let i = 0; i < maxLogLength; i++) {
-      const iteration = results[Object.keys(results)[0]].logs[i].iteration;
-      let dataItem = { iteration };
-      resultIds.forEach((resultId) => {
-        const result = results[resultId];
-        dataItem[result.name] = result.logs[i][logKey];
-      });
-      data.push(dataItem);
-    }
-
-    const lineElems = resultIds.map((resultId) => {
+  const data = [];
+  for (let i = 0; i < maxLogLength; i += 1) {
+    const iteration = results[Object.keys(results)[0]].logs[i].iteration;
+    const dataItem = { iteration };
+    resultIds.forEach((resultId) => {
       const result = results[resultId];
-      const key = 'line-' + resultId;
-      return (
-        <Line
-          type="monotone"
-          dataKey={result.name}
-          stroke={'#'+Math.floor(Math.random()*16777215).toString(16)}
-          connectNulls={true}
-          isAnimationActive={false}
-          key={key}
-        />
-      );
+      dataItem[result.id] = result.logs[i][logKey];
     });
-
-    return (
-      <div className="log-visualizer-root">
-        <LineChart width={730} height={250} data={data}
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <XAxis type="number" dataKey="iteration" domain={[0, 'dataMax']} />
-          <YAxis />
-          <CartesianGrid strokeDasharray="3 3" />
-          <Tooltip />
-          <Legend />
-          {lineElems}
-        </LineChart>
-      </div>
-    );
+    data.push(dataItem);
   }
 
-}
+  const lineElems = resultIds.map((resultId) => {
+    const result = results[resultId];
+    const nameSeparator = '.';
+    const name = result.experimentName + nameSeparator + result.name;
+    const key = `line-${resultId}`;
+    return (
+      <Line
+        type="monotone"
+        name={name}
+        dataKey={result.id}
+        stroke={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+        connectNulls
+        isAnimationActive={false}
+        key={key}
+      />
+    );
+  });
+
+  return (
+    <div className="log-visualizer-root">
+      <LineChart
+        width={730}
+        height={250}
+        data={data}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      >
+        <XAxis type="number" dataKey="iteration" domain={[0, 'dataMax']} />
+        <YAxis />
+        <CartesianGrid strokeDasharray="3 3" />
+        <Tooltip />
+        <Legend />
+        {lineElems}
+      </LineChart>
+    </div>
+  );
+};
 
 LogVisualizer.propTypes = {
-  experiments: PropTypes.array.isRequired,
-  resultIds: PropTypes.array.isRequired,
-  logKey: PropTypes.string,
+  experiments: PropTypes.arrayOf(
+    PropTypes.shape({
+      results: PropTypes.arrayOf(PropTypes.any)
+    })
+  ).isRequired,
+  resultIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  logKey: PropTypes.string
+};
+LogVisualizer.defaultProps = {
+  logKey: ''
 };
 
 export default LogVisualizer;

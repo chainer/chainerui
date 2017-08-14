@@ -14,13 +14,13 @@ const render = (Component, appNode) => {
 };
 
 if (module.hot) {
-  let appNode = document.createElement('div');
+  const appNode = document.createElement('div');
   document.body.appendChild(appNode);
   render(ChainerUIContainer, appNode);
-  module.hot.accept('./containers/ChainerUIContainer', () => { render(ChainerUIContainer, appNode) });
+  module.hot.accept('./containers/ChainerUIContainer', () => { render(ChainerUIContainer, appNode); });
 } else {
   document.addEventListener('DOMContentLoaded', () => {
-    let appNode = document.getElementById('chainer_ui-root');
+    const appNode = document.getElementById('chainer_ui-root');
     if (appNode) {
       render(ChainerUIContainer, appNode);
     }

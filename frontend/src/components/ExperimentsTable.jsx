@@ -4,7 +4,6 @@ import ResultRow from './ResultRow';
 
 
 class ExperimentsTable extends React.Component {
-
   constructor(props, context) {
     super(props, context);
 
@@ -17,21 +16,19 @@ class ExperimentsTable extends React.Component {
 
   render() {
     const { experiments, selectedResultIds, argKeys } = this.props;
-    let selectedResultIdsSet = {};
+    const selectedResultIdsSet = {};
     selectedResultIds.forEach((resultId) => { selectedResultIdsSet[resultId] = true; });
 
-    const argKeyHeaderElems = argKeys.map((argKey) => {
-      return (<th key={'args-'+ argKey}><span className="glyphicon glyphicon-cog"></span>{argKey}</th>);
-    });
+    const argKeyHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}><span className="glyphicon glyphicon-cog" />{argKey}</th>));
 
-    const resultRows = experiments.map((experiment, i) => {
+    const resultRows = experiments.map((experiment) => {
       if (experiment.results.length === 0) {
         // experiment with no results
-        const key = 'result-row-' + experiment.id;
+        const key = `result-row-${experiment.id}`;
         return (<ResultRow xpName={experiment.name} argKeys={argKeys} key={key} />);
       }
-      return experiment.results.map((result, i) => {
-        const key = 'result-row-' + experiment.id + '-' + result.id;
+      return experiment.results.map((result) => {
+        const key = `result-row-${experiment.id}-${result.id}`;
         return (
           <ResultRow
             xpName={experiment.name}
@@ -49,7 +46,7 @@ class ExperimentsTable extends React.Component {
       <table className="table table-hover">
         <thead>
           <tr>
-            <th></th>
+            <th />
             <th>experiment name</th>
             <th>result name</th>
             {argKeyHeaderElems}
@@ -64,20 +61,23 @@ class ExperimentsTable extends React.Component {
       </table>
     );
   }
-
 }
 
 ExperimentsTable.propTypes = {
-  experiments: PropTypes.array.isRequired,
-  selectedResultIds: PropTypes.array,
-  argKeys: PropTypes.array,
-  onToggleResult: PropTypes.func,
+  experiments: PropTypes.arrayOf(
+    PropTypes.shape({
+      results: PropTypes.arrayOf(PropTypes.any)
+    })
+  ).isRequired,
+  selectedResultIds: PropTypes.arrayOf(PropTypes.number),
+  argKeys: PropTypes.arrayOf(PropTypes.string),
+  onToggleResult: PropTypes.func
 };
 ExperimentsTable.defaultProps = {
   selectedResultIds: [],
   argKeys: [],
-  onToggleResult: () => {},
-}
+  onToggleResult: () => {}
+};
 
 export default ExperimentsTable;
 

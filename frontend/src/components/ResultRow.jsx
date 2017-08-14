@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 const emptyStr = '-';
 
 class ResultRow extends React.Component {
-
-  constructor(props, context) {
+  constructor(props) {
     super(props);
 
     this.handleToggle = this.handleToggle.bind(this);
@@ -18,13 +17,13 @@ class ResultRow extends React.Component {
   }
 
   render() {
-    const { xpName, argKeys, result, selected, onToggle } = this.props;
-    const { logs, args } = result;
+    const { xpName, argKeys, result, selected } = this.props;
+    const { logs } = result;
     const lastLog = logs[logs.length - 1] || {};
 
     const argKeyElems = argKeys.map((argKey) => {
       const content = (argKey in result.args) ? result.args[argKey] : emptyStr;
-      return (<td key={'args-' + argKey}>{content}</td>);
+      return (<td key={`args-${argKey}`}>{content}</td>);
     });
 
     return (
@@ -41,20 +40,22 @@ class ResultRow extends React.Component {
       </tr>
     );
   }
-
 }
 
 ResultRow.propTypes = {
   xpName: PropTypes.string.isRequired,
-  argKeys: PropTypes.array.isRequired,
-  result: PropTypes.object,
+  argKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
+  result: PropTypes.shape({
+    logs: PropTypes.arrayOf(PropTypes.any),
+    args: PropTypes.any
+  }),
   selected: PropTypes.bool,
-  onToggle: PropTypes.func,
+  onToggle: PropTypes.func
 };
 ResultRow.defaultProps = {
   result: { logs: [], args: {} },
   selected: false,
-  onToggle: () => {},
+  onToggle: () => {}
 };
 
 export default ResultRow;

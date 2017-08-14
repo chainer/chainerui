@@ -1,55 +1,35 @@
 import React from 'react';
+import $ from 'jquery';
+import path from 'path';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import LogKeySelector from '../components/LogKeySelector';
-import path from 'path';
 
 
 const apiEndpoint = '/api/v1';
 
 class ChainerUIContainer extends React.Component {
-
   constructor(props, context) {
     super(props, context);
 
-    this.requestExperiments = this.requestExperiments.bind(this);
     this.getLogAndArgsKeys = this.getLogAndArgsKeys.bind(this);
+    this.requestExperiments = this.requestExperiments.bind(this);
     this.handleCangeLogKey = this.handleCangeLogKey.bind(this);
     this.handleToggleResult = this.handleToggleResult.bind(this);
 
     this.state = {
       experiments: [],
       resultIds: [],
-      logKey: '',
+      logKey: ''
     };
 
     this.requestExperiments();
   }
 
-  requestExperiments() {
-    const url = path.resolve(apiEndpoint, 'experiments');
-    $.ajax({
-      url: url,
-      type: "GET",
-      dataType: "json",
-    })
-      .done(function(data, textStatus, jqXHR) {
-        console.log(data);
-        this.setState({
-          experiments: data.experiments,
-        });
-      }.bind(this))
-      .fail(function(jqXHR, textStatus, errorThrown) {
-        console.error(jqXHR);
-      }.bind(this))
-      .always(function() {
-      }.bind(this));
-  }
-
   getLogAndArgsKeys() {
     const { experiments } = this.state;
-    let logKeysSet = {};
-    let argKeysSet = {};
+    const logKeysSet = {};
+    const argKeysSet = {};
     experiments.forEach((experiment) => {
       experiment.results.forEach((result) => {
         result.logs.forEach((log) => {
@@ -64,13 +44,27 @@ class ChainerUIContainer extends React.Component {
     });
     return {
       logKeys: Object.keys(logKeysSet),
-      argKeys: Object.keys(argKeysSet),
-    }
+      argKeys: Object.keys(argKeysSet)
+    };
+  }
+
+  requestExperiments() {
+    const url = path.resolve(apiEndpoint, 'experiments');
+    $.ajax({
+      url,
+      type: 'GET',
+      dataType: 'json'
+    })
+      .done((data) => {
+        this.setState({
+          experiments: data.experiments
+        });
+      });
   }
 
   handleCangeLogKey(e) {
     this.setState({
-      logKey: e.target.value,
+      logKey: e.target.value
     });
   }
 
@@ -80,10 +74,10 @@ class ChainerUIContainer extends React.Component {
     if (isToggleed) {
       newResultIds = resultIds.concat(resultId);
     } else {
-      newResultIds = resultIds.filter((resId) => { return (resId != resultId); });
+      newResultIds = resultIds.filter((resId) => (resId !== resultId));
     }
     this.setState({
-      resultIds: newResultIds,
+      resultIds: newResultIds
     });
   }
 
@@ -118,7 +112,6 @@ class ChainerUIContainer extends React.Component {
       </div>
     );
   }
-
 }
 
 export default ChainerUIContainer;
