@@ -2,11 +2,26 @@ import os
 import re
 import json
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for
 from flask_apscheduler import APScheduler
 
 app = Flask(__name__)
 project_root = os.environ.get('CHAINER_UI_TARGET_ROOT')
+
+
+# static url cache buster
+@app.context_processor
+def override_url_for():
+    return dict(url_for=dated_url_for)
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        filename = values.get('filename', None)
+        if filename:
+            file_path = os.path.join(app.root_path,
+                                     endpoint, filename)
+            values['_'] = int(os.stat(file_path).st_mtime)
+    return url_for(endpoint, **values)
 
 
 @app.route('/')

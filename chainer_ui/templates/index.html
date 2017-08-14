@@ -3,14 +3,16 @@
   <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
-    <link rel="stylesheet" href="/static/dist/vendor.css" />
-    <script type="text/javascript" src="/static/dist/vendor.js"></script>
-    <script type="text/javascript" src="/static/dist/chainer_ui.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/vendor.css') }}" />
+    <script type="text/javascript" src="{{ url_for('static', filename='dist/vendor.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='dist/chainer_ui.js') }}"></script>
   </head>
 
   <body>
-    <h1>Chainer UI</h1>
-    <hr />
-    <div id="chainer_ui-root"></div>
+    <div class="container">
+      <h1>Chainer UI</h1>
+      <hr />
+      <div id="chainer_ui-root"></div>
+    </div>
   </body>
 </html>

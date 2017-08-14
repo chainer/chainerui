@@ -70,32 +70,28 @@ class ChainerUIContainer extends React.Component {
 
     return (
       <div className="chainer-ui-container">
-        <div className="container">
-          <h1>chainer_ui</h1>
-          <hr />
-          <div className="row">
-            <div className="col-sm-9">
-              <LogVisualizer
-                experiments={experiments}
-                resultIds={resultIds}
-                logKey={logKey}
-              />
-            </div>
-            <div className="col-sm-3">
-              <LogKeySelector
-                logKey={logKey}
-                logKeys={logKeys}
-                onChangeLogKey={this.handleCangeLogKey}
-              />
-            </div>
+        <div className="row">
+          <div className="col-sm-9">
+            <LogVisualizer
+              experiments={experiments}
+              resultIds={resultIds}
+              logKey={logKey}
+            />
           </div>
-          <ExperimentsTable
-            experiments={experiments}
-            selectedResultIds={resultIds}
-            argKeys={argKeys}
-            onToggleResult={this.handleToggleResult}
-          />
+          <div className="col-sm-3">
+            <LogKeySelector
+              logKey={logKey}
+              logKeys={logKeys}
+              onChangeLogKey={this.handleCangeLogKey}
+            />
+          </div>
         </div>
+        <ExperimentsTable
+          experiments={experiments}
+          selectedResultIds={resultIds}
+          argKeys={argKeys}
+          onToggleResult={this.handleToggleResult}
+        />
       </div>
     );
   }
