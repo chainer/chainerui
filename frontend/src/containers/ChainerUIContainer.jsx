@@ -3,7 +3,7 @@ import $ from 'jquery';
 import path from 'path';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
-import LogKeySelector from '../components/LogKeySelector';
+import AxisKeySelector from '../components/AxisKeySelector';
 
 
 const apiEndpoint = '/api/v1';
@@ -14,12 +14,14 @@ class ChainerUIContainer extends React.Component {
 
     this.getLogAndArgsKeys = this.getLogAndArgsKeys.bind(this);
     this.requestExperiments = this.requestExperiments.bind(this);
+    this.handleCangeXAxisKey = this.handleCangeXAxisKey.bind(this);
     this.handleCangeLogKey = this.handleCangeLogKey.bind(this);
     this.handleToggleResult = this.handleToggleResult.bind(this);
 
     this.state = {
       experiments: [],
       resultIds: [],
+      xAxisKey: '',
       logKey: ''
     };
 
@@ -62,10 +64,12 @@ class ChainerUIContainer extends React.Component {
       });
   }
 
-  handleCangeLogKey(e) {
-    this.setState({
-      logKey: e.target.value
-    });
+  handleCangeXAxisKey(axisName, xAxisKey) {
+    this.setState({ xAxisKey });
+  }
+
+  handleCangeLogKey(axisName, logKey) {
+    this.setState({ logKey });
   }
 
   handleToggleResult(resultId, isToggleed) {
@@ -82,8 +86,9 @@ class ChainerUIContainer extends React.Component {
   }
 
   render() {
-    const { experiments, resultIds, logKey } = this.state;
+    const { experiments, resultIds, xAxisKey, logKey } = this.state;
     const { logKeys, argKeys } = this.getLogAndArgsKeys();
+    const xAxisKeys = ['iteration', 'epoch', 'elapsed_time'];
 
     return (
       <div className="chainer-ui-container">
@@ -92,14 +97,24 @@ class ChainerUIContainer extends React.Component {
             <LogVisualizer
               experiments={experiments}
               resultIds={resultIds}
+              xAxisKey={xAxisKey}
               logKey={logKey}
             />
           </div>
           <div className="col-sm-3">
-            <LogKeySelector
-              logKey={logKey}
-              logKeys={logKeys}
-              onChangeLogKey={this.handleCangeLogKey}
+            <AxisKeySelector
+              axisName="y"
+              title="Y axis:"
+              axisKey={logKey}
+              axisKeys={logKeys}
+              onChangeAxisKey={this.handleCangeLogKey}
+            />
+            <AxisKeySelector
+              axisName="x"
+              title="X axis:"
+              axisKey={xAxisKey}
+              axisKeys={xAxisKeys}
+              onChangeAxisKey={this.handleCangeXAxisKey}
             />
           </div>
         </div>

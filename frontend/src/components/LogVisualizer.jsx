@@ -12,7 +12,7 @@ import {
 
 
 const LogVisualizer = (props) => {
-  const { experiments, resultIds, logKey } = props;
+  const { experiments, resultIds, xAxisKey, logKey } = props;
 
   const results = {};
   let maxLogLength = 0;
@@ -29,8 +29,8 @@ const LogVisualizer = (props) => {
   resultIds.forEach((resultId) => {
     const result = results[resultId];
     result.logs.forEach((log) => {
-      const iteration = log.iteration;
-      const dataItem = { iteration };
+      const dataItem = {};
+      dataItem[xAxisKey] = log[xAxisKey];
       dataItem[resultId] = log[logKey];
       data.push(dataItem);
     });
@@ -62,7 +62,7 @@ const LogVisualizer = (props) => {
         data={data}
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
-        <XAxis type="number" dataKey="iteration" domain={[0, 'dataMax']} />
+        <XAxis type="number" dataKey={xAxisKey} domain={[0, 'dataMax']} />
         <YAxis />
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip />
@@ -80,9 +80,11 @@ LogVisualizer.propTypes = {
     })
   ).isRequired,
   resultIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  xAxisKey: PropTypes.string,
   logKey: PropTypes.string
 };
 LogVisualizer.defaultProps = {
+  xAxisKey: '',
   logKey: ''
 };
 
