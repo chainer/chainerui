@@ -59,6 +59,9 @@ class ChainerUIContainer extends React.Component {
         this.setState({
           experiments: data.experiments
         });
+      })
+      .fail(() => {
+        alert('Web API Error\nPlease check API log.'); // eslint-disable-line no-alert
       });
   }
 
