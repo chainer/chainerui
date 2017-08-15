@@ -11,11 +11,16 @@ import {
 } from 'recharts';
 import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import * as Cookies from 'js-cookie';
 import AxisConfigurator from './AxisConfigurator';
 
 
 const xAxisKeys = ['iteration', 'epoch', 'elapsed_time'];
 const defaultValueRange = { min: 0.0, max: 100.0 };
+const defaultAxisConfig = {
+  axisKey: '',
+  domain: [defaultValueRange.min, defaultValueRange.max]
+};
 const sliderSteps = 100.0;
 
 class LogVisualizer extends React.Component {
@@ -28,14 +33,8 @@ class LogVisualizer extends React.Component {
     this.handleChangeRange = this.handleChangeRange.bind(this);
 
     this.state = {
-      xAxis: {
-        axisKey: '',
-        domain: [defaultValueRange.min, defaultValueRange.max]
-      },
-      yAxis: {
-        axisKey: '',
-        domain: [defaultValueRange.min, defaultValueRange.max]
-      }
+      xAxis: Cookies.getJSON('chainerUILogVisualizer-xAxis') || defaultAxisConfig,
+      yAxis: Cookies.getJSON('chainerUILogVisualizer-yAxis') || defaultAxisConfig
     };
   }
 
@@ -48,6 +47,7 @@ class LogVisualizer extends React.Component {
       domain: [valueRange.min, valueRange.max]
     };
     this.setState(newState);
+    Cookies.set(`chainerUILogVisualizer-${axisName}`, newState[axisName]);
   }
 
   handleChangeXRange(range) {
@@ -65,6 +65,7 @@ class LogVisualizer extends React.Component {
       domain: range
     };
     this.setState(newState);
+    Cookies.set(`chainerUILogVisualizer-${axisName}`, newState[axisName]);
   }
 
   render() {
@@ -91,6 +92,9 @@ class LogVisualizer extends React.Component {
     const dataDict = {};
     resultIds.forEach((resultId) => {
       const result = results[resultId];
+      if (result == null) {
+        return;
+      }
       result.logs.forEach((log) => {
         if (dataDict[log[xAxisKey]] == null) {
           dataDict[log[xAxisKey]] = {};
@@ -103,6 +107,9 @@ class LogVisualizer extends React.Component {
 
     const lineElems = resultIds.map((resultId) => {
       const result = results[resultId];
+      if (result == null) {
+        return null;
+      }
       const nameSeparator = '.';
       const name = result.experimentName + nameSeparator + result.name;
       const key = `line-${resultId}`;

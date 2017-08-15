@@ -1,6 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 import path from 'path';
+import * as Cookies from 'js-cookie';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 
@@ -17,7 +18,7 @@ class ChainerUIContainer extends React.Component {
 
     this.state = {
       experiments: [],
-      resultIds: []
+      resultIds: Cookies.getJSON('chainerUIResultIds') || []
     };
 
     this.requestExperiments();
@@ -84,6 +85,7 @@ class ChainerUIContainer extends React.Component {
     this.setState({
       resultIds: newResultIds
     });
+    Cookies.set('chainerUIResultIds', newResultIds);
   }
 
   render() {
