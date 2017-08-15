@@ -3,7 +3,6 @@ import $ from 'jquery';
 import path from 'path';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
-import AxisConfigurator from '../components/AxisConfigurator';
 
 
 const apiEndpoint = '/api/v1';
@@ -14,15 +13,11 @@ class ChainerUIContainer extends React.Component {
 
     this.getStats = this.getStats.bind(this);
     this.requestExperiments = this.requestExperiments.bind(this);
-    this.handleCangeXAxisKey = this.handleCangeXAxisKey.bind(this);
-    this.handleCangeLogKey = this.handleCangeLogKey.bind(this);
     this.handleToggleResult = this.handleToggleResult.bind(this);
 
     this.state = {
       experiments: [],
-      resultIds: [],
-      xAxisKey: '',
-      logKey: ''
+      resultIds: []
     };
 
     this.requestExperiments();
@@ -75,14 +70,6 @@ class ChainerUIContainer extends React.Component {
       });
   }
 
-  handleCangeXAxisKey(axisName, xAxisKey) {
-    this.setState({ xAxisKey });
-  }
-
-  handleCangeLogKey(axisName, logKey) {
-    this.setState({ logKey });
-  }
-
   handleToggleResult(resultId, isToggleed) {
     const { resultIds } = this.state;
     let newResultIds = [];
@@ -97,38 +84,17 @@ class ChainerUIContainer extends React.Component {
   }
 
   render() {
-    const { experiments, resultIds, xAxisKey, logKey } = this.state;
-    const { logKeys, argKeys } = this.getStats();
-    const xAxisKeys = ['iteration', 'epoch', 'elapsed_time'];
+    const { experiments, resultIds } = this.state;
+    const { logKeys, argKeys, valueRanges } = this.getStats();
 
     return (
       <div className="chainer-ui-container">
-        <div className="row">
-          <div className="col-sm-9">
-            <LogVisualizer
-              experiments={experiments}
-              resultIds={resultIds}
-              xAxisKey={xAxisKey}
-              logKey={logKey}
-            />
-          </div>
-          <div className="col-sm-3">
-            <AxisConfigurator
-              axisName="y"
-              title="Y axis:"
-              axisKey={logKey}
-              axisKeys={logKeys}
-              onChangeAxisKey={this.handleCangeLogKey}
-            />
-            <AxisConfigurator
-              axisName="x"
-              title="X axis:"
-              axisKey={xAxisKey}
-              axisKeys={xAxisKeys}
-              onChangeAxisKey={this.handleCangeXAxisKey}
-            />
-          </div>
-        </div>
+        <LogVisualizer
+          experiments={experiments}
+          valueRanges={valueRanges}
+          resultIds={resultIds}
+          logKeys={logKeys}
+        />
         <ExperimentsTable
           experiments={experiments}
           selectedResultIds={resultIds}

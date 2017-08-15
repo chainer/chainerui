@@ -27,7 +27,7 @@ module.exports = {
         exclude: nodeModulePath,
         loader: 'eslint-loader',
         options: {
-          fix: true
+          fix: true,
         }
       },
       {
@@ -38,7 +38,8 @@ module.exports = {
           presets: [
             ['es2015', { modules: false }],
             'react'
-          ]
+          ],
+          plugins: ["transform-object-rest-spread"],
         }
       },
       {
