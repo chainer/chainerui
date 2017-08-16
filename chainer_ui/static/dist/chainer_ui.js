@@ -726,8 +726,6 @@ ResultRow.defaultProps = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_js_cookie__ = __webpack_require__(152);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_js_cookie___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_js_cookie__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__AxisConfigurator__ = __webpack_require__(842);
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -748,7 +746,8 @@ var xAxisKeys = ['iteration', 'epoch', 'elapsed_time'];
 var defaultValueRange = { min: 0.0, max: 100.0 };
 var defaultAxisConfig = {
   axisKey: '',
-  domain: [defaultValueRange.min, defaultValueRange.max]
+  domain: [defaultValueRange.min, defaultValueRange.max],
+  scale: 'auto'
 };
 var sliderSteps = 100.0;
 
@@ -761,9 +760,10 @@ var LogVisualizer = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (LogVisualizer.__proto__ || Object.getPrototypeOf(LogVisualizer)).call(this, props));
 
     _this.handleChangeAxisKey = _this.handleChangeAxisKey.bind(_this);
+    _this.handleChangeScale = _this.handleChangeScale.bind(_this);
     _this.handleChangeXRange = _this.handleChangeXRange.bind(_this);
     _this.handleChangeYRange = _this.handleChangeYRange.bind(_this);
-    _this.handleChangeRange = _this.handleChangeRange.bind(_this);
+    _this.handleChangeConfig = _this.handleChangeConfig.bind(_this);
 
     _this.state = {
       xAxis: __WEBPACK_IMPORTED_MODULE_5_js_cookie__["getJSON"]('chainerUILogVisualizer-xAxis') || defaultAxisConfig,
@@ -776,33 +776,47 @@ var LogVisualizer = function (_React$Component) {
     key: 'handleChangeAxisKey',
     value: function handleChangeAxisKey(axisName, axisKey) {
       var valueRanges = this.props.valueRanges;
+      var scale = this.state[axisName].scale;
 
       var valueRange = valueRanges[axisKey] || defaultValueRange;
-      var newState = {};
-      newState[axisName] = {
-        axisKey: axisKey,
-        domain: [valueRange.min, valueRange.max]
-      };
-      this.setState(newState);
-      __WEBPACK_IMPORTED_MODULE_5_js_cookie__["set"]('chainerUILogVisualizer-' + axisName, newState[axisName]);
+      this.handleChangeConfig(axisName, axisKey, [valueRange.min, valueRange.max], scale);
+    }
+  }, {
+    key: 'handleChangeScale',
+    value: function handleChangeScale(axisName, scale) {
+      var _state$axisName = this.state[axisName],
+          axisKey = _state$axisName.axisKey,
+          domain = _state$axisName.domain;
+
+      this.handleChangeConfig(axisName, axisKey, domain, scale);
     }
   }, {
     key: 'handleChangeXRange',
     value: function handleChangeXRange(range) {
-      this.handleChangeRange('xAxis', range);
+      var _state$xAxis = this.state.xAxis,
+          axisKey = _state$xAxis.axisKey,
+          scale = _state$xAxis.scale;
+
+      this.handleChangeConfig('xAxis', axisKey, range, scale);
     }
   }, {
     key: 'handleChangeYRange',
     value: function handleChangeYRange(range) {
-      this.handleChangeRange('yAxis', range);
+      var _state$yAxis = this.state.yAxis,
+          axisKey = _state$yAxis.axisKey,
+          scale = _state$yAxis.scale;
+
+      this.handleChangeConfig('yAxis', axisKey, range, scale);
     }
   }, {
-    key: 'handleChangeRange',
-    value: function handleChangeRange(axisName, range) {
+    key: 'handleChangeConfig',
+    value: function handleChangeConfig(axisName, axisKey, domain, scale) {
       var newState = {};
-      newState[axisName] = _extends({}, this.state[axisName], {
-        domain: range
-      });
+      newState[axisName] = {
+        axisKey: axisKey,
+        domain: domain,
+        scale: scale
+      };
       this.setState(newState);
       __WEBPACK_IMPORTED_MODULE_5_js_cookie__["set"]('chainerUILogVisualizer-' + axisName, newState[axisName]);
     }
@@ -820,10 +834,12 @@ var LogVisualizer = function (_React$Component) {
 
       var xAxisKey = xAxis.axisKey;
       var yAxisKey = yAxis.axisKey;
-      var xDomain = xAxis.domain;
-      var yDomain = yAxis.domain;
+      var xDomain = xAxis.scale === 'auto' ? xAxis.domain : [];
+      var yDomain = yAxis.scale === 'auto' ? yAxis.domain : [];
       var xValueRange = valueRanges[xAxisKey] || defaultValueRange;
       var yValueRange = valueRanges[yAxisKey] || defaultValueRange;
+      var chartWidth = 640;
+      var chartHeight = 360;
 
       var results = {};
       var maxLogLength = 0;
@@ -892,7 +908,7 @@ var LogVisualizer = function (_React$Component) {
                   'td',
                   null,
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_rc_slider__["Range"], {
-                    style: { height: '190px' },
+                    style: { height: chartHeight + 'px' },
                     vertical: true,
                     min: yValueRange.min,
                     max: yValueRange.max,
@@ -907,8 +923,8 @@ var LogVisualizer = function (_React$Component) {
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     __WEBPACK_IMPORTED_MODULE_2_recharts__["LineChart"],
                     {
-                      width: 730,
-                      height: 250,
+                      width: chartWidth,
+                      height: chartHeight,
                       data: data,
                       margin: { top: 5, right: 30, left: 20, bottom: 5 }
                     },
@@ -916,10 +932,12 @@ var LogVisualizer = function (_React$Component) {
                       type: 'number',
                       dataKey: xAxisKey,
                       domain: xDomain,
+                      scale: xAxis.scale,
                       allowDataOverflow: true
                     }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_recharts__["YAxis"], {
                       domain: yDomain,
+                      scale: yAxis.scale,
                       allowDataOverflow: true
                     }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_recharts__["CartesianGrid"], { strokeDasharray: '3 3' }),
@@ -937,7 +955,7 @@ var LogVisualizer = function (_React$Component) {
                   'td',
                   null,
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_rc_slider__["Range"], {
-                    style: { width: '620px', margin: 'auto' },
+                    style: { width: chartWidth + 'px', margin: 'auto' },
                     min: xValueRange.min,
                     max: xValueRange.max,
                     step: (xDomain[1] - xDomain[0]) / sliderSteps,
@@ -954,17 +972,19 @@ var LogVisualizer = function (_React$Component) {
           { className: 'col-sm-3' },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__AxisConfigurator__["a" /* default */], {
             axisName: 'yAxis',
-            title: 'Y axis:',
             axisKey: yAxisKey,
             axisKeys: logKeys,
-            onChangeAxisKey: this.handleChangeAxisKey
+            scale: yAxis.scale,
+            onChangeAxisKey: this.handleChangeAxisKey,
+            onChangeScale: this.handleChangeScale
           }),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__AxisConfigurator__["a" /* default */], {
             axisName: 'xAxis',
-            title: 'X axis:',
             axisKey: xAxisKey,
             axisKeys: xAxisKeys,
-            onChangeAxisKey: this.handleChangeAxisKey
+            scale: xAxis.scale,
+            onChangeAxisKey: this.handleChangeAxisKey,
+            onChangeScale: this.handleChangeScale
           })
         )
       );
@@ -1028,6 +1048,7 @@ var AxisConfigurator = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (AxisConfigurator.__proto__ || Object.getPrototypeOf(AxisConfigurator)).call(this, props));
 
     _this.handleChangeAxisKey = _this.handleChangeAxisKey.bind(_this);
+    _this.handleChangeScale = _this.handleChangeScale.bind(_this);
 
     _this.state = {};
     return _this;
@@ -1043,12 +1064,22 @@ var AxisConfigurator = function (_React$Component) {
       onChangeAxisKey(axisName, e.target.value);
     }
   }, {
+    key: 'handleChangeScale',
+    value: function handleChangeScale(e) {
+      var _props2 = this.props,
+          axisName = _props2.axisName,
+          onChangeScale = _props2.onChangeScale;
+
+      onChangeScale(axisName, e.target.value);
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var _props2 = this.props,
-          title = _props2.title,
-          axisKey = _props2.axisKey,
-          axisKeys = _props2.axisKeys;
+      var _props3 = this.props,
+          axisName = _props3.axisName,
+          axisKey = _props3.axisKey,
+          axisKeys = _props3.axisKeys,
+          scale = _props3.scale;
 
 
       var options = [__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -1065,22 +1096,70 @@ var AxisConfigurator = function (_React$Component) {
       }));
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
-        { className: 'axis-key-selector' },
+        { className: 'axis-configurator panel panel-default' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          'form',
-          { className: 'form-inline' },
+          'div',
+          { className: 'panel-heading' },
+          axisName
+        ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'div',
+          { className: 'panel-body' },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'div',
-            { className: 'form-group' },
+            'form',
+            null,
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              'label',
-              { htmlFor: 'axis-key-selector-select' },
-              title
+              'div',
+              { className: 'form-group' },
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'label',
+                { htmlFor: 'axis-configurator-key', className: 'control-label' },
+                'key'
+              ),
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'select',
+                { id: 'axis-configurator-key', className: 'form-control', value: axisKey, onChange: this.handleChangeAxisKey },
+                options
+              )
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              'select',
-              { id: 'axis-key-selector-select', className: 'form-control', value: axisKey, onChange: this.handleChangeAxisKey },
-              options
+              'div',
+              { className: 'form-group' },
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'label',
+                { className: 'control-label' },
+                'scale'
+              ),
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                null,
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'label',
+                  { className: 'radio-inline' },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
+                    type: 'radio',
+                    name: 'axis-configurator-scale-auto',
+                    id: 'axis-configurator-scale-auto',
+                    value: 'auto',
+                    checked: scale === 'auto',
+                    onChange: this.handleChangeScale
+                  }),
+                  'auto'
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'label',
+                  { className: 'radio-inline' },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
+                    type: 'radio',
+                    name: 'axis-configurator-scale-log',
+                    id: 'axis-configurator-scale-log',
+                    value: 'log',
+                    checked: scale === 'log',
+                    onChange: this.handleChangeScale
+                  }),
+                  'log'
+                )
+              )
             )
           )
         )
@@ -1093,16 +1172,18 @@ var AxisConfigurator = function (_React$Component) {
 
 AxisConfigurator.propTypes = {
   axisName: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string.isRequired,
-  title: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
   axisKey: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
   axisKeys: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string),
-  onChangeAxisKey: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
+  scale: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+  onChangeAxisKey: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  onChangeScale: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 AxisConfigurator.defaultProps = {
-  title: '',
   axisKey: '',
   axisKeys: [],
-  onChangeAxisKey: function onChangeAxisKey() {}
+  scale: 'auto',
+  onChangeAxisKey: function onChangeAxisKey() {},
+  onChangeScale: function onChangeScale() {}
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (AxisConfigurator);
