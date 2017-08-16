@@ -8,6 +8,27 @@ import LogVisualizer from '../components/LogVisualizer';
 
 const apiEndpoint = '/api/v1';
 
+function rgb2Color(r, g, b) {
+  const rs = (r < 16 ? '0' : '') + Math.floor(r).toString(16);
+  const gs = (g < 16 ? '0' : '') + Math.floor(g).toString(16);
+  const bs = (b < 16 ? '0' : '') + Math.floor(b).toString(16);
+  return `#${rs}${gs}${bs}`;
+}
+
+function makeColorGradient(len) {
+  const width = 127;
+  const center = 128;
+  const freq = (2 * Math.PI) / (len + 1);
+  const colors = [];
+  for (let i = 0; i < len; i += 1) {
+    const r = (Math.cos((freq * i) + (Math.PI * 0.66)) * width) + center;
+    const g = (Math.cos((freq * i) + (Math.PI * 1.33)) * width) + center;
+    const b = (Math.cos((freq * i) + (Math.PI * 0.00)) * width) + center;
+    colors.push(rgb2Color(r, g, b));
+  }
+  return colors;
+}
+
 class ChainerUIContainer extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -29,8 +50,11 @@ class ChainerUIContainer extends React.Component {
     const logKeysSet = {};
     const argKeysSet = {};
     const valueRanges = {};
+    let resultRowCount = 0;
     experiments.forEach((experiment) => {
+      resultRowCount += (experiment.results.length === 0 ? 1 : 0);
       experiment.results.forEach((result) => {
+        resultRowCount += 1;
         result.logs.forEach((log) => {
           Object.keys(log).forEach((logKey) => {
             logKeysSet[logKey] = true;
@@ -53,7 +77,8 @@ class ChainerUIContainer extends React.Component {
     return {
       logKeys: Object.keys(logKeysSet),
       argKeys: Object.keys(argKeysSet),
-      valueRanges
+      valueRanges,
+      resultRowCount
     };
   }
 
@@ -90,7 +115,8 @@ class ChainerUIContainer extends React.Component {
 
   render() {
     const { experiments, resultIds } = this.state;
-    const { logKeys, argKeys, valueRanges } = this.getStats();
+    const { logKeys, argKeys, valueRanges, resultRowCount } = this.getStats();
+    const colors = makeColorGradient(resultRowCount, 0, Math.PI * 0.67, Math.PI * 1.32);
 
     return (
       <div className="chainer-ui-container">
@@ -99,11 +125,13 @@ class ChainerUIContainer extends React.Component {
           valueRanges={valueRanges}
           resultIds={resultIds}
           logKeys={logKeys}
+          colors={colors}
         />
         <ExperimentsTable
           experiments={experiments}
           selectedResultIds={resultIds}
           argKeys={argKeys}
+          colors={colors}
           onToggleResult={this.handleToggleResult}
         />
       </div>

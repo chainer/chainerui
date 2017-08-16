@@ -82,6 +82,27 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var apiEndpoint = '/api/v1';
 
+function rgb2Color(r, g, b) {
+  var rs = (r < 16 ? '0' : '') + Math.floor(r).toString(16);
+  var gs = (g < 16 ? '0' : '') + Math.floor(g).toString(16);
+  var bs = (b < 16 ? '0' : '') + Math.floor(b).toString(16);
+  return '#' + rs + gs + bs;
+}
+
+function makeColorGradient(len) {
+  var width = 127;
+  var center = 128;
+  var freq = 2 * Math.PI / (len + 1);
+  var colors = [];
+  for (var i = 0; i < len; i += 1) {
+    var r = Math.cos(freq * i + Math.PI * 0.66) * width + center;
+    var g = Math.cos(freq * i + Math.PI * 1.33) * width + center;
+    var b = Math.cos(freq * i + Math.PI * 0.00) * width + center;
+    colors.push(rgb2Color(r, g, b));
+  }
+  return colors;
+}
+
 var ChainerUIContainer = function (_React$Component) {
   _inherits(ChainerUIContainer, _React$Component);
 
@@ -111,8 +132,11 @@ var ChainerUIContainer = function (_React$Component) {
       var logKeysSet = {};
       var argKeysSet = {};
       var valueRanges = {};
+      var resultRowCount = 0;
       experiments.forEach(function (experiment) {
+        resultRowCount += experiment.results.length === 0 ? 1 : 0;
         experiment.results.forEach(function (result) {
+          resultRowCount += 1;
           result.logs.forEach(function (log) {
             Object.keys(log).forEach(function (logKey) {
               logKeysSet[logKey] = true;
@@ -135,7 +159,8 @@ var ChainerUIContainer = function (_React$Component) {
       return {
         logKeys: Object.keys(logKeysSet),
         argKeys: Object.keys(argKeysSet),
-        valueRanges: valueRanges
+        valueRanges: valueRanges,
+        resultRowCount: resultRowCount
       };
     }
   }, {
@@ -184,7 +209,10 @@ var ChainerUIContainer = function (_React$Component) {
       var _getStats = this.getStats(),
           logKeys = _getStats.logKeys,
           argKeys = _getStats.argKeys,
-          valueRanges = _getStats.valueRanges;
+          valueRanges = _getStats.valueRanges,
+          resultRowCount = _getStats.resultRowCount;
+
+      var colors = makeColorGradient(resultRowCount, 0, Math.PI * 0.67, Math.PI * 1.32);
 
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
@@ -193,12 +221,14 @@ var ChainerUIContainer = function (_React$Component) {
           experiments: experiments,
           valueRanges: valueRanges,
           resultIds: resultIds,
-          logKeys: logKeys
+          logKeys: logKeys,
+          colors: colors
         }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__components_ExperimentsTable__["a" /* default */], {
           experiments: experiments,
           selectedResultIds: resultIds,
           argKeys: argKeys,
+          colors: colors,
           onToggleResult: this.handleToggleResult
         })
       );
@@ -484,7 +514,8 @@ var ExperimentsTable = function (_React$Component) {
       var _props = this.props,
           experiments = _props.experiments,
           selectedResultIds = _props.selectedResultIds,
-          argKeys = _props.argKeys;
+          argKeys = _props.argKeys,
+          colors = _props.colors;
 
       var selectedResultIdsSet = {};
       selectedResultIds.forEach(function (resultId) {
@@ -500,19 +531,25 @@ var ExperimentsTable = function (_React$Component) {
         );
       });
 
+      var resultRowIndex = 0;
       var resultRows = experiments.map(function (experiment) {
         if (experiment.results.length === 0) {
           // experiment with no results
           var key = 'result-row-' + experiment.id;
-          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__ResultRow__["a" /* default */], { xpName: experiment.name, argKeys: argKeys, key: key });
+          var color = colors[resultRowIndex];
+          resultRowIndex += 1;
+          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__ResultRow__["a" /* default */], { xpName: experiment.name, argKeys: argKeys, color: color, key: key });
         }
         return experiment.results.map(function (result) {
           var key = 'result-row-' + experiment.id + '-' + result.id;
+          var color = colors[resultRowIndex];
+          resultRowIndex += 1;
           return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__ResultRow__["a" /* default */], {
             xpName: experiment.name,
             argKeys: argKeys,
             result: result,
             selected: selectedResultIdsSet[result.id],
+            color: color,
             onToggle: _this2.handleToggleResult,
             key: key
           });
@@ -528,6 +565,7 @@ var ExperimentsTable = function (_React$Component) {
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'tr',
             null,
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('th', null),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('th', null),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               'th',
@@ -575,11 +613,13 @@ ExperimentsTable.propTypes = {
   })).isRequired,
   selectedResultIds: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number),
   argKeys: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string),
+  colors: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string),
   onToggleResult: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 ExperimentsTable.defaultProps = {
   selectedResultIds: [],
   argKeys: [],
+  colors: [],
   onToggleResult: function onToggleResult() {}
 };
 
@@ -636,10 +676,12 @@ var ResultRow = function (_React$Component) {
           xpName = _props2.xpName,
           argKeys = _props2.argKeys,
           result = _props2.result,
-          selected = _props2.selected;
+          selected = _props2.selected,
+          color = _props2.color;
       var logs = result.logs;
 
       var lastLog = logs[logs.length - 1] || {};
+      var colorCellStyle = selected ? { backgroundColor: color } : {};
 
       var argKeyElems = argKeys.map(function (argKey) {
         var content = argKey in result.args ? result.args[argKey] : emptyStr;
@@ -658,6 +700,7 @@ var ResultRow = function (_React$Component) {
           null,
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'checkbox', 'aria-label': 'select single row', checked: selected, onChange: this.handleToggle })
         ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('td', { style: colorCellStyle }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'td',
           null,
@@ -699,11 +742,13 @@ ResultRow.propTypes = {
     args: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any
   }),
   selected: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+  color: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
   onToggle: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 ResultRow.defaultProps = {
   result: { logs: [], args: {} },
   selected: false,
+  color: '',
   onToggle: function onToggle() {}
 };
 
@@ -813,7 +858,8 @@ var LogVisualizer = function (_React$Component) {
           experiments = _props.experiments,
           valueRanges = _props.valueRanges,
           resultIds = _props.resultIds,
-          logKeys = _props.logKeys;
+          logKeys = _props.logKeys,
+          colors = _props.colors;
       var _state = this.state,
           xAxis = _state.xAxis,
           yAxis = _state.yAxis;
@@ -826,13 +872,18 @@ var LogVisualizer = function (_React$Component) {
       var yValueRange = valueRanges[yAxisKey] || defaultValueRange;
 
       var results = {};
+      var id2Color = {};
       var maxLogLength = 0;
+      var resultRowIndex = 0;
       experiments.forEach(function (experiment) {
+        resultRowIndex += experiment.results.length === 0 ? 1 : 0;
         experiment.results.forEach(function (result) {
           results[result.id] = result;
           results[result.id].experimentName = experiment.name;
           results[result.id].logs = result.logs || [];
+          id2Color[result.id] = colors[resultRowIndex];
           maxLogLength = Math.max(maxLogLength, result.logs.length);
+          resultRowIndex += 1;
         });
       });
 
@@ -866,7 +917,7 @@ var LogVisualizer = function (_React$Component) {
           type: 'monotone',
           name: name,
           dataKey: result.id,
-          stroke: '#' + Math.floor(Math.random() * 16777215).toString(16),
+          stroke: id2Color[result.id],
           connectNulls: true,
           isAnimationActive: false,
           key: key
@@ -983,10 +1034,12 @@ LogVisualizer.propTypes = {
     max: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number
   })).isRequired,
   resultIds: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number).isRequired,
-  logKeys: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string)
+  logKeys: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string),
+  colors: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string)
 };
 LogVisualizer.defaultProps = {
-  logKeys: []
+  logKeys: [],
+  colors: []
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (LogVisualizer);

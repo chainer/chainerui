@@ -69,7 +69,7 @@ class LogVisualizer extends React.Component {
   }
 
   render() {
-    const { experiments, valueRanges, resultIds, logKeys } = this.props;
+    const { experiments, valueRanges, resultIds, logKeys, colors } = this.props;
     const { xAxis, yAxis } = this.state;
     const xAxisKey = xAxis.axisKey;
     const yAxisKey = yAxis.axisKey;
@@ -79,13 +79,18 @@ class LogVisualizer extends React.Component {
     const yValueRange = valueRanges[yAxisKey] || defaultValueRange;
 
     const results = {};
+    const id2Color = {};
     let maxLogLength = 0;
+    let resultRowIndex = 0;
     experiments.forEach((experiment) => {
+      resultRowIndex += (experiment.results.length === 0 ? 1 : 0);
       experiment.results.forEach((result) => {
         results[result.id] = result;
         results[result.id].experimentName = experiment.name;
         results[result.id].logs = result.logs || [];
+        id2Color[result.id] = colors[resultRowIndex];
         maxLogLength = Math.max(maxLogLength, result.logs.length);
+        resultRowIndex += 1;
       });
     });
 
@@ -118,7 +123,7 @@ class LogVisualizer extends React.Component {
           type="monotone"
           name={name}
           dataKey={result.id}
-          stroke={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+          stroke={id2Color[result.id]}
           connectNulls
           isAnimationActive={false}
           key={key}
@@ -217,10 +222,12 @@ LogVisualizer.propTypes = {
     })
   ).isRequired,
   resultIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-  logKeys: PropTypes.arrayOf(PropTypes.string)
+  logKeys: PropTypes.arrayOf(PropTypes.string),
+  colors: PropTypes.arrayOf(PropTypes.string)
 };
 LogVisualizer.defaultProps = {
-  logKeys: []
+  logKeys: [],
+  colors: []
 };
 
 export default LogVisualizer;
