@@ -44,7 +44,7 @@ def get_experiments():
     ''' /api/v1/experiments '''
     # todo: データ数が増えると遅くなるので、result毎に別のAPIにするか考える
     experiments = Experiment.query.join(Result).join(Log).join(Argument).all()
-    return jsonify({'experiments': [i.serialize for i in experiments]})
+    return jsonify({'experiments': [e.serialize for e in experiments]})
 
 
 if __name__ == '__main__':
