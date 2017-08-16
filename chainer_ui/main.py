@@ -52,10 +52,11 @@ if __name__ == '__main__':
 
     PARSER = argparse.ArgumentParser(description='chainer ui')
     PARSER.add_argument('-d', '--dir', required=True, type=str, help='target directory')
+    PARSER.add_argument('-p', '--port', required=False, type=int, help='port', default=5000)
     ARGS = PARSER.parse_args()
 
     APP.config['TARGET_DIR'] = ARGS.dir
-    APP.config['DEBUG'] = True
+    APP.config['DEBUG'] = False
 
     class JobConfig(object):
         ''' job config '''
@@ -75,4 +76,4 @@ if __name__ == '__main__':
     SCHEDULER.init_app(APP)
 
     SCHEDULER.start()
-    APP.run()
+    APP.run(port=ARGS.port)
