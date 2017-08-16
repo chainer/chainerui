@@ -1,14 +1,14 @@
 webpackJsonp([0],{
 
-/***/ 361:
+/***/ 362:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(362);
+module.exports = __webpack_require__(363);
 
 
 /***/ }),
 
-/***/ 362:
+/***/ 363:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17,9 +17,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_hot_loader__ = __webpack_require__(240);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_hot_loader__ = __webpack_require__(241);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_hot_loader___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react_hot_loader__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__containers_ChainerUIContainer__ = __webpack_require__(456);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__containers_ChainerUIContainer__ = __webpack_require__(457);
 
 
 
@@ -51,7 +51,7 @@ if (false) {
 
 /***/ }),
 
-/***/ 456:
+/***/ 457:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59,10 +59,12 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_path__ = __webpack_require__(457);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_path__ = __webpack_require__(458);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_path___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_path__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_ExperimentsTable__ = __webpack_require__(458);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_LogVisualizer__ = __webpack_require__(461);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_js_cookie__ = __webpack_require__(152);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_js_cookie___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_js_cookie__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_ExperimentsTable__ = __webpack_require__(459);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_LogVisualizer__ = __webpack_require__(462);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -70,6 +72,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -93,7 +96,7 @@ var ChainerUIContainer = function (_React$Component) {
 
     _this.state = {
       experiments: [],
-      resultIds: []
+      resultIds: __WEBPACK_IMPORTED_MODULE_3_js_cookie__["getJSON"]('chainerUIResultIds') || []
     };
 
     _this.requestExperiments();
@@ -149,6 +152,8 @@ var ChainerUIContainer = function (_React$Component) {
         _this2.setState({
           experiments: data.experiments
         });
+      }).fail(function () {
+        alert('Web API Error\nPlease check API log.'); // eslint-disable-line no-alert
       });
     }
   }, {
@@ -167,6 +172,7 @@ var ChainerUIContainer = function (_React$Component) {
       this.setState({
         resultIds: newResultIds
       });
+      __WEBPACK_IMPORTED_MODULE_3_js_cookie__["set"]('chainerUIResultIds', newResultIds);
     }
   }, {
     key: 'render',
@@ -183,13 +189,13 @@ var ChainerUIContainer = function (_React$Component) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         { className: 'chainer-ui-container' },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__components_LogVisualizer__["a" /* default */], {
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__components_LogVisualizer__["a" /* default */], {
           experiments: experiments,
           valueRanges: valueRanges,
           resultIds: resultIds,
           logKeys: logKeys
         }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__components_ExperimentsTable__["a" /* default */], {
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__components_ExperimentsTable__["a" /* default */], {
           experiments: experiments,
           selectedResultIds: resultIds,
           argKeys: argKeys,
@@ -206,7 +212,7 @@ var ChainerUIContainer = function (_React$Component) {
 
 /***/ }),
 
-/***/ 457:
+/***/ 458:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -432,7 +438,7 @@ var substr = 'ab'.substr(-1) === 'b' ? function (str, start, len) {
 
 /***/ }),
 
-/***/ 458:
+/***/ 459:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -440,7 +446,7 @@ var substr = 'ab'.substr(-1) === 'b' ? function (str, start, len) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ResultRow__ = __webpack_require__(460);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ResultRow__ = __webpack_require__(461);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -581,7 +587,7 @@ ExperimentsTable.defaultProps = {
 
 /***/ }),
 
-/***/ 460:
+/***/ 461:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -705,7 +711,7 @@ ResultRow.defaultProps = {
 
 /***/ }),
 
-/***/ 461:
+/***/ 462:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -713,11 +719,13 @@ ResultRow.defaultProps = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_recharts__ = __webpack_require__(241);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rc_slider__ = __webpack_require__(338);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rc_slider_assets_index_css__ = __webpack_require__(840);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_recharts__ = __webpack_require__(242);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rc_slider__ = __webpack_require__(339);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rc_slider_assets_index_css__ = __webpack_require__(841);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rc_slider_assets_index_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rc_slider_assets_index_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__AxisConfigurator__ = __webpack_require__(841);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_js_cookie__ = __webpack_require__(152);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_js_cookie___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_js_cookie__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__AxisConfigurator__ = __webpack_require__(842);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -735,8 +743,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
+
 var xAxisKeys = ['iteration', 'epoch', 'elapsed_time'];
 var defaultValueRange = { min: 0.0, max: 100.0 };
+var defaultAxisConfig = {
+  axisKey: '',
+  domain: [defaultValueRange.min, defaultValueRange.max]
+};
 var sliderSteps = 100.0;
 
 var LogVisualizer = function (_React$Component) {
@@ -753,14 +766,8 @@ var LogVisualizer = function (_React$Component) {
     _this.handleChangeRange = _this.handleChangeRange.bind(_this);
 
     _this.state = {
-      xAxis: {
-        axisKey: '',
-        domain: [defaultValueRange.min, defaultValueRange.max]
-      },
-      yAxis: {
-        axisKey: '',
-        domain: [defaultValueRange.min, defaultValueRange.max]
-      }
+      xAxis: __WEBPACK_IMPORTED_MODULE_5_js_cookie__["getJSON"]('chainerUILogVisualizer-xAxis') || defaultAxisConfig,
+      yAxis: __WEBPACK_IMPORTED_MODULE_5_js_cookie__["getJSON"]('chainerUILogVisualizer-yAxis') || defaultAxisConfig
     };
     return _this;
   }
@@ -777,6 +784,7 @@ var LogVisualizer = function (_React$Component) {
         domain: [valueRange.min, valueRange.max]
       };
       this.setState(newState);
+      __WEBPACK_IMPORTED_MODULE_5_js_cookie__["set"]('chainerUILogVisualizer-' + axisName, newState[axisName]);
     }
   }, {
     key: 'handleChangeXRange',
@@ -796,6 +804,7 @@ var LogVisualizer = function (_React$Component) {
         domain: range
       });
       this.setState(newState);
+      __WEBPACK_IMPORTED_MODULE_5_js_cookie__["set"]('chainerUILogVisualizer-' + axisName, newState[axisName]);
     }
   }, {
     key: 'render',
@@ -830,6 +839,9 @@ var LogVisualizer = function (_React$Component) {
       var dataDict = {};
       resultIds.forEach(function (resultId) {
         var result = results[resultId];
+        if (result == null) {
+          return;
+        }
         result.logs.forEach(function (log) {
           if (dataDict[log[xAxisKey]] == null) {
             dataDict[log[xAxisKey]] = {};
@@ -844,6 +856,9 @@ var LogVisualizer = function (_React$Component) {
 
       var lineElems = resultIds.map(function (resultId) {
         var result = results[resultId];
+        if (result == null) {
+          return null;
+        }
         var nameSeparator = '.';
         var name = result.experimentName + nameSeparator + result.name;
         var key = 'line-' + resultId;
@@ -937,14 +952,14 @@ var LogVisualizer = function (_React$Component) {
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { className: 'col-sm-3' },
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__AxisConfigurator__["a" /* default */], {
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__AxisConfigurator__["a" /* default */], {
             axisName: 'yAxis',
             title: 'Y axis:',
             axisKey: yAxisKey,
             axisKeys: logKeys,
             onChangeAxisKey: this.handleChangeAxisKey
           }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__AxisConfigurator__["a" /* default */], {
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__AxisConfigurator__["a" /* default */], {
             axisName: 'xAxis',
             title: 'X axis:',
             axisKey: xAxisKey,
@@ -978,14 +993,14 @@ LogVisualizer.defaultProps = {
 
 /***/ }),
 
-/***/ 840:
+/***/ 841:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 841:
+/***/ 842:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1094,4 +1109,4 @@ AxisConfigurator.defaultProps = {
 
 /***/ })
 
-},[361]);
+},[362]);
