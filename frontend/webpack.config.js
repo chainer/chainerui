@@ -27,7 +27,7 @@ module.exports = {
         exclude: nodeModulePath,
         loader: 'eslint-loader',
         options: {
-          fix: true,
+          fix: true
         }
       },
       {
