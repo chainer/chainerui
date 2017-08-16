@@ -19,7 +19,8 @@ const xAxisKeys = ['iteration', 'epoch', 'elapsed_time'];
 const defaultValueRange = { min: 0.0, max: 100.0 };
 const defaultAxisConfig = {
   axisKey: '',
-  domain: [defaultValueRange.min, defaultValueRange.max]
+  domain: [defaultValueRange.min, defaultValueRange.max],
+  scale: 'auto'
 };
 const sliderSteps = 100.0;
 
@@ -28,9 +29,10 @@ class LogVisualizer extends React.Component {
     super(props);
 
     this.handleChangeAxisKey = this.handleChangeAxisKey.bind(this);
+    this.handleChangeScale = this.handleChangeScale.bind(this);
     this.handleChangeXRange = this.handleChangeXRange.bind(this);
     this.handleChangeYRange = this.handleChangeYRange.bind(this);
-    this.handleChangeRange = this.handleChangeRange.bind(this);
+    this.handleChangeConfig = this.handleChangeConfig.bind(this);
 
     this.state = {
       xAxis: Cookies.getJSON('chainerUILogVisualizer-xAxis') || defaultAxisConfig,
@@ -40,29 +42,32 @@ class LogVisualizer extends React.Component {
 
   handleChangeAxisKey(axisName, axisKey) {
     const { valueRanges } = this.props;
+    const { scale } = this.state[axisName];
     const valueRange = valueRanges[axisKey] || defaultValueRange;
-    const newState = {};
-    newState[axisName] = {
-      axisKey,
-      domain: [valueRange.min, valueRange.max]
-    };
-    this.setState(newState);
-    Cookies.set(`chainerUILogVisualizer-${axisName}`, newState[axisName]);
+    this.handleChangeConfig(axisName, axisKey, [valueRange.min, valueRange.max], scale);
+  }
+
+  handleChangeScale(axisName, scale) {
+    const { axisKey, domain } = this.state[axisName];
+    this.handleChangeConfig(axisName, axisKey, domain, scale);
   }
 
   handleChangeXRange(range) {
-    this.handleChangeRange('xAxis', range);
+    const { axisKey, scale } = this.state.xAxis;
+    this.handleChangeConfig('xAxis', axisKey, range, scale);
   }
 
   handleChangeYRange(range) {
-    this.handleChangeRange('yAxis', range);
+    const { axisKey, scale } = this.state.yAxis;
+    this.handleChangeConfig('yAxis', axisKey, range, scale);
   }
 
-  handleChangeRange(axisName, range) {
+  handleChangeConfig(axisName, axisKey, domain, scale) {
     const newState = {};
     newState[axisName] = {
-      ...this.state[axisName],
-      domain: range
+      axisKey,
+      domain,
+      scale
     };
     this.setState(newState);
     Cookies.set(`chainerUILogVisualizer-${axisName}`, newState[axisName]);
@@ -73,10 +78,12 @@ class LogVisualizer extends React.Component {
     const { xAxis, yAxis } = this.state;
     const xAxisKey = xAxis.axisKey;
     const yAxisKey = yAxis.axisKey;
-    const xDomain = xAxis.domain;
-    const yDomain = yAxis.domain;
+    const xDomain = (xAxis.scale === 'auto') ? xAxis.domain : [];
+    const yDomain = (yAxis.scale === 'auto') ? yAxis.domain : [];
     const xValueRange = valueRanges[xAxisKey] || defaultValueRange;
     const yValueRange = valueRanges[yAxisKey] || defaultValueRange;
+    const chartWidth = 640;
+    const chartHeight = 360;
 
     const results = {};
     const id2Color = {};
@@ -139,7 +146,7 @@ class LogVisualizer extends React.Component {
               <tr>
                 <td>
                   <Range
-                    style={{ height: '190px' }}
+                    style={{ height: `${chartHeight}px` }}
                     vertical
                     min={yValueRange.min}
                     max={yValueRange.max}
@@ -150,8 +157,8 @@ class LogVisualizer extends React.Component {
                 </td>
                 <td>
                   <LineChart
-                    width={730}
-                    height={250}
+                    width={chartWidth}
+                    height={chartHeight}
                     data={data}
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                   >
@@ -159,10 +166,12 @@ class LogVisualizer extends React.Component {
                       type="number"
                       dataKey={xAxisKey}
                       domain={xDomain}
+                      scale={xAxis.scale}
                       allowDataOverflow
                     />
                     <YAxis
                       domain={yDomain}
+                      scale={yAxis.scale}
                       allowDataOverflow
                     />
                     <CartesianGrid strokeDasharray="3 3" />
@@ -176,10 +185,9 @@ class LogVisualizer extends React.Component {
                 <td />
                 <td>
                   <Range
-                    style={{ width: '620px', margin: 'auto' }}
+                    style={{ width: `${chartWidth}px`, margin: 'auto' }}
                     min={xValueRange.min}
                     max={xValueRange.max}
-                    step={(xDomain[1] - xDomain[0]) / sliderSteps}
                     value={xDomain}
                     onChange={this.handleChangeXRange}
                   />
@@ -191,17 +199,19 @@ class LogVisualizer extends React.Component {
         <div className="col-sm-3">
           <AxisConfigurator
             axisName="yAxis"
-            title="Y axis:"
             axisKey={yAxisKey}
             axisKeys={logKeys}
+            scale={yAxis.scale}
             onChangeAxisKey={this.handleChangeAxisKey}
+            onChangeScale={this.handleChangeScale}
           />
           <AxisConfigurator
             axisName="xAxis"
-            title="X axis:"
             axisKey={xAxisKey}
             axisKeys={xAxisKeys}
+            scale={xAxis.scale}
             onChangeAxisKey={this.handleChangeAxisKey}
+            onChangeScale={this.handleChangeScale}
           />
         </div>
       </div>
