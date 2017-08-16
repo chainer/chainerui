@@ -1,2 +1,3 @@
 chainer_ui/static/dist/*.map
-
+chainer_ui/chainer_ui.db
+*.pyc

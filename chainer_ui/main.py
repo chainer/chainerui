@@ -7,6 +7,12 @@ import argparse
 from flask import Flask, render_template, jsonify, url_for
 from flask_apscheduler import APScheduler
 
+from models import Experiment, Result, Argument, Log
+from database import db_session
+
+from database import init_db
+
+
 APP = Flask(__name__)
 
 
@@ -33,6 +39,36 @@ def index():
 @APP.route('/api/v1/experiments', methods=['GET'])
 def get_experiments():
     ''' /api/v1/experiments '''
+
+    db_session.query(Experiment).delete()
+    db_session.query(Result).delete()
+
+    for experiment in explore_project_dir()['experiments']:
+        print(experiment['name'])
+        _experiment = Experiment(experiment['name'])
+
+        for result in experiment['results']:
+            print(result['name'])
+            _result = Result(result['name'])
+
+            _argument = Argument('foo', 'var')
+            _log = Log('log')
+
+            _result.arguments.append(_argument)
+            _result.logs.append(_log)
+
+            _experiment.results.append(_result)
+
+        db_session.add(_experiment)
+        db_session.commit()
+
+    for e in Experiment.query.all():
+        for r in e.results:
+            print(e, r)
+            print("- {0}".format(r.arguments))
+            print("- {0}".format(r.logs))
+            print()
+
     return jsonify(explore_project_dir())
 
 def explore_project_dir():
@@ -83,9 +119,13 @@ def explore_project_dir():
     return {'experiments': experiments}
 
 if __name__ == '__main__':
+    init_db()
+
     PARSER = argparse.ArgumentParser(description='chainer ui')
     PARSER.add_argument('-d', '--dir', required=True, type=str, help='target directory')
     ARGS = PARSER.parse_args()
 
     APP.config['TARGET_DIR'] = ARGS.dir
+
+    APP.config['DEBUG'] = True
     APP.run()
