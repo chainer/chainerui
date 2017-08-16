@@ -1,11 +1,16 @@
 ''' Chainer-UI API '''
 
 import os
-import json
-
 import argparse
+
 from flask import Flask, render_template, jsonify, url_for
 from flask_apscheduler import APScheduler
+
+from models import Experiment, Result, Argument, Log
+from database import init_db
+
+from util import explore_project_dir
+
 
 APP = Flask(__name__)
 
@@ -13,14 +18,17 @@ APP = Flask(__name__)
 # static url cache buster
 @APP.context_processor
 def override_url_for():
+    ''' override_url_for '''
     return dict(url_for=dated_url_for)
 
+
 def dated_url_for(endpoint, **values):
+    ''' dated_url_for '''
+    # todo: utilとかに移動したい
     if endpoint == 'static':
         filename = values.get('filename', None)
         if filename:
-            file_path = os.path.join(APP.root_path,
-                                     endpoint, filename)
+            file_path = os.path.join(APP.root_path, endpoint, filename)
             values['_'] = int(os.stat(file_path).st_mtime)
     return url_for(endpoint, **values)
 
@@ -30,62 +38,42 @@ def index():
     ''' / '''
     return render_template('index.html')
 
+
 @APP.route('/api/v1/experiments', methods=['GET'])
 def get_experiments():
     ''' /api/v1/experiments '''
-    return jsonify(explore_project_dir())
+    # todo: データ数が増えると遅くなるので、result毎に別のAPIにするか考える
+    experiments = Experiment.query.join(Result).join(Log).join(Argument).all()
+    return jsonify({'experiments': [e.serialize for e in experiments]})
 
-def explore_project_dir():
-    ''' explore_project_dir '''
-    experiments = []
-    result_index = 1
-
-    _experiment_names = os.listdir(APP.config['TARGET_DIR'])
-    experiment_names = [
-        f for f in _experiment_names if os.path.isdir(os.path.join(APP.config['TARGET_DIR'], f))
-    ]
-    filterd_experiment_names = [f for f in experiment_names if f[0] not in ['.', '_']]
-
-    for experiment_index, experiment_name in enumerate(filterd_experiment_names):
-        results = []
-
-        results_path = os.path.join(*[APP.config['TARGET_DIR'], experiment_name, 'results'])
-
-        if os.path.isdir(results_path):
-
-            result_names = os.listdir(results_path)
-            result_names = [f for f in result_names if os.path.isdir(os.path.join(results_path, f))]
-
-            for result_name in result_names:
-                result = {'id': result_index, 'name': result_name, 'logs': [], 'args': {}}
-                result_index += 1
-
-                result_path = os.path.join(results_path, result_name)
-
-                result_args_file = os.path.join(result_path, 'args')
-                if os.path.isfile(result_args_file):
-                    with open(result_args_file) as json_data:
-                        result['args'] = json.load(json_data)
-
-                result_log_file = os.path.join(result_path, 'log')
-                if os.path.isfile(result_log_file):
-                    with open(result_log_file) as json_data:
-                        result['logs'] = json.load(json_data)
-
-                results.append(result)
-
-        experiments.append({
-            'id': experiment_index + 1,
-            'name': experiment_name,
-            'results': results
-        })
-
-    return {'experiments': experiments}
 
 if __name__ == '__main__':
+    init_db()
+
     PARSER = argparse.ArgumentParser(description='chainer ui')
     PARSER.add_argument('-d', '--dir', required=True, type=str, help='target directory')
+    PARSER.add_argument('-p', '--port', required=False, type=int, help='port', default=5000)
     ARGS = PARSER.parse_args()
 
     APP.config['TARGET_DIR'] = ARGS.dir
-    APP.run()
+    APP.config['DEBUG'] = False
+
+    class JobConfig(object):
+        ''' job config '''
+        JOBS = [
+            {
+                'id': 'job1',
+                'func': explore_project_dir,
+                'trigger': 'interval',
+                'kwargs': [('target_dir', APP.config['TARGET_DIR'])],
+                'seconds': 3
+            }
+        ]
+
+    APP.config.from_object(JobConfig())
+
+    SCHEDULER = APScheduler()
+    SCHEDULER.init_app(APP)
+
+    SCHEDULER.start()
+    APP.run(port=ARGS.port)
