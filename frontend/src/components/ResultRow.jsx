@@ -17,9 +17,10 @@ class ResultRow extends React.Component {
   }
 
   render() {
-    const { xpName, argKeys, result, selected } = this.props;
+    const { xpName, argKeys, result, selected, color } = this.props;
     const { logs } = result;
     const lastLog = logs[logs.length - 1] || {};
+    const colorCellStyle = selected ? { backgroundColor: color } : {};
 
     const argKeyElems = argKeys.map((argKey) => {
       const content = (argKey in result.args) ? result.args[argKey] : emptyStr;
@@ -31,6 +32,7 @@ class ResultRow extends React.Component {
         <td>
           <input type="checkbox" aria-label="select single row" checked={selected} onChange={this.handleToggle} />
         </td>
+        <td style={colorCellStyle} />
         <td>{ xpName }</td>
         <td>{ result.name }</td>
         {argKeyElems}
@@ -50,11 +52,13 @@ ResultRow.propTypes = {
     args: PropTypes.any
   }),
   selected: PropTypes.bool,
+  color: PropTypes.string,
   onToggle: PropTypes.func
 };
 ResultRow.defaultProps = {
   result: { logs: [], args: {} },
   selected: false,
+  color: '',
   onToggle: () => {}
 };
 

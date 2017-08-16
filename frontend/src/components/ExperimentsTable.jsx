@@ -15,26 +15,32 @@ class ExperimentsTable extends React.Component {
   }
 
   render() {
-    const { experiments, selectedResultIds, argKeys } = this.props;
+    const { experiments, selectedResultIds, argKeys, colors } = this.props;
     const selectedResultIdsSet = {};
     selectedResultIds.forEach((resultId) => { selectedResultIdsSet[resultId] = true; });
 
     const argKeyHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}><span className="glyphicon glyphicon-cog" />{argKey}</th>));
 
+    let resultRowIndex = 0;
     const resultRows = experiments.map((experiment) => {
       if (experiment.results.length === 0) {
         // experiment with no results
         const key = `result-row-${experiment.id}`;
-        return (<ResultRow xpName={experiment.name} argKeys={argKeys} key={key} />);
+        const color = colors[resultRowIndex];
+        resultRowIndex += 1;
+        return (<ResultRow xpName={experiment.name} argKeys={argKeys} color={color} key={key} />);
       }
       return experiment.results.map((result) => {
         const key = `result-row-${experiment.id}-${result.id}`;
+        const color = colors[resultRowIndex];
+        resultRowIndex += 1;
         return (
           <ResultRow
             xpName={experiment.name}
             argKeys={argKeys}
             result={result}
             selected={selectedResultIdsSet[result.id]}
+            color={color}
             onToggle={this.handleToggleResult}
             key={key}
           />
@@ -46,6 +52,7 @@ class ExperimentsTable extends React.Component {
       <table className="table table-hover">
         <thead>
           <tr>
+            <th />
             <th />
             <th>experiment name</th>
             <th>result name</th>
@@ -71,11 +78,13 @@ ExperimentsTable.propTypes = {
   ).isRequired,
   selectedResultIds: PropTypes.arrayOf(PropTypes.number),
   argKeys: PropTypes.arrayOf(PropTypes.string),
+  colors: PropTypes.arrayOf(PropTypes.string),
   onToggleResult: PropTypes.func
 };
 ExperimentsTable.defaultProps = {
   selectedResultIds: [],
   argKeys: [],
+  colors: [],
   onToggleResult: () => {}
 };
 
