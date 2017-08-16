@@ -183,7 +183,6 @@ class LogVisualizer extends React.Component {
                     style={{ width: `${chartWidth}px`, margin: 'auto' }}
                     min={xValueRange.min}
                     max={xValueRange.max}
-                    step={(xDomain[1] - xDomain[0]) / sliderSteps}
                     value={xDomain}
                     onChange={this.handleChangeXRange}
                   />
