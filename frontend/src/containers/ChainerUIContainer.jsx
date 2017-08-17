@@ -8,6 +8,36 @@ import LogVisualizer from '../components/LogVisualizer';
 
 const apiEndpoint = '/api/v1';
 
+const results = require('../utils/sample_api_response.json');
+
+function test() {
+  console.log(results);
+  let argumentID = 0;
+  let logID = 0;
+  let logItemID = 0;
+  const newResults = results.results.map((result) => {
+    logID += 1;
+    return {
+      ...result,
+      args: Object.keys(result.args).filter((key) => (key !== 'id')).map((key) => {
+        argumentID += 1;
+        return { id: argumentID, key, value: result.args[key] };
+      }),
+      logs: result.logs.map((log) => {
+        logID += 1;
+        return {
+          id: logID,
+          logItems: Object.keys(log).filter((key) => (key !== 'id')).map((key) => {
+            logItemID += 1;
+            return { id: logItemID, key, value: log[key] };
+          })
+        };
+      })
+    };
+  });
+  console.log(JSON.stringify(newResults));
+}
+
 function rgb2Color(r, g, b) {
   const rs = (r < 16 ? '0' : '') + Math.floor(r).toString(16);
   const gs = (g < 16 ? '0' : '') + Math.floor(g).toString(16);
@@ -32,6 +62,8 @@ function makeColorGradient(len) {
 class ChainerUIContainer extends React.Component {
   constructor(props, context) {
     super(props, context);
+
+    test();
 
     this.getStats = this.getStats.bind(this);
     this.requestExperiments = this.requestExperiments.bind(this);
