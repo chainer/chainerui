@@ -6,10 +6,8 @@ import argparse
 from flask import Flask, render_template, jsonify, url_for
 from flask_apscheduler import APScheduler
 
-from models import Experiment, Result, Argument, Log
+from models import Result
 from database import init_db
-
-from util import explore_project_dir
 
 
 APP = Flask(__name__)
@@ -39,38 +37,35 @@ def index():
     return render_template('index.html')
 
 
-@APP.route('/api/v1/experiments', methods=['GET'])
+@APP.route('/api/v1/results', methods=['GET'])
 def get_experiments():
-    ''' /api/v1/experiments '''
-    # todo: データ数が増えると遅くなるので、result毎に別のAPIにするか考える
-    experiments = Experiment.query.join(Result).join(Log).join(Argument).all()
-    return jsonify({'experiments': [e.serialize for e in experiments]})
+    ''' /api/v1/results '''
+    results = Result.query.all()
+    return jsonify({'results': [result.serialize for result in results]})
 
 
 if __name__ == '__main__':
     init_db()
 
     PARSER = argparse.ArgumentParser(description='chainer ui')
-    PARSER.add_argument('-d', '--dir', required=True, type=str, help='target directory')
     PARSER.add_argument('-p', '--port', required=False, type=int, help='port', default=5000)
     ARGS = PARSER.parse_args()
 
-    APP.config['TARGET_DIR'] = ARGS.dir
     APP.config['DEBUG'] = False
 
-    class JobConfig(object):
-        ''' job config '''
-        JOBS = [
-            {
-                'id': 'job1',
-                'func': explore_project_dir,
-                'trigger': 'interval',
-                'kwargs': [('target_dir', APP.config['TARGET_DIR'])],
-                'seconds': 3
-            }
-        ]
+    # class JobConfig(object):
+    #     ''' job config '''
+    #     JOBS = [
+    #         {
+    #             'id': 'job1',
+    #             'func': explore_project_dir,
+    #             'trigger': 'interval',
+    #             'kwargs': [('target_dir', APP.config['TARGET_DIR'])],
+    #             'seconds': 3
+    #         }
+    #     ]
 
-    APP.config.from_object(JobConfig())
+    # APP.config.from_object(JobConfig())
 
     SCHEDULER = APScheduler()
     SCHEDULER.init_app(APP)
