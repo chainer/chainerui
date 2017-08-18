@@ -7,7 +7,7 @@ from flask import Flask, render_template, jsonify, url_for
 from flask_apscheduler import APScheduler
 
 from models import Result
-from database import init_db
+from database import init_db, create_db_session
 
 from util import crawl_result_table
 
@@ -42,7 +42,10 @@ def index():
 @APP.route('/api/v1/results', methods=['GET'])
 def get_experiments():
     ''' /api/v1/results '''
-    results = Result.query.all()
+
+    db_session = create_db_session()
+    results = db_session.query(Result).all()
+
     return jsonify({'results': [result.serialize for result in results]})
 
 

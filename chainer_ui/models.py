@@ -1,5 +1,7 @@
 ''' models.py '''
 
+import json
+
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from database import BASE
@@ -22,10 +24,13 @@ class Result(BASE):
 
     @property
     def serialize(self):
-        ''' Return object data in easily serializeable format '''
+        ''' serialize '''
+        print(self.logs)
         return {
             'id': self.id,
-            'pathName': self.path_name
+            'pathName': self.path_name,
+            'logs': [log.serialize for log in self.logs],
+            'args': []
         }
 
 
@@ -42,3 +47,23 @@ class Log(BASE):
 
     def __repr__(self):
         return '<Log id: %r />' % (self.id)
+
+    @property
+    def serialize(self):
+        ''' serialize '''
+        print(type(json.loads(self.data)))
+
+        log_items = []
+
+        for item in json.loads(self.data).items():
+            log_items.append({
+                'logId': self.id,
+                'key': item[0],
+                'value': item[1]
+            })
+
+        return {
+            'id': self.id,
+            'resultId': self.result_id,
+            'logItems': log_items
+        }
