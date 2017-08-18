@@ -14,15 +14,15 @@ import 'rc-slider/assets/index.css';
 import YAxisConfigurator from './YAxisConfigurator';
 
 
-// const xAxisKeys = ['iteration', 'epoch', 'elapsed_time'];
-// const defaultValueRange = { min: 0.0, max: 100.0 };
-// const defaultAxisConfig = {
-//   axisKey: '',
-//   domain: [defaultValueRange.min, defaultValueRange.max],
-//   scale: 'auto'
-// };
-
 const sliderSteps = 100.0;
+const defaultStats = {
+  axes: {
+    xAxis: {},
+    yLeftAxis: {},
+    yRightAxis: {}
+  }
+};
+
 const defaultRange = [0, 100];
 const defaultXAxisConfig = {
   axisName: 'xAxis',
@@ -71,49 +71,13 @@ class LogVisualizer extends React.Component {
   constructor(props) {
     super(props);
 
-    // this.handleChangeAxisKey = this.handleChangeAxisKey.bind(this);
-    // this.handleChangeScale = this.handleChangeScale.bind(this);
-    // this.handleChangeXRange = this.handleChangeXRange.bind(this);
-    // this.handleChangeYRange = this.handleChangeYRange.bind(this);
-    // this.handleChangeConfig = this.handleChangeConfig.bind(this);
     this.state = {};
   }
 
-  // handleChangeAxisKey(axisName, axisKey) {
-  //   const { valueRanges } = this.props;
-  //   const { scale } = this.state[axisName];
-  //   const valueRange = valueRanges[axisKey] || defaultValueRange;
-  //   this.handleChangeConfig(axisName, axisKey, [valueRange.min, valueRange.max], scale);
-  // }
-  //
-  // handleChangeScale(axisName, scale) {
-  //   const { axisKey, domain } = this.state[axisName];
-  //   this.handleChangeConfig(axisName, axisKey, domain, scale);
-  // }
-  //
-  // handleChangeXRange(range) {
-  //   const { axisKey, scale } = this.state.xAxis;
-  //   this.handleChangeConfig('xAxis', axisKey, range, scale);
-  // }
-  //
-  // handleChangeYRange(range) {
-  //   const { axisKey, scale } = this.state.yAxis;
-  //   this.handleChangeConfig('yAxis', axisKey, range, scale);
-  // }
-  //
-  // handleChangeConfig(axisName, axisKey, domain, scale) {
-  //   const newState = {};
-  //   newState[axisName] = {
-  //     axisKey,
-  //     domain,
-  //     scale
-  //   };
-  //   this.setState(newState);
-  //   Cookies.set(`chainerUILogVisualizer-${axisName}`, newState[axisName]);
-  // }
-
   render() {
-    const { results, stats, config } = this.props;
+    const { results } = this.props;
+    const stats = this.props.stats || defaultStats;
+    const config = this.props.config || defaultConfig;
     const { xAxis, yLeftAxis, yRightAxis } = config.axes;
     const { xAxisKey } = xAxis;
     const leftLines = yLeftAxis.lines || [];
@@ -125,15 +89,6 @@ class LogVisualizer extends React.Component {
     const yLeftValueRange = stats.axes.yLeftAxis.valueRange || defaultRange;
     const yRightValueRange = stats.axes.yRightAxis.valueRange || defaultRange;
 
-
-    // const { experiments, valueRanges, resultIds, logKeys, colors } = this.props;
-    // const { xAxis, yAxis } = this.state;
-    // const xAxisKey = xAxis.axisKey;
-    // const yAxisKey = yAxis.axisKey;
-    // const xDomain = (xAxis.scale === 'auto') ? xAxis.domain : [];
-    // const yDomain = (yAxis.scale === 'auto') ? yAxis.domain : [];
-    // const xValueRange = valueRanges[xAxisKey] || defaultValueRange;
-    // const yValueRange = valueRanges[yAxisKey] || defaultValueRange;
     const chartWidth = 640;
     const chartHeight = 360;
 
@@ -143,7 +98,6 @@ class LogVisualizer extends React.Component {
     });
 
     const lines = leftLines.concat(rightLines);
-    console.log(lines);
     const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
     lines.forEach((line) => {
       const { resultID, logKey } = line;
@@ -163,38 +117,6 @@ class LogVisualizer extends React.Component {
         dataDict[log[xAxisKey]][logKey] = log[logKey];
       });
     });
-
-
-    // const results = {};
-    // const id2Color = {};
-    // let maxLogLength = 0;
-    // let resultRowIndex = 0;
-    // experiments.forEach((experiment) => {
-    //   resultRowIndex += (experiment.results.length === 0 ? 1 : 0);
-    //   experiment.results.forEach((result) => {
-    //     results[result.id] = result;
-    //     results[result.id].experimentName = experiment.name;
-    //     results[result.id].logs = result.logs || [];
-    //     id2Color[result.id] = colors[resultRowIndex];
-    //     maxLogLength = Math.max(maxLogLength, result.logs.length);
-    //     resultRowIndex += 1;
-    //   });
-    // });
-    //
-    // const dataDict = {};
-    // resultIds.forEach((resultId) => {
-    //   const result = results[resultId];
-    //   if (result == null) {
-    //     return;
-    //   }
-    //   result.logs.forEach((log) => {
-    //     if (dataDict[log[xAxisKey]] == null) {
-    //       dataDict[log[xAxisKey]] = {};
-    //       dataDict[log[xAxisKey]][xAxisKey] = log[xAxisKey];
-    //     }
-    //     dataDict[log[xAxisKey]][resultId] = log[yAxisKey];
-    //   });
-    // });
     const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
     const lineElems = buildLineElems('yLeftAxis', config) + buildLineElems('yRightAxis', config);
@@ -292,7 +214,7 @@ class LogVisualizer extends React.Component {
 LogVisualizer.propTypes = {
   results: PropTypes.arrayOf(PropTypes.any),
   stats: PropTypes.shape({
-    axis: PropTypes.shape({
+    axes: PropTypes.shape({
       xAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
       yLeftAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
       yRightAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) })
@@ -311,13 +233,7 @@ LogVisualizer.propTypes = {
 };
 LogVisualizer.defaultProps = {
   results: [],
-  stats: {
-    axes: {
-      xAxis: {},
-      yLeftAxis: {},
-      yRightAxis: {}
-    }
-  },
+  stats: defaultStats,
   config: defaultConfig
 };
 
