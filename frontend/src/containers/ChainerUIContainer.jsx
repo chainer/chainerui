@@ -10,7 +10,6 @@ const apiEndpoint = '/api/v1';
 const getStats = (results) => {
   const argKeySet = {};
   results.forEach((result) => {
-    console.log(result.args);
     result.args.forEach((arg) => { argKeySet[arg.key] = true; });
   });
   const argKeys = Object.keys(argKeySet);
@@ -20,7 +19,6 @@ const getStats = (results) => {
     yLeftAxis: {},
     yRightAxis: {}
   };
-  console.log(argKeys);
 
   return { axes, argKeys };
 };
