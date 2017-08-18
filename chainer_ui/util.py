@@ -4,7 +4,7 @@ import os
 import json
 
 from database import create_db_session
-from models import Result, Log
+from models import Result, Log, Argument
 
 
 
@@ -24,11 +24,13 @@ def explore_log_file(result_path, log_file_name):
 def explore_result_dir(path):
     ''' explore_result_dir '''
     result = {
-        'logs': []
+        'logs': [],
+        'args': []
     }
 
     if os.path.isdir(path):
         result['logs'] = explore_log_file(path, 'log')
+        result['args'] = explore_log_file(path, 'args')
 
     return result
 
@@ -40,6 +42,9 @@ def crawl_result_table():
 
     for result in db_session.query(Result).all():
         crawl_result = explore_result_dir(result.path_name)
+
+        if result.args is None:
+            result.args = Argument(json.dumps(crawl_result['args']))
 
         if len(result.logs) < len(crawl_result['logs']):
             for log in crawl_result['logs'][len(result.logs):]:
