@@ -1,18 +1,29 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+''' database.py '''
+
 import os
 
-databese_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'chainer_ui.db')
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import scoped_session, sessionmaker
 
-engine = create_engine('sqlite:///' + databese_file, convert_unicode=True)
+BASE = declarative_base()
 
-db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+DATABASE_FILE = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'chainer_ui.db')
+ENGINE = create_engine(
+    'sqlite:///' + DATABASE_FILE,
+    convert_unicode=True,
+    connect_args={'check_same_thread': False}
+)
 
-Base = declarative_base()
-
-Base.query = db_session.query_property()
+BASE.metadata.bind = ENGINE
 
 def init_db():
+    ''' init_db '''
     import models
-    Base.metadata.create_all(bind=engine)
+    return BASE.metadata.create_all(bind=ENGINE)
+
+
+def create_db_session():
+    ''' create_db_session '''
+    session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=ENGINE))
+    return session()

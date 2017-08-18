@@ -1,10 +1,12 @@
 ''' models.py '''
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base
+from database import BASE
 
-class Result(Base):
+
+
+class Result(BASE):
     ''' Result Model '''
     __tablename__ = 'result'
 
@@ -27,30 +29,16 @@ class Result(Base):
         }
 
 
-class Log(Base):
+class Log(BASE):
     ''' Log Model '''
     __tablename__ = 'log'
 
     id = Column(Integer, primary_key=True)
     result_id = Column(Integer, ForeignKey('result.id'))
-    log_items = relationship('LogItem')
+    data = Column(String(1024))
+
+    def __init__(self, data=None):
+        self.data = data
 
     def __repr__(self):
         return '<Log id: %r />' % (self.id)
-
-
-class LogItem(Base):
-    ''' LogItem Model '''
-    __tablename__ = 'log_item'
-
-    id = Column(Integer, primary_key=True)
-    log_id = Column(Integer, ForeignKey('log.id'))
-    key = Column(String(64))
-    value = Column(String(64))
-
-    def __init__(self, key=None, value=None):
-        self.key = key
-        self.value = value
-
-    def __repr__(self):
-        return '<LogItem id: %r />' % (self.id)
