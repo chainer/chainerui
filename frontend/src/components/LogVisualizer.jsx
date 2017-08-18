@@ -13,6 +13,7 @@ import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import * as Cookies from 'js-cookie';
 import AxisConfigurator from './AxisConfigurator';
+import YAxisConfigurator from './YAxisConfigurator';
 
 
 const xAxisKeys = ['iteration', 'epoch', 'elapsed_time'];
@@ -197,6 +198,7 @@ class LogVisualizer extends React.Component {
           </table>
         </div>
         <div className="col-sm-3">
+          <YAxisConfigurator />
           <AxisConfigurator
             axisName="yAxis"
             axisKey={yAxisKey}

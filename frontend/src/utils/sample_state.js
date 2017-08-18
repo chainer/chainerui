@@ -3,15 +3,20 @@ const state = {
   config: {
     axes: {
       x: {
-        axisKey: 'epoch',
+        axisName: 'x',
+        xKey: 'epoch',
         scale: 'auto',
+        range: [0, 100],
       },
       yLeft: {
+        axisName: 'yLeft',
         scale: 'auto',
+        range: [0.0, 1.0],
         lines: [
           {
             resultID: 12,
             logID: 123,
+            logKey: 'main_loss',
           },
         ]
       },
