@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import AxisScaleSelector from './AxisScaleSelector';
 
 
-const defaultConfig = {
+const defaultAxisConfig = {
   axisName: '',
   scale: 'auto',
   range: [0, 100],
@@ -15,18 +15,15 @@ class YAxisConfigurator extends React.Component {
     super(props);
 
     this.handleChangeScale = this.handleChangeScale.bind(this);
-
-    this.state = {};
   }
 
   handleChangeScale(scale) {
-    const { axisName } = this.props.config;
+    const { axisName } = this.props.axisConfig;
     this.props.onChangeScale(axisName, scale);
   }
 
   render() {
-    const { axisName, scale, lines } = this.props.config;
-    console.log((this.props.onChangeAxisKey && lines) && 'hoge');
+    const { axisName, scale } = this.props.axisConfig;
 
     return (
       <div className="axis-configurator panel panel-default">
@@ -45,7 +42,7 @@ class YAxisConfigurator extends React.Component {
 }
 
 YAxisConfigurator.propTypes = {
-  config: PropTypes.shape({
+  axisConfig: PropTypes.shape({
     axisName: PropTypes.string.isRequired,
     scale: PropTypes.string,
     range: PropTypes.arrayOf(PropTypes.number),
@@ -57,12 +54,10 @@ YAxisConfigurator.propTypes = {
       })
     )
   }),
-  onChangeAxisKey: PropTypes.func,
   onChangeScale: PropTypes.func
 };
 YAxisConfigurator.defaultProps = {
-  config: defaultConfig,
-  onChangeAxisKey: () => {},
+  axisConfig: defaultAxisConfig,
   onChangeScale: () => {}
 };
 

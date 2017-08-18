@@ -1,31 +1,28 @@
 const state = {
-  data: require('./sample_api_response.json'),
+  results: require('./sample_api_response.json'),
   config: {
     axes: {
-      x: {
-        axisName: 'x',
-        xKey: 'epoch',
+      xAxis: {
+        axisName: 'xAxis',
+        xAxisKey: 'epoch',
         scale: 'auto',
         range: [0, 100],
       },
-      yLeft: {
-        axisName: 'yLeft',
+      yLeftAxis: {
+        axisName: 'yLeftAxis',
         scale: 'auto',
         range: [0.0, 1.0],
         lines: [
           {
             resultID: 12,
-            logID: 123,
             logKey: 'main_loss',
           },
         ]
       },
-      yRight: {},
+      yRightAxis: {},
     },
     colors: {
-      12: { // resultID
-        123: '#ABCDEF', /// logID : color
-      }
+      12_main_loss: '#ABCDEF', /// lineKey(resultID + logKey): color
     },
   },
 };
