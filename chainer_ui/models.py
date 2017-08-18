@@ -51,7 +51,6 @@ class Log(BASE):
     @property
     def serialize(self):
         ''' serialize '''
-        print(type(json.loads(self.data)))
 
         log_items = []
 
