@@ -4,12 +4,17 @@ import ResultRow from './ResultRow';
 
 
 const ExperimentsTable = (props) => {
-  const { results } = props;
+  const { results, stats } = props;
+  const { argKeys } = stats;
+
+  const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}><span className="glyphicon glyphicon-cog" />{argKey}</th>));
+
   const resultRowElems = results.map((result) => {
     const key = `result-row-${result.id}`;
     return (
       <ResultRow
         result={result}
+        stats={stats}
         key={key}
       />
     );
@@ -24,10 +29,11 @@ const ExperimentsTable = (props) => {
           <th>epoch</th>
           <th>iteration</th>
           <th>elapsed_time</th>
+          {argHeaderElems}
         </tr>
       </thead>
       <tbody>
-        { resultRowElems }
+        {resultRowElems}
       </tbody>
     </table>
   );
@@ -41,10 +47,16 @@ ExperimentsTable.propTypes = {
       args: PropTypes.arrayOf(PropTypes.any),
       logs: PropTypes.arrayOf(PropTypes.any)
     })
-  )
+  ),
+  stats: PropTypes.shape({
+    argKeys: PropTypes.arrayOf(PropTypes.string)
+  })
 };
 ExperimentsTable.defaultProps = {
-  results: []
+  results: [],
+  stats: {
+    argKeys: []
+  }
 };
 
 export default ExperimentsTable;

@@ -7,6 +7,24 @@ import LogVisualizer from '../components/LogVisualizer';
 
 const apiEndpoint = '/api/v1';
 
+const getStats = (results) => {
+  const argKeySet = {};
+  results.forEach((result) => {
+    console.log(result.args);
+    result.args.forEach((arg) => { argKeySet[arg.key] = true; });
+  });
+  const argKeys = Object.keys(argKeySet);
+
+  const axes = {
+    xAxis: {},
+    yLeftAxis: {},
+    yRightAxis: {}
+  };
+  console.log(argKeys);
+
+  return { axes, argKeys };
+};
+
 class ChainerUIContainer extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -54,16 +72,18 @@ class ChainerUIContainer extends React.Component {
 
   render() {
     const { results, config } = this.state;
+    const stats = getStats(results);
 
     return (
       <div className="chainer-ui-container">
         <LogVisualizer
           results={results}
-          stats={null}
+          stats={stats}
           config={config}
         />
         <ExperimentsTable
           results={results}
+          stats={stats}
         />
       </div>
     );
