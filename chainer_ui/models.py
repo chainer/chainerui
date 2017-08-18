@@ -25,7 +25,6 @@ class Result(BASE):
     @property
     def serialize(self):
         ''' serialize '''
-        print(self.logs)
         return {
             'id': self.id,
             'pathName': self.path_name,
