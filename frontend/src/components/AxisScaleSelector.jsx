@@ -14,14 +14,9 @@ const AxisScaleSelector = (props) => {
     <option value={scaleKey} key={scaleKey}>{scaleKey}</option>
   ));
   return (
-    <div className="form-group">
-      <label htmlFor="axis-scale-selector-select" className="control-label col-sm-3">scale: </label>
-      <div className="col-sm-9">
-        <select id="axis-scale-selector-select" className="form-control" value={scale} onChange={handleChangeAxisKey}>
-          {options}
-        </select>
-      </div>
-    </div>
+    <select id="axis-scale-selector-select" className="form-control" value={scale} onChange={handleChangeAxisKey}>
+      {options}
+    </select>
   );
 };
 

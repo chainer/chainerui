@@ -11,7 +11,7 @@ import {
 } from 'recharts';
 import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import YAxisConfigurator from './YAxisConfigurator';
+import AxisConfigurator from './AxisConfigurator';
 
 
 const sliderSteps = 100.0;
@@ -199,12 +199,9 @@ class LogVisualizer extends React.Component {
           </table>
         </div>
         <div className="col-sm-3">
-          <YAxisConfigurator
-            axisConfig={yLeftAxis}
-          />
-          <YAxisConfigurator
-            axisConfig={yRightAxis}
-          />
+          <AxisConfigurator axisConfig={yLeftAxis} />
+          <AxisConfigurator axisConfig={yRightAxis} />
+          <AxisConfigurator axisConfig={xAxis} />
         </div>
       </div>
     );

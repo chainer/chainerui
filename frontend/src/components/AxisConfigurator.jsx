@@ -6,11 +6,10 @@ import AxisScaleSelector from './AxisScaleSelector';
 const defaultAxisConfig = {
   axisName: '',
   scale: 'auto',
-  range: [0, 100],
-  lines: []
+  range: [0, 100]
 };
 
-class YAxisConfigurator extends React.Component {
+class AxisConfigurator extends React.Component {
   constructor(props) {
     super(props);
 
@@ -27,39 +26,40 @@ class YAxisConfigurator extends React.Component {
 
     return (
       <div className="axis-configurator panel panel-default">
-        <div className="panel-heading">{axisName}</div>
-        <div className="panel-body">
-          <form className="form-horizontal">
-            <AxisScaleSelector
-              scale={scale}
-              onChange={this.handleChangeScale}
-            />
-          </form>
+        <div className="panel-heading">
+          <div className="row">
+            <div className="col-sm-6">{axisName}</div>
+            <div className="col-sm-6">
+              <AxisScaleSelector
+                scale={scale}
+                onChange={this.handleChangeScale}
+              />
+            </div>
+          </div>
         </div>
+        <div className="panel-body">
+          <form className="form-horizontal" />
+        </div>
+        {this.props.children}
       </div>
     );
   }
 }
 
-YAxisConfigurator.propTypes = {
+AxisConfigurator.propTypes = {
   axisConfig: PropTypes.shape({
     axisName: PropTypes.string.isRequired,
     scale: PropTypes.string,
-    range: PropTypes.arrayOf(PropTypes.number),
-    lines: PropTypes.arrayOf(
-      PropTypes.shape({
-        resultID: PropTypes.number,
-        logID: PropTypes.number,
-        logKey: PropTypes.string
-      })
-    )
+    range: PropTypes.arrayOf(PropTypes.number)
   }),
+  children: PropTypes.element,
   onChangeScale: PropTypes.func
 };
-YAxisConfigurator.defaultProps = {
+AxisConfigurator.defaultProps = {
   axisConfig: defaultAxisConfig,
+  children: null,
   onChangeScale: () => {}
 };
 
-export default YAxisConfigurator;
+export default AxisConfigurator;
 
