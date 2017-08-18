@@ -45,7 +45,7 @@ const defaultConfig = {
   colors: {}
 };
 
-const lineKey = (line) => `${line.resultID}_${line.logKey}`;
+const lineKey = (line) => `${line.resultId}_${line.logKey}`;
 
 const buildLineElem = (line, axisName, colors) => (
   <Line
@@ -100,8 +100,8 @@ class LogVisualizer extends React.Component {
     const lines = leftLines.concat(rightLines);
     const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
     lines.forEach((line) => {
-      const { resultID, logKey } = line;
-      const result = resultsDict[resultID];
+      const { resultId, logKey } = line;
+      const result = resultsDict[resultId];
       if (result == null) {
         return;
       }

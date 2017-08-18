@@ -43,47 +43,47 @@
       "logs":[
         {
           "id":2,
-          "resultID": 1,
+          "resultId": 1,
           "logItems":[
             {
               "id":1,
-              "logID": 2,
+              "logId": 2,
               "key":"elapsed_time",
               "value":55.50233602523804
             },
             {
               "id":2,
-              "logID": 2,
+              "logId": 2,
               "key":"epoch",
               "value":1
             },
             {
               "id":3,
-              "logID": 2,
+              "logId": 2,
               "key":"iteration",
               "value":782
             },
             {
               "id":4,
-              "logID": 2,
+              "logId": 2,
               "key":"main_accuracy",
               "value":0.17459239065647125
             },
             {
               "id":5,
-              "logID": 2,
+              "logId": 2,
               "key":"main_loss",
               "value":2.3462038040161133
             },
             {
               "id":6,
-              "logID": 2,
+              "logId": 2,
               "key":"validation_main_accuracy",
               "value":0.2438296228647232
             },
             {
               "id":7,
-              "logID": 2,
+              "logId": 2,
               "key":"validation_main_loss",
               "value":1.9704272747039795
             }
@@ -94,7 +94,7 @@
           "logItems":[
             {
               "id":8,
-              "logID": 3,
+              "logId": 3,
               "key":"elapsed_time",
               "value":96.27000617980957
             },

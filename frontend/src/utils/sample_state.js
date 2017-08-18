@@ -14,7 +14,7 @@ const state = {
         range: [0.0, 1.0],
         lines: [
           {
-            resultID: 12,
+            resultId: 12,
             logKey: 'main_loss',
           },
         ]
@@ -22,7 +22,7 @@ const state = {
       yRightAxis: {},
     },
     colors: {
-      12_main_loss: '#ABCDEF', /// lineKey(resultID + logKey): color
+      12_main_loss: '#ABCDEF', /// lineKey(resultId + logKey): color
     },
   },
 };
