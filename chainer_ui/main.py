@@ -9,6 +9,8 @@ from flask_apscheduler import APScheduler
 from models import Result
 from database import init_db
 
+from util import crawl_result_table
+
 
 APP = Flask(__name__)
 
@@ -51,21 +53,20 @@ if __name__ == '__main__':
     PARSER.add_argument('-p', '--port', required=False, type=int, help='port', default=5000)
     ARGS = PARSER.parse_args()
 
-    APP.config['DEBUG'] = False
+    APP.config['DEBUG'] = True
 
-    # class JobConfig(object):
-    #     ''' job config '''
-    #     JOBS = [
-    #         {
-    #             'id': 'job1',
-    #             'func': explore_project_dir,
-    #             'trigger': 'interval',
-    #             'kwargs': [('target_dir', APP.config['TARGET_DIR'])],
-    #             'seconds': 3
-    #         }
-    #     ]
+    class CrawlJobConfig(object):
+        ''' job config '''
+        JOBS = [
+            {
+                'id': 'job1',
+                'func': crawl_result_table,
+                'trigger': 'interval',
+                'seconds': 5
+            }
+        ]
 
-    # APP.config.from_object(JobConfig())
+    APP.config.from_object(CrawlJobConfig())
 
     SCHEDULER = APScheduler()
     SCHEDULER.init_app(APP)

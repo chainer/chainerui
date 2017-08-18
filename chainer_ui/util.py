@@ -1,86 +1,50 @@
 ''' util.py '''
+
 import os
 import json
-from database import db_session
-from models import Experiment, Result, Argument, Log
 
-def explore_project_dir(target_dir=None):
-    ''' explore_project_dir '''
-    experiments = []
-    result_index = 1
+from database import create_db_session
+from models import Result, Log
 
-    _experiment_names = os.listdir(target_dir)
-    experiment_names = [
-        f for f in _experiment_names if os.path.isdir(os.path.join(target_dir, f))
-    ]
-    filterd_experiment_names = [f for f in experiment_names if f[0] not in ['.', '_']]
 
-    for experiment_index, experiment_name in enumerate(filterd_experiment_names):
-        results = []
 
-        results_path = os.path.join(*[target_dir, experiment_name, 'results'])
 
-        if os.path.isdir(results_path):
+def explore_log_file(result_path, log_file_name):
+    ''' explore_log_file '''
+    log_path = os.path.join(result_path, log_file_name)
 
-            result_names = os.listdir(results_path)
-            result_names = [f for f in result_names if os.path.isdir(os.path.join(results_path, f))]
+    log = []
+    if os.path.isfile(log_path):
+        with open(log_path) as json_data:
+            log = json.load(json_data)
 
-            for result_name in result_names:
-                result = {'id': result_index, 'name': result_name, 'logs': [], 'args': {}}
-                result_index += 1
+    return log
 
-                result_path = os.path.join(results_path, result_name)
 
-                result_args_file = os.path.join(result_path, 'args')
-                if os.path.isfile(result_args_file):
-                    with open(result_args_file) as json_data:
-                        result['args'] = json.load(json_data)
+def explore_result_dir(path):
+    ''' explore_result_dir '''
+    result = {
+        'logs': []
+    }
 
-                result_log_file = os.path.join(result_path, 'log')
-                if os.path.isfile(result_log_file):
-                    with open(result_log_file) as json_data:
-                        result['logs'] = json.load(json_data)
+    if os.path.isdir(path):
+        result['logs'] = explore_log_file(path, 'log')
 
-                results.append(result)
+    return result
 
-        experiments.append({
-            'id': experiment_index + 1,
-            'name': experiment_name,
-            'results': results
-        })
 
-    db_session.query(Experiment).delete()
-    db_session.query(Result).delete()
-    db_session.query(Argument).delete()
-    db_session.query(Log).delete()
+def crawl_result_table():
+    ''' crawl_result_table '''
 
-    for experiment in experiments:
-        _experiment = Experiment(experiment['name'])
+    db_session = create_db_session()
 
-        for result in experiment['results']:
-            arguments = []
-            logs = []
-            _result = Result(result['name'])
+    for result in db_session.query(Result).all():
+        print(result.path_name)
 
-            for key, value in result['args'].items():
-                arguments.append(Argument(key, value))
+        crawl_result = explore_result_dir(result.path_name)
 
-            for log in result['logs']:
-                logs.append(Log(
-                    log['epoch'],
-                    log['iteration'],
-                    log['main/accuracy'],
-                    log['main/loss'],
-                    log['validation/main/accuracy'],
-                    log['validation/main/loss'],
-                    log['elapsed_time']
-                ))
+        if len(result.logs) < len(crawl_result['logs']):
+            for log in crawl_result['logs'][len(result.logs):]:
+                result.logs.append(Log(str(log)))
 
-            _result.arguments = arguments
-            _result.logs = logs
-            _experiment.results.append(_result)
-
-        db_session.add(_experiment)
         db_session.commit()
-
-    return experiments
