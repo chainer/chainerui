@@ -15,6 +15,7 @@ class Result(BASE):
     id = Column(Integer, primary_key=True)
     path_name = Column(String(512), unique=True)
     logs = relationship('Log')
+    args = relationship('Argument', uselist=False)
 
     def __init__(self, path_name=None):
         self.path_name = path_name
@@ -29,7 +30,7 @@ class Result(BASE):
             'id': self.id,
             'pathName': self.path_name,
             'logs': [log.serialize for log in self.logs],
-            'args': []
+            'args': self.args.serialize
         }
 
 
@@ -65,3 +66,33 @@ class Log(BASE):
             'resultId': self.result_id,
             'logItems': log_items
         }
+
+
+class Argument(BASE):
+    ''' Argument Model '''
+    __tablename__ = 'argument'
+
+    id = Column(Integer, primary_key=True)
+    result_id = Column(Integer, ForeignKey('result.id'))
+    data = Column(String(1024))
+
+    def __init__(self, data=None):
+        self.data = data
+
+    def __repr__(self):
+        return '<Argument id: %r />' % (self.id)
+
+    @property
+    def serialize(self):
+        ''' serialize '''
+
+        arguments = []
+
+        for item in json.loads(self.data).items():
+            arguments.append({
+                'resultId': self.result_id,
+                'key': item[0],
+                'value': item[1]
+            })
+
+        return arguments
