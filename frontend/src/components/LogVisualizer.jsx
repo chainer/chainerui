@@ -48,18 +48,18 @@ const defaultConfig = {
 
 const buildLineElem = (line, axisName) => {
   const { config = {} } = line;
-  const { line2key } = Utils;
+  const { line2key, line2dataKey } = Utils;
 
   return (
     <Line
       type="monotone"
       name={line2key(line)}
-      dataKey={line2key(line)}
+      dataKey={line2dataKey(line, axisName)}
       yAxisId={axisName}
       stroke={config.color}
       connectNulls
       isAnimationActive={false}
-      key={line2key}
+      key={line2dataKey(line, axisName)}
     />
   );
 };
@@ -78,6 +78,7 @@ class LogVisualizer extends React.Component {
   }
 
   render() {
+    const { line2dataKey } = Utils;
     const { entities } = this.props;
     const { results = {} } = entities;
     const stats = this.props.stats || defaultStats;
@@ -86,6 +87,10 @@ class LogVisualizer extends React.Component {
     const { xAxisKey } = xAxis;
     const leftLines = yLeftAxis.lines || [];
     const rightLines = yRightAxis.lines || [];
+    const axisLines = {
+      yLeftAxis: leftLines,
+      yRightAxis: rightLines
+    };
     const xRange = xAxis.range || defaultRange;
     const yLeftRange = yLeftAxis.range || defaultRange;
     const yRightRange = yRightAxis.range || defaultRange;
@@ -96,29 +101,34 @@ class LogVisualizer extends React.Component {
     const chartWidth = 640;
     const chartHeight = 360;
 
-    const lines = leftLines.concat(rightLines);
     const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
-    lines.forEach((line) => {
-      const { resultId, logKey } = line;
-      const result = results[resultId];
-      if (result == null) {
-        return;
-      }
-      const logs = result.logs || [];
-      logs.forEach((log) => {
-        if (log[xAxisKey] == null || log[logKey] == null) {
+    Object.keys(axisLines).forEach((axisName) => {
+      const lines = axisLines[axisName];
+      lines.forEach((line) => {
+        const { resultId, logKey } = line;
+        const result = results[resultId];
+        if (result == null) {
           return;
         }
-        if (dataDict[log[xAxisKey]] == null) {
-          dataDict[log[xAxisKey]] = {};
-          dataDict[log[xAxisKey]][xAxisKey] = log[xAxisKey];
-        }
-        dataDict[log[xAxisKey]][logKey] = log[logKey];
+        const logs = result.logs || [];
+        logs.forEach((log) => {
+          const logDict = {};
+          log.logItems.forEach((logItem) => {
+            logDict[logItem.key] = logItem.value;
+          });
+          if (logDict[xAxisKey] == null || logDict[logKey] == null) {
+            return;
+          }
+          if (dataDict[logDict[xAxisKey]] == null) {
+            dataDict[logDict[xAxisKey]] = { [xAxisKey]: logDict[xAxisKey] };
+          }
+          dataDict[logDict[xAxisKey]][line2dataKey(line, axisName)] = logDict[logKey];
+        });
       });
     });
     const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
-    const lineElems = buildLineElems('yLeftAxis', config) + buildLineElems('yRightAxis', config);
+    const lineElems = [...buildLineElems('yLeftAxis', config), ...buildLineElems('yRightAxis', config)];
 
     return (
       <div className="log-visualizer-root row">
@@ -146,21 +156,18 @@ class LogVisualizer extends React.Component {
                     <XAxis
                       type="number"
                       dataKey={xAxisKey}
-                      domain={xRange}
                       scale={xAxis.scale}
                       allowDataOverflow
                     />
                     <YAxis
                       yAxisId="yLeftAxis"
                       orientation="left"
-                      domain={yLeftRange}
                       scale={yLeftAxis.scale}
                       allowDataOverflow
                     />
                     <YAxis
                       yAxisId="yRightAxis"
                       orientation="right"
-                      domain={yRightRange}
                       scale={yRightAxis.scale}
                       allowDataOverflow
                     />

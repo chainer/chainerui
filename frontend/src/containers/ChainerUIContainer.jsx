@@ -50,7 +50,7 @@ class ChainerUIContainer extends React.Component {
             lines: [
               {
                 resultId: 2,
-                logKey: 'main_loss',
+                logKey: 'main/loss',
                 config: {
                   color: '#ABCDEF'
                 }
@@ -59,7 +59,17 @@ class ChainerUIContainer extends React.Component {
           },
           yRightAxis: {
             axisName: 'yRightAxis',
-            scale: 'log'
+            scale: 'linear',
+            // range: [0.0, 1.0],
+            lines: [
+              {
+                resultId: 3,
+                logKey: 'main/loss',
+                config: {
+                  color: '#FEDCBA'
+                }
+              }
+            ]
           }
         }
       }

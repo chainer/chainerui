@@ -18,18 +18,19 @@ class LineConfigurator extends React.Component {
     const { truncateForward } = Utils;
 
     const colorBlockStyle = {
-      display: 'inline-block',
       width: '20px',
       height: '15px',
       backgroundColor: config.color
     };
 
     return (
-      <div>
-        <span style={colorBlockStyle} />
-        <span>{truncateForward(result.pathName, 25)}</span>
-        <span>{line.logKey}</span>
-        <button type="button" className="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div className="row">
+        <div className="col-sm-1" style={colorBlockStyle} />
+        <div className="col-sm-5">{truncateForward(result.pathName, 24)}</div>
+        <div className="col-sm-4">{line.logKey}</div>
+        <div className="col-sm-1">
+          <button type="button" className="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
       </div>
     );
   }
