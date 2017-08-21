@@ -25,10 +25,10 @@ class AxisConfigurator extends React.Component {
     const { axisName, scale } = this.props.axisConfig;
 
     return (
-      <div className="axis-configurator panel panel-default">
-        <div className="panel-heading">
+      <div className="axis-configurator card">
+        <div className="card-header">{axisName}</div>
+        <div className="card-body">
           <div className="row">
-            <div className="col-sm-6">{axisName}</div>
             <div className="col-sm-6">
               <AxisScaleSelector
                 scale={scale}

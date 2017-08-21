@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { loadResults } from '../actions';
+import {
+  loadResults,
+  addLineToAxis
+} from '../actions';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 
@@ -24,12 +27,23 @@ const getStats = (results) => {
 };
 
 class ChainerUIContainer extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleAxisConfigLineAdd = this.handleAxisConfigLineAdd.bind(this);
+  }
   componentWillMount() {
     this.props.loadResults();
   }
 
+  handleAxisConfigLineAdd(...args) {
+    console.log(this && args);
+  }
+
   render() {
+    // const { results, config } = this.props;
     const { results } = this.props;
+    const stats = getStats(results);
     const config = {
       axes: {
         xAxis: {
@@ -67,7 +81,6 @@ class ChainerUIContainer extends React.Component {
         }
       }
     };
-    const stats = getStats(results);
 
     return (
       <div className="chainer-ui-container">
@@ -75,6 +88,7 @@ class ChainerUIContainer extends React.Component {
           results={results}
           stats={stats}
           config={config}
+          onAxisConfigLineAdd={this.handleAxisConfigLineAdd}
         />
         <ExperimentsTable
           results={results}
@@ -106,6 +120,7 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  loadResults
+  loadResults,
+  addLineToAxis
 })(ChainerUIContainer);
 

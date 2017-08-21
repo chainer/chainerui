@@ -20,8 +20,23 @@ const entities = (state = { results: {} }, action) => {
   return state;
 };
 
+const axes = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.AXIS_CONFIG_LINE_ADD:
+      return state;
+    default:
+      break;
+  }
+  return state;
+};
+
+const config = combineReducers({
+  axes
+});
+
 const rootReducer = combineReducers({
-  entities
+  entities,
+  config
 });
 
 export default rootReducer;
