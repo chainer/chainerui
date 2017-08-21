@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import $ from 'jquery';
 import path from 'path';
 import ExperimentsTable from '../components/ExperimentsTable';
@@ -7,8 +9,7 @@ import LogVisualizer from '../components/LogVisualizer';
 
 const apiEndpoint = '/api/v1';
 
-const getStats = (entities) => {
-  const { results } = entities;
+const getStats = (results) => {
   const argKeySet = {};
   Object.keys(results).forEach((resultId) => {
     const result = results[resultId];
@@ -27,10 +28,11 @@ const getStats = (entities) => {
 
 class ChainerUIContainer extends React.Component {
   constructor(props, context) {
+    console.log(props.results);
+    console.log(props.config);
     super(props, context);
 
     this.requestResults = this.requestResults.bind(this);
-    this.handleToggleResult = this.handleToggleResult.bind(this);
 
     this.state = {
       entities: {
@@ -75,7 +77,7 @@ class ChainerUIContainer extends React.Component {
       }
     };
 
-    this.requestResults();
+    // this.requestResults();
   }
 
   requestResults() {
@@ -102,32 +104,19 @@ class ChainerUIContainer extends React.Component {
       });
   }
 
-  handleToggleResult(resultId, isToggleed) {
-    const { resultIds } = this.state;
-    let newResultIds = [];
-    if (isToggleed) {
-      newResultIds = resultIds.concat(resultId);
-    } else {
-      newResultIds = resultIds.filter((resId) => (resId !== resultId));
-    }
-    this.setState({
-      resultIds: newResultIds
-    });
-  }
-
   render() {
-    const { entities, config } = this.state;
-    const stats = getStats(entities);
+    const { results, config } = this.props;
+    const stats = getStats(results);
 
     return (
       <div className="chainer-ui-container">
         <LogVisualizer
-          entities={entities}
+          results={results}
           stats={stats}
           config={config}
         />
         <ExperimentsTable
-          entities={entities}
+          results={results}
           stats={stats}
         />
       </div>
@@ -135,5 +124,24 @@ class ChainerUIContainer extends React.Component {
   }
 }
 
-export default ChainerUIContainer;
+ChainerUIContainer.propTypes = {
+  results: PropTypes.objectOf(PropTypes.any).isRequired,
+  config: PropTypes.shape({
+    axes: PropTypes.objectOf(PropTypes.any)
+  }).isRequired
+};
+
+const defaultConfig = {
+  axes: {}
+};
+
+const mapStateToProps = (state) => {
+  const {
+    entities: { results },
+    config = defaultConfig
+  } = state;
+  return { results, config };
+};
+
+export default connect(mapStateToProps)(ChainerUIContainer);
 

@@ -4,8 +4,7 @@ import ResultRow from './ResultRow';
 
 
 const ExperimentsTable = (props) => {
-  const { stats } = props;
-  const { results } = props.entities || {};
+  const { results = {}, stats } = props;
   const { argKeys } = stats;
 
   const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}><span className="glyphicon glyphicon-cog" />{argKey}</th>));
@@ -42,24 +41,20 @@ const ExperimentsTable = (props) => {
 };
 
 ExperimentsTable.propTypes = {
-  entities: PropTypes.shape({
-    results: PropTypes.objectOf(
-      PropTypes.shape({
-        id: PropTypes.number,
-        pathName: PropTypes.string,
-        args: PropTypes.arrayOf(PropTypes.any),
-        logs: PropTypes.arrayOf(PropTypes.any)
-      })
-    )
-  }),
+  results: PropTypes.objectOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      pathName: PropTypes.string,
+      args: PropTypes.arrayOf(PropTypes.any),
+      logs: PropTypes.arrayOf(PropTypes.any)
+    })
+  ),
   stats: PropTypes.shape({
     argKeys: PropTypes.arrayOf(PropTypes.string)
   })
 };
 ExperimentsTable.defaultProps = {
-  entities: {
-    results: {}
-  },
+  results: {},
   stats: {
     argKeys: []
   }

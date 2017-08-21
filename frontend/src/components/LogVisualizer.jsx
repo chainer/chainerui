@@ -65,7 +65,7 @@ const buildLineElem = (line, axisName) => {
 };
 
 const buildLineElems = (axisName, config) => {
-  const axisConfig = config.axes[axisName];
+  const axisConfig = config.axes[axisName] || {};
   const { lines = [] } = axisConfig;
   return lines.map((line) => buildLineElem(line, axisName));
 };
@@ -79,12 +79,17 @@ class LogVisualizer extends React.Component {
 
   render() {
     const { line2dataKey } = Utils;
-    const { entities } = this.props;
-    const { results = {} } = entities;
-    const stats = this.props.stats || defaultStats;
-    const config = this.props.config || defaultConfig;
-    const { xAxis, yLeftAxis, yRightAxis } = config.axes;
-    const { xAxisKey } = xAxis;
+    const {
+      results = {},
+      stats = defaultStats,
+      config = defaultConfig
+    } = this.props;
+    const {
+      xAxis = { axisName: 'xAxis' },
+      yLeftAxis = { axisName: 'yLeftAxis' },
+      yRightAxis = { axisName: 'yRightAxis' }
+    } = config.axes;
+    const { xAxisKey = 'epoch' } = xAxis;
     const leftLines = yLeftAxis.lines || [];
     const rightLines = yRightAxis.lines || [];
     const axisLines = {
@@ -207,13 +212,13 @@ class LogVisualizer extends React.Component {
         <div className="col-sm-4">
           <AxisConfigurator axisConfig={yLeftAxis}>
             <LinesConfigurator
-              entities={entities}
+              results={results}
               lines={yLeftAxis.lines}
             />
           </AxisConfigurator>
           <AxisConfigurator axisConfig={yRightAxis}>
             <LinesConfigurator
-              entities={entities}
+              results={results}
               lines={yRightAxis.lines}
             />
           </AxisConfigurator>
@@ -225,9 +230,7 @@ class LogVisualizer extends React.Component {
 }
 
 LogVisualizer.propTypes = {
-  entities: PropTypes.shape({
-    results: PropTypes.objectOf(PropTypes.any)
-  }),
+  results: PropTypes.objectOf(PropTypes.any).isRequired,
   stats: PropTypes.shape({
     axes: PropTypes.shape({
       xAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
@@ -244,9 +247,6 @@ LogVisualizer.propTypes = {
   })
 };
 LogVisualizer.defaultProps = {
-  entities: {
-    results: {}
-  },
   stats: defaultStats,
   config: defaultConfig
 };

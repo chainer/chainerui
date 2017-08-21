@@ -12,12 +12,12 @@ class LinesConfigurator extends React.Component {
   }
 
   render() {
-    const { entities, lines = [] } = this.props;
+    const { results, lines = [] } = this.props;
     const { line2key } = Utils;
 
     const lineConfiguratorElems = lines.map((line) => (
       <li className="list-group-item" key={line2key(line)}>
-        <LineConfigurator entities={entities} line={line} />
+        <LineConfigurator results={results} line={line} />
       </li>
     ));
 
@@ -30,9 +30,7 @@ class LinesConfigurator extends React.Component {
 }
 
 LinesConfigurator.propTypes = {
-  entities: PropTypes.shape({
-    results: PropTypes.objectOf(PropTypes.any)
-  }).isRequired,
+  results: PropTypes.objectOf(PropTypes.any).isRequired,
   lines: PropTypes.arrayOf(
     PropTypes.shape({
       resultId: PropTypes.number,

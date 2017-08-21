@@ -11,8 +11,7 @@ class LineConfigurator extends React.Component {
   }
 
   render() {
-    const { entities, line = {} } = this.props;
-    const { results = {} } = entities;
+    const { results = {}, line = {} } = this.props;
     const result = results[line.resultId] || {};
     const { config = {} } = line;
     const { truncateForward } = Utils;
@@ -37,9 +36,7 @@ class LineConfigurator extends React.Component {
 }
 
 LineConfigurator.propTypes = {
-  entities: PropTypes.shape({
-    results: PropTypes.objectOf(PropTypes.any)
-  }).isRequired,
+  results: PropTypes.objectOf(PropTypes.any).isRequired,
   line: PropTypes.shape({
     resultId: PropTypes.number,
     logKey: PropTypes.string,
