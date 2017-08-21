@@ -1,5 +1,10 @@
 const state = {
-  results: require('./sample_api_response.json'),
+  entities: {
+    results: {
+      123: {},
+      124: {},
+    }
+  },
   config: {
     axes: {
       xAxis: {
@@ -16,13 +21,13 @@ const state = {
           {
             resultId: 12,
             logKey: 'main_loss',
+            config: {
+              color: '#ABCDEF'
+            }
           },
         ]
       },
       yRightAxis: {},
-    },
-    colors: {
-      12_main_loss: '#ABCDEF', /// lineKey(resultId + logKey): color
     },
   },
 };

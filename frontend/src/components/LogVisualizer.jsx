@@ -75,7 +75,7 @@ class LogVisualizer extends React.Component {
   }
 
   render() {
-    const { results } = this.props;
+    const { results } = this.props.entities || {};
     const stats = this.props.stats || defaultStats;
     const config = this.props.config || defaultConfig;
     const { xAxis, yLeftAxis, yRightAxis } = config.axes;
@@ -92,16 +92,11 @@ class LogVisualizer extends React.Component {
     const chartWidth = 640;
     const chartHeight = 360;
 
-    const resultsDict = {};
-    results.forEach((result) => {
-      resultsDict[result.id] = result;
-    });
-
     const lines = leftLines.concat(rightLines);
     const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
     lines.forEach((line) => {
       const { resultId, logKey } = line;
-      const result = resultsDict[resultId];
+      const result = results[resultId];
       if (result == null) {
         return;
       }
@@ -209,7 +204,9 @@ class LogVisualizer extends React.Component {
 }
 
 LogVisualizer.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.any),
+  entities: PropTypes.shape({
+    results: PropTypes.objectOf(PropTypes.any)
+  }),
   stats: PropTypes.shape({
     axes: PropTypes.shape({
       xAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
@@ -229,7 +226,9 @@ LogVisualizer.propTypes = {
   })
 };
 LogVisualizer.defaultProps = {
-  results: [],
+  entities: {
+    results: {}
+  },
   stats: defaultStats,
   config: defaultConfig
 };

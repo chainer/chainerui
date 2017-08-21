@@ -7,9 +7,11 @@ import LogVisualizer from '../components/LogVisualizer';
 
 const apiEndpoint = '/api/v1';
 
-const getStats = (results) => {
+const getStats = (entities) => {
+  const { results } = entities;
   const argKeySet = {};
-  results.forEach((result) => {
+  Object.keys(results).forEach((resultId) => {
+    const result = results[resultId];
     result.args.forEach((arg) => { argKeySet[arg.key] = true; });
   });
   const argKeys = Object.keys(argKeySet);
@@ -31,7 +33,9 @@ class ChainerUIContainer extends React.Component {
     this.handleToggleResult = this.handleToggleResult.bind(this);
 
     this.state = {
-      results: [],
+      entities: {
+        results: {}
+      },
       config: null
     };
 
@@ -46,8 +50,15 @@ class ChainerUIContainer extends React.Component {
       dataType: 'json'
     })
       .done((data) => {
+        const results = {};
+        data.results.forEach((result) => {
+          results[result.id] = result;
+        });
         this.setState({
-          results: data.results
+          entities: {
+            ...this.state.entities,
+            results
+          }
         });
       })
       .fail(() => {
@@ -69,18 +80,18 @@ class ChainerUIContainer extends React.Component {
   }
 
   render() {
-    const { results, config } = this.state;
-    const stats = getStats(results);
+    const { entities, config } = this.state;
+    const stats = getStats(entities);
 
     return (
       <div className="chainer-ui-container">
         <LogVisualizer
-          results={results}
+          entities={entities}
           stats={stats}
           config={config}
         />
         <ExperimentsTable
-          results={results}
+          entities={entities}
           stats={stats}
         />
       </div>

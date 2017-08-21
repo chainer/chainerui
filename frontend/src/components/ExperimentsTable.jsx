@@ -4,12 +4,14 @@ import ResultRow from './ResultRow';
 
 
 const ExperimentsTable = (props) => {
-  const { results, stats } = props;
+  const { stats } = props;
+  const { results } = props.entities || {};
   const { argKeys } = stats;
 
   const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}><span className="glyphicon glyphicon-cog" />{argKey}</th>));
 
-  const resultRowElems = results.map((result) => {
+  const resultRowElems = Object.keys(results).map((resultId) => {
+    const result = results[resultId];
     const key = `result-row-${result.id}`;
     return (
       <ResultRow
@@ -40,20 +42,24 @@ const ExperimentsTable = (props) => {
 };
 
 ExperimentsTable.propTypes = {
-  results: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      pathName: PropTypes.string,
-      args: PropTypes.arrayOf(PropTypes.any),
-      logs: PropTypes.arrayOf(PropTypes.any)
-    })
-  ),
+  entities: PropTypes.shape({
+    results: PropTypes.objectOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        pathName: PropTypes.string,
+        args: PropTypes.arrayOf(PropTypes.any),
+        logs: PropTypes.arrayOf(PropTypes.any)
+      })
+    )
+  }),
   stats: PropTypes.shape({
     argKeys: PropTypes.arrayOf(PropTypes.string)
   })
 };
 ExperimentsTable.defaultProps = {
-  results: [],
+  entities: {
+    results: {}
+  },
   stats: {
     argKeys: []
   }
