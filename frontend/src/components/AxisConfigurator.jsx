@@ -37,9 +37,6 @@ class AxisConfigurator extends React.Component {
             </div>
           </div>
         </div>
-        <div className="panel-body">
-          <form className="form-horizontal" />
-        </div>
         {this.props.children}
       </div>
     );

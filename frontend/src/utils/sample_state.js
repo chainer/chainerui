@@ -10,13 +10,13 @@ const state = {
       xAxis: {
         axisName: 'xAxis',
         xAxisKey: 'epoch',
-        scale: 'auto',
-        range: [0, 100],
+        scale: 'linear',
+        // range: [0, 100],
       },
       yLeftAxis: {
         axisName: 'yLeftAxis',
-        scale: 'auto',
-        range: [0.0, 1.0],
+        scale: 'linear',
+        // range: [0.0, 1.0],
         lines: [
           {
             resultId: 12,

@@ -11,7 +11,9 @@ import {
 } from 'recharts';
 import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import Utils from '../utils';
 import AxisConfigurator from './AxisConfigurator';
+import LinesConfigurator from './LinesConfigurator';
 
 
 const sliderSteps = 100.0;
@@ -41,30 +43,31 @@ const defaultConfig = {
     xAxis: defaultXAxisConfig,
     yLeftAxis: { ...defaultYAxisConfig, axisName: 'yLeftAxis' },
     yRightAxis: { ...defaultYAxisConfig, axisName: 'yRightAxis' }
-  },
-  colors: {}
+  }
 };
 
-const lineKey = (line) => `${line.resultId}_${line.logKey}`;
+const buildLineElem = (line, axisName) => {
+  const { config = {} } = line;
+  const { line2key } = Utils;
 
-const buildLineElem = (line, axisName, colors) => (
-  <Line
-    type="monotone"
-    name={lineKey(line)}
-    dataKey={lineKey(line)}
-    yAxisId={axisName}
-    stroke={colors[lineKey]}
-    connectNulls
-    isAnimationActive={false}
-    key={lineKey}
-  />
-);
+  return (
+    <Line
+      type="monotone"
+      name={line2key(line)}
+      dataKey={line2key(line)}
+      yAxisId={axisName}
+      stroke={config.color}
+      connectNulls
+      isAnimationActive={false}
+      key={line2key}
+    />
+  );
+};
 
 const buildLineElems = (axisName, config) => {
-  const { colors } = config.colors;
   const axisConfig = config.axes[axisName];
-  const { lines } = axisConfig;
-  return lines.map((line) => buildLineElem(line, axisName, colors));
+  const { lines = [] } = axisConfig;
+  return lines.map((line) => buildLineElem(line, axisName));
 };
 
 class LogVisualizer extends React.Component {
@@ -75,7 +78,8 @@ class LogVisualizer extends React.Component {
   }
 
   render() {
-    const { results } = this.props.entities || {};
+    const { entities } = this.props;
+    const { results = {} } = entities;
     const stats = this.props.stats || defaultStats;
     const config = this.props.config || defaultConfig;
     const { xAxis, yLeftAxis, yRightAxis } = config.axes;
@@ -118,7 +122,7 @@ class LogVisualizer extends React.Component {
 
     return (
       <div className="log-visualizer-root row">
-        <div className="col-sm-9">
+        <div className="col-sm-8">
           <table>
             <tbody>
               <tr>
@@ -193,9 +197,19 @@ class LogVisualizer extends React.Component {
             </tbody>
           </table>
         </div>
-        <div className="col-sm-3">
-          <AxisConfigurator axisConfig={yLeftAxis} />
-          <AxisConfigurator axisConfig={yRightAxis} />
+        <div className="col-sm-4">
+          <AxisConfigurator axisConfig={yLeftAxis}>
+            <LinesConfigurator
+              entities={entities}
+              lines={yLeftAxis.lines}
+            />
+          </AxisConfigurator>
+          <AxisConfigurator axisConfig={yRightAxis}>
+            <LinesConfigurator
+              entities={entities}
+              lines={yRightAxis.lines}
+            />
+          </AxisConfigurator>
           <AxisConfigurator axisConfig={xAxis} />
         </div>
       </div>
@@ -219,10 +233,7 @@ LogVisualizer.propTypes = {
       xAxis: PropTypes.any,
       yLeftAxis: PropTypes.any,
       yRightAxis: PropTypes.any
-    }),
-    colors: PropTypes.objectOf(
-      PropTypes.string
-    )
+    })
   })
 };
 LogVisualizer.defaultProps = {
