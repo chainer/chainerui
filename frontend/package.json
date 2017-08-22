@@ -49,7 +49,7 @@
     "react-hot-loader": "^3.0.0-beta.7",
     "react-redux": "^5.0.6",
     "reactstrap": "^4.8.0",
-    "recharts": "^1.0.0-alpha.2",
+    "recharts": "^1.0.0-alpha.4",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0"

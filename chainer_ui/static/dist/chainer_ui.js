@@ -901,12 +901,14 @@ var LogVisualizer = function (_React$Component) {
                       yAxisId: 'yLeftAxis',
                       orientation: 'left',
                       scale: yLeftAxis.scale,
+                      domain: ['auto', 'auto'],
                       allowDataOverflow: true
                     }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_recharts__["YAxis"], {
                       yAxisId: 'yRightAxis',
                       orientation: 'right',
                       scale: yRightAxis.scale,
+                      domain: ['auto', 'auto'],
                       allowDataOverflow: true
                     }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_recharts__["CartesianGrid"], { strokeDasharray: '3 3' }),
