@@ -77,10 +77,11 @@ const defaultConfig = {
 
 const mapStateToProps = (state) => {
   const {
-    entities: { results },
+    entities,
     config = defaultConfig
   } = state;
-  const stats = mapEntitiesToStats(state.entities);
+  const { results = {} } = entities;
+  const stats = mapEntitiesToStats(entities);
   return { results, config, stats };
 };
 

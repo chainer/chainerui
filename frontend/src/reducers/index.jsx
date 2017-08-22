@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
 import Utils from '../utils';
 
@@ -64,7 +66,7 @@ const config = combineReducers({
 
 const rootReducer = combineReducers({
   entities,
-  config
+  config: persistReducer({ key: 'config', storage }, config)
 });
 
 export default rootReducer;
