@@ -25,7 +25,7 @@ const entities = (state = { results: {} }, action) => {
 
 const axes = (state = {}, action) => {
   const { line2key } = Utils;
-  const { axisName, line, lineKey } = action;
+  const { axisName, line, lineKey, scale } = action;
   if (axisName == null) {
     return state;
   }
@@ -53,6 +53,14 @@ const axes = (state = {}, action) => {
         [axisName]: {
           ...axisConfig,
           lines: [...lines.filter((l) => line2key(l) !== lineKey)]
+        }
+      };
+    case ActionTypes.AXIS_CONFIG_SCALE_UPDATE:
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          scale
         }
       };
     default:
