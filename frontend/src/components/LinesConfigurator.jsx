@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Utils from '../utils';
+import LinesConfiguratorRow from './LinesConfiguratorRow';
 import LineConfigurator from './LineConfigurator';
 
 
@@ -18,6 +19,7 @@ class LinesConfigurator extends React.Component {
     this.handleModalToggle = this.handleModalToggle.bind(this);
     this.handleAddingLineChange = this.handleAddingLineChange.bind(this);
     this.handleAxisConfigLineAdd = this.handleAxisConfigLineAdd.bind(this);
+    this.handleAxisConfigLineRemove = this.handleAxisConfigLineRemove.bind(this);
 
     this.state = {
       showModal: false,
@@ -55,32 +57,26 @@ class LinesConfigurator extends React.Component {
     }
   }
 
+  handleAxisConfigLineRemove(lineKey) {
+    const { axisName, onAxisConfigLineRemove } = this.props;
+    onAxisConfigLineRemove(axisName, lineKey);
+  }
+
   render() {
-    const { line2key, truncateForward } = Utils;
+    const { line2key } = Utils;
     const { results, lines = [] } = this.props;
     const { addingLine, showLineConfigError } = this.state;
 
     const lineConfiguratorElems = lines.map((line) => {
       const result = results[line.resultId] || {};
-      const { config = {} } = line;
-
-      const colorBlockStyle = {
-        width: '20px',
-        height: '15px',
-        backgroundColor: config.color
-      };
 
       return (
-        <li className="list-group-item" key={line2key(line)}>
-          <div className="row">
-            <div className="col-sm-1" style={colorBlockStyle} />
-            <div className="col-sm-5">{truncateForward(result.pathName, 24)}</div>
-            <div className="col-sm-4">{line.logKey}</div>
-            <div className="col-sm-1">
-              <button type="button" className="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-          </div>
-        </li>
+        <LinesConfiguratorRow
+          line={line}
+          result={result}
+          onRemove={this.handleAxisConfigLineRemove}
+          key={line2key(line)}
+        />
       );
     });
 
@@ -127,7 +123,8 @@ LinesConfigurator.propTypes = {
       logKey: PropTypes.string
     })
   ),
-  onAxisConfigLineAdd: PropTypes.func.isRequired
+  onAxisConfigLineAdd: PropTypes.func.isRequired,
+  onAxisConfigLineRemove: PropTypes.func.isRequired
 };
 
 LinesConfigurator.defaultProps = {
