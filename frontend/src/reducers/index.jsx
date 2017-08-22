@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import * as ActionTypes from '../actions';
+import Utils from '../utils';
 
 
 const entities = (state = { results: {} }, action) => {
@@ -21,23 +22,40 @@ const entities = (state = { results: {} }, action) => {
 };
 
 const axes = (state = {}, action) => {
-  const { axisName, line } = action;
-  if (axisName == null || line == null) {
+  const { line2key } = Utils;
+  const { axisName, line, lineKey } = action;
+  if (axisName == null) {
     return state;
   }
   const axisConfig = state[axisName] || { axisName };
   const { lines = [] } = axisConfig;
 
-  let newAxisConfig;
   switch (action.type) {
     case ActionTypes.AXIS_CONFIG_LINE_ADD:
-      newAxisConfig = { ...axisConfig, lines: [...lines, line] };
-      break;
+      if (line == null) {
+        return state;
+      }
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          lines: [...lines, line]
+        }
+      };
+    case ActionTypes.AXIS_CONFIG_LINE_REMOVE:
+      if (lineKey == null) {
+        return state;
+      }
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          lines: [...lines.filter((l) => line2key(l) !== lineKey)]
+        }
+      };
     default:
-      newAxisConfig = axisConfig;
-      break;
+      return state;
   }
-  return { ...state, [axisName]: newAxisConfig };
 };
 
 const config = combineReducers({

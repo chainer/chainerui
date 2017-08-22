@@ -28,3 +28,9 @@ export const addLineToAxis = (axisName, line) => ({
   line
 });
 
+export const removeLineFromAxis = (axisName, lineKey) => ({
+  type: AXIS_CONFIG_LINE_REMOVE,
+  axisName,
+  lineKey
+});
+

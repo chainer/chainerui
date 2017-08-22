@@ -3,18 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   loadResults,
-  addLineToAxis
+  addLineToAxis, removeLineFromAxis
 } from '../actions';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 
 
 class ChainerUIContainer extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.handleAxisConfigLineAdd = this.handleAxisConfigLineAdd.bind(this);
-  }
   componentWillMount() {
     this.props.loadResults();
   }
@@ -32,7 +27,8 @@ class ChainerUIContainer extends React.Component {
           results={results}
           stats={stats}
           config={config}
-          onAxisConfigLineAdd={this.handleAxisConfigLineAdd}
+          onAxisConfigLineAdd={this.props.addLineToAxis}
+          onAxisConfigLineRemove={this.props.removeLineFromAxis}
         />
         <ExperimentsTable
           results={results}
@@ -53,7 +49,8 @@ ChainerUIContainer.propTypes = {
     argKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   loadResults: PropTypes.func.isRequired,
-  addLineToAxis: PropTypes.func.isRequired
+  addLineToAxis: PropTypes.func.isRequired,
+  removeLineFromAxis: PropTypes.func.isRequired
 };
 
 const mapEntitiesToStats = (entities) => {
@@ -89,6 +86,7 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   loadResults,
-  addLineToAxis
+  addLineToAxis,
+  removeLineFromAxis
 })(ChainerUIContainer);
 
