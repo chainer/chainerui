@@ -218,7 +218,7 @@ class LogVisualizer extends React.Component {
               results={results}
               axisName="yLeftAxis"
               lines={yLeftAxis.lines}
-              onLineAdd={onAxisConfigLineAdd}
+              onAxisConfigLineAdd={onAxisConfigLineAdd}
             />
           </AxisConfigurator>
           <AxisConfigurator
@@ -228,7 +228,7 @@ class LogVisualizer extends React.Component {
               results={results}
               axisName="yRightAxis"
               lines={yRightAxis.lines}
-              onLineAdd={onAxisConfigLineAdd}
+              onAxisConfigLineAdd={onAxisConfigLineAdd}
             />
           </AxisConfigurator>
           <AxisConfigurator axisConfig={xAxis} />

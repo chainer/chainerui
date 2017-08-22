@@ -9,23 +9,6 @@ import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 
 
-const getStats = (results) => {
-  const argKeySet = {};
-  Object.keys(results).forEach((resultId) => {
-    const result = results[resultId];
-    result.args.forEach((arg) => { argKeySet[arg.key] = true; });
-  });
-  const argKeys = Object.keys(argKeySet);
-
-  const axes = {
-    xAxis: {},
-    yLeftAxis: {},
-    yRightAxis: {}
-  };
-
-  return { axes, argKeys };
-};
-
 class ChainerUIContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -36,51 +19,12 @@ class ChainerUIContainer extends React.Component {
     this.props.loadResults();
   }
 
-  handleAxisConfigLineAdd(...args) {
-    console.log(this && args);
+  handleAxisConfigLineAdd(axisName, line) {
+    this.props.addLineToAxis(axisName, line);
   }
 
   render() {
-    // const { results, config } = this.props;
-    const { results } = this.props;
-    const stats = getStats(results);
-    const config = {
-      axes: {
-        xAxis: {
-          axisName: 'xAxis',
-          xAxisKey: 'epoch',
-          scale: 'linear'
-        },
-        yLeftAxis: {
-          axisName: 'yLeftAxis',
-          scale: 'linear',
-          // range: [0.0, 1.0],
-          lines: [
-            {
-              resultId: 2,
-              logKey: 'main/loss',
-              config: {
-                color: '#ABCDEF'
-              }
-            }
-          ]
-        },
-        yRightAxis: {
-          axisName: 'yRightAxis',
-          scale: 'linear',
-          // range: [0.0, 1.0],
-          lines: [
-            {
-              resultId: 3,
-              logKey: 'main/loss',
-              config: {
-                color: '#FEDCBA'
-              }
-            }
-          ]
-        }
-      }
-    };
+    const { results, config, stats } = this.props;
 
     return (
       <div className="chainer-ui-container">
@@ -101,10 +45,33 @@ class ChainerUIContainer extends React.Component {
 
 ChainerUIContainer.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
-  // config: PropTypes.shape({
-  //   axes: PropTypes.objectOf(PropTypes.any)
-  // }).isRequired,
-  loadResults: PropTypes.func.isRequired
+  config: PropTypes.shape({
+    axes: PropTypes.objectOf(PropTypes.any)
+  }).isRequired,
+  stats: PropTypes.shape({
+    axes: PropTypes.objectOf(PropTypes.any),
+    argKeys: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
+  loadResults: PropTypes.func.isRequired,
+  addLineToAxis: PropTypes.func.isRequired
+};
+
+const mapEntitiesToStats = (entities) => {
+  const { results = {} } = entities;
+  const argKeySet = {};
+  Object.keys(results).forEach((resultId) => {
+    const result = results[resultId];
+    result.args.forEach((arg) => { argKeySet[arg.key] = true; });
+  });
+  const argKeys = Object.keys(argKeySet);
+
+  const axes = {
+    xAxis: {},
+    yLeftAxis: {},
+    yRightAxis: {}
+  };
+
+  return { axes, argKeys };
 };
 
 const defaultConfig = {
@@ -116,7 +83,8 @@ const mapStateToProps = (state) => {
     entities: { results },
     config = defaultConfig
   } = state;
-  return { results, config };
+  const stats = mapEntitiesToStats(state.entities);
+  return { results, config, stats };
 };
 
 export default connect(mapStateToProps, {

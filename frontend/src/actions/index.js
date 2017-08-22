@@ -22,11 +22,9 @@ export const loadResults = () => (dispatch) => dispatch(fetchResults());
 export const AXIS_CONFIG_LINE_ADD = 'AXIS_CONFIG_LINE_ADD';
 export const AXIS_CONFIG_LINE_REMOVE = 'AXIS_CONFIG_LINE_REMOVE';
 
-export const addLineToAxis = (axisName, resultId, logKey, config) => ({
+export const addLineToAxis = (axisName, line) => ({
   type: AXIS_CONFIG_LINE_ADD,
   axisName,
-  resultId,
-  logKey,
-  config
+  line
 });
 

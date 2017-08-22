@@ -21,13 +21,23 @@ const entities = (state = { results: {} }, action) => {
 };
 
 const axes = (state = {}, action) => {
+  const { axisName, line } = action;
+  if (axisName == null || line == null) {
+    return state;
+  }
+  const axisConfig = state[axisName] || { axisName };
+  const { lines = [] } = axisConfig;
+
+  let newAxisConfig;
   switch (action.type) {
     case ActionTypes.AXIS_CONFIG_LINE_ADD:
-      return state;
+      newAxisConfig = { ...axisConfig, lines: [...lines, line] };
+      break;
     default:
+      newAxisConfig = axisConfig;
       break;
   }
-  return state;
+  return { ...state, [axisName]: newAxisConfig };
 };
 
 const config = combineReducers({

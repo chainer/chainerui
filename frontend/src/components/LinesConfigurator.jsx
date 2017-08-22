@@ -5,34 +5,60 @@ import Utils from '../utils';
 import LineConfigurator from './LineConfigurator';
 
 
+const defaultLine = {
+  config: {
+    color: '#ABCDEF'
+  }
+};
+
 class LinesConfigurator extends React.Component {
   constructor() {
     super();
 
     this.handleModalToggle = this.handleModalToggle.bind(this);
-    this.handleLineAdd = this.handleLineAdd.bind(this);
+    this.handleAddingLineChange = this.handleAddingLineChange.bind(this);
+    this.handleAxisConfigLineAdd = this.handleAxisConfigLineAdd.bind(this);
 
     this.state = {
       showModal: false,
-      addingLine: {}
+      addingLine: defaultLine
     };
   }
 
   handleModalToggle() {
+    const newAddingLine = this.state.showModal ? defaultLine : this.state.addingLine;
     this.setState({
-      showModal: !this.state.showModal
+      showModal: !this.state.showModal,
+      addingLine: newAddingLine
     });
   }
 
-  handleLineAdd() {
-    const { axisName, onLineAdd } = this.props;
-    onLineAdd(axisName);
+  handleAddingLineChange(newLine) {
+    this.setState({
+      addingLine: newLine,
+      showLineConfigError: false
+    });
+  }
+
+  handleAxisConfigLineAdd() {
+    const { axisName, onAxisConfigLineAdd } = this.props;
+    const { addingLine } = this.state;
+
+    if (addingLine.resultId == null || addingLine.logKey == null) {
+      // invalid
+      this.setState({
+        showLineConfigError: true
+      });
+    } else {
+      onAxisConfigLineAdd(axisName, addingLine);
+      this.handleModalToggle();
+    }
   }
 
   render() {
     const { line2key, truncateForward } = Utils;
     const { results, lines = [] } = this.props;
-    const { addingLine } = this.state;
+    const { addingLine, showLineConfigError } = this.state;
 
     const lineConfiguratorElems = lines.map((line) => {
       const result = results[line.resultId] || {};
@@ -76,12 +102,13 @@ class LinesConfigurator extends React.Component {
               <LineConfigurator
                 results={results}
                 line={addingLine}
-                onChange={() => {}}
+                showError={showLineConfigError}
+                onChange={this.handleAddingLineChange}
               />
             </ModalBody>
             <ModalFooter>
               <Button color="secondary" onClick={this.handleModalToggle}>Cancel</Button>{' '}
-              <Button color="primary" onClick={this.handleLineAdd}>Add</Button>
+              <Button color="primary" onClick={this.handleAxisConfigLineAdd}>Add</Button>
             </ModalFooter>
           </Modal>
 
@@ -100,12 +127,11 @@ LinesConfigurator.propTypes = {
       logKey: PropTypes.string
     })
   ),
-  onLineAdd: PropTypes.func
+  onAxisConfigLineAdd: PropTypes.func.isRequired
 };
 
 LinesConfigurator.defaultProps = {
-  lines: [],
-  onLineAdd: () => {}
+  lines: []
 };
 
 export default LinesConfigurator;
