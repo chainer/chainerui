@@ -80,7 +80,7 @@ module.exports = {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.es6']
   },
-  devtool: NODE_PROD ? false : 'source-map',
+  devtool: NODE_PROD ? false : 'inline-source-map',
   target: 'web',
   plugins: [
     new webpack.DefinePlugin({
@@ -89,6 +89,8 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+      Popper: ['popper.js', 'default'],
     }),
     new HtmlWebpackPlugin({
       title: 'chainer_ui'
