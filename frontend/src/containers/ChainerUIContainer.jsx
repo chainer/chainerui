@@ -9,9 +9,15 @@ import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 
 
+const resultsLoadInterval = 5 * 1000;
+
 class ChainerUIContainer extends React.Component {
-  componentWillMount() {
-    this.props.loadResults();
+  componentDidMount() {
+    this.resultsLoadTimer = setInterval(this.props.loadResults, resultsLoadInterval);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.resultsLoadTimer);
   }
 
   handleAxisConfigLineAdd(axisName, line) {
