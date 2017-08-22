@@ -52,7 +52,7 @@ const buildLineElem = (line, axisName) => {
 
   return (
     <Line
-      type="monotone"
+      type="linear"
       name={line2key(line)}
       dataKey={line2dataKey(line, axisName)}
       yAxisId={axisName}
