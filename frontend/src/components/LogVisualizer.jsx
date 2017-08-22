@@ -169,12 +169,14 @@ class LogVisualizer extends React.Component {
                       yAxisId="yLeftAxis"
                       orientation="left"
                       scale={yLeftAxis.scale}
+                      domain={['auto', 'auto']}
                       allowDataOverflow
                     />
                     <YAxis
                       yAxisId="yRightAxis"
                       orientation="right"
                       scale={yRightAxis.scale}
+                      domain={['auto', 'auto']}
                       allowDataOverflow
                     />
                     <CartesianGrid strokeDasharray="3 3" />
