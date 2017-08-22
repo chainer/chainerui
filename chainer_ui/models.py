@@ -88,11 +88,12 @@ class Argument(BASE):
 
         arguments = []
 
-        for item in json.loads(self.data).items():
-            arguments.append({
-                'resultId': self.result_id,
-                'key': item[0],
-                'value': item[1]
-            })
+        if isinstance(json.loads(self.data), dict):
+            for item in json.loads(self.data).items():
+                arguments.append({
+                    'resultId': self.result_id,
+                    'key': item[0],
+                    'value': item[1]
+                })
 
         return arguments
