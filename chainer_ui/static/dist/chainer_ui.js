@@ -483,6 +483,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
+var resultsLoadInterval = 5 * 1000;
+
 var ChainerUIContainer = function (_React$Component) {
   _inherits(ChainerUIContainer, _React$Component);
 
@@ -493,9 +495,14 @@ var ChainerUIContainer = function (_React$Component) {
   }
 
   _createClass(ChainerUIContainer, [{
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      this.props.loadResults();
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.resultsLoadTimer = setInterval(this.props.loadResults, resultsLoadInterval);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      clearInterval(this.resultsLoadTimer);
     }
   }, {
     key: 'handleAxisConfigLineAdd',
