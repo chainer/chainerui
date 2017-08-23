@@ -114,6 +114,10 @@ class LineConfigurator extends React.Component {
             <FormText className="text-danger" hidden={!showError || logKey !== LOG_KEY_NONE}>
               Select a log key!!
             </FormText>
+
+            <FormText className="text-danger" hidden={!showError || (logKey === LOG_KEY_NONE && resultId === RESULT_NONE)}>
+              Cannot add this line because it already exists.
+            </FormText>
           </FormGroup>
         </Form>
       </div>
