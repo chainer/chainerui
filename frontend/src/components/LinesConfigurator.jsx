@@ -43,11 +43,15 @@ class LinesConfigurator extends React.Component {
   }
 
   handleAxisConfigLineAdd() {
-    const { axisName, onAxisConfigLineAdd } = this.props;
+    const { axisName, onAxisConfigLineAdd, lines } = this.props;
     const { addingLine } = this.state;
 
-    if (addingLine.resultId == null || addingLine.logKey == null) {
-      // invalid
+    const hasSameLine = !![
+      ...lines.filter((l) => l.resultId === addingLine.resultId && l.logKey === addingLine.logKey
+      )].length;
+
+    if (addingLine.resultId == null || addingLine.logKey == null || hasSameLine) {
+      // invalid or hasSameLine
       this.setState({
         showLineConfigError: true
       });
