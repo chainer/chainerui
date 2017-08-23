@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Label, FormText } from 'reactstrap';
-
+import { ChromePicker } from 'react-color';
 
 const RESULT_NONE = -1;
 const LOG_KEY_NONE = '';
@@ -44,6 +44,7 @@ class LineConfigurator extends React.Component {
 
     this.handleResultChange = this.handleResultChange.bind(this);
     this.handleLogKeyChange = this.handleLogKeyChange.bind(this);
+    this.handleLineColorChange = this.handleLineColorChange.bind(this);
 
     this.state = {
       showError: false
@@ -60,6 +61,12 @@ class LineConfigurator extends React.Component {
     const { line, onChange } = this.props;
     const newLogKey = e.target.value;
     onChange({ ...line, logKey: newLogKey });
+  }
+
+  handleLineColorChange(e) {
+    const { line, onChange } = this.props;
+    const { hex } = e;
+    onChange({ ...line, config: { color: hex } });
   }
 
   render() {
@@ -81,6 +88,11 @@ class LineConfigurator extends React.Component {
           <FormGroup>
             <Label>color</Label>
             <div style={colorBlockStyle}>{color}</div>
+            <ChromePicker
+              color={color}
+              disableAlpha
+              onChange={this.handleLineColorChange}
+            />
           </FormGroup>
           <FormGroup>
             <Label for="line-configurator-result-select">result</Label><br />
