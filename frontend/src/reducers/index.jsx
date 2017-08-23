@@ -16,11 +16,23 @@ const entities = (state = { results: {} }, action) => {
         });
         return { ...state, results };
       }
-      break;
+      return state;
+    case ActionTypes.RESULT_UPDATE_SUCCESS:
+      console.log(action);
+      if (action.response && action.response.result) {
+        const { result } = action.response;
+        return {
+          ...state,
+          results: {
+            ...state.results,
+            [result.id]: result
+          }
+        };
+      }
+      return state;
     default:
-      break;
+      return state;
   }
-  return state;
 };
 
 const axes = (state = {}, action) => {

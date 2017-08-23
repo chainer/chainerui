@@ -55,13 +55,18 @@ def update_results(result_id):
     db_session = create_db_session()
     result = db_session.query(Result).filter_by(id=result_id).first()
     if result is None:
-        response = jsonify({'result': None, 'message': 'No interface defined for URL'})
-        response.status_code = 404
-        return response
+        response = jsonify({'result': None, 'message': 'No interface defined for URL.'})
+        return response, 404
 
-    print(result_id)
-    print(result)
-    print(request.get_json())
+    request_json = request.get_json()
+    request_result = request_json.get('result')
+
+    name = request_result.get('name', None)
+    if name is not None:
+        result.name = name
+
+    db_session.add(result)
+    db_session.commit()
 
     return jsonify({'result': result.serialize})
 

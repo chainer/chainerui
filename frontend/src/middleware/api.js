@@ -1,9 +1,18 @@
 const API_ROOT = '/api/v1/';
 
-const callApi = (endpoint) => {
+const callApi = (endpoint, method = 'GET', body) => {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
+  const options = {
+    method,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  if (body !== null) {
+    options.body = JSON.stringify(body);
+  }
 
-  return fetch(fullUrl)
+  return fetch(fullUrl, options)
     .then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
@@ -23,7 +32,7 @@ export default (store) => (next) => (action) => {
   }
 
   let { endpoint } = callAPI;
-  const { types } = callAPI;
+  const { types, method, body } = callAPI;
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState());
@@ -42,7 +51,7 @@ export default (store) => (next) => (action) => {
   const [requestType, successType, failureType] = types;
   next(actionWith({ type: requestType }));
 
-  return callApi(endpoint).then(
+  return callApi(endpoint, method, body).then(
     (response) => next(actionWith({
       response,
       type: successType
