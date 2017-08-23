@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {
   loadResults,
   addLineToAxis, removeLineFromAxis,
+  updateAxisScale,
   updateResult
 } from '../actions';
 import ExperimentsTable from '../components/ExperimentsTable';
@@ -40,6 +41,7 @@ class ChainerUIContainer extends React.Component {
           config={config}
           onAxisConfigLineAdd={this.props.addLineToAxis}
           onAxisConfigLineRemove={this.props.removeLineFromAxis}
+          onAxisConfigScaleUpdate={this.props.updateAxisScale}
         />
         <ExperimentsTable
           results={results}
@@ -63,6 +65,7 @@ ChainerUIContainer.propTypes = {
   loadResults: PropTypes.func.isRequired,
   addLineToAxis: PropTypes.func.isRequired,
   removeLineFromAxis: PropTypes.func.isRequired,
+  updateAxisScale: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired
 };
 
@@ -102,6 +105,7 @@ export default connect(mapStateToProps, {
   loadResults,
   addLineToAxis,
   removeLineFromAxis,
+  updateAxisScale,
   updateResult
 })(ChainerUIContainer);
 

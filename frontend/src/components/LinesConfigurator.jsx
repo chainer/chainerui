@@ -31,7 +31,8 @@ class LinesConfigurator extends React.Component {
     const newAddingLine = this.state.showModal ? defaultLine : this.state.addingLine;
     this.setState({
       showModal: !this.state.showModal,
-      addingLine: newAddingLine
+      addingLine: newAddingLine,
+      showLineConfigError: false
     });
   }
 
@@ -43,11 +44,15 @@ class LinesConfigurator extends React.Component {
   }
 
   handleAxisConfigLineAdd() {
-    const { axisName, onAxisConfigLineAdd } = this.props;
+    const { axisName, onAxisConfigLineAdd, lines } = this.props;
     const { addingLine } = this.state;
 
-    if (addingLine.resultId == null || addingLine.logKey == null) {
-      // invalid
+    const hasSameLine = lines.some((l) =>
+      l.resultId === addingLine.resultId && l.logKey === addingLine.logKey
+    );
+
+    if (addingLine.resultId == null || addingLine.logKey == null || hasSameLine) {
+      // invalid or hasSameLine
       this.setState({
         showLineConfigError: true
       });
@@ -84,13 +89,7 @@ class LinesConfigurator extends React.Component {
       <ul className="list-group list-group-flush">
         {lineConfiguratorElems}
         <li className="list-group-item text-right">
-          <button
-            type="button"
-            className="btn btn-default btn-xs"
-            onClick={this.handleModalToggle}
-          >
-            <span className="glyphicon glyphicon-plus" /> Add
-          </button>
+          <Button color="primary" onClick={this.handleModalToggle}>Add</Button>
 
           <Modal isOpen={this.state.showModal} toggle={this.handleModalToggle} className="">
             <ModalHeader toggle={this.handleModalToggle}>Modal title</ModalHeader>
