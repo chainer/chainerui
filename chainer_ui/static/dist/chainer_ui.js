@@ -1582,8 +1582,6 @@ var checkErrors = function checkErrors() {
   }) : targetLineKey !== line2key(line) && lines.some(function (l) {
     return line2key(l) === line2key(line);
   });
-  console.log(targetLineKey);
-  console.log(line);
 
   return {
     resultIdNone: !Number.isInteger(line.resultId),

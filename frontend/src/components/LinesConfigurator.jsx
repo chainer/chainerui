@@ -17,8 +17,6 @@ const checkErrors = (line = defaultLine, isNewLine, targetLineKey, lines) => {
   const hasSameLine = isNewLine ?
     lines.some((l) => line2key(l) === line2key(line)) :
     (targetLineKey !== line2key(line) && lines.some((l) => line2key(l) === line2key(line)));
-  console.log(targetLineKey);
-  console.log(line);
 
   return {
     resultIdNone: !Number.isInteger(line.resultId),
