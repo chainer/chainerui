@@ -31,7 +31,8 @@ class LinesConfigurator extends React.Component {
     const newAddingLine = this.state.showModal ? defaultLine : this.state.addingLine;
     this.setState({
       showModal: !this.state.showModal,
-      addingLine: newAddingLine
+      addingLine: newAddingLine,
+      showLineConfigError: false
     });
   }
 
