@@ -47,9 +47,9 @@ class LinesConfigurator extends React.Component {
     const { axisName, onAxisConfigLineAdd, lines } = this.props;
     const { addingLine } = this.state;
 
-    const hasSameLine = !![
-      ...lines.filter((l) => l.resultId === addingLine.resultId && l.logKey === addingLine.logKey
-      )].length;
+    const hasSameLine = lines.some((l) =>
+      l.resultId === addingLine.resultId && l.logKey === addingLine.logKey
+    );
 
     if (addingLine.resultId == null || addingLine.logKey == null || hasSameLine) {
       // invalid or hasSameLine
