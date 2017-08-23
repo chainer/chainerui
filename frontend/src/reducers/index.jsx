@@ -18,7 +18,6 @@ const entities = (state = { results: {} }, action) => {
       }
       return state;
     case ActionTypes.RESULT_UPDATE_SUCCESS:
-      console.log(action);
       if (action.response && action.response.result) {
         const { result } = action.response;
         return {
