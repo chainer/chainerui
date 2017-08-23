@@ -95,19 +95,21 @@ var CALL_API = 'Call API';
 
 "use strict";
 /* unused harmony export RESULTS_REQUEST */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return RESULTS_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return RESULTS_SUCCESS; });
 /* unused harmony export RESULTS_FAILUE */
 /* unused harmony export RESULT_UPDATE_REQUEST */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return RESULT_UPDATE_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return RESULT_UPDATE_SUCCESS; });
 /* unused harmony export RESULT_UPDATE_FAILUE */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return loadResults; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return updateResult; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return loadResults; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return updateResult; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AXIS_CONFIG_LINE_ADD; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return AXIS_CONFIG_LINE_UPDATE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return AXIS_CONFIG_LINE_REMOVE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return AXIS_CONFIG_SCALE_UPDATE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return addLineToAxis; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return removeLineFromAxis; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return updateAxisScale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return AXIS_CONFIG_SCALE_UPDATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return addLineToAxis; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return updateLineInAxis; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return removeLineFromAxis; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return updateAxisScale; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__middleware_api__ = __webpack_require__(281);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -154,6 +156,7 @@ var updateResult = function updateResult() {
 // axis config
 
 var AXIS_CONFIG_LINE_ADD = 'AXIS_CONFIG_LINE_ADD';
+var AXIS_CONFIG_LINE_UPDATE = 'AXIS_CONFIG_LINE_UPDATE';
 var AXIS_CONFIG_LINE_REMOVE = 'AXIS_CONFIG_LINE_REMOVE';
 var AXIS_CONFIG_SCALE_UPDATE = 'AXIS_CONFIG_SCALE_UPDATE';
 
@@ -161,6 +164,15 @@ var addLineToAxis = function addLineToAxis(axisName, line) {
   return {
     type: AXIS_CONFIG_LINE_ADD,
     axisName: axisName,
+    line: line
+  };
+};
+
+var updateLineInAxis = function updateLineInAxis(axisName, lineKey, line) {
+  return {
+    type: AXIS_CONFIG_LINE_UPDATE,
+    axisName: axisName,
+    lineKey: lineKey,
     line: line
   };
 };
@@ -306,7 +318,7 @@ var entities = function entities() {
   var action = arguments[1];
 
   switch (action.type) {
-    case __WEBPACK_IMPORTED_MODULE_3__actions__["d" /* RESULTS_SUCCESS */]:
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["e" /* RESULTS_SUCCESS */]:
       if (action.response && action.response.results) {
         var resultsList = action.response.results;
         var results = {};
@@ -316,7 +328,7 @@ var entities = function entities() {
         return _extends({}, state, { results: results });
       }
       return state;
-    case __WEBPACK_IMPORTED_MODULE_3__actions__["e" /* RESULT_UPDATE_SUCCESS */]:
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["f" /* RESULT_UPDATE_SUCCESS */]:
       if (action.response && action.response.result) {
         var result = action.response.result;
 
@@ -355,6 +367,15 @@ var axes = function axes() {
       return _extends({}, state, _defineProperty({}, axisName, _extends({}, axisConfig, {
         lines: [].concat(_toConsumableArray(lines), [line])
       })));
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["c" /* AXIS_CONFIG_LINE_UPDATE */]:
+      for (var i = 0; i < lines.length; i += 1) {
+        if (line2key(lines[i]) === lineKey) {
+          return _extends({}, state, _defineProperty({}, axisName, _extends({}, axisConfig, {
+            lines: Object.assign([], lines, _defineProperty({}, i, line))
+          })));
+        }
+      }
+      return state;
     case __WEBPACK_IMPORTED_MODULE_3__actions__["b" /* AXIS_CONFIG_LINE_REMOVE */]:
       if (lineKey == null) {
         return state;
@@ -364,7 +385,7 @@ var axes = function axes() {
           return line2key(l) !== lineKey;
         })))
       })));
-    case __WEBPACK_IMPORTED_MODULE_3__actions__["c" /* AXIS_CONFIG_SCALE_UPDATE */]:
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["d" /* AXIS_CONFIG_SCALE_UPDATE */]:
       return _extends({}, state, _defineProperty({}, axisName, _extends({}, axisConfig, {
         scale: scale
       })));
@@ -564,11 +585,6 @@ var ChainerUIContainer = function (_React$Component) {
       clearInterval(this.resultsLoadTimer);
     }
   }, {
-    key: 'handleAxisConfigLineAdd',
-    value: function handleAxisConfigLineAdd(axisName, line) {
-      this.props.addLineToAxis(axisName, line);
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _props = this.props,
@@ -585,6 +601,7 @@ var ChainerUIContainer = function (_React$Component) {
           stats: stats,
           config: config,
           onAxisConfigLineAdd: this.props.addLineToAxis,
+          onAxisConfigLineUpdate: this.props.updateLineInAxis,
           onAxisConfigLineRemove: this.props.removeLineFromAxis,
           onAxisConfigScaleUpdate: this.props.updateAxisScale
         }),
@@ -599,22 +616,6 @@ var ChainerUIContainer = function (_React$Component) {
 
   return ChainerUIContainer;
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
-
-ChainerUIContainer.propTypes = {
-  results: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any).isRequired,
-  config: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
-    axes: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any)
-  }).isRequired,
-  stats: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
-    axes: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any),
-    argKeys: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string)
-  }).isRequired,
-  loadResults: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
-  addLineToAxis: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
-  removeLineFromAxis: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
-  updateAxisScale: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
-  updateResult: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
-};
 
 var mapEntitiesToStats = function mapEntitiesToStats(entities) {
   var _entities$results = entities.results,
@@ -653,12 +654,30 @@ var mapStateToProps = function mapStateToProps(state) {
   return { results: results, config: config, stats: stats };
 };
 
+ChainerUIContainer.propTypes = {
+  results: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any).isRequired,
+  config: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
+    axes: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any)
+  }).isRequired,
+  stats: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
+    axes: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any),
+    argKeys: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string)
+  }).isRequired,
+  loadResults: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  addLineToAxis: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  updateLineInAxis: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  removeLineFromAxis: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  updateAxisScale: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  updateResult: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
+};
+
 /* harmony default export */ __webpack_exports__["a"] = (Object(__WEBPACK_IMPORTED_MODULE_2_react_redux__["connect"])(mapStateToProps, {
-  loadResults: __WEBPACK_IMPORTED_MODULE_3__actions__["g" /* loadResults */],
-  addLineToAxis: __WEBPACK_IMPORTED_MODULE_3__actions__["f" /* addLineToAxis */],
-  removeLineFromAxis: __WEBPACK_IMPORTED_MODULE_3__actions__["h" /* removeLineFromAxis */],
-  updateAxisScale: __WEBPACK_IMPORTED_MODULE_3__actions__["i" /* updateAxisScale */],
-  updateResult: __WEBPACK_IMPORTED_MODULE_3__actions__["j" /* updateResult */]
+  loadResults: __WEBPACK_IMPORTED_MODULE_3__actions__["h" /* loadResults */],
+  addLineToAxis: __WEBPACK_IMPORTED_MODULE_3__actions__["g" /* addLineToAxis */],
+  updateLineInAxis: __WEBPACK_IMPORTED_MODULE_3__actions__["k" /* updateLineInAxis */],
+  removeLineFromAxis: __WEBPACK_IMPORTED_MODULE_3__actions__["i" /* removeLineFromAxis */],
+  updateAxisScale: __WEBPACK_IMPORTED_MODULE_3__actions__["j" /* updateAxisScale */],
+  updateResult: __WEBPACK_IMPORTED_MODULE_3__actions__["l" /* updateResult */]
 })(ChainerUIContainer));
 
 /***/ }),
@@ -1065,6 +1084,7 @@ var LogVisualizer = function (_React$Component) {
           _props$config = _props.config,
           config = _props$config === undefined ? defaultConfig : _props$config,
           onAxisConfigLineAdd = _props.onAxisConfigLineAdd,
+          onAxisConfigLineUpdate = _props.onAxisConfigLineUpdate,
           onAxisConfigLineRemove = _props.onAxisConfigLineRemove,
           onAxisConfigScaleUpdate = _props.onAxisConfigScaleUpdate;
       var _config$axes = config.axes,
@@ -1238,6 +1258,7 @@ var LogVisualizer = function (_React$Component) {
               axisName: 'yLeftAxis',
               lines: yLeftAxis.lines,
               onAxisConfigLineAdd: onAxisConfigLineAdd,
+              onAxisConfigLineUpdate: onAxisConfigLineUpdate,
               onAxisConfigLineRemove: onAxisConfigLineRemove
             })
           ),
@@ -1252,6 +1273,7 @@ var LogVisualizer = function (_React$Component) {
               axisName: 'yRightAxis',
               lines: yRightAxis.lines,
               onAxisConfigLineAdd: onAxisConfigLineAdd,
+              onAxisConfigLineUpdate: onAxisConfigLineUpdate,
               onAxisConfigLineRemove: onAxisConfigLineRemove
             })
           ),
@@ -1284,6 +1306,7 @@ LogVisualizer.propTypes = {
     })
   }),
   onAxisConfigLineAdd: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  onAxisConfigLineUpdate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
   onAxisConfigLineRemove: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
   onAxisConfigScaleUpdate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
 };
@@ -1547,6 +1570,36 @@ var defaultLine = {
   }
 };
 
+var checkErrors = function checkErrors() {
+  var line = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultLine;
+  var isNewLine = arguments[1];
+  var targetLineKey = arguments[2];
+  var lines = arguments[3];
+  var line2key = __WEBPACK_IMPORTED_MODULE_3__utils__["a" /* default */].line2key;
+
+  var hasSameLine = isNewLine ? lines.some(function (l) {
+    return line2key(l) === line2key(line);
+  }) : targetLineKey !== line2key(line) && lines.some(function (l) {
+    return line2key(l) === line2key(line);
+  });
+  console.log(targetLineKey);
+  console.log(line);
+
+  return {
+    resultIdNone: !Number.isInteger(line.resultId),
+    logKeyNone: !line.logKey,
+    hasSameLine: hasSameLine
+  };
+};
+
+var hasError = function hasError(errors) {
+  var resultIdNone = errors.resultIdNone,
+      logKeyNone = errors.logKeyNone,
+      hasSameLine = errors.hasSameLine;
+
+  return resultIdNone || logKeyNone || hasSameLine;
+};
+
 var LinesConfigurator = function (_React$Component) {
   _inherits(LinesConfigurator, _React$Component);
 
@@ -1556,13 +1609,16 @@ var LinesConfigurator = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (LinesConfigurator.__proto__ || Object.getPrototypeOf(LinesConfigurator)).call(this));
 
     _this.handleModalToggle = _this.handleModalToggle.bind(_this);
-    _this.handleAddingLineChange = _this.handleAddingLineChange.bind(_this);
+    _this.handleModalOpen = _this.handleModalOpen.bind(_this);
+    _this.handleModalClose = _this.handleModalClose.bind(_this);
+    _this.handleEditingLineChange = _this.handleEditingLineChange.bind(_this);
     _this.handleAxisConfigLineAdd = _this.handleAxisConfigLineAdd.bind(_this);
     _this.handleAxisConfigLineRemove = _this.handleAxisConfigLineRemove.bind(_this);
 
     _this.state = {
       showModal: false,
-      addingLine: defaultLine
+      editingLine: defaultLine,
+      isNewLine: true
     };
     return _this;
   }
@@ -1570,19 +1626,46 @@ var LinesConfigurator = function (_React$Component) {
   _createClass(LinesConfigurator, [{
     key: 'handleModalToggle',
     value: function handleModalToggle() {
-      var newAddingLine = this.state.showModal ? defaultLine : this.state.addingLine;
+      if (this.state.showModal) {
+        this.handleModalClose();
+      } else {
+        this.handleModalOpen();
+      }
+    }
+  }, {
+    key: 'handleModalOpen',
+    value: function handleModalOpen() {
+      var line = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultLine;
+      var line2key = __WEBPACK_IMPORTED_MODULE_3__utils__["a" /* default */].line2key;
+
       this.setState({
-        showModal: !this.state.showModal,
-        addingLine: newAddingLine,
-        showLineConfigError: false
+        showModal: true,
+        targetLineKey: line2key(line),
+        editingLine: line,
+        isNewLine: line === defaultLine,
+        errors: {}
       });
     }
   }, {
-    key: 'handleAddingLineChange',
-    value: function handleAddingLineChange(newLine) {
+    key: 'handleModalClose',
+    value: function handleModalClose() {
       this.setState({
-        addingLine: newLine,
-        showLineConfigError: false
+        showModal: false
+      });
+    }
+  }, {
+    key: 'handleEditingLineChange',
+    value: function handleEditingLineChange(newLine) {
+      var lines = this.props.lines;
+      var _state = this.state,
+          isNewLine = _state.isNewLine,
+          targetLineKey = _state.targetLineKey;
+
+      var errors = checkErrors(newLine, isNewLine, targetLineKey, lines);
+
+      this.setState({
+        editingLine: newLine,
+        errors: errors
       });
     }
   }, {
@@ -1591,22 +1674,24 @@ var LinesConfigurator = function (_React$Component) {
       var _props = this.props,
           axisName = _props.axisName,
           onAxisConfigLineAdd = _props.onAxisConfigLineAdd,
+          onAxisConfigLineUpdate = _props.onAxisConfigLineUpdate,
           lines = _props.lines;
-      var addingLine = this.state.addingLine;
+      var _state2 = this.state,
+          targetLineKey = _state2.targetLineKey,
+          editingLine = _state2.editingLine,
+          isNewLine = _state2.isNewLine;
 
+      var errors = checkErrors(editingLine, isNewLine, targetLineKey, lines);
 
-      var hasSameLine = lines.some(function (l) {
-        return l.resultId === addingLine.resultId && l.logKey === addingLine.logKey;
-      });
-
-      if (addingLine.resultId == null || addingLine.logKey == null || hasSameLine) {
-        // invalid or hasSameLine
-        this.setState({
-          showLineConfigError: true
-        });
+      if (hasError(errors)) {
+        this.setState({ showError: true, errors: errors });
       } else {
-        onAxisConfigLineAdd(axisName, addingLine);
-        this.handleModalToggle();
+        if (isNewLine) {
+          onAxisConfigLineAdd(axisName, editingLine);
+        } else {
+          onAxisConfigLineUpdate(axisName, targetLineKey, editingLine);
+        }
+        this.handleModalClose();
       }
     }
   }, {
@@ -1628,9 +1713,11 @@ var LinesConfigurator = function (_React$Component) {
           results = _props3.results,
           _props3$lines = _props3.lines,
           lines = _props3$lines === undefined ? [] : _props3$lines;
-      var _state = this.state,
-          addingLine = _state.addingLine,
-          showLineConfigError = _state.showLineConfigError;
+      var _state3 = this.state,
+          editingLine = _state3.editingLine,
+          isNewLine = _state3.isNewLine,
+          errors = _state3.errors,
+          showError = _state3.showError;
 
 
       var lineConfiguratorElems = lines.map(function (line) {
@@ -1639,6 +1726,7 @@ var LinesConfigurator = function (_React$Component) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__LinesConfiguratorRow__["a" /* default */], {
           line: line,
           result: result,
+          onEditClick: _this2.handleModalOpen,
           onRemove: _this2.handleAxisConfigLineRemove,
           key: line2key(line)
         });
@@ -1662,16 +1750,16 @@ var LinesConfigurator = function (_React$Component) {
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_2_reactstrap__["ModalHeader"],
               { toggle: this.handleModalToggle },
-              'Modal title'
+              isNewLine ? 'Add a line' : 'Edit a line'
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_2_reactstrap__["ModalBody"],
               null,
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__LineConfigurator__["a" /* default */], {
                 results: results,
-                line: addingLine,
-                showError: showLineConfigError,
-                onChange: this.handleAddingLineChange
+                line: editingLine,
+                errors: showError ? errors : {},
+                onChange: this.handleEditingLineChange
               })
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -1686,7 +1774,7 @@ var LinesConfigurator = function (_React$Component) {
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Button"],
                 { color: 'primary', onClick: this.handleAxisConfigLineAdd },
-                'Add'
+                isNewLine ? 'Add' : 'Save'
               )
             )
           )
@@ -1706,6 +1794,7 @@ LinesConfigurator.propTypes = {
     logKey: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
   })),
   onAxisConfigLineAdd: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  onAxisConfigLineUpdate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
   onAxisConfigLineRemove: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
 };
 
@@ -1746,19 +1835,34 @@ var LinesConfiguratorRow = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (LinesConfiguratorRow.__proto__ || Object.getPrototypeOf(LinesConfiguratorRow)).call(this, props));
 
+    _this.handleEditClick = _this.handleEditClick.bind(_this);
     _this.handleRemoveClick = _this.handleRemoveClick.bind(_this);
     return _this;
   }
 
   _createClass(LinesConfiguratorRow, [{
-    key: 'handleRemoveClick',
-    value: function handleRemoveClick() {
-      var line2key = __WEBPACK_IMPORTED_MODULE_2__utils__["a" /* default */].line2key;
+    key: 'handleEditClick',
+    value: function handleEditClick(e) {
       var _props = this.props,
           line = _props.line,
-          onRemove = _props.onRemove;
+          onEditClick = _props.onEditClick;
 
 
+      e.preventDefault();
+      e.stopPropagation();
+      onEditClick(line);
+    }
+  }, {
+    key: 'handleRemoveClick',
+    value: function handleRemoveClick(e) {
+      var line2key = __WEBPACK_IMPORTED_MODULE_2__utils__["a" /* default */].line2key;
+      var _props2 = this.props,
+          line = _props2.line,
+          onRemove = _props2.onRemove;
+
+
+      e.preventDefault();
+      e.stopPropagation();
       onRemove(line2key(line));
     }
   }, {
@@ -1767,9 +1871,9 @@ var LinesConfiguratorRow = function (_React$Component) {
       var line2key = __WEBPACK_IMPORTED_MODULE_2__utils__["a" /* default */].line2key,
           displayName = __WEBPACK_IMPORTED_MODULE_2__utils__["a" /* default */].displayName,
           truncateForward = __WEBPACK_IMPORTED_MODULE_2__utils__["a" /* default */].truncateForward;
-      var _props2 = this.props,
-          line = _props2.line,
-          result = _props2.result;
+      var _props3 = this.props,
+          line = _props3.line,
+          result = _props3.result;
       var _line$config = line.config,
           config = _line$config === undefined ? {} : _line$config;
 
@@ -1782,7 +1886,11 @@ var LinesConfiguratorRow = function (_React$Component) {
 
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'li',
-        { className: 'list-group-item', key: line2key(line) },
+        {
+          className: 'list-group-item',
+          onClick: this.handleEditClick,
+          key: line2key(line)
+        },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { className: 'row' },
@@ -1834,10 +1942,12 @@ LinesConfiguratorRow.propTypes = {
     args: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any),
     logs: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any)
   }).isRequired,
+  onEditClick: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
   onRemove: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 
 LinesConfiguratorRow.defaultProps = {
+  onEditClick: function onEditClick() {},
   onRemove: function onRemove() {}
 };
 
@@ -1943,10 +2053,6 @@ var LineConfigurator = function (_React$Component) {
     _this.handleResultChange = _this.handleResultChange.bind(_this);
     _this.handleLogKeyChange = _this.handleLogKeyChange.bind(_this);
     _this.handleLineColorChange = _this.handleLineColorChange.bind(_this);
-
-    _this.state = {
-      showError: false
-    };
     return _this;
   }
 
@@ -1987,8 +2093,8 @@ var LineConfigurator = function (_React$Component) {
           results = _props4.results,
           _props4$line = _props4.line,
           line = _props4$line === undefined ? {} : _props4$line,
-          _props4$showError = _props4.showError,
-          showError = _props4$showError === undefined ? false : _props4$showError;
+          _props4$errors = _props4.errors,
+          errors = _props4$errors === undefined ? {} : _props4$errors;
       var _line$resultId = line.resultId,
           resultId = _line$resultId === undefined ? RESULT_NONE : _line$resultId,
           _line$logKey = line.logKey,
@@ -2054,7 +2160,7 @@ var LineConfigurator = function (_React$Component) {
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_2_reactstrap__["FormText"],
-              { className: 'text-danger', hidden: !showError || resultId !== RESULT_NONE },
+              { className: 'text-danger', hidden: !errors.resultIdNone },
               'Select a result!!'
             )
           ),
@@ -2082,12 +2188,12 @@ var LineConfigurator = function (_React$Component) {
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_2_reactstrap__["FormText"],
-              { className: 'text-danger', hidden: !showError || logKey !== LOG_KEY_NONE },
+              { className: 'text-danger', hidden: !errors.logKeyNone },
               'Select a log key!!'
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_2_reactstrap__["FormText"],
-              { className: 'text-danger', hidden: !showError || logKey === LOG_KEY_NONE && resultId === RESULT_NONE },
+              { className: 'text-danger', hidden: !errors.hasSameLine },
               'Cannot add this line because it already exists.'
             )
           )
@@ -2108,13 +2214,17 @@ LineConfigurator.propTypes = {
       color: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
     })
   }),
-  showError: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+  errors: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
+    resultIdNone: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+    logKeyNone: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+    hasSameLine: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool
+  }),
   onChange: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 
 LineConfigurator.defaultProps = {
   line: {},
-  showError: false,
+  errors: {},
   onChange: function onChange() {}
 };
 
