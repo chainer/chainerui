@@ -83,8 +83,8 @@ class ResultRow extends React.Component {
 ResultRow.propTypes = {
   result: PropTypes.shape({
     id: PropTypes.number,
-    name: PropTypes.string,
     pathName: PropTypes.string,
+    name: PropTypes.string,
     args: PropTypes.arrayOf(PropTypes.any),
     logs: PropTypes.arrayOf(PropTypes.any)
   }).isRequired,

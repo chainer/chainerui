@@ -95,5 +95,5 @@ if __name__ == '__main__':
     SCHEDULER = APScheduler()
     SCHEDULER.init_app(APP)
 
-    # SCHEDULER.start()
+    SCHEDULER.start()
     APP.run(port=ARGS.port)
