@@ -1503,14 +1503,9 @@ var LinesConfigurator = function (_React$Component) {
           'li',
           { className: 'list-group-item text-right' },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'button',
-            {
-              type: 'button',
-              className: 'btn btn-default btn-xs',
-              onClick: this.handleModalToggle
-            },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'glyphicon glyphicon-plus' }),
-            ' Add'
+            __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Button"],
+            { color: 'primary', onClick: this.handleModalToggle },
+            'Add'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Modal"],
