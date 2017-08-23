@@ -84,7 +84,8 @@ class LogVisualizer extends React.Component {
       stats = defaultStats,
       config = defaultConfig,
       onAxisConfigLineAdd,
-      onAxisConfigLineRemove
+      onAxisConfigLineRemove,
+      onAxisConfigScaleUpdate
     } = this.props;
     const {
       xAxis = { axisName: 'xAxis' },
@@ -164,6 +165,7 @@ class LogVisualizer extends React.Component {
                       type="number"
                       dataKey={xAxisKey}
                       scale={xAxis.scale}
+                      domain={['auto', 'auto']}
                       allowDataOverflow
                     />
                     <YAxis
@@ -216,6 +218,7 @@ class LogVisualizer extends React.Component {
         <div className="col-sm-4">
           <AxisConfigurator
             axisConfig={yLeftAxis}
+            onChangeScale={onAxisConfigScaleUpdate}
           >
             <LinesConfigurator
               results={results}
@@ -227,6 +230,7 @@ class LogVisualizer extends React.Component {
           </AxisConfigurator>
           <AxisConfigurator
             axisConfig={yRightAxis}
+            onChangeScale={onAxisConfigScaleUpdate}
           >
             <LinesConfigurator
               results={results}
@@ -236,7 +240,10 @@ class LogVisualizer extends React.Component {
               onAxisConfigLineRemove={onAxisConfigLineRemove}
             />
           </AxisConfigurator>
-          <AxisConfigurator axisConfig={xAxis} />
+          <AxisConfigurator
+            axisConfig={xAxis}
+            onChangeScale={onAxisConfigScaleUpdate}
+          />
         </div>
       </div>
     );
@@ -260,7 +267,8 @@ LogVisualizer.propTypes = {
     })
   }),
   onAxisConfigLineAdd: PropTypes.func.isRequired,
-  onAxisConfigLineRemove: PropTypes.func.isRequired
+  onAxisConfigLineRemove: PropTypes.func.isRequired,
+  onAxisConfigScaleUpdate: PropTypes.func.isRequired
 };
 LogVisualizer.defaultProps = {
   stats: defaultStats,

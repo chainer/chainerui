@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   loadResults,
-  addLineToAxis, removeLineFromAxis
+  addLineToAxis, removeLineFromAxis,
+  updateAxisScale
 } from '../actions';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
@@ -35,6 +36,7 @@ class ChainerUIContainer extends React.Component {
           config={config}
           onAxisConfigLineAdd={this.props.addLineToAxis}
           onAxisConfigLineRemove={this.props.removeLineFromAxis}
+          onAxisConfigScaleUpdate={this.props.updateAxisScale}
         />
         <ExperimentsTable
           results={results}
@@ -56,7 +58,8 @@ ChainerUIContainer.propTypes = {
   }).isRequired,
   loadResults: PropTypes.func.isRequired,
   addLineToAxis: PropTypes.func.isRequired,
-  removeLineFromAxis: PropTypes.func.isRequired
+  removeLineFromAxis: PropTypes.func.isRequired,
+  updateAxisScale: PropTypes.func.isRequired
 };
 
 const mapEntitiesToStats = (entities) => {
@@ -94,6 +97,7 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   loadResults,
   addLineToAxis,
-  removeLineFromAxis
+  removeLineFromAxis,
+  updateAxisScale
 })(ChainerUIContainer);
 
