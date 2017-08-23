@@ -46,14 +46,15 @@ const defaultConfig = {
   }
 };
 
-const buildLineElem = (line, axisName) => {
+const buildLineElem = (line, axisName, results) => {
   const { config = {} } = line;
-  const { line2key, line2dataKey } = Utils;
+  const result = results[line.resultId] || {};
+  const { line2name, line2dataKey } = Utils;
 
   return (
     <Line
       type="linear"
-      name={line2key(line)}
+      name={line2name(line, result)}
       dataKey={line2dataKey(line, axisName)}
       yAxisId={axisName}
       stroke={config.color}
@@ -64,10 +65,10 @@ const buildLineElem = (line, axisName) => {
   );
 };
 
-const buildLineElems = (axisName, config) => {
+const buildLineElems = (axisName, results, config) => {
   const axisConfig = config.axes[axisName] || {};
   const { lines = [] } = axisConfig;
-  return lines.map((line) => buildLineElem(line, axisName));
+  return lines.map((line) => buildLineElem(line, axisName, results));
 };
 
 class LogVisualizer extends React.Component {
@@ -136,7 +137,7 @@ class LogVisualizer extends React.Component {
     });
     const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
-    const lineElems = [...buildLineElems('yLeftAxis', config), ...buildLineElems('yRightAxis', config)];
+    const lineElems = [...buildLineElems('yLeftAxis', results, config), ...buildLineElems('yRightAxis', results, config)];
 
     return (
       <div className="log-visualizer-root row">

@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import {
   loadResults,
   addLineToAxis, removeLineFromAxis,
-  updateAxisScale
+  updateAxisScale,
+  updateResult
 } from '../actions';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
@@ -13,6 +14,10 @@ import LogVisualizer from '../components/LogVisualizer';
 const resultsLoadInterval = 5 * 1000;
 
 class ChainerUIContainer extends React.Component {
+  componentWillMount() {
+    this.props.loadResults();
+  }
+
   componentDidMount() {
     this.resultsLoadTimer = setInterval(this.props.loadResults, resultsLoadInterval);
   }
@@ -41,6 +46,7 @@ class ChainerUIContainer extends React.Component {
         <ExperimentsTable
           results={results}
           stats={stats}
+          onResultUpdate={this.props.updateResult}
         />
       </div>
     );
@@ -59,7 +65,8 @@ ChainerUIContainer.propTypes = {
   loadResults: PropTypes.func.isRequired,
   addLineToAxis: PropTypes.func.isRequired,
   removeLineFromAxis: PropTypes.func.isRequired,
-  updateAxisScale: PropTypes.func.isRequired
+  updateAxisScale: PropTypes.func.isRequired,
+  updateResult: PropTypes.func.isRequired
 };
 
 const mapEntitiesToStats = (entities) => {
@@ -98,6 +105,7 @@ export default connect(mapStateToProps, {
   loadResults,
   addLineToAxis,
   removeLineFromAxis,
-  updateAxisScale
+  updateAxisScale,
+  updateResult
 })(ChainerUIContainer);
 

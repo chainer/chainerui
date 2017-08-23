@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Label, FormText } from 'reactstrap';
 import { ChromePicker } from 'react-color';
+import Utils from '../utils';
 
 const RESULT_NONE = -1;
 const LOG_KEY_NONE = '';
@@ -18,15 +19,18 @@ const getLogKeys = (result = {}) => {
   return Object.keys(logKeySet);
 };
 
-const createResultOptionElems = (results = []) => [
-  <option value={RESULT_NONE} key={RESULT_NONE} disabled>-- select result --</option>,
-  ...Object.keys(results).map((resultId) => {
-    const result = results[resultId];
-    return (
-      <option value={result.id} key={result.id}>{result.id}: {result.pathName}</option>
-    );
-  })
-];
+const createResultOptionElems = (results = []) => {
+  const { displayName } = Utils;
+  return [
+    <option value={RESULT_NONE} key={RESULT_NONE} disabled>-- select result --</option>,
+    ...Object.keys(results).map((resultId) => {
+      const result = results[resultId];
+      return (
+        <option value={result.id} key={result.id}>{result.id}: {displayName(result)}</option>
+      );
+    })
+  ];
+};
 
 const createLogKeyOptionElems = (result = {}) => {
   const logKeys = getLogKeys(result);

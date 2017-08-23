@@ -3,7 +3,7 @@
 import os
 import argparse
 
-from flask import Flask, render_template, jsonify, url_for
+from flask import Flask, request, render_template, jsonify, abort, url_for
 from flask_apscheduler import APScheduler
 
 from models import Result
@@ -40,7 +40,7 @@ def index():
 
 
 @APP.route('/api/v1/results', methods=['GET'])
-def get_experiments():
+def get_results():
     ''' /api/v1/results '''
 
     db_session = create_db_session()
@@ -48,6 +48,27 @@ def get_experiments():
 
     return jsonify({'results': [result.serialize for result in results]})
 
+@APP.route('/api/v1/results/<int:result_id>', methods=['PUT'])
+def update_results(result_id):
+    ''' PUT /api/v1/results/<int:result_id> '''
+
+    db_session = create_db_session()
+    result = db_session.query(Result).filter_by(id=result_id).first()
+    if result is None:
+        response = jsonify({'result': None, 'message': 'No interface defined for URL.'})
+        return response, 404
+
+    request_json = request.get_json()
+    request_result = request_json.get('result')
+
+    name = request_result.get('name', None)
+    if name is not None:
+        result.name = name
+
+    db_session.add(result)
+    db_session.commit()
+
+    return jsonify({'result': result.serialize})
 
 if __name__ == '__main__':
     init_db()

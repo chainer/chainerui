@@ -14,11 +14,13 @@ class Result(BASE):
 
     id = Column(Integer, primary_key=True)
     path_name = Column(String(512), unique=True)
+    name = Column(String(512))
     logs = relationship('Log')
     args = relationship('Argument', uselist=False)
 
-    def __init__(self, path_name=None):
+    def __init__(self, path_name=None, name=None):
         self.path_name = path_name
+        self.name = name
 
     def __repr__(self):
         return '<Result id: %r, path_name: %r />' % (self.id, self.path_name)
@@ -29,8 +31,9 @@ class Result(BASE):
         return {
             'id': self.id,
             'pathName': self.path_name,
+            'name': self.name,
             'logs': [log.serialize for log in self.logs],
-            'args': self.args.serialize
+            'args': self.args.serialize if self.args is not None else []
         }
 
 
