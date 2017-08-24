@@ -13,6 +13,7 @@ import {
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
+import SideBar from '../components/SideBar';
 
 let resultsPollingTimer;
 
@@ -59,22 +60,37 @@ class ChainerUIContainer extends React.Component {
           config={config}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
         />
-        <Container>
-          <LogVisualizer
-            results={results}
-            stats={stats}
-            config={config}
-            onAxisConfigLineAdd={this.props.addLineToAxis}
-            onAxisConfigLineUpdate={this.props.updateLineInAxis}
-            onAxisConfigLineRemove={this.props.removeLineFromAxis}
-            onAxisConfigScaleUpdate={this.props.updateAxisScale}
-            onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
-          />
-          <ExperimentsTable
-            results={results}
-            stats={stats}
-            onResultUpdate={this.props.updateResult}
-          />
+        <Container fluid>
+          <div className="row">
+            <div className="col-sm-4 col-md-3">
+              <SideBar
+                results={results}
+                config={config}
+                onAxisConfigLineAdd={this.props.addLineToAxis}
+                onAxisConfigLineUpdate={this.props.updateLineInAxis}
+                onAxisConfigLineRemove={this.props.removeLineFromAxis}
+                onAxisConfigScaleUpdate={this.props.updateAxisScale}
+                onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
+              />
+            </div>
+            <div className="col-sm-8 col-md-9">
+              <LogVisualizer
+                results={results}
+                stats={stats}
+                config={config}
+                onAxisConfigLineAdd={this.props.addLineToAxis}
+                onAxisConfigLineUpdate={this.props.updateLineInAxis}
+                onAxisConfigLineRemove={this.props.removeLineFromAxis}
+                onAxisConfigScaleUpdate={this.props.updateAxisScale}
+                onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
+              />
+              <ExperimentsTable
+                results={results}
+                stats={stats}
+                onResultUpdate={this.props.updateResult}
+              />
+            </div>
+          </div>
         </Container>
       </div>
     );

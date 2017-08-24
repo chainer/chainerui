@@ -69,7 +69,7 @@ class NavigationBar extends React.Component {
 
     return (
       <Navbar className="navbar-light bg-light mb-3">
-        <Container>
+        <Container fluid>
           <NavbarBrand href="/">Chainer UI</NavbarBrand>
           <Collapse isOpen>
             <Button id="navbar-global-setting" onClick={this.toggleSettingPopover}>
