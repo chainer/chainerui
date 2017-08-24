@@ -133,9 +133,9 @@ class LinesConfigurator extends React.Component {
     });
 
     return (
-      <ul className="list-group list-group-flush">
+      <div className="list-group list-group-flush">
         {lineConfiguratorElems}
-        <li className="list-group-item text-right">
+        <div className="list-group-item text-right">
           <Button color="primary" onClick={this.handleModalToggle}>Add</Button>
 
           <Modal isOpen={this.state.showModal} toggle={this.handleModalToggle} className="">
@@ -158,8 +158,8 @@ class LinesConfigurator extends React.Component {
             </ModalFooter>
           </Modal>
 
-        </li>
-      </ul>
+        </div>
+      </div>
     );
   }
 }

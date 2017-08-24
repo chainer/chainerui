@@ -40,8 +40,9 @@ class LinesConfiguratorRow extends React.Component {
     };
 
     return (
-      <li
-        className="list-group-item"
+      <a
+        href="#"
+        className="list-group-item list-group-item-action"
         onClick={this.handleEditClick}
         key={line2key(line)}
       >
@@ -60,7 +61,7 @@ class LinesConfiguratorRow extends React.Component {
             </button>
           </div>
         </div>
-      </li>
+      </a>
 
     );
   }
