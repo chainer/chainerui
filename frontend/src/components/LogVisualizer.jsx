@@ -84,8 +84,7 @@ class LogVisualizer extends React.Component {
       results = {},
       stats = defaultStats,
       config = defaultConfig,
-      onAxisConfigLineAdd,
-      onAxisConfigLineRemove,
+      onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
       onAxisConfigScaleUpdate
     } = this.props;
     const {
@@ -226,6 +225,7 @@ class LogVisualizer extends React.Component {
               axisName="yLeftAxis"
               lines={yLeftAxis.lines}
               onAxisConfigLineAdd={onAxisConfigLineAdd}
+              onAxisConfigLineUpdate={onAxisConfigLineUpdate}
               onAxisConfigLineRemove={onAxisConfigLineRemove}
             />
           </AxisConfigurator>
@@ -238,6 +238,7 @@ class LogVisualizer extends React.Component {
               axisName="yRightAxis"
               lines={yRightAxis.lines}
               onAxisConfigLineAdd={onAxisConfigLineAdd}
+              onAxisConfigLineUpdate={onAxisConfigLineUpdate}
               onAxisConfigLineRemove={onAxisConfigLineRemove}
             />
           </AxisConfigurator>
@@ -268,6 +269,7 @@ LogVisualizer.propTypes = {
     })
   }),
   onAxisConfigLineAdd: PropTypes.func.isRequired,
+  onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigLineRemove: PropTypes.func.isRequired,
   onAxisConfigScaleUpdate: PropTypes.func.isRequired
 };

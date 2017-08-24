@@ -7,13 +7,24 @@ class LinesConfiguratorRow extends React.Component {
   constructor(props) {
     super(props);
 
+    this.handleEditClick = this.handleEditClick.bind(this);
     this.handleRemoveClick = this.handleRemoveClick.bind(this);
   }
 
-  handleRemoveClick() {
+  handleEditClick(e) {
+    const { line, onEditClick } = this.props;
+
+    e.preventDefault();
+    e.stopPropagation();
+    onEditClick(line);
+  }
+
+  handleRemoveClick(e) {
     const { line2key } = Utils;
     const { line, onRemove } = this.props;
 
+    e.preventDefault();
+    e.stopPropagation();
     onRemove(line2key(line));
   }
 
@@ -29,7 +40,11 @@ class LinesConfiguratorRow extends React.Component {
     };
 
     return (
-      <li className="list-group-item" key={line2key(line)}>
+      <li
+        className="list-group-item"
+        onClick={this.handleEditClick}
+        key={line2key(line)}
+      >
         <div className="row">
           <div className="col-sm-1" style={colorBlockStyle} />
           <div className="col-sm-5">{truncateForward(displayName(result), 24)}</div>
@@ -62,10 +77,12 @@ LinesConfiguratorRow.propTypes = {
     args: PropTypes.arrayOf(PropTypes.any),
     logs: PropTypes.arrayOf(PropTypes.any)
   }).isRequired,
+  onEditClick: PropTypes.func,
   onRemove: PropTypes.func
 };
 
 LinesConfiguratorRow.defaultProps = {
+  onEditClick: () => {},
   onRemove: () => {}
 };
 
