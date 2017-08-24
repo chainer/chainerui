@@ -36,7 +36,7 @@ const entities = (state = { results: {} }, action) => {
 
 const axes = (state = {}, action) => {
   const { line2key } = Utils;
-  const { axisName, line, lineKey, scale } = action;
+  const { axisName, line, lineKey, scale, xAxisKey } = action;
   if (axisName == null) {
     return state;
   }
@@ -85,6 +85,14 @@ const axes = (state = {}, action) => {
         [axisName]: {
           ...axisConfig,
           scale
+        }
+      };
+    case ActionTypes.AXIS_CONFIG_X_KEY_UPDATE:
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          xAxisKey
         }
       };
     default:

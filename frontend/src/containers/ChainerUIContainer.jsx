@@ -7,7 +7,8 @@ import {
   addLineToAxis, updateLineInAxis, removeLineFromAxis,
   updateAxisScale,
   updateResult,
-  updateGlobalPollingRate
+  updateGlobalPollingRate,
+  updateXAxisKey
 } from '../actions';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
@@ -67,6 +68,7 @@ class ChainerUIContainer extends React.Component {
             onAxisConfigLineUpdate={this.props.updateLineInAxis}
             onAxisConfigLineRemove={this.props.removeLineFromAxis}
             onAxisConfigScaleUpdate={this.props.updateAxisScale}
+            onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
           />
           <ExperimentsTable
             results={results}
@@ -128,7 +130,8 @@ ChainerUIContainer.propTypes = {
   removeLineFromAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
-  updateResult: PropTypes.func.isRequired
+  updateResult: PropTypes.func.isRequired,
+  updateXAxisKey: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, {
@@ -138,6 +141,7 @@ export default connect(mapStateToProps, {
   removeLineFromAxis,
   updateAxisScale,
   updateResult,
-  updateGlobalPollingRate
+  updateGlobalPollingRate,
+  updateXAxisKey
 })(ChainerUIContainer);
 
