@@ -25,7 +25,7 @@ const checkErrors = (line = defaultLine, isNewLine, targetLineKey, lines) => {
   };
 };
 
-const hasError = (errors) => {
+const hasError = (errors = {}) => {
   const { resultIdNone, logKeyNone, hasSameLine } = errors;
   return resultIdNone || logKeyNone || hasSameLine;
 };
@@ -44,6 +44,7 @@ class LinesConfigurator extends React.Component {
 
     this.state = {
       showModal: false,
+      showError: false,
       editingLine: defaultLine,
       isNewLine: true
     };
@@ -61,6 +62,7 @@ class LinesConfigurator extends React.Component {
     const { line2key } = Utils;
     this.setState({
       showModal: true,
+      showError: false,
       targetLineKey: line2key(line),
       editingLine: line,
       isNewLine: (line === defaultLine),
@@ -148,7 +150,11 @@ class LinesConfigurator extends React.Component {
             </ModalBody>
             <ModalFooter>
               <Button color="secondary" onClick={this.handleModalToggle}>Cancel</Button>{' '}
-              <Button color="primary" onClick={this.handleAxisConfigLineAdd}>{isNewLine ? 'Add' : 'Save'}</Button>
+              <Button
+                color="primary"
+                onClick={this.handleAxisConfigLineAdd}
+                disabled={hasError(showError ? errors : {})}
+              >{isNewLine ? 'Add' : 'Save'}</Button>
             </ModalFooter>
           </Modal>
 
