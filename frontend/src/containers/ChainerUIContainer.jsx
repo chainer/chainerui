@@ -1,17 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Container } from 'reactstrap';
 import {
   loadResults,
   addLineToAxis, removeLineFromAxis,
   updateAxisScale,
-  updateResult
+  updateResult,
+  updateGlobalPollingRate
 } from '../actions';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
+import NavigationBar from '../components/NavigationBar';
 
+let resultsPollingTimer;
 
-const resultsLoadInterval = 5 * 1000;
+const startResultsPolling = (func, pollingRate) => {
+  if (pollingRate > 0) {
+    resultsPollingTimer = setInterval(func, pollingRate);
+  }
+};
+
+const stopPolling = (timer) => {
+  clearInterval(timer);
+};
 
 class ChainerUIContainer extends React.Component {
   componentWillMount() {
@@ -19,11 +31,22 @@ class ChainerUIContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.resultsLoadTimer = setInterval(this.props.loadResults, resultsLoadInterval);
+    const { pollingRate } = this.props.config.global;
+    startResultsPolling(this.props.loadResults, pollingRate);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const currentPollingRate = this.props.config.global.pollingRate;
+    const nextPollingRate = nextProps.config.global.pollingRate;
+
+    if (currentPollingRate !== nextPollingRate) {
+      stopPolling(resultsPollingTimer);
+      startResultsPolling(this.props.loadResults, nextPollingRate);
+    }
   }
 
   componentWillUnmount() {
-    clearInterval(this.resultsLoadTimer);
+    stopPolling(resultsPollingTimer);
   }
 
   handleAxisConfigLineAdd(axisName, line) {
@@ -35,19 +58,25 @@ class ChainerUIContainer extends React.Component {
 
     return (
       <div className="chainer-ui-container">
-        <LogVisualizer
-          results={results}
-          stats={stats}
+        <NavigationBar
           config={config}
-          onAxisConfigLineAdd={this.props.addLineToAxis}
-          onAxisConfigLineRemove={this.props.removeLineFromAxis}
-          onAxisConfigScaleUpdate={this.props.updateAxisScale}
+          onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
         />
-        <ExperimentsTable
-          results={results}
-          stats={stats}
-          onResultUpdate={this.props.updateResult}
-        />
+        <Container>
+          <LogVisualizer
+            results={results}
+            stats={stats}
+            config={config}
+            onAxisConfigLineAdd={this.props.addLineToAxis}
+            onAxisConfigLineRemove={this.props.removeLineFromAxis}
+            onAxisConfigScaleUpdate={this.props.updateAxisScale}
+          />
+          <ExperimentsTable
+            results={results}
+            stats={stats}
+            onResultUpdate={this.props.updateResult}
+          />
+        </Container>
       </div>
     );
   }
@@ -56,7 +85,8 @@ class ChainerUIContainer extends React.Component {
 ChainerUIContainer.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   config: PropTypes.shape({
-    axes: PropTypes.objectOf(PropTypes.any)
+    axes: PropTypes.objectOf(PropTypes.any),
+    global: PropTypes.objectOf(PropTypes.any)
   }).isRequired,
   stats: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
@@ -66,6 +96,7 @@ ChainerUIContainer.propTypes = {
   addLineToAxis: PropTypes.func.isRequired,
   removeLineFromAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
+  updateGlobalPollingRate: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired
 };
 
@@ -88,7 +119,8 @@ const mapEntitiesToStats = (entities) => {
 };
 
 const defaultConfig = {
-  axes: {}
+  axes: {},
+  global: {}
 };
 
 const mapStateToProps = (state) => {
@@ -106,6 +138,7 @@ export default connect(mapStateToProps, {
   addLineToAxis,
   removeLineFromAxis,
   updateAxisScale,
-  updateResult
+  updateResult,
+  updateGlobalPollingRate
 })(ChainerUIContainer);
 

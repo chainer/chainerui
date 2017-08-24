@@ -79,8 +79,22 @@ const axes = (state = {}, action) => {
   }
 };
 
+const global = (state = { pollingRate: (5 * 1000) }, action) => {
+  const { pollingRate } = action;
+  switch (action.type) {
+    case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
+      return {
+        ...state,
+        pollingRate
+      };
+    default:
+      return state;
+  }
+};
+
 const config = combineReducers({
-  axes
+  axes,
+  global
 });
 
 const rootReducer = combineReducers({
