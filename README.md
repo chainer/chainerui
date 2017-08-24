@@ -21,7 +21,7 @@ python register.py path/to/result
 The Chainer UI server watches two files under the registerd directories.
 
 - `log`: a json file crested by `LogReport` extension.
-- `args`: *(optional)* a json file, which includes key-value pairs you want to see on Chainer UI along with logs. See [`ArgsReport`](https://github.com/pfn-intern/intern-chainer-ui/tree/master/_extension) for details.
+- `args`: *(optional)* a json file, which includes key-value pairs you want to see on Chainer UI along with logs. See [`args_report.py`](https://github.com/pfn-intern/intern-chainer-ui/tree/master/_extension) for a sample extension to dump command line arguments to `args` file.
 
 ```
 path/to/result
