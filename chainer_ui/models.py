@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 ''' models.py '''
 
 import json
