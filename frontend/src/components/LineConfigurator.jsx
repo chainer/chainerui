@@ -82,8 +82,6 @@ class LineConfigurator extends React.Component {
     const resultOptionElems = createResultOptionElems(results);
     const logKeyOptionElems = createLogKeyOptionElems(result);
 
-    console.log(errors);
-
     return (
       <div className="line-configurator">
         <Form>
