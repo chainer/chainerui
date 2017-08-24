@@ -8,6 +8,55 @@ webpackJsonp([0],{
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
+
+
+
+var keyOptions = ['epoch', 'iteration'];
+
+var XAxisKeySelector = function XAxisKeySelector(props) {
+  var value = props.value,
+      onChange = props.onChange;
+
+  var handleChangeXAxisKey = function handleChangeXAxisKey(e) {
+    onChange(e.target.value);
+  };
+
+  var options = keyOptions.map(function (key) {
+    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+      'option',
+      { value: key, key: key },
+      key
+    );
+  });
+  return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    'select',
+    { id: 'x-axis-key-selector-select', className: 'form-control', value: value, onChange: handleChangeXAxisKey },
+    options
+  );
+};
+
+XAxisKeySelector.propTypes = {
+  value: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+  onChange: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
+};
+
+XAxisKeySelector.defaultProps = {
+  value: '',
+  onChange: function onChange() {}
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (XAxisKeySelector);
+
+/***/ }),
+
+/***/ 1010:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(91);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -267,23 +316,25 @@ var CALL_API = 'Call API';
 
 "use strict";
 /* unused harmony export RESULTS_REQUEST */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return RESULTS_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return RESULTS_SUCCESS; });
 /* unused harmony export RESULTS_FAILUE */
 /* unused harmony export RESULT_UPDATE_REQUEST */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return RESULT_UPDATE_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return RESULT_UPDATE_SUCCESS; });
 /* unused harmony export RESULT_UPDATE_FAILUE */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return loadResults; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return updateResult; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return loadResults; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return updateResult; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AXIS_CONFIG_LINE_ADD; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return AXIS_CONFIG_LINE_UPDATE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return AXIS_CONFIG_LINE_REMOVE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return AXIS_CONFIG_SCALE_UPDATE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return addLineToAxis; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return updateLineInAxis; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return removeLineFromAxis; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return updateAxisScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return GLOBAL_CONFIG_POLLING_RATE_UPDATE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return updateGlobalPollingRate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return AXIS_CONFIG_X_KEY_UPDATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return addLineToAxis; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return updateLineInAxis; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return removeLineFromAxis; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return updateAxisScale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "p", function() { return updateXAxisKey; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return GLOBAL_CONFIG_POLLING_RATE_UPDATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return updateGlobalPollingRate; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__middleware_api__ = __webpack_require__(281);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -333,6 +384,7 @@ var AXIS_CONFIG_LINE_ADD = 'AXIS_CONFIG_LINE_ADD';
 var AXIS_CONFIG_LINE_UPDATE = 'AXIS_CONFIG_LINE_UPDATE';
 var AXIS_CONFIG_LINE_REMOVE = 'AXIS_CONFIG_LINE_REMOVE';
 var AXIS_CONFIG_SCALE_UPDATE = 'AXIS_CONFIG_SCALE_UPDATE';
+var AXIS_CONFIG_X_KEY_UPDATE = 'AXIS_CONFIG_X_KEY_UPDATE';
 
 var addLineToAxis = function addLineToAxis(axisName, line) {
   return {
@@ -364,6 +416,14 @@ var updateAxisScale = function updateAxisScale(axisName, scale) {
     type: AXIS_CONFIG_SCALE_UPDATE,
     axisName: axisName,
     scale: scale
+  };
+};
+
+var updateXAxisKey = function updateXAxisKey(xAxisKey) {
+  return {
+    type: AXIS_CONFIG_X_KEY_UPDATE,
+    axisName: 'xAxis',
+    xAxisKey: xAxisKey
   };
 };
 
@@ -503,7 +563,7 @@ var entities = function entities() {
   var action = arguments[1];
 
   switch (action.type) {
-    case __WEBPACK_IMPORTED_MODULE_3__actions__["f" /* RESULTS_SUCCESS */]:
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["g" /* RESULTS_SUCCESS */]:
       if (action.response && action.response.results) {
         var resultsList = action.response.results;
         var results = {};
@@ -513,7 +573,7 @@ var entities = function entities() {
         return _extends({}, state, { results: results });
       }
       return state;
-    case __WEBPACK_IMPORTED_MODULE_3__actions__["g" /* RESULT_UPDATE_SUCCESS */]:
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["h" /* RESULT_UPDATE_SUCCESS */]:
       if (action.response && action.response.result) {
         var result = action.response.result;
 
@@ -534,7 +594,8 @@ var axes = function axes() {
   var axisName = action.axisName,
       line = action.line,
       lineKey = action.lineKey,
-      scale = action.scale;
+      scale = action.scale,
+      xAxisKey = action.xAxisKey;
 
   if (axisName == null) {
     return state;
@@ -574,6 +635,10 @@ var axes = function axes() {
       return _extends({}, state, _defineProperty({}, axisName, _extends({}, axisConfig, {
         scale: scale
       })));
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["e" /* AXIS_CONFIG_X_KEY_UPDATE */]:
+      return _extends({}, state, _defineProperty({}, axisName, _extends({}, axisConfig, {
+        xAxisKey: xAxisKey
+      })));
     default:
       return state;
   }
@@ -585,7 +650,7 @@ var global = function global() {
   var pollingRate = action.pollingRate;
 
   switch (action.type) {
-    case __WEBPACK_IMPORTED_MODULE_3__actions__["e" /* GLOBAL_CONFIG_POLLING_RATE_UPDATE */]:
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["f" /* GLOBAL_CONFIG_POLLING_RATE_UPDATE */]:
       return _extends({}, state, {
         pollingRate: pollingRate
       });
@@ -745,7 +810,7 @@ function getStorage(type) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions__ = __webpack_require__(282);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_ExperimentsTable__ = __webpack_require__(567);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_LogVisualizer__ = __webpack_require__(569);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_NavigationBar__ = __webpack_require__(1009);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_NavigationBar__ = __webpack_require__(1010);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -838,7 +903,8 @@ var ChainerUIContainer = function (_React$Component) {
             onAxisConfigLineAdd: this.props.addLineToAxis,
             onAxisConfigLineUpdate: this.props.updateLineInAxis,
             onAxisConfigLineRemove: this.props.removeLineFromAxis,
-            onAxisConfigScaleUpdate: this.props.updateAxisScale
+            onAxisConfigScaleUpdate: this.props.updateAxisScale,
+            onAxisConfigXKeyUpdate: this.props.updateXAxisKey
           }),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__components_ExperimentsTable__["a" /* default */], {
             results: results,
@@ -907,17 +973,19 @@ ChainerUIContainer.propTypes = {
   removeLineFromAxis: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
   updateAxisScale: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
   updateGlobalPollingRate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
-  updateResult: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
+  updateResult: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  updateXAxisKey: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (Object(__WEBPACK_IMPORTED_MODULE_2_react_redux__["connect"])(mapStateToProps, {
-  loadResults: __WEBPACK_IMPORTED_MODULE_4__actions__["i" /* loadResults */],
-  addLineToAxis: __WEBPACK_IMPORTED_MODULE_4__actions__["h" /* addLineToAxis */],
-  updateLineInAxis: __WEBPACK_IMPORTED_MODULE_4__actions__["m" /* updateLineInAxis */],
-  removeLineFromAxis: __WEBPACK_IMPORTED_MODULE_4__actions__["j" /* removeLineFromAxis */],
-  updateAxisScale: __WEBPACK_IMPORTED_MODULE_4__actions__["k" /* updateAxisScale */],
-  updateResult: __WEBPACK_IMPORTED_MODULE_4__actions__["n" /* updateResult */],
-  updateGlobalPollingRate: __WEBPACK_IMPORTED_MODULE_4__actions__["l" /* updateGlobalPollingRate */]
+  loadResults: __WEBPACK_IMPORTED_MODULE_4__actions__["j" /* loadResults */],
+  addLineToAxis: __WEBPACK_IMPORTED_MODULE_4__actions__["i" /* addLineToAxis */],
+  updateLineInAxis: __WEBPACK_IMPORTED_MODULE_4__actions__["n" /* updateLineInAxis */],
+  removeLineFromAxis: __WEBPACK_IMPORTED_MODULE_4__actions__["k" /* removeLineFromAxis */],
+  updateAxisScale: __WEBPACK_IMPORTED_MODULE_4__actions__["l" /* updateAxisScale */],
+  updateResult: __WEBPACK_IMPORTED_MODULE_4__actions__["o" /* updateResult */],
+  updateGlobalPollingRate: __WEBPACK_IMPORTED_MODULE_4__actions__["m" /* updateGlobalPollingRate */],
+  updateXAxisKey: __WEBPACK_IMPORTED_MODULE_4__actions__["p" /* updateXAxisKey */]
 })(ChainerUIContainer));
 
 /***/ }),
@@ -1216,6 +1284,7 @@ ResultRow.defaultProps = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils__ = __webpack_require__(90);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__AxisConfigurator__ = __webpack_require__(922);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__LinesConfigurator__ = __webpack_require__(924);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__XAxisKeySelector__ = __webpack_require__(1009);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -1229,6 +1298,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -1326,7 +1396,8 @@ var LogVisualizer = function (_React$Component) {
           onAxisConfigLineAdd = _props.onAxisConfigLineAdd,
           onAxisConfigLineUpdate = _props.onAxisConfigLineUpdate,
           onAxisConfigLineRemove = _props.onAxisConfigLineRemove,
-          onAxisConfigScaleUpdate = _props.onAxisConfigScaleUpdate;
+          onAxisConfigScaleUpdate = _props.onAxisConfigScaleUpdate,
+          onAxisConfigXKeyUpdate = _props.onAxisConfigXKeyUpdate;
       var _config$axes = config.axes,
           _config$axes$xAxis = _config$axes.xAxis,
           xAxis = _config$axes$xAxis === undefined ? { axisName: 'xAxis' } : _config$axes$xAxis,
@@ -1517,10 +1588,22 @@ var LogVisualizer = function (_React$Component) {
               onAxisConfigLineRemove: onAxisConfigLineRemove
             })
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__AxisConfigurator__["a" /* default */], {
-            axisConfig: xAxis,
-            onChangeScale: onAxisConfigScaleUpdate
-          })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            __WEBPACK_IMPORTED_MODULE_6__AxisConfigurator__["a" /* default */],
+            {
+              axisConfig: xAxis,
+              onChangeScale: onAxisConfigScaleUpdate
+            },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'ul',
+              { className: 'list-group list-group-flush' },
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'li',
+                { className: 'list-group-item' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_8__XAxisKeySelector__["a" /* default */], { value: xAxis.xAxisKey, onChange: onAxisConfigXKeyUpdate })
+              )
+            )
+          )
         )
       );
     }
@@ -1548,7 +1631,8 @@ LogVisualizer.propTypes = {
   onAxisConfigLineAdd: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
   onAxisConfigLineUpdate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
   onAxisConfigLineRemove: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
-  onAxisConfigScaleUpdate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
+  onAxisConfigScaleUpdate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  onAxisConfigXKeyUpdate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
 };
 LogVisualizer.defaultProps = {
   stats: defaultStats,

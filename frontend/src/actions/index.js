@@ -41,6 +41,7 @@ export const AXIS_CONFIG_LINE_ADD = 'AXIS_CONFIG_LINE_ADD';
 export const AXIS_CONFIG_LINE_UPDATE = 'AXIS_CONFIG_LINE_UPDATE';
 export const AXIS_CONFIG_LINE_REMOVE = 'AXIS_CONFIG_LINE_REMOVE';
 export const AXIS_CONFIG_SCALE_UPDATE = 'AXIS_CONFIG_SCALE_UPDATE';
+export const AXIS_CONFIG_X_KEY_UPDATE = 'AXIS_CONFIG_X_KEY_UPDATE';
 
 export const addLineToAxis = (axisName, line) => ({
   type: AXIS_CONFIG_LINE_ADD,
@@ -65,6 +66,12 @@ export const updateAxisScale = (axisName, scale) => ({
   type: AXIS_CONFIG_SCALE_UPDATE,
   axisName,
   scale
+});
+
+export const updateXAxisKey = (xAxisKey) => ({
+  type: AXIS_CONFIG_X_KEY_UPDATE,
+  axisName: 'xAxis',
+  xAxisKey
 });
 
 

@@ -14,6 +14,7 @@ import 'rc-slider/assets/index.css';
 import Utils from '../utils';
 import AxisConfigurator from './AxisConfigurator';
 import LinesConfigurator from './LinesConfigurator';
+import XAxisKeySelector from './XAxisKeySelector';
 
 
 const sliderSteps = 100.0;
@@ -85,7 +86,8 @@ class LogVisualizer extends React.Component {
       stats = defaultStats,
       config = defaultConfig,
       onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
-      onAxisConfigScaleUpdate
+      onAxisConfigScaleUpdate,
+      onAxisConfigXKeyUpdate
     } = this.props;
     const {
       xAxis = { axisName: 'xAxis' },
@@ -245,7 +247,13 @@ class LogVisualizer extends React.Component {
           <AxisConfigurator
             axisConfig={xAxis}
             onChangeScale={onAxisConfigScaleUpdate}
-          />
+          >
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item">
+                <XAxisKeySelector value={xAxis.xAxisKey} onChange={onAxisConfigXKeyUpdate} />
+              </li>
+            </ul>
+          </AxisConfigurator>
         </div>
       </div>
     );
@@ -271,7 +279,8 @@ LogVisualizer.propTypes = {
   onAxisConfigLineAdd: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigLineRemove: PropTypes.func.isRequired,
-  onAxisConfigScaleUpdate: PropTypes.func.isRequired
+  onAxisConfigScaleUpdate: PropTypes.func.isRequired,
+  onAxisConfigXKeyUpdate: PropTypes.func.isRequired
 };
 LogVisualizer.defaultProps = {
   stats: defaultStats,
