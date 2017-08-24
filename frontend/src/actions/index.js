@@ -66,3 +66,13 @@ export const updateAxisScale = (axisName, scale) => ({
   axisName,
   scale
 });
+
+
+// global config
+
+export const GLOBAL_CONFIG_POLLING_RATE_UPDATE = 'GLOBAL_CONFIG_POLLING_RATE_UPDATE';
+
+export const updateGlobalPollingRate = (pollingRate) => ({
+  type: GLOBAL_CONFIG_POLLING_RATE_UPDATE,
+  pollingRate
+});
