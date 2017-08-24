@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Label, FormText } from 'reactstrap';
+import { Form, FormGroup, Label, Input } from 'reactstrap';
 import { ChromePicker } from 'react-color';
 import Utils from '../utils';
 
@@ -96,8 +96,8 @@ class LineConfigurator extends React.Component {
           </FormGroup>
           <FormGroup>
             <Label for="line-configurator-result-select">result</Label><br />
-            <select
-              className="form-control"
+            <Input
+              className={`form-control${errors.resultIdNone ? ' is-invalid' : ''}`}
               type="select"
               name="select"
               id="line-configurator-result-select"
@@ -105,15 +105,15 @@ class LineConfigurator extends React.Component {
               onChange={this.handleResultChange}
             >
               {resultOptionElems}
-            </select>
-            <FormText className="text-danger" hidden={!errors.resultIdNone}>
+            </Input>
+            <div className="invalid-feedback">
               Select a result!!
-            </FormText>
+            </div>
           </FormGroup>
           <FormGroup>
             <Label for="line-configurator-log-key-select">log key</Label><br />
-            <select
-              className="form-control"
+            <Input
+              className={`form-control${errors.logKeyNone ? ' is-invalid' : ''}`}
               type="select"
               name="select"
               id="line-configurator-log-key-select"
@@ -122,14 +122,19 @@ class LineConfigurator extends React.Component {
               onChange={this.handleLogKeyChange}
             >
               {logKeyOptionElems}
-            </select>
-            <FormText className="text-danger" hidden={!errors.logKeyNone}>
+            </Input>
+            <div className="invalid-feedback">
               Select a log key!!
-            </FormText>
-
-            <FormText className="text-danger" hidden={!errors.hasSameLine}>
+            </div>
+          </FormGroup>
+          <FormGroup>
+            <Input
+              className={`form-control${errors.hasSameLine ? ' is-invalid' : ''}`}
+              hidden
+            />
+            <div className="invalid-feedback">
               Cannot add this line because it already exists.
-            </FormText>
+            </div>
           </FormGroup>
         </Form>
       </div>
