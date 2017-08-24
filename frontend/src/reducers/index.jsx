@@ -55,6 +55,19 @@ const axes = (state = {}, action) => {
           lines: [...lines, line]
         }
       };
+    case ActionTypes.AXIS_CONFIG_LINE_UPDATE:
+      for (let i = 0; i < lines.length; i += 1) {
+        if (line2key(lines[i]) === lineKey) {
+          return {
+            ...state,
+            [axisName]: {
+              ...axisConfig,
+              lines: Object.assign([], lines, { [i]: line })
+            }
+          };
+        }
+      }
+      return state;
     case ActionTypes.AXIS_CONFIG_LINE_REMOVE:
       if (lineKey == null) {
         return state;
@@ -79,8 +92,22 @@ const axes = (state = {}, action) => {
   }
 };
 
+const global = (state = { pollingRate: (5 * 1000) }, action) => {
+  const { pollingRate } = action;
+  switch (action.type) {
+    case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
+      return {
+        ...state,
+        pollingRate
+      };
+    default:
+      return state;
+  }
+};
+
 const config = combineReducers({
-  axes
+  axes,
+  global
 });
 
 const rootReducer = combineReducers({

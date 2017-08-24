@@ -1,5 +1,177 @@
 webpackJsonp([0],{
 
+/***/ 1009:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(91);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+
+
+
+
+var pollingOptions = [{
+  id: 1,
+  name: 'stop',
+  value: 0
+}, {
+  id: 2,
+  name: '5s',
+  value: 5 * 1000
+}, {
+  id: 3,
+  name: '10s',
+  value: 10 * 1000
+}, {
+  id: 4,
+  name: '15s',
+  value: 15 * 1000
+}, {
+  id: 5,
+  name: '20s',
+  value: 20 * 1000
+}];
+
+var createPollingOptionElems = function createPollingOptionElems(options) {
+  return [].concat(_toConsumableArray(options.map(function (option) {
+    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+      'option',
+      { key: option.id, value: option.value },
+      option.name
+    );
+  })));
+};
+
+var NavigationBar = function (_React$Component) {
+  _inherits(NavigationBar, _React$Component);
+
+  function NavigationBar(props) {
+    _classCallCheck(this, NavigationBar);
+
+    var _this = _possibleConstructorReturn(this, (NavigationBar.__proto__ || Object.getPrototypeOf(NavigationBar)).call(this, props));
+
+    _this.toggleSettingPopover = _this.toggleSettingPopover.bind(_this);
+    _this.handlePollingRate = _this.handlePollingRate.bind(_this);
+    _this.state = {
+      settingPopoverOpen: false
+    };
+    return _this;
+  }
+
+  _createClass(NavigationBar, [{
+    key: 'toggleSettingPopover',
+    value: function toggleSettingPopover() {
+      this.setState({
+        settingPopoverOpen: !this.state.settingPopoverOpen
+      });
+    }
+  }, {
+    key: 'handlePollingRate',
+    value: function handlePollingRate(e) {
+      this.props.onGlobalConfigPollingRateUpdate(Number(e.target.value));
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var pollingOptionElems = createPollingOptionElems(pollingOptions);
+
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Navbar"],
+        { className: 'navbar-light bg-light mb-3' },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Container"],
+          null,
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            __WEBPACK_IMPORTED_MODULE_2_reactstrap__["NavbarBrand"],
+            { href: '/' },
+            'Chainer UI'
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Collapse"],
+            { isOpen: true },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Button"],
+              { id: 'navbar-global-setting', onClick: this.toggleSettingPopover },
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'oi oi-cog' })
+            )
+          )
+        ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Popover"],
+          { placement: 'bottom', isOpen: this.state.settingPopoverOpen, target: 'navbar-global-setting', toggle: this.toggleSettingPopover },
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            __WEBPACK_IMPORTED_MODULE_2_reactstrap__["PopoverTitle"],
+            { className: 'popover-header' },
+            'Global Setting'
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            __WEBPACK_IMPORTED_MODULE_2_reactstrap__["PopoverContent"],
+            { className: 'popover-body' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Form"],
+              null,
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                __WEBPACK_IMPORTED_MODULE_2_reactstrap__["FormGroup"],
+                null,
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Label"],
+                  { 'for': 'global-config-polling-rate' },
+                  'Results polling rate'
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'select',
+                  {
+                    className: 'form-control',
+                    type: 'select',
+                    name: 'select',
+                    id: 'global-config-polling-rate',
+                    onChange: this.handlePollingRate,
+                    value: this.props.config.global.pollingRate
+                  },
+                  pollingOptionElems
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return NavigationBar;
+}(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
+
+NavigationBar.propTypes = {
+  config: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
+    global: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
+      pollingRate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number
+    })
+  }),
+  onGlobalConfigPollingRateUpdate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
+};
+
+NavigationBar.defaultProps = {
+  config: {}
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (NavigationBar);
+
+/***/ }),
+
 /***/ 281:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -95,19 +267,23 @@ var CALL_API = 'Call API';
 
 "use strict";
 /* unused harmony export RESULTS_REQUEST */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return RESULTS_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return RESULTS_SUCCESS; });
 /* unused harmony export RESULTS_FAILUE */
 /* unused harmony export RESULT_UPDATE_REQUEST */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return RESULT_UPDATE_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return RESULT_UPDATE_SUCCESS; });
 /* unused harmony export RESULT_UPDATE_FAILUE */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return loadResults; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return updateResult; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return loadResults; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return updateResult; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AXIS_CONFIG_LINE_ADD; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return AXIS_CONFIG_LINE_UPDATE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return AXIS_CONFIG_LINE_REMOVE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return AXIS_CONFIG_SCALE_UPDATE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return addLineToAxis; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return removeLineFromAxis; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return updateAxisScale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return AXIS_CONFIG_SCALE_UPDATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return addLineToAxis; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return updateLineInAxis; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return removeLineFromAxis; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return updateAxisScale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return GLOBAL_CONFIG_POLLING_RATE_UPDATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return updateGlobalPollingRate; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__middleware_api__ = __webpack_require__(281);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -154,6 +330,7 @@ var updateResult = function updateResult() {
 // axis config
 
 var AXIS_CONFIG_LINE_ADD = 'AXIS_CONFIG_LINE_ADD';
+var AXIS_CONFIG_LINE_UPDATE = 'AXIS_CONFIG_LINE_UPDATE';
 var AXIS_CONFIG_LINE_REMOVE = 'AXIS_CONFIG_LINE_REMOVE';
 var AXIS_CONFIG_SCALE_UPDATE = 'AXIS_CONFIG_SCALE_UPDATE';
 
@@ -161,6 +338,15 @@ var addLineToAxis = function addLineToAxis(axisName, line) {
   return {
     type: AXIS_CONFIG_LINE_ADD,
     axisName: axisName,
+    line: line
+  };
+};
+
+var updateLineInAxis = function updateLineInAxis(axisName, lineKey, line) {
+  return {
+    type: AXIS_CONFIG_LINE_UPDATE,
+    axisName: axisName,
+    lineKey: lineKey,
     line: line
   };
 };
@@ -178,6 +364,17 @@ var updateAxisScale = function updateAxisScale(axisName, scale) {
     type: AXIS_CONFIG_SCALE_UPDATE,
     axisName: axisName,
     scale: scale
+  };
+};
+
+// global config
+
+var GLOBAL_CONFIG_POLLING_RATE_UPDATE = 'GLOBAL_CONFIG_POLLING_RATE_UPDATE';
+
+var updateGlobalPollingRate = function updateGlobalPollingRate(pollingRate) {
+  return {
+    type: GLOBAL_CONFIG_POLLING_RATE_UPDATE,
+    pollingRate: pollingRate
   };
 };
 
@@ -200,7 +397,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_redux__ = __webpack_require__(163);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_redux__ = __webpack_require__(164);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_hot_loader__ = __webpack_require__(274);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_hot_loader___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_react_hot_loader__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__store_configureStore__ = __webpack_require__(544);
@@ -251,7 +448,7 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redux__ = __webpack_require__(88);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redux_thunk__ = __webpack_require__(275);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redux_thunk___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_redux_thunk__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_redux_persist__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_redux_persist__ = __webpack_require__(167);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_redux_persist___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_redux_persist__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_redux_logger__ = __webpack_require__(280);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_redux_logger___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_redux_logger__);
@@ -283,7 +480,7 @@ var configureStore = function configureStore(preloadedState) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redux__ = __webpack_require__(88);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redux_persist__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redux_persist__ = __webpack_require__(167);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redux_persist___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_redux_persist__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_redux_persist_es_storage__ = __webpack_require__(551);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_redux_persist_es_storage___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_redux_persist_es_storage__);
@@ -306,7 +503,7 @@ var entities = function entities() {
   var action = arguments[1];
 
   switch (action.type) {
-    case __WEBPACK_IMPORTED_MODULE_3__actions__["d" /* RESULTS_SUCCESS */]:
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["f" /* RESULTS_SUCCESS */]:
       if (action.response && action.response.results) {
         var resultsList = action.response.results;
         var results = {};
@@ -316,7 +513,7 @@ var entities = function entities() {
         return _extends({}, state, { results: results });
       }
       return state;
-    case __WEBPACK_IMPORTED_MODULE_3__actions__["e" /* RESULT_UPDATE_SUCCESS */]:
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["g" /* RESULT_UPDATE_SUCCESS */]:
       if (action.response && action.response.result) {
         var result = action.response.result;
 
@@ -355,6 +552,15 @@ var axes = function axes() {
       return _extends({}, state, _defineProperty({}, axisName, _extends({}, axisConfig, {
         lines: [].concat(_toConsumableArray(lines), [line])
       })));
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["c" /* AXIS_CONFIG_LINE_UPDATE */]:
+      for (var i = 0; i < lines.length; i += 1) {
+        if (line2key(lines[i]) === lineKey) {
+          return _extends({}, state, _defineProperty({}, axisName, _extends({}, axisConfig, {
+            lines: Object.assign([], lines, _defineProperty({}, i, line))
+          })));
+        }
+      }
+      return state;
     case __WEBPACK_IMPORTED_MODULE_3__actions__["b" /* AXIS_CONFIG_LINE_REMOVE */]:
       if (lineKey == null) {
         return state;
@@ -364,7 +570,7 @@ var axes = function axes() {
           return line2key(l) !== lineKey;
         })))
       })));
-    case __WEBPACK_IMPORTED_MODULE_3__actions__["c" /* AXIS_CONFIG_SCALE_UPDATE */]:
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["d" /* AXIS_CONFIG_SCALE_UPDATE */]:
       return _extends({}, state, _defineProperty({}, axisName, _extends({}, axisConfig, {
         scale: scale
       })));
@@ -373,8 +579,24 @@ var axes = function axes() {
   }
 };
 
+var global = function global() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { pollingRate: 5 * 1000 };
+  var action = arguments[1];
+  var pollingRate = action.pollingRate;
+
+  switch (action.type) {
+    case __WEBPACK_IMPORTED_MODULE_3__actions__["e" /* GLOBAL_CONFIG_POLLING_RATE_UPDATE */]:
+      return _extends({}, state, {
+        pollingRate: pollingRate
+      });
+    default:
+      return state;
+  }
+};
+
 var config = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["combineReducers"])({
-  axes: axes
+  axes: axes,
+  global: global
 });
 
 var rootReducer = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["combineReducers"])({
@@ -518,10 +740,12 @@ function getStorage(type) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_redux__ = __webpack_require__(163);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions__ = __webpack_require__(282);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_ExperimentsTable__ = __webpack_require__(555);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_LogVisualizer__ = __webpack_require__(557);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_redux__ = __webpack_require__(164);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_reactstrap__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions__ = __webpack_require__(282);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_ExperimentsTable__ = __webpack_require__(567);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_LogVisualizer__ = __webpack_require__(569);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_NavigationBar__ = __webpack_require__(1009);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -537,7 +761,19 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
-var resultsLoadInterval = 5 * 1000;
+
+
+var resultsPollingTimer = void 0;
+
+var startResultsPolling = function startResultsPolling(func, pollingRate) {
+  if (pollingRate > 0) {
+    resultsPollingTimer = setInterval(func, pollingRate);
+  }
+};
+
+var stopPolling = function stopPolling(timer) {
+  clearInterval(timer);
+};
 
 var ChainerUIContainer = function (_React$Component) {
   _inherits(ChainerUIContainer, _React$Component);
@@ -556,17 +792,25 @@ var ChainerUIContainer = function (_React$Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this.resultsLoadTimer = setInterval(this.props.loadResults, resultsLoadInterval);
+      var pollingRate = this.props.config.global.pollingRate;
+
+      startResultsPolling(this.props.loadResults, pollingRate);
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      var currentPollingRate = this.props.config.global.pollingRate;
+      var nextPollingRate = nextProps.config.global.pollingRate;
+
+      if (currentPollingRate !== nextPollingRate) {
+        stopPolling(resultsPollingTimer);
+        startResultsPolling(this.props.loadResults, nextPollingRate);
+      }
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      clearInterval(this.resultsLoadTimer);
-    }
-  }, {
-    key: 'handleAxisConfigLineAdd',
-    value: function handleAxisConfigLineAdd(axisName, line) {
-      this.props.addLineToAxis(axisName, line);
+      stopPolling(resultsPollingTimer);
     }
   }, {
     key: 'render',
@@ -580,41 +824,34 @@ var ChainerUIContainer = function (_React$Component) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         { className: 'chainer-ui-container' },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__components_LogVisualizer__["a" /* default */], {
-          results: results,
-          stats: stats,
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_7__components_NavigationBar__["a" /* default */], {
           config: config,
-          onAxisConfigLineAdd: this.props.addLineToAxis,
-          onAxisConfigLineRemove: this.props.removeLineFromAxis,
-          onAxisConfigScaleUpdate: this.props.updateAxisScale
+          onGlobalConfigPollingRateUpdate: this.props.updateGlobalPollingRate
         }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__components_ExperimentsTable__["a" /* default */], {
-          results: results,
-          stats: stats,
-          onResultUpdate: this.props.updateResult
-        })
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          __WEBPACK_IMPORTED_MODULE_3_reactstrap__["Container"],
+          null,
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__components_LogVisualizer__["a" /* default */], {
+            results: results,
+            stats: stats,
+            config: config,
+            onAxisConfigLineAdd: this.props.addLineToAxis,
+            onAxisConfigLineUpdate: this.props.updateLineInAxis,
+            onAxisConfigLineRemove: this.props.removeLineFromAxis,
+            onAxisConfigScaleUpdate: this.props.updateAxisScale
+          }),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__components_ExperimentsTable__["a" /* default */], {
+            results: results,
+            stats: stats,
+            onResultUpdate: this.props.updateResult
+          })
+        )
       );
     }
   }]);
 
   return ChainerUIContainer;
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
-
-ChainerUIContainer.propTypes = {
-  results: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any).isRequired,
-  config: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
-    axes: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any)
-  }).isRequired,
-  stats: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
-    axes: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any),
-    argKeys: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string)
-  }).isRequired,
-  loadResults: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
-  addLineToAxis: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
-  removeLineFromAxis: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
-  updateAxisScale: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
-  updateResult: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
-};
 
 var mapEntitiesToStats = function mapEntitiesToStats(entities) {
   var _entities$results = entities.results,
@@ -639,7 +876,8 @@ var mapEntitiesToStats = function mapEntitiesToStats(entities) {
 };
 
 var defaultConfig = {
-  axes: {}
+  axes: {},
+  global: {}
 };
 
 var mapStateToProps = function mapStateToProps(state) {
@@ -653,17 +891,38 @@ var mapStateToProps = function mapStateToProps(state) {
   return { results: results, config: config, stats: stats };
 };
 
+ChainerUIContainer.propTypes = {
+  results: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any).isRequired,
+  config: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
+    axes: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any),
+    global: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any)
+  }).isRequired,
+  stats: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
+    axes: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.objectOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any),
+    argKeys: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string)
+  }).isRequired,
+  loadResults: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  addLineToAxis: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  updateLineInAxis: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  removeLineFromAxis: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  updateAxisScale: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  updateGlobalPollingRate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  updateResult: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
+};
+
 /* harmony default export */ __webpack_exports__["a"] = (Object(__WEBPACK_IMPORTED_MODULE_2_react_redux__["connect"])(mapStateToProps, {
-  loadResults: __WEBPACK_IMPORTED_MODULE_3__actions__["g" /* loadResults */],
-  addLineToAxis: __WEBPACK_IMPORTED_MODULE_3__actions__["f" /* addLineToAxis */],
-  removeLineFromAxis: __WEBPACK_IMPORTED_MODULE_3__actions__["h" /* removeLineFromAxis */],
-  updateAxisScale: __WEBPACK_IMPORTED_MODULE_3__actions__["i" /* updateAxisScale */],
-  updateResult: __WEBPACK_IMPORTED_MODULE_3__actions__["j" /* updateResult */]
+  loadResults: __WEBPACK_IMPORTED_MODULE_4__actions__["i" /* loadResults */],
+  addLineToAxis: __WEBPACK_IMPORTED_MODULE_4__actions__["h" /* addLineToAxis */],
+  updateLineInAxis: __WEBPACK_IMPORTED_MODULE_4__actions__["m" /* updateLineInAxis */],
+  removeLineFromAxis: __WEBPACK_IMPORTED_MODULE_4__actions__["j" /* removeLineFromAxis */],
+  updateAxisScale: __WEBPACK_IMPORTED_MODULE_4__actions__["k" /* updateAxisScale */],
+  updateResult: __WEBPACK_IMPORTED_MODULE_4__actions__["n" /* updateResult */],
+  updateGlobalPollingRate: __WEBPACK_IMPORTED_MODULE_4__actions__["l" /* updateGlobalPollingRate */]
 })(ChainerUIContainer));
 
 /***/ }),
 
-/***/ 555:
+/***/ 567:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -671,7 +930,7 @@ var mapStateToProps = function mapStateToProps(state) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ResultRow__ = __webpack_require__(556);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ResultRow__ = __webpack_require__(568);
 
 
 
@@ -772,7 +1031,7 @@ ExperimentsTable.defaultProps = {
 
 /***/ }),
 
-/***/ 556:
+/***/ 568:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -942,7 +1201,7 @@ ResultRow.defaultProps = {
 
 /***/ }),
 
-/***/ 557:
+/***/ 569:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -950,13 +1209,13 @@ ResultRow.defaultProps = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_recharts__ = __webpack_require__(283);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_recharts__ = __webpack_require__(288);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rc_slider__ = __webpack_require__(387);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rc_slider_assets_index_css__ = __webpack_require__(917);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rc_slider_assets_index_css__ = __webpack_require__(921);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rc_slider_assets_index_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rc_slider_assets_index_css__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils__ = __webpack_require__(90);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__AxisConfigurator__ = __webpack_require__(918);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__LinesConfigurator__ = __webpack_require__(920);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__AxisConfigurator__ = __webpack_require__(922);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__LinesConfigurator__ = __webpack_require__(924);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -1065,6 +1324,7 @@ var LogVisualizer = function (_React$Component) {
           _props$config = _props.config,
           config = _props$config === undefined ? defaultConfig : _props$config,
           onAxisConfigLineAdd = _props.onAxisConfigLineAdd,
+          onAxisConfigLineUpdate = _props.onAxisConfigLineUpdate,
           onAxisConfigLineRemove = _props.onAxisConfigLineRemove,
           onAxisConfigScaleUpdate = _props.onAxisConfigScaleUpdate;
       var _config$axes = config.axes,
@@ -1238,6 +1498,7 @@ var LogVisualizer = function (_React$Component) {
               axisName: 'yLeftAxis',
               lines: yLeftAxis.lines,
               onAxisConfigLineAdd: onAxisConfigLineAdd,
+              onAxisConfigLineUpdate: onAxisConfigLineUpdate,
               onAxisConfigLineRemove: onAxisConfigLineRemove
             })
           ),
@@ -1252,6 +1513,7 @@ var LogVisualizer = function (_React$Component) {
               axisName: 'yRightAxis',
               lines: yRightAxis.lines,
               onAxisConfigLineAdd: onAxisConfigLineAdd,
+              onAxisConfigLineUpdate: onAxisConfigLineUpdate,
               onAxisConfigLineRemove: onAxisConfigLineRemove
             })
           ),
@@ -1284,6 +1546,7 @@ LogVisualizer.propTypes = {
     })
   }),
   onAxisConfigLineAdd: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  onAxisConfigLineUpdate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
   onAxisConfigLineRemove: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
   onAxisConfigScaleUpdate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
 };
@@ -1353,14 +1616,14 @@ var Utils = function () {
 
 /***/ }),
 
-/***/ 917:
+/***/ 921:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 918:
+/***/ 922:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1368,7 +1631,7 @@ var Utils = function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__AxisScaleSelector__ = __webpack_require__(919);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__AxisScaleSelector__ = __webpack_require__(923);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1465,7 +1728,7 @@ AxisConfigurator.defaultProps = {
 
 /***/ }),
 
-/***/ 919:
+/***/ 923:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1514,7 +1777,7 @@ AxisScaleSelector.defaultProps = {
 
 /***/ }),
 
-/***/ 920:
+/***/ 924:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1522,7 +1785,7 @@ AxisScaleSelector.defaultProps = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(230);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(91);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils__ = __webpack_require__(90);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__LinesConfiguratorRow__ = __webpack_require__(925);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__LineConfigurator__ = __webpack_require__(926);
@@ -1547,6 +1810,34 @@ var defaultLine = {
   }
 };
 
+var checkErrors = function checkErrors() {
+  var line = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultLine;
+  var isNewLine = arguments[1];
+  var targetLineKey = arguments[2];
+  var lines = arguments[3];
+  var line2key = __WEBPACK_IMPORTED_MODULE_3__utils__["a" /* default */].line2key;
+
+  var hasSameLine = isNewLine ? lines.some(function (l) {
+    return line2key(l) === line2key(line);
+  }) : targetLineKey !== line2key(line) && lines.some(function (l) {
+    return line2key(l) === line2key(line);
+  });
+
+  return {
+    resultIdNone: !Number.isInteger(line.resultId),
+    logKeyNone: !line.logKey,
+    hasSameLine: hasSameLine
+  };
+};
+
+var hasError = function hasError(errors) {
+  var resultIdNone = errors.resultIdNone,
+      logKeyNone = errors.logKeyNone,
+      hasSameLine = errors.hasSameLine;
+
+  return resultIdNone || logKeyNone || hasSameLine;
+};
+
 var LinesConfigurator = function (_React$Component) {
   _inherits(LinesConfigurator, _React$Component);
 
@@ -1556,13 +1847,16 @@ var LinesConfigurator = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (LinesConfigurator.__proto__ || Object.getPrototypeOf(LinesConfigurator)).call(this));
 
     _this.handleModalToggle = _this.handleModalToggle.bind(_this);
-    _this.handleAddingLineChange = _this.handleAddingLineChange.bind(_this);
+    _this.handleModalOpen = _this.handleModalOpen.bind(_this);
+    _this.handleModalClose = _this.handleModalClose.bind(_this);
+    _this.handleEditingLineChange = _this.handleEditingLineChange.bind(_this);
     _this.handleAxisConfigLineAdd = _this.handleAxisConfigLineAdd.bind(_this);
     _this.handleAxisConfigLineRemove = _this.handleAxisConfigLineRemove.bind(_this);
 
     _this.state = {
       showModal: false,
-      addingLine: defaultLine
+      editingLine: defaultLine,
+      isNewLine: true
     };
     return _this;
   }
@@ -1570,19 +1864,46 @@ var LinesConfigurator = function (_React$Component) {
   _createClass(LinesConfigurator, [{
     key: 'handleModalToggle',
     value: function handleModalToggle() {
-      var newAddingLine = this.state.showModal ? defaultLine : this.state.addingLine;
+      if (this.state.showModal) {
+        this.handleModalClose();
+      } else {
+        this.handleModalOpen();
+      }
+    }
+  }, {
+    key: 'handleModalOpen',
+    value: function handleModalOpen() {
+      var line = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultLine;
+      var line2key = __WEBPACK_IMPORTED_MODULE_3__utils__["a" /* default */].line2key;
+
       this.setState({
-        showModal: !this.state.showModal,
-        addingLine: newAddingLine,
-        showLineConfigError: false
+        showModal: true,
+        targetLineKey: line2key(line),
+        editingLine: line,
+        isNewLine: line === defaultLine,
+        errors: {}
       });
     }
   }, {
-    key: 'handleAddingLineChange',
-    value: function handleAddingLineChange(newLine) {
+    key: 'handleModalClose',
+    value: function handleModalClose() {
       this.setState({
-        addingLine: newLine,
-        showLineConfigError: false
+        showModal: false
+      });
+    }
+  }, {
+    key: 'handleEditingLineChange',
+    value: function handleEditingLineChange(newLine) {
+      var lines = this.props.lines;
+      var _state = this.state,
+          isNewLine = _state.isNewLine,
+          targetLineKey = _state.targetLineKey;
+
+      var errors = checkErrors(newLine, isNewLine, targetLineKey, lines);
+
+      this.setState({
+        editingLine: newLine,
+        errors: errors
       });
     }
   }, {
@@ -1591,22 +1912,24 @@ var LinesConfigurator = function (_React$Component) {
       var _props = this.props,
           axisName = _props.axisName,
           onAxisConfigLineAdd = _props.onAxisConfigLineAdd,
+          onAxisConfigLineUpdate = _props.onAxisConfigLineUpdate,
           lines = _props.lines;
-      var addingLine = this.state.addingLine;
+      var _state2 = this.state,
+          targetLineKey = _state2.targetLineKey,
+          editingLine = _state2.editingLine,
+          isNewLine = _state2.isNewLine;
 
+      var errors = checkErrors(editingLine, isNewLine, targetLineKey, lines);
 
-      var hasSameLine = lines.some(function (l) {
-        return l.resultId === addingLine.resultId && l.logKey === addingLine.logKey;
-      });
-
-      if (addingLine.resultId == null || addingLine.logKey == null || hasSameLine) {
-        // invalid or hasSameLine
-        this.setState({
-          showLineConfigError: true
-        });
+      if (hasError(errors)) {
+        this.setState({ showError: true, errors: errors });
       } else {
-        onAxisConfigLineAdd(axisName, addingLine);
-        this.handleModalToggle();
+        if (isNewLine) {
+          onAxisConfigLineAdd(axisName, editingLine);
+        } else {
+          onAxisConfigLineUpdate(axisName, targetLineKey, editingLine);
+        }
+        this.handleModalClose();
       }
     }
   }, {
@@ -1628,9 +1951,11 @@ var LinesConfigurator = function (_React$Component) {
           results = _props3.results,
           _props3$lines = _props3.lines,
           lines = _props3$lines === undefined ? [] : _props3$lines;
-      var _state = this.state,
-          addingLine = _state.addingLine,
-          showLineConfigError = _state.showLineConfigError;
+      var _state3 = this.state,
+          editingLine = _state3.editingLine,
+          isNewLine = _state3.isNewLine,
+          errors = _state3.errors,
+          showError = _state3.showError;
 
 
       var lineConfiguratorElems = lines.map(function (line) {
@@ -1639,6 +1964,7 @@ var LinesConfigurator = function (_React$Component) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__LinesConfiguratorRow__["a" /* default */], {
           line: line,
           result: result,
+          onEditClick: _this2.handleModalOpen,
           onRemove: _this2.handleAxisConfigLineRemove,
           key: line2key(line)
         });
@@ -1662,16 +1988,16 @@ var LinesConfigurator = function (_React$Component) {
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_2_reactstrap__["ModalHeader"],
               { toggle: this.handleModalToggle },
-              'Modal title'
+              isNewLine ? 'Add a line' : 'Edit a line'
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_2_reactstrap__["ModalBody"],
               null,
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__LineConfigurator__["a" /* default */], {
                 results: results,
-                line: addingLine,
-                showError: showLineConfigError,
-                onChange: this.handleAddingLineChange
+                line: editingLine,
+                errors: showError ? errors : {},
+                onChange: this.handleEditingLineChange
               })
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -1686,7 +2012,7 @@ var LinesConfigurator = function (_React$Component) {
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Button"],
                 { color: 'primary', onClick: this.handleAxisConfigLineAdd },
-                'Add'
+                isNewLine ? 'Add' : 'Save'
               )
             )
           )
@@ -1706,6 +2032,7 @@ LinesConfigurator.propTypes = {
     logKey: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
   })),
   onAxisConfigLineAdd: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
+  onAxisConfigLineUpdate: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired,
   onAxisConfigLineRemove: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
 };
 
@@ -1746,19 +2073,34 @@ var LinesConfiguratorRow = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (LinesConfiguratorRow.__proto__ || Object.getPrototypeOf(LinesConfiguratorRow)).call(this, props));
 
+    _this.handleEditClick = _this.handleEditClick.bind(_this);
     _this.handleRemoveClick = _this.handleRemoveClick.bind(_this);
     return _this;
   }
 
   _createClass(LinesConfiguratorRow, [{
-    key: 'handleRemoveClick',
-    value: function handleRemoveClick() {
-      var line2key = __WEBPACK_IMPORTED_MODULE_2__utils__["a" /* default */].line2key;
+    key: 'handleEditClick',
+    value: function handleEditClick(e) {
       var _props = this.props,
           line = _props.line,
-          onRemove = _props.onRemove;
+          onEditClick = _props.onEditClick;
 
 
+      e.preventDefault();
+      e.stopPropagation();
+      onEditClick(line);
+    }
+  }, {
+    key: 'handleRemoveClick',
+    value: function handleRemoveClick(e) {
+      var line2key = __WEBPACK_IMPORTED_MODULE_2__utils__["a" /* default */].line2key;
+      var _props2 = this.props,
+          line = _props2.line,
+          onRemove = _props2.onRemove;
+
+
+      e.preventDefault();
+      e.stopPropagation();
       onRemove(line2key(line));
     }
   }, {
@@ -1767,9 +2109,9 @@ var LinesConfiguratorRow = function (_React$Component) {
       var line2key = __WEBPACK_IMPORTED_MODULE_2__utils__["a" /* default */].line2key,
           displayName = __WEBPACK_IMPORTED_MODULE_2__utils__["a" /* default */].displayName,
           truncateForward = __WEBPACK_IMPORTED_MODULE_2__utils__["a" /* default */].truncateForward;
-      var _props2 = this.props,
-          line = _props2.line,
-          result = _props2.result;
+      var _props3 = this.props,
+          line = _props3.line,
+          result = _props3.result;
       var _line$config = line.config,
           config = _line$config === undefined ? {} : _line$config;
 
@@ -1782,7 +2124,11 @@ var LinesConfiguratorRow = function (_React$Component) {
 
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'li',
-        { className: 'list-group-item', key: line2key(line) },
+        {
+          className: 'list-group-item',
+          onClick: this.handleEditClick,
+          key: line2key(line)
+        },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { className: 'row' },
@@ -1834,10 +2180,12 @@ LinesConfiguratorRow.propTypes = {
     args: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any),
     logs: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.any)
   }).isRequired,
+  onEditClick: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
   onRemove: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 
 LinesConfiguratorRow.defaultProps = {
+  onEditClick: function onEditClick() {},
   onRemove: function onRemove() {}
 };
 
@@ -1853,7 +2201,7 @@ LinesConfiguratorRow.defaultProps = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(230);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(91);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_color__ = __webpack_require__(410);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_color___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_react_color__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils__ = __webpack_require__(90);
@@ -1943,10 +2291,6 @@ var LineConfigurator = function (_React$Component) {
     _this.handleResultChange = _this.handleResultChange.bind(_this);
     _this.handleLogKeyChange = _this.handleLogKeyChange.bind(_this);
     _this.handleLineColorChange = _this.handleLineColorChange.bind(_this);
-
-    _this.state = {
-      showError: false
-    };
     return _this;
   }
 
@@ -1987,8 +2331,8 @@ var LineConfigurator = function (_React$Component) {
           results = _props4.results,
           _props4$line = _props4.line,
           line = _props4$line === undefined ? {} : _props4$line,
-          _props4$showError = _props4.showError,
-          showError = _props4$showError === undefined ? false : _props4$showError;
+          _props4$errors = _props4.errors,
+          errors = _props4$errors === undefined ? {} : _props4$errors;
       var _line$resultId = line.resultId,
           resultId = _line$resultId === undefined ? RESULT_NONE : _line$resultId,
           _line$logKey = line.logKey,
@@ -2054,7 +2398,7 @@ var LineConfigurator = function (_React$Component) {
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_2_reactstrap__["FormText"],
-              { className: 'text-danger', hidden: !showError || resultId !== RESULT_NONE },
+              { className: 'text-danger', hidden: !errors.resultIdNone },
               'Select a result!!'
             )
           ),
@@ -2082,12 +2426,12 @@ var LineConfigurator = function (_React$Component) {
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_2_reactstrap__["FormText"],
-              { className: 'text-danger', hidden: !showError || logKey !== LOG_KEY_NONE },
+              { className: 'text-danger', hidden: !errors.logKeyNone },
               'Select a log key!!'
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_2_reactstrap__["FormText"],
-              { className: 'text-danger', hidden: !showError || logKey === LOG_KEY_NONE && resultId === RESULT_NONE },
+              { className: 'text-danger', hidden: !errors.hasSameLine },
               'Cannot add this line because it already exists.'
             )
           )
@@ -2108,13 +2452,17 @@ LineConfigurator.propTypes = {
       color: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
     })
   }),
-  showError: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+  errors: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
+    resultIdNone: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+    logKeyNone: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+    hasSameLine: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool
+  }),
   onChange: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 
 LineConfigurator.defaultProps = {
   line: {},
-  showError: false,
+  errors: {},
   onChange: function onChange() {}
 };
 
