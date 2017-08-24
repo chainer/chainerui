@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 ''' Chainer-UI API '''
 
 import os
