@@ -12,53 +12,97 @@ const defaultLine = {
   }
 };
 
+const checkErrors = (line = defaultLine, isNewLine, targetLineKey, lines) => {
+  const { line2key } = Utils;
+  const hasSameLine = isNewLine ?
+    lines.some((l) => line2key(l) === line2key(line)) :
+    (targetLineKey !== line2key(line) && lines.some((l) => line2key(l) === line2key(line)));
+
+  return {
+    resultIdNone: !Number.isInteger(line.resultId),
+    logKeyNone: !line.logKey,
+    hasSameLine
+  };
+};
+
+const hasError = (errors) => {
+  const { resultIdNone, logKeyNone, hasSameLine } = errors;
+  return resultIdNone || logKeyNone || hasSameLine;
+};
+
+
 class LinesConfigurator extends React.Component {
   constructor() {
     super();
 
     this.handleModalToggle = this.handleModalToggle.bind(this);
-    this.handleAddingLineChange = this.handleAddingLineChange.bind(this);
+    this.handleModalOpen = this.handleModalOpen.bind(this);
+    this.handleModalClose = this.handleModalClose.bind(this);
+    this.handleEditingLineChange = this.handleEditingLineChange.bind(this);
     this.handleAxisConfigLineAdd = this.handleAxisConfigLineAdd.bind(this);
     this.handleAxisConfigLineRemove = this.handleAxisConfigLineRemove.bind(this);
 
     this.state = {
       showModal: false,
-      addingLine: defaultLine
+      editingLine: defaultLine,
+      isNewLine: true
     };
   }
 
   handleModalToggle() {
-    const newAddingLine = this.state.showModal ? defaultLine : this.state.addingLine;
+    if (this.state.showModal) {
+      this.handleModalClose();
+    } else {
+      this.handleModalOpen();
+    }
+  }
+
+  handleModalOpen(line = defaultLine) {
+    const { line2key } = Utils;
     this.setState({
-      showModal: !this.state.showModal,
-      addingLine: newAddingLine,
-      showLineConfigError: false
+      showModal: true,
+      targetLineKey: line2key(line),
+      editingLine: line,
+      isNewLine: (line === defaultLine),
+      errors: {}
     });
   }
 
-  handleAddingLineChange(newLine) {
+  handleModalClose() {
     this.setState({
-      addingLine: newLine,
-      showLineConfigError: false
+      showModal: false
+    });
+  }
+
+  handleEditingLineChange(newLine) {
+    const { lines } = this.props;
+    const { isNewLine, targetLineKey } = this.state;
+    const errors = checkErrors(newLine, isNewLine, targetLineKey, lines);
+
+    this.setState({
+      editingLine: newLine,
+      errors
     });
   }
 
   handleAxisConfigLineAdd() {
-    const { axisName, onAxisConfigLineAdd, lines } = this.props;
-    const { addingLine } = this.state;
+    const {
+      axisName,
+      onAxisConfigLineAdd, onAxisConfigLineUpdate,
+      lines
+    } = this.props;
+    const { targetLineKey, editingLine, isNewLine } = this.state;
+    const errors = checkErrors(editingLine, isNewLine, targetLineKey, lines);
 
-    const hasSameLine = lines.some((l) =>
-      l.resultId === addingLine.resultId && l.logKey === addingLine.logKey
-    );
-
-    if (addingLine.resultId == null || addingLine.logKey == null || hasSameLine) {
-      // invalid or hasSameLine
-      this.setState({
-        showLineConfigError: true
-      });
+    if (hasError(errors)) {
+      this.setState({ showError: true, errors });
     } else {
-      onAxisConfigLineAdd(axisName, addingLine);
-      this.handleModalToggle();
+      if (isNewLine) {
+        onAxisConfigLineAdd(axisName, editingLine);
+      } else {
+        onAxisConfigLineUpdate(axisName, targetLineKey, editingLine);
+      }
+      this.handleModalClose();
     }
   }
 
@@ -70,7 +114,7 @@ class LinesConfigurator extends React.Component {
   render() {
     const { line2key } = Utils;
     const { results, lines = [] } = this.props;
-    const { addingLine, showLineConfigError } = this.state;
+    const { editingLine, isNewLine, errors, showError } = this.state;
 
     const lineConfiguratorElems = lines.map((line) => {
       const result = results[line.resultId] || {};
@@ -79,6 +123,7 @@ class LinesConfigurator extends React.Component {
         <LinesConfiguratorRow
           line={line}
           result={result}
+          onEditClick={this.handleModalOpen}
           onRemove={this.handleAxisConfigLineRemove}
           key={line2key(line)}
         />
@@ -92,18 +137,18 @@ class LinesConfigurator extends React.Component {
           <Button color="primary" onClick={this.handleModalToggle}>Add</Button>
 
           <Modal isOpen={this.state.showModal} toggle={this.handleModalToggle} className="">
-            <ModalHeader toggle={this.handleModalToggle}>Modal title</ModalHeader>
+            <ModalHeader toggle={this.handleModalToggle}>{isNewLine ? 'Add a line' : 'Edit a line'}</ModalHeader>
             <ModalBody>
               <LineConfigurator
                 results={results}
-                line={addingLine}
-                showError={showLineConfigError}
-                onChange={this.handleAddingLineChange}
+                line={editingLine}
+                errors={showError ? errors : {}}
+                onChange={this.handleEditingLineChange}
               />
             </ModalBody>
             <ModalFooter>
               <Button color="secondary" onClick={this.handleModalToggle}>Cancel</Button>{' '}
-              <Button color="primary" onClick={this.handleAxisConfigLineAdd}>Add</Button>
+              <Button color="primary" onClick={this.handleAxisConfigLineAdd}>{isNewLine ? 'Add' : 'Save'}</Button>
             </ModalFooter>
           </Modal>
 
@@ -123,6 +168,7 @@ LinesConfigurator.propTypes = {
     })
   ),
   onAxisConfigLineAdd: PropTypes.func.isRequired,
+  onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigLineRemove: PropTypes.func.isRequired
 };
 

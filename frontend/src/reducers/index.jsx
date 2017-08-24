@@ -55,6 +55,19 @@ const axes = (state = {}, action) => {
           lines: [...lines, line]
         }
       };
+    case ActionTypes.AXIS_CONFIG_LINE_UPDATE:
+      for (let i = 0; i < lines.length; i += 1) {
+        if (line2key(lines[i]) === lineKey) {
+          return {
+            ...state,
+            [axisName]: {
+              ...axisConfig,
+              lines: Object.assign([], lines, { [i]: line })
+            }
+          };
+        }
+      }
+      return state;
     case ActionTypes.AXIS_CONFIG_LINE_REMOVE:
       if (lineKey == null) {
         return state;

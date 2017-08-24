@@ -49,10 +49,6 @@ class LineConfigurator extends React.Component {
     this.handleResultChange = this.handleResultChange.bind(this);
     this.handleLogKeyChange = this.handleLogKeyChange.bind(this);
     this.handleLineColorChange = this.handleLineColorChange.bind(this);
-
-    this.state = {
-      showError: false
-    };
   }
 
   handleResultChange(e) {
@@ -74,7 +70,7 @@ class LineConfigurator extends React.Component {
   }
 
   render() {
-    const { results, line = {}, showError = false } = this.props;
+    const { results, line = {}, errors = {} } = this.props;
     const { resultId = RESULT_NONE, logKey = LOG_KEY_NONE, config = {} } = line;
     const result = results[resultId] || {};
     const color = config.color;
@@ -110,7 +106,7 @@ class LineConfigurator extends React.Component {
             >
               {resultOptionElems}
             </select>
-            <FormText className="text-danger" hidden={!showError || resultId !== RESULT_NONE}>
+            <FormText className="text-danger" hidden={!errors.resultIdNone}>
               Select a result!!
             </FormText>
           </FormGroup>
@@ -127,11 +123,11 @@ class LineConfigurator extends React.Component {
             >
               {logKeyOptionElems}
             </select>
-            <FormText className="text-danger" hidden={!showError || logKey !== LOG_KEY_NONE}>
+            <FormText className="text-danger" hidden={!errors.logKeyNone}>
               Select a log key!!
             </FormText>
 
-            <FormText className="text-danger" hidden={!showError || (logKey === LOG_KEY_NONE && resultId === RESULT_NONE)}>
+            <FormText className="text-danger" hidden={!errors.hasSameLine}>
               Cannot add this line because it already exists.
             </FormText>
           </FormGroup>
@@ -150,13 +146,17 @@ LineConfigurator.propTypes = {
       color: PropTypes.string
     })
   }),
-  showError: PropTypes.bool,
+  errors: PropTypes.shape({
+    resultIdNone: PropTypes.bool,
+    logKeyNone: PropTypes.bool,
+    hasSameLine: PropTypes.bool
+  }),
   onChange: PropTypes.func
 };
 
 LineConfigurator.defaultProps = {
   line: {},
-  showError: false,
+  errors: {},
   onChange: () => {}
 };
 

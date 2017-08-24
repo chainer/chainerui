@@ -38,12 +38,20 @@ export const updateResult = (result = {}) => {
 // axis config
 
 export const AXIS_CONFIG_LINE_ADD = 'AXIS_CONFIG_LINE_ADD';
+export const AXIS_CONFIG_LINE_UPDATE = 'AXIS_CONFIG_LINE_UPDATE';
 export const AXIS_CONFIG_LINE_REMOVE = 'AXIS_CONFIG_LINE_REMOVE';
 export const AXIS_CONFIG_SCALE_UPDATE = 'AXIS_CONFIG_SCALE_UPDATE';
 
 export const addLineToAxis = (axisName, line) => ({
   type: AXIS_CONFIG_LINE_ADD,
   axisName,
+  line
+});
+
+export const updateLineInAxis = (axisName, lineKey, line) => ({
+  type: AXIS_CONFIG_LINE_UPDATE,
+  axisName,
+  lineKey,
   line
 });
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   loadResults,
-  addLineToAxis, removeLineFromAxis,
+  addLineToAxis, updateLineInAxis, removeLineFromAxis,
   updateAxisScale,
   updateResult,
   updateGlobalPollingRate
@@ -49,10 +49,6 @@ class ChainerUIContainer extends React.Component {
     stopPolling(resultsPollingTimer);
   }
 
-  handleAxisConfigLineAdd(axisName, line) {
-    this.props.addLineToAxis(axisName, line);
-  }
-
   render() {
     const { results, config, stats } = this.props;
 
@@ -68,6 +64,7 @@ class ChainerUIContainer extends React.Component {
             stats={stats}
             config={config}
             onAxisConfigLineAdd={this.props.addLineToAxis}
+            onAxisConfigLineUpdate={this.props.updateLineInAxis}
             onAxisConfigLineRemove={this.props.removeLineFromAxis}
             onAxisConfigScaleUpdate={this.props.updateAxisScale}
           />
@@ -81,24 +78,6 @@ class ChainerUIContainer extends React.Component {
     );
   }
 }
-
-ChainerUIContainer.propTypes = {
-  results: PropTypes.objectOf(PropTypes.any).isRequired,
-  config: PropTypes.shape({
-    axes: PropTypes.objectOf(PropTypes.any),
-    global: PropTypes.objectOf(PropTypes.any)
-  }).isRequired,
-  stats: PropTypes.shape({
-    axes: PropTypes.objectOf(PropTypes.any),
-    argKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
-  loadResults: PropTypes.func.isRequired,
-  addLineToAxis: PropTypes.func.isRequired,
-  removeLineFromAxis: PropTypes.func.isRequired,
-  updateAxisScale: PropTypes.func.isRequired,
-  updateGlobalPollingRate: PropTypes.func.isRequired,
-  updateResult: PropTypes.func.isRequired
-};
 
 const mapEntitiesToStats = (entities) => {
   const { results = {} } = entities;
@@ -133,9 +112,29 @@ const mapStateToProps = (state) => {
   return { results, config, stats };
 };
 
+ChainerUIContainer.propTypes = {
+  results: PropTypes.objectOf(PropTypes.any).isRequired,
+  config: PropTypes.shape({
+    axes: PropTypes.objectOf(PropTypes.any),
+    global: PropTypes.objectOf(PropTypes.any)
+  }).isRequired,
+  stats: PropTypes.shape({
+    axes: PropTypes.objectOf(PropTypes.any),
+    argKeys: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
+  loadResults: PropTypes.func.isRequired,
+  addLineToAxis: PropTypes.func.isRequired,
+  updateLineInAxis: PropTypes.func.isRequired,
+  removeLineFromAxis: PropTypes.func.isRequired,
+  updateAxisScale: PropTypes.func.isRequired,
+  updateGlobalPollingRate: PropTypes.func.isRequired,
+  updateResult: PropTypes.func.isRequired
+};
+
 export default connect(mapStateToProps, {
   loadResults,
   addLineToAxis,
+  updateLineInAxis,
   removeLineFromAxis,
   updateAxisScale,
   updateResult,
