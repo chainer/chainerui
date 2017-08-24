@@ -16,31 +16,8 @@ import chainer.links as L
 from chainer import training
 from chainer.training import extensions
 
+from args_report import ArgsReport
 
-# <--- my extension -----
-from chainer.training import extension
-import json
-import os
-import tempfile
-import shutil
-from chainer.training import trigger as trigger_module
-
-class ArgsReport(extension.Extension):
-    def __init__(self, args, trigger=(1, 'epoch'), log_name='args'):
-        self._log_name = log_name
-        self._trigger = trigger_module.get_trigger(trigger)
-        self._args = vars(args)
-
-    def __call__(self, trainer):
-        if self._log_name is not None:
-            log_name = self._log_name
-            fd, path = tempfile.mkstemp(prefix=log_name, dir=trainer.out)
-            with os.fdopen(fd, 'w') as f:
-                json.dump(self._args, f, indent=4)
-
-            new_path = os.path.join(trainer.out, log_name)
-            shutil.move(path, new_path)
-# ---- my extension ---->
 
 # Network definition
 class MLP(chainer.Chain):
@@ -63,7 +40,7 @@ def main():
     parser = argparse.ArgumentParser(description='Chainer example: MNIST')
     parser.add_argument('--batchsize', '-b', type=int, default=100,
                         help='Number of images in each mini-batch')
-    parser.add_argument('--epoch', '-e', type=int, default=3,
+    parser.add_argument('--epoch', '-e', type=int, default=20,
                         help='Number of sweeps over the dataset to train')
     parser.add_argument('--frequency', '-f', type=int, default=-1,
                         help='Frequency of taking a snapshot')
@@ -121,6 +98,10 @@ def main():
     # Write a log of evaluation statistics for each epoch
     trainer.extend(extensions.LogReport())
 
+    # <--- my extension -----
+    trainer.extend(ArgsReport(args))
+    # ---- my extension ---->
+
     # Save two plot images to the result dir
     if extensions.PlotReport.available():
         trainer.extend(
@@ -142,10 +123,6 @@ def main():
 
     # Print a progress bar to stdout
     trainer.extend(extensions.ProgressBar())
-
-    # <--- my extension -----
-    trainer.extend(ArgsReport(args))
-    # ---- my extension ---->
 
     if args.resume:
         # Resume from a snapshot
