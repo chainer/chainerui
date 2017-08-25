@@ -54,6 +54,7 @@ class NavigationBar extends React.Component {
   render() {
     const pollingOptionElems = createPollingOptionElems(pollingOptions);
     const chartSizeElems = createVisualizerSizeOptionElems(chartSizeOptions);
+    const { chartSize = {} } = this.props.config.global;
 
     return (
       <Navbar className="navbar-light bg-light mb-3">
@@ -94,7 +95,7 @@ class NavigationBar extends React.Component {
                   type="select"
                   name="select"
                   id="global-config-chart-size"
-                  value={this.props.config.global.chartSize.id}
+                  value={chartSize.id}
                   onChange={this.handleChangeChartSize}
                 >
                   {chartSizeElems}

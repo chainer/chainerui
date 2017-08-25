@@ -7,23 +7,31 @@ import XAxisKeySelector from './XAxisKeySelector';
 
 const AxesConfigurator = (props) => {
   const {
-    results = {},
-    config = {},
+    results,
+    stats,
+    config,
     onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
     onAxisConfigScaleUpdate,
-    onAxisConfigXKeyUpdate
+    onAxisConfigXKeyUpdate,
+    onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
   } = props;
   const {
     xAxis = { axisName: 'xAxis' },
     yLeftAxis = { axisName: 'yLeftAxis' },
     yRightAxis = { axisName: 'yRightAxis' }
   } = config.axes || {};
+  const xAxisStats = stats.axes.xAxis;
+  const yLeftAxisStats = stats.axes.yLeftAxis;
+  const yRightAxisStats = stats.axes.yRightAxis;
 
   return (
     <div className="axes-configurator">
       <AxisConfigurator
         axisConfig={yLeftAxis}
+        axisStats={yLeftAxisStats}
         onChangeScale={onAxisConfigScaleUpdate}
+        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
       >
         <LinesConfigurator
           results={results}
@@ -36,7 +44,10 @@ const AxesConfigurator = (props) => {
       </AxisConfigurator>
       <AxisConfigurator
         axisConfig={yRightAxis}
+        axisStats={yRightAxisStats}
         onChangeScale={onAxisConfigScaleUpdate}
+        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
       >
         <LinesConfigurator
           results={results}
@@ -49,7 +60,10 @@ const AxesConfigurator = (props) => {
       </AxisConfigurator>
       <AxisConfigurator
         axisConfig={xAxis}
+        axisStats={xAxisStats}
         onChangeScale={onAxisConfigScaleUpdate}
+        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
       >
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
@@ -70,11 +84,20 @@ AxesConfigurator.propTypes = {
       yRightAxis: PropTypes.any
     })
   }).isRequired,
+  stats: PropTypes.shape({
+    axes: PropTypes.shape({
+      xAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
+      yLeftAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
+      yRightAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) })
+    })
+  }).isRequired,
   onAxisConfigLineAdd: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigLineRemove: PropTypes.func.isRequired,
   onAxisConfigScaleUpdate: PropTypes.func.isRequired,
-  onAxisConfigXKeyUpdate: PropTypes.func.isRequired
+  onAxisConfigXKeyUpdate: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired
 };
 
 AxesConfigurator.defaultProps = {

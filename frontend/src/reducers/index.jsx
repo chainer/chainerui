@@ -58,12 +58,20 @@ const fetchState = (state = { results: '' }, action) => {
 };
 
 const axes = (state = {}, action) => {
-  const { axisName, line, lineKey, scale, xAxisKey } = action;
+  const {
+    axisName,
+    line,
+    lineKey,
+    scale = 'linear',
+    xAxisKey,
+    rangeType = 'auto',
+    isMin, rangeNumber
+  } = action;
   if (axisName == null) {
     return state;
   }
   const axisConfig = state[axisName] || { axisName };
-  const { lines = [] } = axisConfig;
+  const { lines = [], scaleRange = {} } = axisConfig;
 
   switch (action.type) {
     case ActionTypes.AXIS_CONFIG_LINE_ADD:
@@ -117,6 +125,46 @@ const axes = (state = {}, action) => {
           xAxisKey
         }
       };
+    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE:
+      if (rangeType) {
+        const idx = isMin ? 0 : 1;
+        const rangeConfig = scaleRange[scale] || {};
+        const { rangeTypes = [], range = [] } = rangeConfig;
+        return {
+          ...state,
+          [axisName]: {
+            ...axisConfig,
+            scaleRange: {
+              ...scaleRange,
+              [scale]: {
+                rangeTypes: Object.assign([], rangeTypes, { [idx]: rangeType }),
+                range
+              }
+            }
+          }
+        };
+      }
+      return state;
+    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE:
+      if (rangeNumber != null) {
+        const idx = isMin ? 0 : 1;
+        const rangeConfig = scaleRange[scale] || {};
+        const { rangeTypes = [], range = [] } = rangeConfig;
+        return {
+          ...state,
+          [axisName]: {
+            ...axisConfig,
+            scaleRange: {
+              ...scaleRange,
+              [scale]: {
+                rangeTypes,
+                range: Object.assign([], range, { [idx]: rangeNumber })
+              }
+            }
+          }
+        };
+      }
+      return state;
     default:
       return state;
   }
