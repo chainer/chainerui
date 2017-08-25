@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Label, Input, Collapse, Button } from 'reactstrap';
+import { Form, FormGroup, Label, Input, Collapse, Button, Col, Row } from 'reactstrap';
 import { ChromePicker, SwatchesPicker } from 'react-color';
 import { displayName } from '../utils';
 
@@ -47,6 +47,7 @@ class LineConfigurator extends React.Component {
     this.handleResultChange = this.handleResultChange.bind(this);
     this.handleLogKeyChange = this.handleLogKeyChange.bind(this);
     this.handleLineColorChange = this.handleLineColorChange.bind(this);
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
     this.togglePicker = this.togglePicker.bind(this);
 
     this.state = { colorPickerCollapse: false };
@@ -74,11 +75,24 @@ class LineConfigurator extends React.Component {
     onChange({ ...line, config: { color: hex } });
   }
 
+  handleVisibilityChange(e) {
+    const { line, onChange } = this.props;
+    const { checked } = e.target;
+    const { config } = line;
+    onChange({
+      ...line,
+      config: {
+        ...config,
+        isVisible: checked
+      }
+    });
+  }
+
   render() {
     const { results, line = {}, errors = {} } = this.props;
     const { resultId = RESULT_NONE, logKey = LOG_KEY_NONE, config = {} } = line;
     const result = results[resultId] || {};
-    const color = config.color;
+    const { color, isVisible } = config;
 
     const colorBlockStyle = {
       backgroundColor: color
@@ -143,6 +157,23 @@ class LineConfigurator extends React.Component {
             </div>
           </FormGroup>
           <FormGroup>
+            <Row>
+              <Label for="line-configurator-select-visibility" sm={{ size: 2 }}>visibility</Label>
+              <Col sm={{ size: 10 }}>
+                <FormGroup check>
+                  <Label check>
+                    <Input
+                      type="checkbox"
+                      id="line-configurator-select-visibility"
+                      defaultChecked={isVisible}
+                      onChange={this.handleVisibilityChange}
+                    />{' '}
+                  </Label>
+                </FormGroup>
+              </Col>
+            </Row>
+          </FormGroup>
+          <FormGroup>
             <Input
               className={`form-control${errors.hasSameLine ? ' is-invalid' : ''}`}
               hidden
@@ -163,7 +194,8 @@ LineConfigurator.propTypes = {
     resultId: PropTypes.number,
     logKey: PropTypes.string,
     config: PropTypes.shape({
-      color: PropTypes.string
+      color: PropTypes.string,
+      isVisible: PropTypes.bool
     })
   }),
   errors: PropTypes.shape({
