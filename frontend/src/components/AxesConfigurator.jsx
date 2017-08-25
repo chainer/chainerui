@@ -5,32 +5,10 @@ import LinesConfigurator from './LinesConfigurator';
 import XAxisKeySelector from './XAxisKeySelector';
 
 
-const defaultRange = [0, 100];
-const defaultXAxisConfig = {
-  axisName: 'xAxis',
-  xAxisKey: 'epoch',
-  scale: 'linear',
-  range: defaultRange
-};
-const defaultYAxisConfig = {
-  axisName: '',
-  scale: 'linear',
-  range: defaultRange,
-  lines: []
-};
-const defaultConfig = {
-  axes: {
-    xAxis: defaultXAxisConfig,
-    yLeftAxis: { ...defaultYAxisConfig, axisName: 'yLeftAxis' },
-    yRightAxis: { ...defaultYAxisConfig, axisName: 'yRightAxis' }
-  }
-};
-
-
 const AxesConfigurator = (props) => {
   const {
     results = {},
-    config = defaultConfig,
+    config = {},
     onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
     onAxisConfigScaleUpdate,
     onAxisConfigXKeyUpdate
@@ -39,7 +17,7 @@ const AxesConfigurator = (props) => {
     xAxis = { axisName: 'xAxis' },
     yLeftAxis = { axisName: 'yLeftAxis' },
     yRightAxis = { axisName: 'yRightAxis' }
-  } = config.axes;
+  } = config.axes || {};
 
   return (
     <div className="axes-configurator">

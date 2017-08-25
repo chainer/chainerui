@@ -15,34 +15,7 @@ import Utils from '../utils';
 
 
 const sliderSteps = 100.0;
-const defaultStats = {
-  axes: {
-    xAxis: {},
-    yLeftAxis: {},
-    yRightAxis: {}
-  }
-};
-
 const defaultRange = [0, 100];
-const defaultXAxisConfig = {
-  axisName: 'xAxis',
-  xAxisKey: 'epoch',
-  scale: 'linear',
-  range: defaultRange
-};
-const defaultYAxisConfig = {
-  axisName: '',
-  scale: 'linear',
-  range: defaultRange,
-  lines: []
-};
-const defaultConfig = {
-  axes: {
-    xAxis: defaultXAxisConfig,
-    yLeftAxis: { ...defaultYAxisConfig, axisName: 'yLeftAxis' },
-    yRightAxis: { ...defaultYAxisConfig, axisName: 'yRightAxis' }
-  }
-};
 
 const buildLineElem = (line, axisName, results) => {
   const { config = {} } = line;
@@ -80,14 +53,14 @@ class LogVisualizer extends React.Component {
     const { line2dataKey } = Utils;
     const {
       results = {},
-      stats = defaultStats,
-      config = defaultConfig
+      stats = {},
+      config = {}
     } = this.props;
     const {
       xAxis = { axisName: 'xAxis' },
       yLeftAxis = { axisName: 'yLeftAxis' },
       yRightAxis = { axisName: 'yRightAxis' }
-    } = config.axes;
+    } = config.axes || {};
     const { xAxisKey = 'epoch' } = xAxis;
     const leftLines = yLeftAxis.lines || [];
     const rightLines = yRightAxis.lines || [];
@@ -132,7 +105,10 @@ class LogVisualizer extends React.Component {
     });
     const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
-    const lineElems = [...buildLineElems('yLeftAxis', results, config), ...buildLineElems('yRightAxis', results, config)];
+    const lineElems = [
+      ...buildLineElems('yLeftAxis', results, config),
+      ...buildLineElems('yRightAxis', results, config)
+    ];
 
     return (
       <div className="log-visualizer-root">
@@ -222,18 +198,17 @@ LogVisualizer.propTypes = {
       yLeftAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
       yRightAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) })
     })
-  }),
+  }).isRequired,
   config: PropTypes.shape({
     axes: PropTypes.shape({
       xAxis: PropTypes.any,
       yLeftAxis: PropTypes.any,
       yRightAxis: PropTypes.any
     })
-  })
+  }).isRequired
 };
+
 LogVisualizer.defaultProps = {
-  stats: defaultStats,
-  config: defaultConfig
 };
 
 export default LogVisualizer;
