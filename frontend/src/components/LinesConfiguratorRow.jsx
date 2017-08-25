@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Utils from '../utils';
+import { line2key, displayName } from '../utils';
 
 
 class LinesConfiguratorRow extends React.Component {
@@ -20,7 +20,6 @@ class LinesConfiguratorRow extends React.Component {
   }
 
   handleRemoveClick(e) {
-    const { line2key } = Utils;
     const { line, onRemove } = this.props;
 
     e.preventDefault();
@@ -29,7 +28,6 @@ class LinesConfiguratorRow extends React.Component {
   }
 
   render() {
-    const { line2key, displayName, truncateForward } = Utils;
     const { line, result } = this.props;
     const { config = {} } = line;
 
@@ -48,7 +46,7 @@ class LinesConfiguratorRow extends React.Component {
       >
         <div className="row">
           <div className="col-sm-1" style={colorBlockStyle} />
-          <div className="col-sm-5">{truncateForward(displayName(result), 24)}</div>
+          <div className="col-sm-5">{displayName(result)}</div>
           <div className="col-sm-4">{line.logKey}</div>
           <div className="col-sm-1">
             <button

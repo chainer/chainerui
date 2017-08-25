@@ -11,7 +11,7 @@ import {
 } from 'recharts';
 import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import Utils from '../utils';
+import { line2name, line2dataKey } from '../utils';
 
 
 const sliderSteps = 100.0;
@@ -20,7 +20,6 @@ const defaultRange = [0, 100];
 const buildLineElem = (line, axisName, results) => {
   const { config = {} } = line;
   const result = results[line.resultId] || {};
-  const { line2name, line2dataKey } = Utils;
 
   return (
     <Line
@@ -50,7 +49,6 @@ class LogVisualizer extends React.Component {
   }
 
   render() {
-    const { line2dataKey } = Utils;
     const {
       results = {},
       stats = {},
