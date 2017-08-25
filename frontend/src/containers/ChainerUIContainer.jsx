@@ -52,11 +52,12 @@ class ChainerUIContainer extends React.Component {
   }
 
   render() {
-    const { results, config, stats } = this.props;
+    const { results, fetchState, config, stats } = this.props;
 
     return (
       <div className="chainer-ui-container">
         <NavigationBar
+          fetchState={fetchState}
           config={config}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
         />
@@ -123,15 +124,19 @@ const defaultConfig = {
 const mapStateToProps = (state) => {
   const {
     entities,
+    fetchState,
     config = defaultConfig
   } = state;
   const { results = {} } = entities;
   const stats = mapEntitiesToStats(entities);
-  return { results, config, stats };
+  return { results, fetchState, config, stats };
 };
 
 ChainerUIContainer.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
+  fetchState: PropTypes.shape({
+    results: PropTypes.string
+  }).isRequired,
   config: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
     global: PropTypes.objectOf(PropTypes.any)

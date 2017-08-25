@@ -34,6 +34,28 @@ const entities = (state = { results: {} }, action) => {
   }
 };
 
+const fetchState = (state = { results: '' }, action) => {
+  switch (action.type) {
+    case ActionTypes.RESULTS_REQUEST:
+    case ActionTypes.RESULTS_SUCCESS:
+    case ActionTypes.RESULTS_FAILUE:
+      return {
+        ...state,
+        results: action.type
+      };
+    case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
+      if (action.pollingRate === 0) {
+        return {
+          ...state,
+          results: ''
+        };
+      }
+      return state;
+    default:
+      return state;
+  }
+};
+
 const axes = (state = {}, action) => {
   const { axisName, line, lineKey, scale, xAxisKey } = action;
   if (axisName == null) {
@@ -119,6 +141,7 @@ const config = combineReducers({
 
 const rootReducer = combineReducers({
   entities,
+  fetchState,
   config: persistReducer({ key: 'config', storage }, config)
 });
 
