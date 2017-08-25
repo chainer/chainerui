@@ -8,39 +8,18 @@ import {
   Button
 } from 'reactstrap';
 import ResultsFetchState from './ResultsFetchState';
+import { chartSizeOptions, pollingOptions } from '../constants';
 
-
-const pollingOptions = [
-  {
-    id: 1,
-    name: 'stop',
-    value: 0
-  },
-  {
-    id: 2,
-    name: '5s',
-    value: (5 * 1000)
-  },
-  {
-    id: 3,
-    name: '10s',
-    value: (10 * 1000)
-  },
-  {
-    id: 4,
-    name: '15s',
-    value: (15 * 1000)
-  },
-  {
-    id: 5,
-    name: '20s',
-    value: (20 * 1000)
-  }
-];
 
 const createPollingOptionElems = (options) => [
   ...options.map((option) => (
     <option key={option.id} value={option.value}>{option.name}</option>
+  ))
+];
+
+const createVisualizerSizeOptionElems = (options) => [
+  ...options.map((option) => (
+    <option key={option.id} value={option.id}>{option.name}</option>
   ))
 ];
 
@@ -49,7 +28,8 @@ class NavigationBar extends React.Component {
     super(props);
 
     this.toggleSettingPopover = this.toggleSettingPopover.bind(this);
-    this.handlePollingRate = this.handlePollingRate.bind(this);
+    this.handleChangePollingRate = this.handleChangePollingRate.bind(this);
+    this.handleChangeChartSize = this.handleChangeChartSize.bind(this);
     this.state = {
       settingPopoverOpen: false
     };
@@ -61,12 +41,19 @@ class NavigationBar extends React.Component {
     });
   }
 
-  handlePollingRate(e) {
+  handleChangePollingRate(e) {
     this.props.onGlobalConfigPollingRateUpdate(Number(e.target.value));
+  }
+
+  handleChangeChartSize(e) {
+    const selectedId = Number(e.target.value);
+    const chartSize = chartSizeOptions.find((o) => o.id === selectedId);
+    this.props.onGlobalConfigChartSizeUpdate(chartSize);
   }
 
   render() {
     const pollingOptionElems = createPollingOptionElems(pollingOptions);
+    const chartSizeElems = createVisualizerSizeOptionElems(chartSizeOptions);
 
     return (
       <Navbar className="navbar-light bg-light mb-3">
@@ -82,7 +69,7 @@ class NavigationBar extends React.Component {
           </Collapse>
         </Container>
 
-        <Popover placement="bottom" isOpen={this.state.settingPopoverOpen} target="navbar-global-setting" toggle={this.toggleSettingPopover}>
+        <Popover placement="left bottom" isOpen={this.state.settingPopoverOpen} target="navbar-global-setting" toggle={this.toggleSettingPopover}>
           <PopoverTitle className="popover-header">Global Setting</PopoverTitle>
           <PopoverContent className="popover-body">
             <Form>
@@ -93,10 +80,24 @@ class NavigationBar extends React.Component {
                   type="select"
                   name="select"
                   id="global-config-polling-rate"
-                  onChange={this.handlePollingRate}
+                  onChange={this.handleChangePollingRate}
                   value={this.props.config.global.pollingRate}
                 >
                   {pollingOptionElems}
+                </select>
+              </FormGroup>
+
+              <FormGroup>
+                <Label for="global-config-chart-size">Chart size</Label><br />
+                <select
+                  className="form-control"
+                  type="select"
+                  name="select"
+                  id="global-config-chart-size"
+                  value={this.props.config.global.chartSize.id}
+                  onChange={this.handleChangeChartSize}
+                >
+                  {chartSizeElems}
                 </select>
               </FormGroup>
             </Form>
@@ -113,10 +114,12 @@ NavigationBar.propTypes = {
   }).isRequired,
   config: PropTypes.shape({
     global: PropTypes.shape({
-      pollingRate: PropTypes.number
+      pollingRate: PropTypes.number,
+      chartSize: PropTypes.objectOf(PropTypes.any)
     })
   }),
-  onGlobalConfigPollingRateUpdate: PropTypes.func.isRequired
+  onGlobalConfigPollingRateUpdate: PropTypes.func.isRequired,
+  onGlobalConfigChartSizeUpdate: PropTypes.func.isRequired
 };
 
 NavigationBar.defaultProps = {
