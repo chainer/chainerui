@@ -12,40 +12,10 @@ import {
 import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import Utils from '../utils';
-import AxisConfigurator from './AxisConfigurator';
-import LinesConfigurator from './LinesConfigurator';
-import XAxisKeySelector from './XAxisKeySelector';
 
 
 const sliderSteps = 100.0;
-const defaultStats = {
-  axes: {
-    xAxis: {},
-    yLeftAxis: {},
-    yRightAxis: {}
-  }
-};
-
 const defaultRange = [0, 100];
-const defaultXAxisConfig = {
-  axisName: 'xAxis',
-  xAxisKey: 'epoch',
-  scale: 'linear',
-  range: defaultRange
-};
-const defaultYAxisConfig = {
-  axisName: '',
-  scale: 'linear',
-  range: defaultRange,
-  lines: []
-};
-const defaultConfig = {
-  axes: {
-    xAxis: defaultXAxisConfig,
-    yLeftAxis: { ...defaultYAxisConfig, axisName: 'yLeftAxis' },
-    yRightAxis: { ...defaultYAxisConfig, axisName: 'yRightAxis' }
-  }
-};
 
 const buildLineElem = (line, axisName, results) => {
   const { config = {} } = line;
@@ -83,17 +53,14 @@ class LogVisualizer extends React.Component {
     const { line2dataKey } = Utils;
     const {
       results = {},
-      stats = defaultStats,
-      config = defaultConfig,
-      onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
-      onAxisConfigScaleUpdate,
-      onAxisConfigXKeyUpdate
+      stats = {},
+      config = {}
     } = this.props;
     const {
       xAxis = { axisName: 'xAxis' },
       yLeftAxis = { axisName: 'yLeftAxis' },
       yRightAxis = { axisName: 'yRightAxis' }
-    } = config.axes;
+    } = config.axes || {};
     const { xAxisKey = 'epoch' } = xAxis;
     const leftLines = yLeftAxis.lines || [];
     const rightLines = yRightAxis.lines || [];
@@ -138,123 +105,86 @@ class LogVisualizer extends React.Component {
     });
     const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
-    const lineElems = [...buildLineElems('yLeftAxis', results, config), ...buildLineElems('yRightAxis', results, config)];
+    const lineElems = [
+      ...buildLineElems('yLeftAxis', results, config),
+      ...buildLineElems('yRightAxis', results, config)
+    ];
 
     return (
-      <div className="log-visualizer-root row">
-        <div className="col-sm-8">
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  <Range
-                    style={{ height: `${chartHeight}px` }}
-                    vertical
-                    min={yLeftValueRange[0]}
-                    max={yLeftValueRange[1]}
-                    step={(yLeftRange[1] - yLeftRange[0]) / sliderSteps}
-                    value={yLeftRange}
+      <div className="log-visualizer-root">
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <Range
+                  style={{ height: `${chartHeight}px` }}
+                  vertical
+                  min={yLeftValueRange[0]}
+                  max={yLeftValueRange[1]}
+                  step={(yLeftRange[1] - yLeftRange[0]) / sliderSteps}
+                  value={yLeftRange}
+                />
+              </td>
+              <td>
+                <LineChart
+                  width={chartWidth}
+                  height={chartHeight}
+                  data={data}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <XAxis
+                    type="number"
+                    dataKey={xAxisKey}
+                    scale={xAxis.scale}
+                    domain={['auto', 'auto']}
+                    allowDataOverflow
                   />
-                </td>
-                <td>
-                  <LineChart
-                    width={chartWidth}
-                    height={chartHeight}
-                    data={data}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <XAxis
-                      type="number"
-                      dataKey={xAxisKey}
-                      scale={xAxis.scale}
-                      domain={['auto', 'auto']}
-                      allowDataOverflow
-                    />
-                    <YAxis
-                      yAxisId="yLeftAxis"
-                      orientation="left"
-                      scale={yLeftAxis.scale}
-                      domain={['auto', 'auto']}
-                      allowDataOverflow
-                    />
-                    <YAxis
-                      yAxisId="yRightAxis"
-                      orientation="right"
-                      scale={yRightAxis.scale}
-                      domain={['auto', 'auto']}
-                      allowDataOverflow
-                    />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Tooltip />
-                    <Legend />
-                    {lineElems}
-                  </LineChart>
-                </td>
-                <td>
-                  <Range
-                    style={{ height: `${chartHeight}px` }}
-                    vertical
-                    min={yRightValueRange[0]}
-                    max={yRightValueRange[1]}
-                    step={(yRightRange[1] - yRightRange[0]) / sliderSteps}
-                    value={yRightRange}
+                  <YAxis
+                    yAxisId="yLeftAxis"
+                    orientation="left"
+                    scale={yLeftAxis.scale}
+                    domain={['auto', 'auto']}
+                    allowDataOverflow
                   />
-                </td>
-              </tr>
-              <tr>
-                <td />
-                <td>
-                  <Range
-                    style={{ width: `${chartWidth}px`, margin: 'auto' }}
-                    min={xValueRange.min}
-                    max={xValueRange.max}
-                    value={xRange}
-                    onChange={this.handleChangeXRange}
+                  <YAxis
+                    yAxisId="yRightAxis"
+                    orientation="right"
+                    scale={yRightAxis.scale}
+                    domain={['auto', 'auto']}
+                    allowDataOverflow
                   />
-                </td>
-                <td />
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="col-sm-4">
-          <AxisConfigurator
-            axisConfig={yLeftAxis}
-            onChangeScale={onAxisConfigScaleUpdate}
-          >
-            <LinesConfigurator
-              results={results}
-              axisName="yLeftAxis"
-              lines={yLeftAxis.lines}
-              onAxisConfigLineAdd={onAxisConfigLineAdd}
-              onAxisConfigLineUpdate={onAxisConfigLineUpdate}
-              onAxisConfigLineRemove={onAxisConfigLineRemove}
-            />
-          </AxisConfigurator>
-          <AxisConfigurator
-            axisConfig={yRightAxis}
-            onChangeScale={onAxisConfigScaleUpdate}
-          >
-            <LinesConfigurator
-              results={results}
-              axisName="yRightAxis"
-              lines={yRightAxis.lines}
-              onAxisConfigLineAdd={onAxisConfigLineAdd}
-              onAxisConfigLineUpdate={onAxisConfigLineUpdate}
-              onAxisConfigLineRemove={onAxisConfigLineRemove}
-            />
-          </AxisConfigurator>
-          <AxisConfigurator
-            axisConfig={xAxis}
-            onChangeScale={onAxisConfigScaleUpdate}
-          >
-            <ul className="list-group list-group-flush">
-              <li className="list-group-item">
-                <XAxisKeySelector value={xAxis.xAxisKey} onChange={onAxisConfigXKeyUpdate} />
-              </li>
-            </ul>
-          </AxisConfigurator>
-        </div>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <Tooltip />
+                  <Legend />
+                  {lineElems}
+                </LineChart>
+              </td>
+              <td>
+                <Range
+                  style={{ height: `${chartHeight}px` }}
+                  vertical
+                  min={yRightValueRange[0]}
+                  max={yRightValueRange[1]}
+                  step={(yRightRange[1] - yRightRange[0]) / sliderSteps}
+                  value={yRightRange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td />
+              <td>
+                <Range
+                  style={{ width: `${chartWidth}px`, margin: 'auto' }}
+                  min={xValueRange.min}
+                  max={xValueRange.max}
+                  value={xRange}
+                  onChange={this.handleChangeXRange}
+                />
+              </td>
+              <td />
+            </tr>
+          </tbody>
+        </table>
       </div>
     );
   }
@@ -268,23 +198,17 @@ LogVisualizer.propTypes = {
       yLeftAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
       yRightAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) })
     })
-  }),
+  }).isRequired,
   config: PropTypes.shape({
     axes: PropTypes.shape({
       xAxis: PropTypes.any,
       yLeftAxis: PropTypes.any,
       yRightAxis: PropTypes.any
     })
-  }),
-  onAxisConfigLineAdd: PropTypes.func.isRequired,
-  onAxisConfigLineUpdate: PropTypes.func.isRequired,
-  onAxisConfigLineRemove: PropTypes.func.isRequired,
-  onAxisConfigScaleUpdate: PropTypes.func.isRequired,
-  onAxisConfigXKeyUpdate: PropTypes.func.isRequired
+  }).isRequired
 };
+
 LogVisualizer.defaultProps = {
-  stats: defaultStats,
-  config: defaultConfig
 };
 
 export default LogVisualizer;
