@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-const keyOptions = ['epoch', 'iteration'];
+const keyOptions = ['epoch', 'iteration', 'elapsed_time'];
 
 const XAxisKeySelector = (props) => {
   const { value, onChange } = props;
