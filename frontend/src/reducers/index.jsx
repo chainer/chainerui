@@ -3,7 +3,7 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
 import Utils from '../utils';
-import { chartSizeOptions } from '../constants';
+import { chartSizeOptions, pollingOptions } from '../constants';
 
 
 const entities = (state = { results: {} }, action) => {
@@ -102,7 +102,7 @@ const axes = (state = {}, action) => {
 };
 
 const defaultGlobaState = {
-  pollingRate: (5 * 1000),
+  pollingRate: pollingOptions[1].value,
   chartSize: chartSizeOptions[0]
 };
 

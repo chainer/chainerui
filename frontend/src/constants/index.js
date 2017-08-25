@@ -30,6 +30,35 @@ export const chartSizeOptions = [
   }
 ];
 
+export const pollingOptions = [
+  {
+    id: 1,
+    name: 'stop',
+    value: 0
+  },
+  {
+    id: 2,
+    name: '5s',
+    value: (5 * 1000)
+  },
+  {
+    id: 3,
+    name: '10s',
+    value: (10 * 1000)
+  },
+  {
+    id: 4,
+    name: '15s',
+    value: (15 * 1000)
+  },
+  {
+    id: 5,
+    name: '20s',
+    value: (20 * 1000)
+  }
+];
+
 export default {
-  chartSizeOptions
+  chartSizeOptions,
+  pollingOptions
 };
