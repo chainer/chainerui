@@ -78,8 +78,14 @@ export const updateXAxisKey = (xAxisKey) => ({
 // global config
 
 export const GLOBAL_CONFIG_POLLING_RATE_UPDATE = 'GLOBAL_CONFIG_POLLING_RATE_UPDATE';
+export const GLOBAL_CONFIG_CHART_SIZE_UPDATE = 'GLOBAL_CONFIG_CHART_SIZE_UPDATE';
 
 export const updateGlobalPollingRate = (pollingRate) => ({
   type: GLOBAL_CONFIG_POLLING_RATE_UPDATE,
   pollingRate
+});
+
+export const updateGlobalChartSize = (chartSize) => ({
+  type: GLOBAL_CONFIG_CHART_SIZE_UPDATE,
+  chartSize
 });

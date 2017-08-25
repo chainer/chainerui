@@ -7,15 +7,11 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
+  Legend,
+  ResponsiveContainer
 } from 'recharts';
-import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import Utils from '../utils';
-
-
-const sliderSteps = 100.0;
-const defaultRange = [0, 100];
 
 const buildLineElem = (line, axisName, results) => {
   const { config = {} } = line;
@@ -53,7 +49,6 @@ class LogVisualizer extends React.Component {
     const { line2dataKey } = Utils;
     const {
       results = {},
-      stats = {},
       config = {}
     } = this.props;
     const {
@@ -68,15 +63,6 @@ class LogVisualizer extends React.Component {
       yLeftAxis: leftLines,
       yRightAxis: rightLines
     };
-    const xRange = xAxis.range || defaultRange;
-    const yLeftRange = yLeftAxis.range || defaultRange;
-    const yRightRange = yRightAxis.range || defaultRange;
-    const xValueRange = stats.axes.xAxis.valueRange || defaultRange;
-    const yLeftValueRange = stats.axes.yLeftAxis.valueRange || defaultRange;
-    const yRightValueRange = stats.axes.yRightAxis.valueRange || defaultRange;
-
-    const chartWidth = 640;
-    const chartHeight = 360;
 
     const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
     Object.keys(axisLines).forEach((axisName) => {
@@ -110,81 +96,43 @@ class LogVisualizer extends React.Component {
       ...buildLineElems('yRightAxis', results, config)
     ];
 
+    const { chartSize } = this.props.config.global;
+
     return (
       <div className="log-visualizer-root">
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <Range
-                  style={{ height: `${chartHeight}px` }}
-                  vertical
-                  min={yLeftValueRange[0]}
-                  max={yLeftValueRange[1]}
-                  step={(yLeftRange[1] - yLeftRange[0]) / sliderSteps}
-                  value={yLeftRange}
-                />
-              </td>
-              <td>
-                <LineChart
-                  width={chartWidth}
-                  height={chartHeight}
-                  data={data}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <XAxis
-                    type="number"
-                    dataKey={xAxisKey}
-                    scale={xAxis.scale}
-                    domain={['auto', 'auto']}
-                    allowDataOverflow
-                  />
-                  <YAxis
-                    yAxisId="yLeftAxis"
-                    orientation="left"
-                    scale={yLeftAxis.scale}
-                    domain={yLeftAxis.scale === 'log' ? [0.01, 'auto'] : ['auto', 'auto']}
-                    allowDataOverflow
-                  />
-                  <YAxis
-                    yAxisId="yRightAxis"
-                    orientation="right"
-                    scale={yRightAxis.scale}
-                    domain={yRightAxis.scale === 'log' ? [0.01, 'auto'] : ['auto', 'auto']}
-                    allowDataOverflow
-                  />
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <Tooltip />
-                  <Legend />
-                  {lineElems}
-                </LineChart>
-              </td>
-              <td>
-                <Range
-                  style={{ height: `${chartHeight}px` }}
-                  vertical
-                  min={yRightValueRange[0]}
-                  max={yRightValueRange[1]}
-                  step={(yRightRange[1] - yRightRange[0]) / sliderSteps}
-                  value={yRightRange}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td />
-              <td>
-                <Range
-                  style={{ width: `${chartWidth}px`, margin: 'auto' }}
-                  min={xValueRange.min}
-                  max={xValueRange.max}
-                  value={xRange}
-                  onChange={this.handleChangeXRange}
-                />
-              </td>
-              <td />
-            </tr>
-          </tbody>
-        </table>
+        <ResponsiveContainer
+          width={chartSize.width}
+          height={chartSize.height}
+          aspect={chartSize.aspect}
+        >
+          <LineChart data={data}>
+            <XAxis
+              type="number"
+              dataKey={xAxisKey}
+              scale={xAxis.scale}
+              domain={['auto', 'auto']}
+              allowDataOverflow
+            />
+            <YAxis
+              yAxisId="yLeftAxis"
+              orientation="left"
+              scale={yLeftAxis.scale}
+              domain={yLeftAxis.scale === 'log' ? [0.01, 'auto'] : ['auto', 'auto']}
+              allowDataOverflow
+            />
+            <YAxis
+              yAxisId="yRightAxis"
+              orientation="right"
+              scale={yRightAxis.scale}
+              domain={yRightAxis.scale === 'log' ? [0.01, 'auto'] : ['auto', 'auto']}
+              allowDataOverflow
+            />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Tooltip />
+            <Legend />
+            {lineElems}
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     );
   }
@@ -192,18 +140,18 @@ class LogVisualizer extends React.Component {
 
 LogVisualizer.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
-  stats: PropTypes.shape({
-    axes: PropTypes.shape({
-      xAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
-      yLeftAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
-      yRightAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) })
-    })
-  }).isRequired,
   config: PropTypes.shape({
     axes: PropTypes.shape({
       xAxis: PropTypes.any,
       yLeftAxis: PropTypes.any,
       yRightAxis: PropTypes.any
+    }),
+    global: PropTypes.shape({
+      chartSize: PropTypes.shape({
+        width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        aspect: PropTypes.number.isRequired
+      })
     })
   }).isRequired
 };
