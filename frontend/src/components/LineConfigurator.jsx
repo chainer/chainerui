@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Label, Input } from 'reactstrap';
-import { ChromePicker } from 'react-color';
+import { Form, FormGroup, Label, Input, Collapse, Button } from 'reactstrap';
+import { ChromePicker, SwatchesPicker } from 'react-color';
 import { displayName } from '../utils';
 
 
@@ -47,6 +47,13 @@ class LineConfigurator extends React.Component {
     this.handleResultChange = this.handleResultChange.bind(this);
     this.handleLogKeyChange = this.handleLogKeyChange.bind(this);
     this.handleLineColorChange = this.handleLineColorChange.bind(this);
+    this.togglePicker = this.togglePicker.bind(this);
+
+    this.state = { colorPickerCollapse: false };
+  }
+
+  togglePicker() {
+    this.setState({ colorPickerCollapse: !this.state.colorPickerCollapse });
   }
 
   handleResultChange(e) {
@@ -86,11 +93,21 @@ class LineConfigurator extends React.Component {
           <FormGroup>
             <Label>color</Label>
             <div style={colorBlockStyle}>{color}</div>
-            <ChromePicker
-              color={color}
-              disableAlpha
-              onChange={this.handleLineColorChange}
-            />
+            <Collapse isOpen={this.state.colorPickerCollapse}>
+              <ChromePicker
+                color={color}
+                disableAlpha
+                onChange={this.handleLineColorChange}
+              />
+            </Collapse>
+            <Collapse isOpen={!this.state.colorPickerCollapse}>
+              <SwatchesPicker
+                color={color}
+                width={470}
+                onChange={this.handleLineColorChange}
+              />
+            </Collapse>
+            <Button onClick={this.togglePicker} size="sm" className="my-2">Toggle color picker</Button>
           </FormGroup>
           <FormGroup>
             <Label for="line-configurator-result-select">result</Label><br />
