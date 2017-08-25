@@ -12,13 +12,19 @@ class Utils {
   }
 
   static displayName(result = {}) {
-    return result.name || result.pathName;
+    return Utils.truncate(result.name) || Utils.truncate(result.pathName, { forward: true });
   }
 
-  static truncateForward(string, length, beginning = '...') {
-    const str = string || '';
-    if (str.length > length) {
-      return beginning + str.substring((str.length - length) + beginning.length, str.length);
+  static truncate(string, options = {}) {
+    const { length = 20, restStr = '...', forward = false } = options;
+    let str = string || '';
+    const chars = [...str];
+    if (chars.length > length) {
+      if (forward) {
+        str = restStr + chars.slice(chars.length - length).join('');
+      } else {
+        str = chars.slice(0, length).join('') + restStr;
+      }
     }
     return str;
   }
