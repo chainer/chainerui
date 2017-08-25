@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import Utils from '../utils';
+import { line2key } from '../utils';
 
 
 const entities = (state = { results: {} }, action) => {
@@ -35,7 +35,6 @@ const entities = (state = { results: {} }, action) => {
 };
 
 const axes = (state = {}, action) => {
-  const { line2key } = Utils;
   const { axisName, line, lineKey, scale, xAxisKey } = action;
   if (axisName == null) {
     return state;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import Utils from '../utils';
+import { line2key } from '../utils';
 import LinesConfiguratorRow from './LinesConfiguratorRow';
 import LineConfigurator from './LineConfigurator';
 
@@ -13,7 +13,6 @@ const defaultLine = {
 };
 
 const checkErrors = (line = defaultLine, isNewLine, targetLineKey, lines) => {
-  const { line2key } = Utils;
   const hasSameLine = isNewLine ?
     lines.some((l) => line2key(l) === line2key(line)) :
     (targetLineKey !== line2key(line) && lines.some((l) => line2key(l) === line2key(line)));
@@ -59,7 +58,6 @@ class LinesConfigurator extends React.Component {
   }
 
   handleModalOpen(line = defaultLine) {
-    const { line2key } = Utils;
     this.setState({
       showModal: true,
       showError: false,
@@ -114,7 +112,6 @@ class LinesConfigurator extends React.Component {
   }
 
   render() {
-    const { line2key } = Utils;
     const { results, lines = [] } = this.props;
     const { editingLine, isNewLine, errors, showError } = this.state;
 
