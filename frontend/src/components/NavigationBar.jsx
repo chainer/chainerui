@@ -7,6 +7,7 @@ import {
   Form, FormGroup, Label,
   Button
 } from 'reactstrap';
+import ResultsFetchState from './ResultsFetchState';
 
 
 const pollingOptions = [
@@ -72,6 +73,9 @@ class NavigationBar extends React.Component {
         <Container fluid>
           <NavbarBrand href="/">Chainer UI</NavbarBrand>
           <Collapse isOpen>
+            <span className="navbar-text mx-3 my-0">
+              <ResultsFetchState fetchState={this.props.fetchState} />
+            </span>
             <Button id="navbar-global-setting" onClick={this.toggleSettingPopover}>
               <span className="oi oi-cog" />
             </Button>
@@ -104,6 +108,9 @@ class NavigationBar extends React.Component {
 }
 
 NavigationBar.propTypes = {
+  fetchState: PropTypes.shape({
+    results: PropTypes.string
+  }).isRequired,
   config: PropTypes.shape({
     global: PropTypes.shape({
       pollingRate: PropTypes.number
