@@ -7,7 +7,7 @@ const ExperimentsTable = (props) => {
   const { results = {}, stats, onResultUpdate } = props;
   const { argKeys } = stats;
 
-  const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}><span className="oi oi-cog" />{argKey}</th>));
+  const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}>{`(${argKey})`}</th>));
 
   const resultRowElems = Object.keys(results).map((resultId) => {
     const result = results[resultId];
