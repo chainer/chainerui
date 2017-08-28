@@ -37,6 +37,7 @@ class AxisRangeConfigurator extends React.Component {
     const { rangeTypes = [], range = [] } = rangeConfig;
     const rangeType = rangeTypes[isMin ? 0 : 1] || 'auto';
     const rangeNumber = range[isMin ? 0 : 1];
+    const isNumberInvalid = (rangeType === 'number' && (rangeNumber == null || rangeNumber === ''));
 
     return (
       <Form onSubmit={(e) => { e.preventDefault(); }}>
@@ -66,7 +67,7 @@ class AxisRangeConfigurator extends React.Component {
               /> data {isMin ? 'min' : 'max'}
             </Label>
           </FormGroup>
-          <FormGroup check disabled>
+          <FormGroup check>
             <Label check>
               <Input
                 type="radio"
@@ -77,11 +78,12 @@ class AxisRangeConfigurator extends React.Component {
                 onChange={this.handleRangeTypeChange}
               />
               <Input
+                className={isNumberInvalid ? 'is-invalid' : ''}
                 type="number"
                 step="any"
                 name="range-number-value"
                 size="sm"
-                value={(rangeNumber == null) ? '' : rangeNumber}
+                value={(rangeNumber == null || rangeNumber === '') ? '' : rangeNumber}
                 disabled={rangeType !== 'number'}
                 onChange={this.handleNumberChange}
               />
