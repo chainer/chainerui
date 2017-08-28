@@ -43,52 +43,54 @@ class AxisRangeConfigurator extends React.Component {
       <Form onSubmit={(e) => { e.preventDefault(); }}>
         <FormGroup tag="fieldset">
           <legend><small>{isMin ? 'Min' : 'Max'}</small></legend>
-          <FormGroup check>
-            <Label check>
-              <Input
-                type="radio"
-                name="range-auto"
-                value="auto"
-                size="sm"
-                checked={rangeType === 'auto'}
-                onChange={this.handleRangeTypeChange}
-              /> auto
-            </Label>
-          </FormGroup>
-          <FormGroup check>
-            <Label check>
-              <Input
-                type="radio"
-                name="range-data-min-or-max"
-                value={isMin ? 'dataMin' : 'dataMax'}
-                size="sm"
-                checked={rangeType === (isMin ? 'dataMin' : 'dataMax')}
-                onChange={this.handleRangeTypeChange}
-              /> data {isMin ? 'min' : 'max'}
-            </Label>
-          </FormGroup>
-          <FormGroup check>
-            <Label check>
-              <Input
-                type="radio"
-                name="range-number"
-                value="number"
-                size="sm"
-                checked={rangeType === 'number'}
-                onChange={this.handleRangeTypeChange}
-              />
-              <Input
-                className={isNumberInvalid ? 'is-invalid' : ''}
-                type="number"
-                step="any"
-                name="range-number-value"
-                size="sm"
-                value={(rangeNumber == null || rangeNumber === '') ? '' : rangeNumber}
-                disabled={rangeType !== 'number'}
-                onChange={this.handleNumberChange}
-              />
-            </Label>
-          </FormGroup>
+          <div className="form-row">
+            <FormGroup check className="col-sm-3">
+              <Label check>
+                <Input
+                  type="radio"
+                  name="range-auto"
+                  value="auto"
+                  size="sm"
+                  checked={rangeType === 'auto'}
+                  onChange={this.handleRangeTypeChange}
+                /> auto
+              </Label>
+            </FormGroup>
+            <FormGroup check className="col-sm-4">
+              <Label check>
+                <Input
+                  type="radio"
+                  name="range-data-min-or-max"
+                  value={isMin ? 'dataMin' : 'dataMax'}
+                  size="sm"
+                  checked={rangeType === (isMin ? 'dataMin' : 'dataMax')}
+                  onChange={this.handleRangeTypeChange}
+                /> data {isMin ? 'min' : 'max'}
+              </Label>
+            </FormGroup>
+            <FormGroup check className="col-sm-5">
+              <Label check>
+                <Input
+                  type="radio"
+                  name="range-number"
+                  value="number"
+                  size="sm"
+                  checked={rangeType === 'number'}
+                  onChange={this.handleRangeTypeChange}
+                />
+                <Input
+                  className={isNumberInvalid ? 'is-invalid' : ''}
+                  type="number"
+                  step="any"
+                  name="range-number-value"
+                  size="sm"
+                  value={(rangeNumber == null || rangeNumber === '') ? '' : rangeNumber}
+                  disabled={rangeType !== 'number'}
+                  onChange={this.handleNumberChange}
+                />
+              </Label>
+            </FormGroup>
+          </div>
         </FormGroup>
       </Form>
     );

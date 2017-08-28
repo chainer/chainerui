@@ -66,7 +66,7 @@ class ChainerUIContainer extends React.Component {
         />
         <Container fluid>
           <div className="row">
-            <div className="col-sm-4 col-md-3">
+            <div className="col-md-4 col-lg-3">
               <SideBar
                 results={results}
                 stats={stats}
@@ -80,7 +80,7 @@ class ChainerUIContainer extends React.Component {
                 onAxisConfigScaleRangeNumberUpdate={this.props.updateAxisScaleRangeNumber}
               />
             </div>
-            <div className="col-sm-8 col-md-9">
+            <div className="col-md-8 col-lg-9">
               <LogVisualizer
                 results={results}
                 stats={stats}

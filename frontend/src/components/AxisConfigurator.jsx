@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button, Collapse } from 'reactstrap';
 import AxisScaleSelector from './AxisScaleSelector';
 import AxisRangeConfigurator from './AxisRangeConfigurator';
 
@@ -9,11 +10,22 @@ class AxisConfigurator extends React.Component {
     super(props);
 
     this.handleChangeScale = this.handleChangeScale.bind(this);
+    this.toggleRangeConfig = this.toggleRangeConfig.bind(this);
+
+    this.state = {
+      showRangeConfig: false
+    };
   }
 
   handleChangeScale(scale) {
     const { axisName } = this.props.axisConfig;
     this.props.onChangeScale(axisName, scale);
+  }
+
+  toggleRangeConfig() {
+    this.setState({
+      showRangeConfig: !this.state.showRangeConfig
+    });
   }
 
   render() {
@@ -28,30 +40,27 @@ class AxisConfigurator extends React.Component {
       <div className="axis-configurator card">
         <div className="card-header">{axisName}</div>
         <div className="card-body">
-          <div className="row">
-            <div className="col-md-6">
-              <AxisScaleSelector
-                scale={scale}
-                onChange={this.handleChangeScale}
-              />
-            </div>
-            <div className="col-md-6">
-              <AxisRangeConfigurator
-                axisConfig={axisConfig}
-                axisStats={axisStats}
-                isMin={false}
-                onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-                onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-              />
-              <AxisRangeConfigurator
-                axisConfig={axisConfig}
-                axisStats={axisStats}
-                isMin
-                onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-                onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-              />
-            </div>
-          </div>
+          <AxisScaleSelector
+            scale={scale}
+            onChange={this.handleChangeScale}
+          />
+          <Button size="sm" className="my-2" onClick={this.toggleRangeConfig}>Toggle range setting</Button>
+          <Collapse isOpen={this.state.showRangeConfig}>
+            <AxisRangeConfigurator
+              axisConfig={axisConfig}
+              axisStats={axisStats}
+              isMin={false}
+              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+            />
+            <AxisRangeConfigurator
+              axisConfig={axisConfig}
+              axisStats={axisStats}
+              isMin
+              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+            />
+          </Collapse>
         </div>
         {this.props.children}
       </div>
