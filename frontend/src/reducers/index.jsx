@@ -125,46 +125,42 @@ const axes = (state = {}, action) => {
           xAxisKey
         }
       };
-    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE:
-      if (rangeType) {
-        const idx = isMin ? 0 : 1;
-        const rangeConfig = scaleRange[scale] || {};
-        const { rangeTypes = [], range = [] } = rangeConfig;
-        return {
-          ...state,
-          [axisName]: {
-            ...axisConfig,
-            scaleRange: {
-              ...scaleRange,
-              [scale]: {
-                rangeTypes: Object.assign([], rangeTypes, { [idx]: rangeType }),
-                range
-              }
+    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE: {
+      const idx = isMin ? 0 : 1;
+      const rangeConfig = scaleRange[scale] || {};
+      const { rangeTypes = [], range = [] } = rangeConfig;
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          scaleRange: {
+            ...scaleRange,
+            [scale]: {
+              rangeTypes: Object.assign([], rangeTypes, { [idx]: rangeType }),
+              range
             }
           }
-        };
-      }
-      return state;
-    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE:
-      if (rangeNumber != null) {
-        const idx = isMin ? 0 : 1;
-        const rangeConfig = scaleRange[scale] || {};
-        const { rangeTypes = [], range = [] } = rangeConfig;
-        return {
-          ...state,
-          [axisName]: {
-            ...axisConfig,
-            scaleRange: {
-              ...scaleRange,
-              [scale]: {
-                rangeTypes,
-                range: Object.assign([], range, { [idx]: rangeNumber })
-              }
+        }
+      };
+    }
+    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE: {
+      const idx = isMin ? 0 : 1;
+      const rangeConfig = scaleRange[scale] || {};
+      const { rangeTypes = [], range = [] } = rangeConfig;
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          scaleRange: {
+            ...scaleRange,
+            [scale]: {
+              rangeTypes,
+              range: Object.assign([], range, { [idx]: rangeNumber })
             }
           }
-        };
-      }
-      return state;
+        }
+      };
+    }
     default:
       return state;
   }

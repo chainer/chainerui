@@ -20,7 +20,14 @@ class AxisRangeConfigurator extends React.Component {
   handleNumberChange(e) {
     const { axisConfig, isMin, onAxisConfigScaleRangeNumberUpdate } = this.props;
     const { axisName, scale = 'linear' } = axisConfig;
-    onAxisConfigScaleRangeNumberUpdate(axisName, scale, isMin, Number(e.target.value));
+
+    let rangeNumber = null;
+    if (e.target.value) {
+      const num = Number(e.target.value);
+      rangeNumber = (isNaN(num) || !isFinite(num)) ? null : num;
+    }
+
+    onAxisConfigScaleRangeNumberUpdate(axisName, scale, isMin, rangeNumber);
   }
 
   render() {
@@ -32,7 +39,7 @@ class AxisRangeConfigurator extends React.Component {
     const rangeNumber = range[isMin ? 0 : 1];
 
     return (
-      <Form>
+      <Form onSubmit={(e) => { e.preventDefault(); }}>
         <FormGroup tag="fieldset">
           <legend><small>{isMin ? 'Min' : 'Max'}</small></legend>
           <FormGroup check>
