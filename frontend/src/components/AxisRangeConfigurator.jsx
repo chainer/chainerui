@@ -108,9 +108,6 @@ AxisRangeConfigurator.propTypes = {
       })
     )
   }).isRequired,
-  axisStats: PropTypes.shape({
-    valueRange: PropTypes.arrayOf(PropTypes.number)
-  }).isRequired,
   isMin: PropTypes.bool.isRequired,
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired

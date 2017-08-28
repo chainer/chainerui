@@ -31,7 +31,6 @@ class AxisConfigurator extends React.Component {
   render() {
     const {
       axisConfig,
-      axisStats,
       onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
     } = this.props;
     const { axisName, scale } = axisConfig;
@@ -48,14 +47,12 @@ class AxisConfigurator extends React.Component {
           <Collapse isOpen={this.state.showRangeConfig}>
             <AxisRangeConfigurator
               axisConfig={axisConfig}
-              axisStats={axisStats}
               isMin={false}
               onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
               onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
             />
             <AxisRangeConfigurator
               axisConfig={axisConfig}
-              axisStats={axisStats}
               isMin
               onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
               onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
@@ -78,9 +75,6 @@ AxisConfigurator.propTypes = {
         range: PropTypes.arrayOf(PropTypes.number)
       })
     )
-  }).isRequired,
-  axisStats: PropTypes.shape({
-    valueRange: PropTypes.arrayOf(PropTypes.number)
   }).isRequired,
   children: PropTypes.element,
   onChangeScale: PropTypes.func.isRequired,

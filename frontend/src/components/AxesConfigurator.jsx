@@ -8,7 +8,6 @@ import XAxisKeySelector from './XAxisKeySelector';
 const AxesConfigurator = (props) => {
   const {
     results,
-    stats,
     config,
     onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
     onAxisConfigScaleUpdate,
@@ -20,15 +19,11 @@ const AxesConfigurator = (props) => {
     yLeftAxis = { axisName: 'yLeftAxis' },
     yRightAxis = { axisName: 'yRightAxis' }
   } = config.axes || {};
-  const xAxisStats = stats.axes.xAxis;
-  const yLeftAxisStats = stats.axes.yLeftAxis;
-  const yRightAxisStats = stats.axes.yRightAxis;
 
   return (
     <div className="axes-configurator">
       <AxisConfigurator
         axisConfig={yLeftAxis}
-        axisStats={yLeftAxisStats}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
         onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
@@ -44,7 +39,6 @@ const AxesConfigurator = (props) => {
       </AxisConfigurator>
       <AxisConfigurator
         axisConfig={yRightAxis}
-        axisStats={yRightAxisStats}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
         onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
@@ -60,7 +54,6 @@ const AxesConfigurator = (props) => {
       </AxisConfigurator>
       <AxisConfigurator
         axisConfig={xAxis}
-        axisStats={xAxisStats}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
         onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
@@ -82,13 +75,6 @@ AxesConfigurator.propTypes = {
       xAxis: PropTypes.any,
       yLeftAxis: PropTypes.any,
       yRightAxis: PropTypes.any
-    })
-  }).isRequired,
-  stats: PropTypes.shape({
-    axes: PropTypes.shape({
-      xAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
-      yLeftAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
-      yRightAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) })
     })
   }).isRequired,
   onAxisConfigLineAdd: PropTypes.func.isRequired,

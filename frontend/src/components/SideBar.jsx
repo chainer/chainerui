@@ -6,7 +6,6 @@ import AxesConfigurator from './AxesConfigurator';
 const SideBar = (props) => {
   const {
     results,
-    stats,
     config,
     onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
     onAxisConfigScaleUpdate,
@@ -19,7 +18,6 @@ const SideBar = (props) => {
         {
         ...{
           results,
-          stats,
           config,
           onAxisConfigLineAdd,
           onAxisConfigLineUpdate,
@@ -43,9 +41,6 @@ SideBar.propTypes = {
       yLeftAxis: PropTypes.any,
       yRightAxis: PropTypes.any
     })
-  }).isRequired,
-  stats: PropTypes.shape({
-    axes: PropTypes.objectOf(PropTypes.any)
   }).isRequired,
   onAxisConfigLineAdd: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,

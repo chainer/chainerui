@@ -69,7 +69,6 @@ class ChainerUIContainer extends React.Component {
             <div className="col-md-4 col-lg-3">
               <SideBar
                 results={results}
-                stats={stats}
                 config={config}
                 onAxisConfigLineAdd={this.props.addLineToAxis}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
