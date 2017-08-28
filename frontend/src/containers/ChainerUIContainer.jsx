@@ -9,6 +9,7 @@ import {
   updateResult,
   updateGlobalPollingRate,
   updateXAxisKey,
+  updateAxisScaleRangeType, updateAxisScaleRangeNumber,
   updateGlobalChartSize
 } from '../actions';
 import ExperimentsTable from '../components/ExperimentsTable';
@@ -65,7 +66,7 @@ class ChainerUIContainer extends React.Component {
         />
         <Container fluid>
           <div className="row">
-            <div className="col-sm-4 col-md-3">
+            <div className="col-md-4 col-lg-3">
               <SideBar
                 results={results}
                 config={config}
@@ -74,9 +75,11 @@ class ChainerUIContainer extends React.Component {
                 onAxisConfigLineRemove={this.props.removeLineFromAxis}
                 onAxisConfigScaleUpdate={this.props.updateAxisScale}
                 onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
+                onAxisConfigScaleRangeTypeUpdate={this.props.updateAxisScaleRangeType}
+                onAxisConfigScaleRangeNumberUpdate={this.props.updateAxisScaleRangeNumber}
               />
             </div>
-            <div className="col-sm-8 col-md-9">
+            <div className="col-md-8 col-lg-9">
               <LogVisualizer
                 results={results}
                 stats={stats}
@@ -155,6 +158,8 @@ ChainerUIContainer.propTypes = {
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
+  updateAxisScaleRangeType: PropTypes.func.isRequired,
+  updateAxisScaleRangeNumber: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired
 };
 
@@ -167,6 +172,8 @@ export default connect(mapStateToProps, {
   updateResult,
   updateGlobalPollingRate,
   updateXAxisKey,
+  updateAxisScaleRangeType,
+  updateAxisScaleRangeNumber,
   updateGlobalChartSize
 })(ChainerUIContainer);
 

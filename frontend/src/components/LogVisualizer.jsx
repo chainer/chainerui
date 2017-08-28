@@ -13,6 +13,22 @@ import {
 import 'rc-slider/assets/index.css';
 import { line2name, line2dataKey } from '../utils';
 
+
+const getDomain = (axisConfig = {}) => {
+  const { scale = 'linear', scaleRange = {} } = axisConfig;
+  const { rangeTypes = [], range } = scaleRange[scale] || {};
+  const domain = [];
+  for (let i = 0; i < 2; i += 1) {
+    const rangeType = rangeTypes[i] || 'auto';
+    if (rangeType === 'number') {
+      domain[i] = (range[i] == null || range[i] === '') ? 'auto' : range[i];
+    } else {
+      domain[i] = rangeType;
+    }
+  }
+  return domain;
+};
+
 const buildLineElem = (line, axisName, results) => {
   const { config = {} } = line;
   const result = results[line.resultId] || {};
@@ -109,21 +125,21 @@ class LogVisualizer extends React.Component {
               type="number"
               dataKey={xAxisKey}
               scale={xAxis.scale}
-              domain={['auto', 'auto']}
+              domain={getDomain(xAxis)}
               allowDataOverflow
             />
             <YAxis
               yAxisId="yLeftAxis"
               orientation="left"
               scale={yLeftAxis.scale}
-              domain={yLeftAxis.scale === 'log' ? [0.01, 'auto'] : ['auto', 'auto']}
+              domain={getDomain(yLeftAxis)}
               allowDataOverflow
             />
             <YAxis
               yAxisId="yRightAxis"
               orientation="right"
               scale={yRightAxis.scale}
-              domain={yRightAxis.scale === 'log' ? [0.01, 'auto'] : ['auto', 'auto']}
+              domain={getDomain(yRightAxis)}
               allowDataOverflow
             />
             <CartesianGrid strokeDasharray="3 3" />

@@ -9,7 +9,8 @@ const SideBar = (props) => {
     config,
     onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
     onAxisConfigScaleUpdate,
-    onAxisConfigXKeyUpdate
+    onAxisConfigXKeyUpdate,
+    onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
   } = props;
   return (
     <div className="side-bar">
@@ -22,7 +23,9 @@ const SideBar = (props) => {
           onAxisConfigLineUpdate,
           onAxisConfigLineRemove,
           onAxisConfigScaleUpdate,
-          onAxisConfigXKeyUpdate
+          onAxisConfigXKeyUpdate,
+          onAxisConfigScaleRangeTypeUpdate,
+          onAxisConfigScaleRangeNumberUpdate
         }
         }
       />
@@ -43,7 +46,9 @@ SideBar.propTypes = {
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigLineRemove: PropTypes.func.isRequired,
   onAxisConfigScaleUpdate: PropTypes.func.isRequired,
-  onAxisConfigXKeyUpdate: PropTypes.func.isRequired
+  onAxisConfigXKeyUpdate: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired
 };
 
 SideBar.defaultProps = {

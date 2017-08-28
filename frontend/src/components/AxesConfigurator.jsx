@@ -7,11 +7,12 @@ import XAxisKeySelector from './XAxisKeySelector';
 
 const AxesConfigurator = (props) => {
   const {
-    results = {},
-    config = {},
+    results,
+    config,
     onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
     onAxisConfigScaleUpdate,
-    onAxisConfigXKeyUpdate
+    onAxisConfigXKeyUpdate,
+    onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
   } = props;
   const {
     xAxis = { axisName: 'xAxis' },
@@ -24,6 +25,8 @@ const AxesConfigurator = (props) => {
       <AxisConfigurator
         axisConfig={yLeftAxis}
         onChangeScale={onAxisConfigScaleUpdate}
+        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
       >
         <LinesConfigurator
           results={results}
@@ -37,6 +40,8 @@ const AxesConfigurator = (props) => {
       <AxisConfigurator
         axisConfig={yRightAxis}
         onChangeScale={onAxisConfigScaleUpdate}
+        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
       >
         <LinesConfigurator
           results={results}
@@ -50,6 +55,8 @@ const AxesConfigurator = (props) => {
       <AxisConfigurator
         axisConfig={xAxis}
         onChangeScale={onAxisConfigScaleUpdate}
+        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
       >
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
@@ -74,7 +81,9 @@ AxesConfigurator.propTypes = {
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigLineRemove: PropTypes.func.isRequired,
   onAxisConfigScaleUpdate: PropTypes.func.isRequired,
-  onAxisConfigXKeyUpdate: PropTypes.func.isRequired
+  onAxisConfigXKeyUpdate: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired
 };
 
 AxesConfigurator.defaultProps = {
