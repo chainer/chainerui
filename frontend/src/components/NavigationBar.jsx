@@ -61,7 +61,7 @@ class NavigationBar extends React.Component {
           <NavbarBrand href="/">Chainer UI</NavbarBrand>
           <Collapse isOpen>
             <span className="navbar-text mx-3 my-0">
-              <ResultsFetchState fetchState={this.props.fetchState} />
+              <ResultsFetchState fetchState={this.props.fetchState} config={this.props.config} />
             </span>
             <Button id="navbar-global-setting" onClick={this.toggleSettingPopover}>
               <span className="oi oi-cog" />
