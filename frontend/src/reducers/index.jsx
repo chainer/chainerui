@@ -72,6 +72,9 @@ const axes = (state = {}, action) => {
   }
   const axisConfig = state[axisName] || { axisName };
   const { lines = [], scaleRange = {} } = axisConfig;
+  const idx = isMin ? 0 : 1;
+  const rangeConfig = scaleRange[scale] || {};
+  const { rangeTypes = [], range = [] } = rangeConfig;
 
   switch (action.type) {
     case ActionTypes.AXIS_CONFIG_LINE_ADD:
@@ -125,10 +128,7 @@ const axes = (state = {}, action) => {
           xAxisKey
         }
       };
-    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE: {
-      const idx = isMin ? 0 : 1;
-      const rangeConfig = scaleRange[scale] || {};
-      const { rangeTypes = [], range = [] } = rangeConfig;
+    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE:
       return {
         ...state,
         [axisName]: {
@@ -142,11 +142,7 @@ const axes = (state = {}, action) => {
           }
         }
       };
-    }
-    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE: {
-      const idx = isMin ? 0 : 1;
-      const rangeConfig = scaleRange[scale] || {};
-      const { rangeTypes = [], range = [] } = rangeConfig;
+    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE:
       return {
         ...state,
         [axisName]: {
@@ -160,7 +156,6 @@ const axes = (state = {}, action) => {
           }
         }
       };
-    }
     default:
       return state;
   }
