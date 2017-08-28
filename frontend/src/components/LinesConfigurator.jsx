@@ -8,7 +8,8 @@ import LineConfigurator from './LineConfigurator';
 
 const defaultLine = {
   config: {
-    color: '#ABCDEF'
+    color: '#ABCDEF',
+    isVisible: true
   }
 };
 
@@ -40,6 +41,7 @@ class LinesConfigurator extends React.Component {
     this.handleEditingLineChange = this.handleEditingLineChange.bind(this);
     this.handleAxisConfigLineAdd = this.handleAxisConfigLineAdd.bind(this);
     this.handleAxisConfigLineRemove = this.handleAxisConfigLineRemove.bind(this);
+    this.handleLineVisibilityUpdate = this.handleLineVisibilityUpdate.bind(this);
 
     this.state = {
       showModal: false,
@@ -111,6 +113,11 @@ class LinesConfigurator extends React.Component {
     onAxisConfigLineRemove(axisName, lineKey);
   }
 
+  handleLineVisibilityUpdate(targetLineKey, line) {
+    const { axisName, onAxisConfigLineUpdate } = this.props;
+    onAxisConfigLineUpdate(axisName, targetLineKey, line);
+  }
+
   render() {
     const { results, lines = [] } = this.props;
     const { editingLine, isNewLine, errors, showError } = this.state;
@@ -124,6 +131,7 @@ class LinesConfigurator extends React.Component {
           result={result}
           onEditClick={this.handleModalOpen}
           onRemove={this.handleAxisConfigLineRemove}
+          onVisibilityUpdate={this.handleLineVisibilityUpdate}
           key={line2key(line)}
         />
       );

@@ -34,7 +34,8 @@ const buildLineElem = (line, axisName, results) => {
 const buildLineElems = (axisName, results, config) => {
   const axisConfig = config.axes[axisName] || {};
   const { lines = [] } = axisConfig;
-  return lines.map((line) => buildLineElem(line, axisName, results));
+  const visibleLines = lines.filter((line) => line.config.isVisible);
+  return visibleLines.map((line) => buildLineElem(line, axisName, results));
 };
 
 class LogVisualizer extends React.Component {

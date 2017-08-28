@@ -1,5 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+  Row, Col, Button,
+  Form, FormGroup, Label, Input
+} from 'reactstrap';
 import { line2key, displayName } from '../utils';
 
 
@@ -9,6 +13,7 @@ class LinesConfiguratorRow extends React.Component {
 
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleRemoveClick = this.handleRemoveClick.bind(this);
+    this.handleLineVisibilityUpdate = this.handleLineVisibilityUpdate.bind(this);
   }
 
   handleEditClick(e) {
@@ -27,28 +32,55 @@ class LinesConfiguratorRow extends React.Component {
     onRemove(line2key(line));
   }
 
+  handleLineVisibilityUpdate(e) {
+    const { line, onVisibilityUpdate } = this.props;
+    const { config } = line;
+    const { checked } = e.target;
+
+    onVisibilityUpdate(line2key(line), {
+      ...line,
+      config: {
+        ...config,
+        isVisible: checked
+      }
+    });
+  }
+
   render() {
     const { line, result } = this.props;
     const { config = {} } = line;
-
-    const colorBlockStyle = {
-      width: '20px',
-      height: '15px',
-      backgroundColor: config.color
-    };
+    const { color, isVisible } = config;
 
     return (
-      <a
-        href="#"
-        className="list-group-item list-group-item-action"
-        onClick={this.handleEditClick}
+      <div
+        className="list-group-item"
         key={line2key(line)}
+        style={{ borderLeft: `3px solid ${color}` }}
       >
-        <div className="row">
-          <div className="col-sm-1" style={colorBlockStyle} />
-          <div className="col-sm-5">{displayName(result)}</div>
-          <div className="col-sm-4">{line.logKey}</div>
-          <div className="col-sm-1">
+        <Row>
+          <Col xs="2">
+            <Form>
+              <FormGroup check>
+                <Label check>
+                  <Input
+                    type="checkbox"
+                    defaultChecked={isVisible}
+                    onChange={this.handleLineVisibilityUpdate}
+                  />{' '}
+                </Label>
+              </FormGroup>
+            </Form>
+
+            <Button
+              size="sm"
+              color="link"
+              className="m-0 p-0"
+              onClick={this.handleEditClick}
+            >edit</Button>
+          </Col>
+          <Col>{displayName(result)}</Col>
+          <Col>{line.logKey}</Col>
+          <Col xs="1">
             <button
               type="button"
               className="close"
@@ -57,10 +89,9 @@ class LinesConfiguratorRow extends React.Component {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-          </div>
-        </div>
-      </a>
-
+          </Col>
+        </Row>
+      </div>
     );
   }
 }
@@ -68,7 +99,10 @@ class LinesConfiguratorRow extends React.Component {
 LinesConfiguratorRow.propTypes = {
   line: PropTypes.shape({
     resultId: PropTypes.number,
-    logKey: PropTypes.string
+    logKey: PropTypes.string,
+    config: PropTypes.shape({
+      isVisible: PropTypes.bool
+    })
   }).isRequired,
   result: PropTypes.shape({
     id: PropTypes.number,
@@ -77,12 +111,14 @@ LinesConfiguratorRow.propTypes = {
     logs: PropTypes.arrayOf(PropTypes.any)
   }).isRequired,
   onEditClick: PropTypes.func,
-  onRemove: PropTypes.func
+  onRemove: PropTypes.func,
+  onVisibilityUpdate: PropTypes.func
 };
 
 LinesConfiguratorRow.defaultProps = {
   onEditClick: () => {},
-  onRemove: () => {}
+  onRemove: () => {},
+  onVisibilityUpdate: () => {}
 };
 
 export default LinesConfiguratorRow;
