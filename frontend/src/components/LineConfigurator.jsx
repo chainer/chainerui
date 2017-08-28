@@ -71,8 +71,15 @@ class LineConfigurator extends React.Component {
 
   handleLineColorChange(e) {
     const { line, onChange } = this.props;
+    const { config } = line;
     const { hex } = e;
-    onChange({ ...line, config: { color: hex } });
+    onChange({
+      ...line,
+      config: {
+        ...config,
+        color: hex
+      }
+    });
   }
 
   handleVisibilityChange(e) {

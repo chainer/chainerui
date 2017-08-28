@@ -13,7 +13,7 @@ class LinesConfiguratorRow extends React.Component {
 
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleRemoveClick = this.handleRemoveClick.bind(this);
-    this.handleLineVisibility = this.handleLineVisibility.bind(this);
+    this.handleLineVisibilityUpdate = this.handleLineVisibilityUpdate.bind(this);
   }
 
   handleEditClick(e) {
@@ -32,21 +32,30 @@ class LinesConfiguratorRow extends React.Component {
     onRemove(line2key(line));
   }
 
-  handleLineVisibility(e) {
-    console.log(e.target.checked);
-    console.log(this);
+  handleLineVisibilityUpdate(e) {
+    const { line, onVisibilityUpdate } = this.props;
+    const { config } = line;
+    const { checked } = e.target;
+
+    onVisibilityUpdate(line2key(line), {
+      ...line,
+      config: {
+        ...config,
+        isVisible: checked
+      }
+    });
   }
 
   render() {
     const { line, result } = this.props;
     const { config = {} } = line;
-    const { isVisible } = config;
+    const { color, isVisible } = config;
 
     return (
       <div
         className="list-group-item"
         key={line2key(line)}
-        style={{ borderLeft: `3px solid ${config.color}` }}
+        style={{ borderLeft: `3px solid ${color}` }}
       >
         <Row>
           <Col xs="2">
@@ -56,7 +65,7 @@ class LinesConfiguratorRow extends React.Component {
                   <Input
                     type="checkbox"
                     defaultChecked={isVisible}
-                    onChange={this.handleLineVisibility}
+                    onChange={this.handleLineVisibilityUpdate}
                   />{' '}
                 </Label>
               </FormGroup>
@@ -102,12 +111,14 @@ LinesConfiguratorRow.propTypes = {
     logs: PropTypes.arrayOf(PropTypes.any)
   }).isRequired,
   onEditClick: PropTypes.func,
-  onRemove: PropTypes.func
+  onRemove: PropTypes.func,
+  onVisibilityUpdate: PropTypes.func
 };
 
 LinesConfiguratorRow.defaultProps = {
   onEditClick: () => {},
-  onRemove: () => {}
+  onRemove: () => {},
+  onVisibilityUpdate: () => {}
 };
 
 export default LinesConfiguratorRow;
