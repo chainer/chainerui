@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rm -Rf ../chainer_ui/static/dist && NODE_ENV=production webpack --config webpack.config.js --progress --profile",
-    "build:watch": "rm -Rf ../chainer_ui/static/dist && webpack --config webpack.config.js --progress --profile --watch",
-    "start": "rm -Rf ../chainer_ui/static/dist && webpack-dev-server --config webpack.server.config.js",
+    "build": "NODE_ENV=production webpack --config webpack.config.js --progress --profile",
+    "build:watch": "webpack --config webpack.config.js --progress --profile --watch",
+    "start": "webpack-dev-server --config webpack.server.config.js",
     "lint": "eslint --fix app || exit 0"
   },
   "devDependencies": {
