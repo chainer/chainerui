@@ -8,9 +8,7 @@ env:
 parser: babel-eslint
 
 extends:
-  - eslint-config-airbnb-base
-  - eslint-config-airbnb-base/rules/strict
-  - eslint-config-airbnb/rules/react
+  - airbnb
 
 rules:
   arrow-parens:
@@ -19,4 +17,3 @@ rules:
   comma-dangle:
     - error
     - never
-
