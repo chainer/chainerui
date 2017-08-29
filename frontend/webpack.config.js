@@ -7,7 +7,7 @@ const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const NODE_PROD = (NODE_ENV === 'production');
 const filename = '[name]';
-const nodeModulePath = path.resolve(path.dirname(__dirname), 'node_modules');
+const nodeModulePath = path.resolve(__dirname, 'node_modules');
 
 module.exports = {
   entry: {
