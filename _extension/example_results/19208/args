@@ -1,0 +1,9 @@
+{
+    "resume": "", 
+    "batchsize": 100, 
+    "epoch": 10, 
+    "frequency": -1, 
+    "gpu": 0, 
+    "unit": 1000, 
+    "out": "results"
+}
