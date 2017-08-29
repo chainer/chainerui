@@ -4,7 +4,7 @@ import ResultRow from './ResultRow';
 
 
 const ExperimentsTable = (props) => {
-  const { results = {}, stats, onResultUpdate } = props;
+  const { results = {}, stats, onResultUpdate, onResultDelete } = props;
   const { argKeys } = stats;
 
   const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}>{`(${argKey})`}</th>));
@@ -18,12 +18,13 @@ const ExperimentsTable = (props) => {
         stats={stats}
         key={key}
         onResultUpdate={onResultUpdate}
+        onResultDelete={onResultDelete}
       />
     );
   });
 
   return (
-    <table className="table table-hover">
+    <table className="table">
       <thead>
         <tr>
           <th>id</th>
@@ -32,6 +33,7 @@ const ExperimentsTable = (props) => {
           <th>iteration</th>
           <th>elapsed_time</th>
           {argHeaderElems}
+          <th />
         </tr>
       </thead>
       <tbody>
@@ -53,7 +55,8 @@ ExperimentsTable.propTypes = {
   stats: PropTypes.shape({
     argKeys: PropTypes.arrayOf(PropTypes.string)
   }),
-  onResultUpdate: PropTypes.func.isRequired
+  onResultUpdate: PropTypes.func.isRequired,
+  onResultDelete: PropTypes.func.isRequired
 };
 ExperimentsTable.defaultProps = {
   results: {},

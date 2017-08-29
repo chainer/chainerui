@@ -9,6 +9,9 @@ export const RESULTS_FAILUE = 'RESULTS_FAILUE';
 export const RESULT_UPDATE_REQUEST = 'RESULT_UPDATE_REQUEST';
 export const RESULT_UPDATE_SUCCESS = 'RESULT_UPDATE_SUCCESS';
 export const RESULT_UPDATE_FAILUE = 'RESULT_UPDATE_FAILUE';
+export const RESULT_DELETE_REQUEST = 'RESULT_DELETE_REQUEST';
+export const RESULT_DELETE_SUCCESS = 'RESULT_DELETE_SUCCESS';
+export const RESULT_DELETE_FAILUE = 'RESULT_DELETE_FAILUE';
 
 const fetchResults = () => ({
   [CALL_API]: {
@@ -30,6 +33,19 @@ export const updateResult = (result = {}) => {
       endpoint: `results/${id}`,
       method: 'PUT',
       body: { result: { id, name } }
+    }
+  };
+};
+
+export const deleteResult = (resultId) => {
+  if (!Number.isInteger(resultId)) {
+    throw new Error('Result id is invalid.');
+  }
+  return {
+    [CALL_API]: {
+      types: [RESULT_DELETE_REQUEST, RESULT_DELETE_SUCCESS, RESULT_DELETE_FAILUE],
+      endpoint: `results/${resultId}`,
+      method: 'DELETE'
     }
   };
 };
