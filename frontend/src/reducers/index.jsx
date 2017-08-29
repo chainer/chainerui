@@ -84,8 +84,6 @@ const axesStateWithoutResult = (state, resultId) => {
       ))
     };
   });
-  console.log(state);
-  console.log(newState);
   return newState;
 };
 
@@ -104,7 +102,6 @@ const axes = (state = {}, action) => {
   const idx = isMin ? 0 : 1;
   const rangeConfig = scaleRange[scale] || {};
   const { rangeTypes = [], range = [] } = rangeConfig;
-  console.log(action.type);
 
   switch (action.type) {
     case ActionTypes.AXIS_CONFIG_LINE_ADD:
@@ -187,10 +184,8 @@ const axes = (state = {}, action) => {
         }
       };
     case ActionTypes.RESULT_DELETE_SUCCESS:
-      console.log('RESULT_DELETE_SUCCESS');
       if (action.response && action.response.result) {
         const resultId = action.response.result.id;
-        console.log(resultId);
         return axesStateWithoutResult(state, resultId);
       }
       return state;

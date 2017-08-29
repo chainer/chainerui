@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { displayName } from '../utils';
+import { displayName, truncate } from '../utils';
 
 
 const emptyStr = '-';
@@ -80,7 +80,7 @@ class ResultRow extends React.Component {
           <input
             className="form-control result-name"
             type="text"
-            placeholder={result.pathName}
+            placeholder={truncate(result.pathName, { length: 22, forward: true })}
             value={resultName || ''}
             onChange={this.handleResultNameChange}
             onKeyPress={this.handleResultNameKeyPress}
