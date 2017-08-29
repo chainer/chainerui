@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
-  loadResults,
+  loadResults, updateResult, deleteResult,
   addLineToAxis, updateLineInAxis, removeLineFromAxis,
   updateAxisScale,
-  updateResult,
   updateGlobalPollingRate,
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber,
@@ -94,6 +93,7 @@ class ChainerUIContainer extends React.Component {
                 results={results}
                 stats={stats}
                 onResultUpdate={this.props.updateResult}
+                onResultDelete={this.props.deleteResult}
               />
             </div>
           </div>
@@ -151,12 +151,13 @@ ChainerUIContainer.propTypes = {
     argKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   loadResults: PropTypes.func.isRequired,
+  updateResult: PropTypes.func.isRequired,
+  deleteResult: PropTypes.func.isRequired,
   addLineToAxis: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
   removeLineFromAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
-  updateResult: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
   updateAxisScaleRangeNumber: PropTypes.func.isRequired,
@@ -165,11 +166,12 @@ ChainerUIContainer.propTypes = {
 
 export default connect(mapStateToProps, {
   loadResults,
+  updateResult,
+  deleteResult,
   addLineToAxis,
   updateLineInAxis,
   removeLineFromAxis,
   updateAxisScale,
-  updateResult,
   updateGlobalPollingRate,
   updateXAxisKey,
   updateAxisScaleRangeType,

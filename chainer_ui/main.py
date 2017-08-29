@@ -51,7 +51,7 @@ def get_results():
     return jsonify({'results': [result.serialize for result in results]})
 
 @APP.route('/api/v1/results/<int:result_id>', methods=['PUT'])
-def update_results(result_id):
+def update_result(result_id):
     ''' PUT /api/v1/results/<int:result_id> '''
 
     db_session = create_db_session()
@@ -71,6 +71,23 @@ def update_results(result_id):
     db_session.commit()
 
     return jsonify({'result': result.serialize})
+
+@APP.route('/api/v1/results/<int:result_id>', methods=['DELETE'])
+def delete_result(result_id):
+    ''' DELETE /api/v1/results/<int:result_id> '''
+
+    db_session = create_db_session()
+    result = db_session.query(Result).filter_by(id=result_id).first()
+    if result is None:
+        response = jsonify({'result': None, 'message': 'No interface defined for URL.'})
+        return response, 404
+
+    db_session.delete(result)
+    db_session.commit()
+
+    # response deleted result
+    return jsonify({'result': result.serialize})
+
 
 if __name__ == '__main__':
     init_db()
