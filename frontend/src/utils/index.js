@@ -1,28 +1,33 @@
-class Utils {
-  static line2key(line) {
-    return `${line.resultId}_${line.logKey}`;
-  }
+const line2key = (line) => `${line.resultId}_${line.logKey}`;
 
-  static line2name(line, result = {}) {
-    return `${Utils.displayName(result)}/${line.logKey}`;
-  }
+const line2dataKey = (line, axisName) => `${axisName}_${line2key(line)}`;
 
-  static line2dataKey(line, axisName) {
-    return `${axisName}_${Utils.line2key(line)}`;
-  }
-
-  static displayName(result = {}) {
-    return result.name || result.pathName;
-  }
-
-  static truncateForward(string, length, beginning = '...') {
-    const str = string || '';
-    if (str.length > length) {
-      return beginning + str.substring((str.length - length) + beginning.length, str.length);
+const truncate = (string, options = {}) => {
+  const { length = 20, restStr = '...', forward = false } = options;
+  let str = string || '';
+  const chars = [...str];
+  if (chars.length > length) {
+    if (forward) {
+      str = restStr + chars.slice(chars.length - length).join('');
+    } else {
+      str = chars.slice(0, length).join('') + restStr;
     }
-    return str;
   }
-}
+  return str;
+};
 
-export default Utils;
+const displayName = (result = {}) => (
+  truncate(result.name) || truncate(result.pathName, { forward: true })
+);
+
+const line2name = (line, result = {}) => `${displayName(result)}/${line.logKey}`;
+
+
+export {
+  line2key,
+  line2name,
+  line2dataKey,
+  displayName,
+  truncate
+};
 

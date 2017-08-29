@@ -7,49 +7,31 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
+  Legend,
+  ResponsiveContainer
 } from 'recharts';
-import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import Utils from '../utils';
-import AxisConfigurator from './AxisConfigurator';
-import LinesConfigurator from './LinesConfigurator';
+import { line2name, line2dataKey } from '../utils';
 
 
-const sliderSteps = 100.0;
-const defaultStats = {
-  axes: {
-    xAxis: {},
-    yLeftAxis: {},
-    yRightAxis: {}
+const getDomain = (axisConfig = {}) => {
+  const { scale = 'linear', scaleRange = {} } = axisConfig;
+  const { rangeTypes = [], range } = scaleRange[scale] || {};
+  const domain = [];
+  for (let i = 0; i < 2; i += 1) {
+    const rangeType = rangeTypes[i] || 'auto';
+    if (rangeType === 'number') {
+      domain[i] = (range[i] == null || range[i] === '') ? 'auto' : range[i];
+    } else {
+      domain[i] = rangeType;
+    }
   }
-};
-
-const defaultRange = [0, 100];
-const defaultXAxisConfig = {
-  axisName: 'xAxis',
-  xAxisKey: 'epoch',
-  scale: 'linear',
-  range: defaultRange
-};
-const defaultYAxisConfig = {
-  axisName: '',
-  scale: 'linear',
-  range: defaultRange,
-  lines: []
-};
-const defaultConfig = {
-  axes: {
-    xAxis: defaultXAxisConfig,
-    yLeftAxis: { ...defaultYAxisConfig, axisName: 'yLeftAxis' },
-    yRightAxis: { ...defaultYAxisConfig, axisName: 'yRightAxis' }
-  }
+  return domain;
 };
 
 const buildLineElem = (line, axisName, results) => {
   const { config = {} } = line;
   const result = results[line.resultId] || {};
-  const { line2name, line2dataKey } = Utils;
 
   return (
     <Line
@@ -68,7 +50,8 @@ const buildLineElem = (line, axisName, results) => {
 const buildLineElems = (axisName, results, config) => {
   const axisConfig = config.axes[axisName] || {};
   const { lines = [] } = axisConfig;
-  return lines.map((line) => buildLineElem(line, axisName, results));
+  const visibleLines = lines.filter((line) => line.config.isVisible);
+  return visibleLines.map((line) => buildLineElem(line, axisName, results));
 };
 
 class LogVisualizer extends React.Component {
@@ -79,19 +62,15 @@ class LogVisualizer extends React.Component {
   }
 
   render() {
-    const { line2dataKey } = Utils;
     const {
       results = {},
-      stats = defaultStats,
-      config = defaultConfig,
-      onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
-      onAxisConfigScaleUpdate
+      config = {}
     } = this.props;
     const {
       xAxis = { axisName: 'xAxis' },
       yLeftAxis = { axisName: 'yLeftAxis' },
       yRightAxis = { axisName: 'yRightAxis' }
-    } = config.axes;
+    } = config.axes || {};
     const { xAxisKey = 'epoch' } = xAxis;
     const leftLines = yLeftAxis.lines || [];
     const rightLines = yRightAxis.lines || [];
@@ -99,15 +78,6 @@ class LogVisualizer extends React.Component {
       yLeftAxis: leftLines,
       yRightAxis: rightLines
     };
-    const xRange = xAxis.range || defaultRange;
-    const yLeftRange = yLeftAxis.range || defaultRange;
-    const yRightRange = yRightAxis.range || defaultRange;
-    const xValueRange = stats.axes.xAxis.valueRange || defaultRange;
-    const yLeftValueRange = stats.axes.yLeftAxis.valueRange || defaultRange;
-    const yRightValueRange = stats.axes.yRightAxis.valueRange || defaultRange;
-
-    const chartWidth = 640;
-    const chartHeight = 360;
 
     const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
     Object.keys(axisLines).forEach((axisName) => {
@@ -136,117 +106,48 @@ class LogVisualizer extends React.Component {
     });
     const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
-    const lineElems = [...buildLineElems('yLeftAxis', results, config), ...buildLineElems('yRightAxis', results, config)];
+    const lineElems = [
+      ...buildLineElems('yLeftAxis', results, config),
+      ...buildLineElems('yRightAxis', results, config)
+    ];
+
+    const { chartSize } = this.props.config.global;
 
     return (
-      <div className="log-visualizer-root row">
-        <div className="col-sm-8">
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  <Range
-                    style={{ height: `${chartHeight}px` }}
-                    vertical
-                    min={yLeftValueRange[0]}
-                    max={yLeftValueRange[1]}
-                    step={(yLeftRange[1] - yLeftRange[0]) / sliderSteps}
-                    value={yLeftRange}
-                  />
-                </td>
-                <td>
-                  <LineChart
-                    width={chartWidth}
-                    height={chartHeight}
-                    data={data}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <XAxis
-                      type="number"
-                      dataKey={xAxisKey}
-                      scale={xAxis.scale}
-                      domain={['auto', 'auto']}
-                      allowDataOverflow
-                    />
-                    <YAxis
-                      yAxisId="yLeftAxis"
-                      orientation="left"
-                      scale={yLeftAxis.scale}
-                      domain={['auto', 'auto']}
-                      allowDataOverflow
-                    />
-                    <YAxis
-                      yAxisId="yRightAxis"
-                      orientation="right"
-                      scale={yRightAxis.scale}
-                      domain={['auto', 'auto']}
-                      allowDataOverflow
-                    />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Tooltip />
-                    <Legend />
-                    {lineElems}
-                  </LineChart>
-                </td>
-                <td>
-                  <Range
-                    style={{ height: `${chartHeight}px` }}
-                    vertical
-                    min={yRightValueRange[0]}
-                    max={yRightValueRange[1]}
-                    step={(yRightRange[1] - yRightRange[0]) / sliderSteps}
-                    value={yRightRange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td />
-                <td>
-                  <Range
-                    style={{ width: `${chartWidth}px`, margin: 'auto' }}
-                    min={xValueRange.min}
-                    max={xValueRange.max}
-                    value={xRange}
-                    onChange={this.handleChangeXRange}
-                  />
-                </td>
-                <td />
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="col-sm-4">
-          <AxisConfigurator
-            axisConfig={yLeftAxis}
-            onChangeScale={onAxisConfigScaleUpdate}
-          >
-            <LinesConfigurator
-              results={results}
-              axisName="yLeftAxis"
-              lines={yLeftAxis.lines}
-              onAxisConfigLineAdd={onAxisConfigLineAdd}
-              onAxisConfigLineUpdate={onAxisConfigLineUpdate}
-              onAxisConfigLineRemove={onAxisConfigLineRemove}
+      <div className="log-visualizer-root">
+        <ResponsiveContainer
+          width={chartSize.width}
+          height={chartSize.height}
+          aspect={chartSize.aspect}
+        >
+          <LineChart data={data}>
+            <XAxis
+              type="number"
+              dataKey={xAxisKey}
+              scale={xAxis.scale}
+              domain={getDomain(xAxis)}
+              allowDataOverflow
             />
-          </AxisConfigurator>
-          <AxisConfigurator
-            axisConfig={yRightAxis}
-            onChangeScale={onAxisConfigScaleUpdate}
-          >
-            <LinesConfigurator
-              results={results}
-              axisName="yRightAxis"
-              lines={yRightAxis.lines}
-              onAxisConfigLineAdd={onAxisConfigLineAdd}
-              onAxisConfigLineUpdate={onAxisConfigLineUpdate}
-              onAxisConfigLineRemove={onAxisConfigLineRemove}
+            <YAxis
+              yAxisId="yLeftAxis"
+              orientation="left"
+              scale={yLeftAxis.scale}
+              domain={getDomain(yLeftAxis)}
+              allowDataOverflow
             />
-          </AxisConfigurator>
-          <AxisConfigurator
-            axisConfig={xAxis}
-            onChangeScale={onAxisConfigScaleUpdate}
-          />
-        </div>
+            <YAxis
+              yAxisId="yRightAxis"
+              orientation="right"
+              scale={yRightAxis.scale}
+              domain={getDomain(yRightAxis)}
+              allowDataOverflow
+            />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Tooltip />
+            <Legend />
+            {lineElems}
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     );
   }
@@ -254,28 +155,23 @@ class LogVisualizer extends React.Component {
 
 LogVisualizer.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
-  stats: PropTypes.shape({
-    axes: PropTypes.shape({
-      xAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
-      yLeftAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) }),
-      yRightAxis: PropTypes.shape({ valueRange: PropTypes.arrayOf(PropTypes.number) })
-    })
-  }),
   config: PropTypes.shape({
     axes: PropTypes.shape({
       xAxis: PropTypes.any,
       yLeftAxis: PropTypes.any,
       yRightAxis: PropTypes.any
+    }),
+    global: PropTypes.shape({
+      chartSize: PropTypes.shape({
+        width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        aspect: PropTypes.number.isRequired
+      })
     })
-  }),
-  onAxisConfigLineAdd: PropTypes.func.isRequired,
-  onAxisConfigLineUpdate: PropTypes.func.isRequired,
-  onAxisConfigLineRemove: PropTypes.func.isRequired,
-  onAxisConfigScaleUpdate: PropTypes.func.isRequired
+  }).isRequired
 };
+
 LogVisualizer.defaultProps = {
-  stats: defaultStats,
-  config: defaultConfig
 };
 
 export default LogVisualizer;

@@ -41,6 +41,9 @@ export const AXIS_CONFIG_LINE_ADD = 'AXIS_CONFIG_LINE_ADD';
 export const AXIS_CONFIG_LINE_UPDATE = 'AXIS_CONFIG_LINE_UPDATE';
 export const AXIS_CONFIG_LINE_REMOVE = 'AXIS_CONFIG_LINE_REMOVE';
 export const AXIS_CONFIG_SCALE_UPDATE = 'AXIS_CONFIG_SCALE_UPDATE';
+export const AXIS_CONFIG_X_KEY_UPDATE = 'AXIS_CONFIG_X_KEY_UPDATE';
+export const AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE';
+export const AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE';
 
 export const addLineToAxis = (axisName, line) => ({
   type: AXIS_CONFIG_LINE_ADD,
@@ -67,12 +70,40 @@ export const updateAxisScale = (axisName, scale) => ({
   scale
 });
 
+export const updateXAxisKey = (xAxisKey) => ({
+  type: AXIS_CONFIG_X_KEY_UPDATE,
+  axisName: 'xAxis',
+  xAxisKey
+});
+
+export const updateAxisScaleRangeType = (axisName, scale, isMin, rangeType = 'auto') => ({
+  type: AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE,
+  axisName,
+  scale,
+  isMin,
+  rangeType
+});
+
+export const updateAxisScaleRangeNumber = (axisName, scale, isMin, rangeNumber) => ({
+  type: AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE,
+  axisName,
+  scale,
+  isMin,
+  rangeNumber
+});
+
 
 // global config
 
 export const GLOBAL_CONFIG_POLLING_RATE_UPDATE = 'GLOBAL_CONFIG_POLLING_RATE_UPDATE';
+export const GLOBAL_CONFIG_CHART_SIZE_UPDATE = 'GLOBAL_CONFIG_CHART_SIZE_UPDATE';
 
 export const updateGlobalPollingRate = (pollingRate) => ({
   type: GLOBAL_CONFIG_POLLING_RATE_UPDATE,
   pollingRate
+});
+
+export const updateGlobalChartSize = (chartSize) => ({
+  type: GLOBAL_CONFIG_CHART_SIZE_UPDATE,
+  chartSize
 });

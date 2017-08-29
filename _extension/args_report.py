@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 ''' args report extension for chainer '''
 
 import json

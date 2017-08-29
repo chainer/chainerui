@@ -1,19 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button, Collapse } from 'reactstrap';
 import AxisScaleSelector from './AxisScaleSelector';
+import AxisRangeConfigurator from './AxisRangeConfigurator';
 
-
-const defaultAxisConfig = {
-  axisName: '',
-  scale: 'auto',
-  range: [0, 100]
-};
 
 class AxisConfigurator extends React.Component {
   constructor(props) {
     super(props);
 
     this.handleChangeScale = this.handleChangeScale.bind(this);
+    this.toggleRangeConfig = this.toggleRangeConfig.bind(this);
+
+    this.state = {
+      showRangeConfig: false
+    };
   }
 
   handleChangeScale(scale) {
@@ -21,21 +22,42 @@ class AxisConfigurator extends React.Component {
     this.props.onChangeScale(axisName, scale);
   }
 
+  toggleRangeConfig() {
+    this.setState({
+      showRangeConfig: !this.state.showRangeConfig
+    });
+  }
+
   render() {
-    const { axisName, scale } = this.props.axisConfig;
+    const {
+      axisConfig,
+      onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
+    } = this.props;
+    const { axisName, scale } = axisConfig;
 
     return (
       <div className="axis-configurator card">
         <div className="card-header">{axisName}</div>
         <div className="card-body">
-          <div className="row">
-            <div className="col-sm-6">
-              <AxisScaleSelector
-                scale={scale}
-                onChange={this.handleChangeScale}
-              />
-            </div>
-          </div>
+          <AxisScaleSelector
+            scale={scale}
+            onChange={this.handleChangeScale}
+          />
+          <Button size="sm" className="my-2" onClick={this.toggleRangeConfig}>Toggle range setting</Button>
+          <Collapse isOpen={this.state.showRangeConfig}>
+            <AxisRangeConfigurator
+              axisConfig={axisConfig}
+              isMin={false}
+              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+            />
+            <AxisRangeConfigurator
+              axisConfig={axisConfig}
+              isMin
+              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+            />
+          </Collapse>
         </div>
         {this.props.children}
       </div>
@@ -47,15 +69,20 @@ AxisConfigurator.propTypes = {
   axisConfig: PropTypes.shape({
     axisName: PropTypes.string.isRequired,
     scale: PropTypes.string,
-    range: PropTypes.arrayOf(PropTypes.number)
-  }),
+    scaleRange: PropTypes.objectOf(
+      PropTypes.shape({
+        rangeTypes: PropTypes.arrayOf(PropTypes.string),
+        range: PropTypes.arrayOf(PropTypes.number)
+      })
+    )
+  }).isRequired,
   children: PropTypes.element,
-  onChangeScale: PropTypes.func
+  onChangeScale: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired
 };
 AxisConfigurator.defaultProps = {
-  axisConfig: defaultAxisConfig,
-  children: null,
-  onChangeScale: () => {}
+  children: null
 };
 
 export default AxisConfigurator;

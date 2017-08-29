@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Label, FormText } from 'reactstrap';
-import { ChromePicker } from 'react-color';
-import Utils from '../utils';
+import { Form, FormGroup, Label, Input, Collapse, Button, Col, Row } from 'reactstrap';
+import { ChromePicker, SwatchesPicker } from 'react-color';
+import { displayName } from '../utils';
+
 
 const RESULT_NONE = -1;
 const LOG_KEY_NONE = '';
@@ -19,18 +20,15 @@ const getLogKeys = (result = {}) => {
   return Object.keys(logKeySet);
 };
 
-const createResultOptionElems = (results = []) => {
-  const { displayName } = Utils;
-  return [
-    <option value={RESULT_NONE} key={RESULT_NONE} disabled>-- select result --</option>,
-    ...Object.keys(results).map((resultId) => {
-      const result = results[resultId];
-      return (
-        <option value={result.id} key={result.id}>{result.id}: {displayName(result)}</option>
-      );
-    })
-  ];
-};
+const createResultOptionElems = (results = []) => [
+  <option value={RESULT_NONE} key={RESULT_NONE} disabled>-- select result --</option>,
+  ...Object.keys(results).map((resultId) => {
+    const result = results[resultId];
+    return (
+      <option value={result.id} key={result.id}>{result.id}: {displayName(result)}</option>
+    );
+  })
+];
 
 const createLogKeyOptionElems = (result = {}) => {
   const logKeys = getLogKeys(result);
@@ -49,6 +47,14 @@ class LineConfigurator extends React.Component {
     this.handleResultChange = this.handleResultChange.bind(this);
     this.handleLogKeyChange = this.handleLogKeyChange.bind(this);
     this.handleLineColorChange = this.handleLineColorChange.bind(this);
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+    this.togglePicker = this.togglePicker.bind(this);
+
+    this.state = { colorPickerCollapse: false };
+  }
+
+  togglePicker() {
+    this.setState({ colorPickerCollapse: !this.state.colorPickerCollapse });
   }
 
   handleResultChange(e) {
@@ -65,15 +71,35 @@ class LineConfigurator extends React.Component {
 
   handleLineColorChange(e) {
     const { line, onChange } = this.props;
+    const { config } = line;
     const { hex } = e;
-    onChange({ ...line, config: { color: hex } });
+    onChange({
+      ...line,
+      config: {
+        ...config,
+        color: hex
+      }
+    });
+  }
+
+  handleVisibilityChange(e) {
+    const { line, onChange } = this.props;
+    const { checked } = e.target;
+    const { config } = line;
+    onChange({
+      ...line,
+      config: {
+        ...config,
+        isVisible: checked
+      }
+    });
   }
 
   render() {
     const { results, line = {}, errors = {} } = this.props;
     const { resultId = RESULT_NONE, logKey = LOG_KEY_NONE, config = {} } = line;
     const result = results[resultId] || {};
-    const color = config.color;
+    const { color, isVisible } = config;
 
     const colorBlockStyle = {
       backgroundColor: color
@@ -88,16 +114,26 @@ class LineConfigurator extends React.Component {
           <FormGroup>
             <Label>color</Label>
             <div style={colorBlockStyle}>{color}</div>
-            <ChromePicker
-              color={color}
-              disableAlpha
-              onChange={this.handleLineColorChange}
-            />
+            <Collapse isOpen={this.state.colorPickerCollapse}>
+              <ChromePicker
+                color={color}
+                disableAlpha
+                onChange={this.handleLineColorChange}
+              />
+            </Collapse>
+            <Collapse isOpen={!this.state.colorPickerCollapse}>
+              <SwatchesPicker
+                color={color}
+                width={470}
+                onChange={this.handleLineColorChange}
+              />
+            </Collapse>
+            <Button onClick={this.togglePicker} size="sm" className="my-2">Toggle color picker</Button>
           </FormGroup>
           <FormGroup>
             <Label for="line-configurator-result-select">result</Label><br />
-            <select
-              className="form-control"
+            <Input
+              className={`form-control${errors.resultIdNone ? ' is-invalid' : ''}`}
               type="select"
               name="select"
               id="line-configurator-result-select"
@@ -105,15 +141,15 @@ class LineConfigurator extends React.Component {
               onChange={this.handleResultChange}
             >
               {resultOptionElems}
-            </select>
-            <FormText className="text-danger" hidden={!errors.resultIdNone}>
+            </Input>
+            <div className="invalid-feedback">
               Select a result!!
-            </FormText>
+            </div>
           </FormGroup>
           <FormGroup>
             <Label for="line-configurator-log-key-select">log key</Label><br />
-            <select
-              className="form-control"
+            <Input
+              className={`form-control${errors.logKeyNone ? ' is-invalid' : ''}`}
               type="select"
               name="select"
               id="line-configurator-log-key-select"
@@ -122,14 +158,36 @@ class LineConfigurator extends React.Component {
               onChange={this.handleLogKeyChange}
             >
               {logKeyOptionElems}
-            </select>
-            <FormText className="text-danger" hidden={!errors.logKeyNone}>
+            </Input>
+            <div className="invalid-feedback">
               Select a log key!!
-            </FormText>
-
-            <FormText className="text-danger" hidden={!errors.hasSameLine}>
+            </div>
+          </FormGroup>
+          <FormGroup>
+            <Row>
+              <Label for="line-configurator-select-visibility" sm={{ size: 2 }}>visibility</Label>
+              <Col sm={{ size: 10 }}>
+                <FormGroup check>
+                  <Label check>
+                    <Input
+                      type="checkbox"
+                      id="line-configurator-select-visibility"
+                      defaultChecked={isVisible}
+                      onChange={this.handleVisibilityChange}
+                    />{' '}
+                  </Label>
+                </FormGroup>
+              </Col>
+            </Row>
+          </FormGroup>
+          <FormGroup>
+            <Input
+              className={`form-control${errors.hasSameLine ? ' is-invalid' : ''}`}
+              hidden
+            />
+            <div className="invalid-feedback">
               Cannot add this line because it already exists.
-            </FormText>
+            </div>
           </FormGroup>
         </Form>
       </div>
@@ -143,7 +201,8 @@ LineConfigurator.propTypes = {
     resultId: PropTypes.number,
     logKey: PropTypes.string,
     config: PropTypes.shape({
-      color: PropTypes.string
+      color: PropTypes.string,
+      isVisible: PropTypes.bool
     })
   }),
   errors: PropTypes.shape({

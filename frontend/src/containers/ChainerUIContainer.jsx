@@ -7,11 +7,15 @@ import {
   addLineToAxis, updateLineInAxis, removeLineFromAxis,
   updateAxisScale,
   updateResult,
-  updateGlobalPollingRate
+  updateGlobalPollingRate,
+  updateXAxisKey,
+  updateAxisScaleRangeType, updateAxisScaleRangeNumber,
+  updateGlobalChartSize
 } from '../actions';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
+import SideBar from '../components/SideBar';
 
 let resultsPollingTimer;
 
@@ -50,29 +54,49 @@ class ChainerUIContainer extends React.Component {
   }
 
   render() {
-    const { results, config, stats } = this.props;
+    const { results, fetchState, config, stats } = this.props;
 
     return (
       <div className="chainer-ui-container">
         <NavigationBar
+          fetchState={fetchState}
           config={config}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
+          onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
-        <Container>
-          <LogVisualizer
-            results={results}
-            stats={stats}
-            config={config}
-            onAxisConfigLineAdd={this.props.addLineToAxis}
-            onAxisConfigLineUpdate={this.props.updateLineInAxis}
-            onAxisConfigLineRemove={this.props.removeLineFromAxis}
-            onAxisConfigScaleUpdate={this.props.updateAxisScale}
-          />
-          <ExperimentsTable
-            results={results}
-            stats={stats}
-            onResultUpdate={this.props.updateResult}
-          />
+        <Container fluid>
+          <div className="row">
+            <div className="col-md-4 col-lg-3">
+              <SideBar
+                results={results}
+                config={config}
+                onAxisConfigLineAdd={this.props.addLineToAxis}
+                onAxisConfigLineUpdate={this.props.updateLineInAxis}
+                onAxisConfigLineRemove={this.props.removeLineFromAxis}
+                onAxisConfigScaleUpdate={this.props.updateAxisScale}
+                onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
+                onAxisConfigScaleRangeTypeUpdate={this.props.updateAxisScaleRangeType}
+                onAxisConfigScaleRangeNumberUpdate={this.props.updateAxisScaleRangeNumber}
+              />
+            </div>
+            <div className="col-md-8 col-lg-9">
+              <LogVisualizer
+                results={results}
+                stats={stats}
+                config={config}
+                onAxisConfigLineAdd={this.props.addLineToAxis}
+                onAxisConfigLineUpdate={this.props.updateLineInAxis}
+                onAxisConfigLineRemove={this.props.removeLineFromAxis}
+                onAxisConfigScaleUpdate={this.props.updateAxisScale}
+                onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
+              />
+              <ExperimentsTable
+                results={results}
+                stats={stats}
+                onResultUpdate={this.props.updateResult}
+              />
+            </div>
+          </div>
         </Container>
       </div>
     );
@@ -105,15 +129,19 @@ const defaultConfig = {
 const mapStateToProps = (state) => {
   const {
     entities,
+    fetchState,
     config = defaultConfig
   } = state;
   const { results = {} } = entities;
   const stats = mapEntitiesToStats(entities);
-  return { results, config, stats };
+  return { results, fetchState, config, stats };
 };
 
 ChainerUIContainer.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
+  fetchState: PropTypes.shape({
+    results: PropTypes.string
+  }).isRequired,
   config: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
     global: PropTypes.objectOf(PropTypes.any)
@@ -128,7 +156,11 @@ ChainerUIContainer.propTypes = {
   removeLineFromAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
-  updateResult: PropTypes.func.isRequired
+  updateResult: PropTypes.func.isRequired,
+  updateXAxisKey: PropTypes.func.isRequired,
+  updateAxisScaleRangeType: PropTypes.func.isRequired,
+  updateAxisScaleRangeNumber: PropTypes.func.isRequired,
+  updateGlobalChartSize: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, {
@@ -138,6 +170,10 @@ export default connect(mapStateToProps, {
   removeLineFromAxis,
   updateAxisScale,
   updateResult,
-  updateGlobalPollingRate
+  updateGlobalPollingRate,
+  updateXAxisKey,
+  updateAxisScaleRangeType,
+  updateAxisScaleRangeNumber,
+  updateGlobalChartSize
 })(ChainerUIContainer);
 

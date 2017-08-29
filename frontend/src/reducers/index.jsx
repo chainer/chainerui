@@ -2,7 +2,8 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import Utils from '../utils';
+import { line2key } from '../utils';
+import { chartSizeOptions, pollingOptions } from '../constants';
 
 
 const entities = (state = { results: {} }, action) => {
@@ -34,14 +35,46 @@ const entities = (state = { results: {} }, action) => {
   }
 };
 
+const fetchState = (state = { results: '' }, action) => {
+  switch (action.type) {
+    case ActionTypes.RESULTS_REQUEST:
+    case ActionTypes.RESULTS_SUCCESS:
+    case ActionTypes.RESULTS_FAILUE:
+      return {
+        ...state,
+        results: action.type
+      };
+    case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
+      if (action.pollingRate === 0) {
+        return {
+          ...state,
+          results: ''
+        };
+      }
+      return state;
+    default:
+      return state;
+  }
+};
+
 const axes = (state = {}, action) => {
-  const { line2key } = Utils;
-  const { axisName, line, lineKey, scale } = action;
+  const {
+    axisName,
+    line,
+    lineKey,
+    scale = 'linear',
+    xAxisKey,
+    rangeType = 'auto',
+    isMin, rangeNumber
+  } = action;
   if (axisName == null) {
     return state;
   }
   const axisConfig = state[axisName] || { axisName };
-  const { lines = [] } = axisConfig;
+  const { lines = [], scaleRange = {} } = axisConfig;
+  const idx = isMin ? 0 : 1;
+  const rangeConfig = scaleRange[scale] || {};
+  const { rangeTypes = [], range = [] } = rangeConfig;
 
   switch (action.type) {
     case ActionTypes.AXIS_CONFIG_LINE_ADD:
@@ -87,18 +120,65 @@ const axes = (state = {}, action) => {
           scale
         }
       };
+    case ActionTypes.AXIS_CONFIG_X_KEY_UPDATE:
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          xAxisKey
+        }
+      };
+    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE:
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          scaleRange: {
+            ...scaleRange,
+            [scale]: {
+              rangeTypes: Object.assign([], rangeTypes, { [idx]: rangeType }),
+              range
+            }
+          }
+        }
+      };
+    case ActionTypes.AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE:
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          scaleRange: {
+            ...scaleRange,
+            [scale]: {
+              rangeTypes,
+              range: Object.assign([], range, { [idx]: rangeNumber })
+            }
+          }
+        }
+      };
     default:
       return state;
   }
 };
 
-const global = (state = { pollingRate: (5 * 1000) }, action) => {
-  const { pollingRate } = action;
+const defaultGlobaState = {
+  pollingRate: pollingOptions[1].value,
+  chartSize: chartSizeOptions[0]
+};
+
+const global = (state = defaultGlobaState, action) => {
+  const { pollingRate, chartSize } = action;
   switch (action.type) {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
       return {
         ...state,
         pollingRate
+      };
+
+    case ActionTypes.GLOBAL_CONFIG_CHART_SIZE_UPDATE:
+      return {
+        ...state,
+        chartSize
       };
     default:
       return state;
@@ -112,6 +192,7 @@ const config = combineReducers({
 
 const rootReducer = combineReducers({
   entities,
+  fetchState,
   config: persistReducer({ key: 'config', storage }, config)
 });
 

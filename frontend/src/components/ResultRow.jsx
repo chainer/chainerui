@@ -54,7 +54,7 @@ class ResultRow extends React.Component {
     });
     const argElems = stats.argKeys.map((argKey) => {
       const content = (argKey in argDict) ? argDict[argKey] : emptyStr;
-      return (<td key={`args-${argKey}`}>{content}</td>);
+      return (<td key={`args-${argKey}`}>{(typeof content === 'boolean') ? String(content) : content}</td>);
     });
 
     return (
