@@ -87,9 +87,11 @@ class ResultRow extends React.Component {
             onBlur={this.handleResultUpdate}
           />
         </td>
-        <td>{lastLogDict.epoch}</td>
-        <td>{lastLogDict.iteration}</td>
-        <td>{lastLogDict.elapsed_time}</td>
+        <td className="text-right">{lastLogDict.epoch}</td>
+        <td className="text-right">{lastLogDict.iteration}</td>
+        <td className="text-right">
+          {lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2)}
+        </td>
         {argElems}
         <td>
           <Button className="close" aria-label="Close" onClick={this.toggleUnwatchModal}>
