@@ -89,7 +89,7 @@ class ResultRow extends React.Component {
         </td>
         <td>{lastLogDict.epoch}</td>
         <td>{lastLogDict.iteration}</td>
-        <td>{lastLogDict.elapsed_time}</td>
+        <td>{lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2)}</td>
         {argElems}
         <td>
           <Button className="close" aria-label="Close" onClick={this.toggleUnwatchModal}>
