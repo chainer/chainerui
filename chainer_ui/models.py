@@ -17,8 +17,8 @@ class Result(BASE):
     id = Column(Integer, primary_key=True)
     path_name = Column(String(512), unique=True)
     name = Column(String(512))
-    logs = relationship('Log')
-    args = relationship('Argument', uselist=False)
+    logs = relationship('Log', cascade='all, delete-orphan')
+    args = relationship('Argument', uselist=False, cascade='all, delete-orphan')
 
     def __init__(self, path_name=None, name=None):
         self.path_name = path_name
