@@ -2,11 +2,12 @@ const webpack = require('webpack');
 const path = require('path');
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const NODE_PROD = (NODE_ENV === 'production');
 const filename = '[name]';
-const nodeModulePath = path.resolve(path.dirname(__dirname), 'node_modules');
+const nodeModulePath = path.resolve(__dirname, 'node_modules');
 
 module.exports = {
   entry: {
@@ -84,6 +85,7 @@ module.exports = {
   devtool: NODE_PROD ? false : 'inline-source-map',
   target: 'web',
   plugins: [
+    new WebpackCleanupPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
     }),
