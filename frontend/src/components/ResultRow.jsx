@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { displayName, truncate } from '../utils';
 
 
 const emptyStr = '-';
@@ -11,6 +13,8 @@ class ResultRow extends React.Component {
     this.handleResultNameChange = this.handleResultNameChange.bind(this);
     this.handleResultNameKeyPress = this.handleResultNameKeyPress.bind(this);
     this.handleResultUpdate = this.handleResultUpdate.bind(this);
+    this.handleUnwatch = this.handleUnwatch.bind(this);
+    this.toggleUnwatchModal = this.toggleUnwatchModal.bind(this);
 
     const { result } = this.props;
     this.state = {
@@ -38,8 +42,20 @@ class ResultRow extends React.Component {
     }
   }
 
+  handleUnwatch() {
+    const { result, onResultDelete } = this.props;
+    onResultDelete(result.id);
+    this.toggleUnwatchModal();
+  }
+
+  toggleUnwatchModal() {
+    this.setState({
+      showUnwatchModal: !this.state.showUnwatchModal
+    });
+  }
+
   render() {
-    const { resultName } = this.state;
+    const { resultName, showUnwatchModal } = this.state;
     const { result, stats } = this.props;
     const { args, logs } = result;
 
@@ -64,7 +80,7 @@ class ResultRow extends React.Component {
           <input
             className="form-control result-name"
             type="text"
-            placeholder={result.pathName}
+            placeholder={truncate(result.pathName, { length: 22, forward: true })}
             value={resultName || ''}
             onChange={this.handleResultNameChange}
             onKeyPress={this.handleResultNameKeyPress}
@@ -75,6 +91,21 @@ class ResultRow extends React.Component {
         <td>{lastLogDict.iteration}</td>
         <td>{lastLogDict.elapsed_time}</td>
         {argElems}
+        <td>
+          <Button className="close" aria-label="Close" onClick={this.toggleUnwatchModal}>
+            <span aria-hidden>&times;</span>
+          </Button>
+          <Modal isOpen={showUnwatchModal}>
+            <ModalHeader>Unwatch a result</ModalHeader>
+            <ModalBody>
+              Are you sure to unwatch {displayName(result)} ?
+            </ModalBody>
+            <ModalFooter>
+              <Button color="secondary" onClick={this.toggleUnwatchModal}>Cancel</Button>
+              <Button color="danger" onClick={this.handleUnwatch}>Unwatch</Button>
+            </ModalFooter>
+          </Modal>
+        </td>
       </tr>
     );
   }
@@ -91,7 +122,8 @@ ResultRow.propTypes = {
   stats: PropTypes.shape({
     argKeys: PropTypes.arrayOf(PropTypes.string)
   }),
-  onResultUpdate: PropTypes.func.isRequired
+  onResultUpdate: PropTypes.func.isRequired,
+  onResultDelete: PropTypes.func.isRequired
 };
 
 ResultRow.defaultProps = {

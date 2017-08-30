@@ -30,6 +30,17 @@ const entities = (state = { results: {} }, action) => {
         };
       }
       return state;
+    case ActionTypes.RESULT_DELETE_SUCCESS:
+      if (action.response && action.response.result) {
+        const resultId = action.response.result.id;
+        const newResults = { ...state.results };
+        delete newResults[resultId];
+        return {
+          ...state,
+          results: newResults
+        };
+      }
+      return state;
     default:
       return state;
   }
@@ -57,6 +68,25 @@ const fetchState = (state = { results: '' }, action) => {
   }
 };
 
+
+const axesStateWithoutResult = (state, resultId) => {
+  if (!Number.isInteger(resultId)) {
+    return state;
+  }
+  const newState = {};
+  Object.keys(state).forEach((axisName) => {
+    const axisConfig = state[axisName];
+    const { lines = [] } = axisConfig;
+    newState[axisName] = {
+      ...axisConfig,
+      lines: lines.filter((line = {}) => (
+        line.resultId != null && line.resultId !== resultId
+      ))
+    };
+  });
+  return newState;
+};
+
 const axes = (state = {}, action) => {
   const {
     axisName,
@@ -67,9 +97,6 @@ const axes = (state = {}, action) => {
     rangeType = 'auto',
     isMin, rangeNumber
   } = action;
-  if (axisName == null) {
-    return state;
-  }
   const axisConfig = state[axisName] || { axisName };
   const { lines = [], scaleRange = {} } = axisConfig;
   const idx = isMin ? 0 : 1;
@@ -156,6 +183,12 @@ const axes = (state = {}, action) => {
           }
         }
       };
+    case ActionTypes.RESULT_DELETE_SUCCESS:
+      if (action.response && action.response.result) {
+        const resultId = action.response.result.id;
+        return axesStateWithoutResult(state, resultId);
+      }
+      return state;
     default:
       return state;
   }

@@ -1,5 +1,6 @@
-# intern-chainer-ui
+# Chainer UI
 
+Chainer UI is a visualization and management tool for chainer.
 
 ## Installation
 
@@ -8,6 +9,25 @@ git clone git@github.com:pfn-intern/intern-chainer-ui.git
 cd intern-chainer-ui
 pip install -r requirements.txt
 ```
+
+## Quick start
+
+```sh
+cd chainer_ui
+
+# register sample result directories
+python register.py ../_extension/example_results/18003
+python register.py ../_extension/example_results/18948
+python register.py ../_extension/example_results/19204
+python register.py ../_extension/example_results/19205
+python register.py ../_extension/example_results/19208
+
+# run Chainer UI server
+python main.py
+```
+
+Then open http://localhost:5000/ .
+
 
 ## Usage
 
@@ -20,7 +40,7 @@ python register.py path/to/result
 
 The Chainer UI server watches two files under the registerd directories.
 
-- `log`: a json file crested by `LogReport` extension.
+- `log`: a json file created by `LogReport` extension.
 - `args`: *(optional)* a json file, which includes key-value pairs you want to see on Chainer UI along with logs. See [`args_report.py`](https://github.com/pfn-intern/intern-chainer-ui/tree/master/_extension) for a sample extension to dump command line arguments to `args` file.
 
 ```
@@ -45,5 +65,13 @@ cd frontend
 npm install
 npm run build:watch
 ```
+
+
+## For users
+
+- Clone and try using Chainer UI.
+- Any bug reports are welcome. Issue page: https://github.com/pfn-intern/intern-chainer-ui/issues
+- Any feature requests are welcome. Slack channel: [#ext-chainer-ui](https://preferred.slack.com/messages/ext-chainer-ui/)
+
 
 
