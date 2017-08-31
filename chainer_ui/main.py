@@ -115,4 +115,4 @@ if __name__ == '__main__':
     SCHEDULER.init_app(APP)
 
     SCHEDULER.start()
-    APP.run(port=ARGS.port)
+    APP.run(port=ARGS.port, threaded=True)

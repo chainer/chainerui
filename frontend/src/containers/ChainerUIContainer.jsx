@@ -29,12 +29,9 @@ const stopPolling = (timer) => {
 };
 
 class ChainerUIContainer extends React.Component {
-  componentWillMount() {
-    this.props.loadResults();
-  }
-
   componentDidMount() {
     const { pollingRate } = this.props.config.global;
+    this.props.loadResults();
     startResultsPolling(this.props.loadResults, pollingRate);
   }
 
