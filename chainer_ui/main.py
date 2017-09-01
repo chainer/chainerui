@@ -5,6 +5,8 @@
 import os
 import json
 import argparse
+import shutil
+import tempfile
 
 from flask import Flask, request, render_template, jsonify, abort, url_for
 from flask_apscheduler import APScheduler
@@ -105,16 +107,17 @@ def insert_command(result_id):
     command_path = os.path.join(result.path_name, 'commands')
     if os.path.isfile(command_path):
         with open(command_path) as json_data:
-            command = json.load(json_data)
+            commands = json.load(json_data)
     else:
-        command = []
+        commands = []
 
-    command.append(request_json)
+    commands.append(request_json)
 
-    f = open(command_path, 'w')
-    f.write(json.dumps(command))
-    f.close() 
+    _fd, path = tempfile.mkstemp(prefix='commands', dir=result.path_name)
+    with os.fdopen(_fd, 'w') as _f:
+        json.dump(commands, _f, indent=4)
 
+    shutil.move(path, command_path)
     return jsonify(request_json)
 
 
