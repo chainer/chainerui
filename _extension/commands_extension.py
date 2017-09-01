@@ -49,7 +49,6 @@ class CommandsExtension(Extension):
             raise ValueError('command name is not given')
         if not callable(receiver):
             raise ValueError('receiver is not callable')
-        print(self._receivers)
 
 
     def _load_commands(self, trainer):
