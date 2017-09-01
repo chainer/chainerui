@@ -3,6 +3,7 @@
 ''' Chainer-UI API '''
 
 import os
+import json
 import argparse
 
 from flask import Flask, request, render_template, jsonify, abort, url_for
@@ -87,6 +88,34 @@ def delete_result(result_id):
 
     # response deleted result
     return jsonify({'result': result.serialize})
+
+
+@APP.route('/api/v1/results/<int:result_id>/commands', methods=['POST'])
+def insert_command(result_id):
+    ''' POST /api/v1/results/<int:result_id>/commands '''
+
+    db_session = create_db_session()
+    result = db_session.query(Result).filter_by(id=result_id).first()
+    if result is None:
+        response = jsonify({'result': None, 'message': 'No interface defined for URL.'})
+        return response, 404
+
+    request_json = request.get_json()
+
+    command_path = os.path.join(result.path_name, 'commands')
+    if os.path.isfile(command_path):
+        with open(command_path) as json_data:
+            command = json.load(json_data)
+    else:
+        command = []
+
+    command.append(request_json)
+
+    f = open(command_path, 'w')
+    f.write(json.dumps(command))
+    f.close() 
+
+    return jsonify(request_json)
 
 
 if __name__ == '__main__':
