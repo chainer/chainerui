@@ -49,11 +49,11 @@ class CommandsExtension(Extension):
 
 
     def add_receiver(self, command_name, receiver):
-        self._receivers[command_name] = receiver
         if command_name is None:
             raise ValueError('command name is not given')
         if not callable(receiver):
             raise ValueError('receiver is not callable')
+        self._receivers[command_name] = receiver
 
 
     def _load_commands(self, trainer):
