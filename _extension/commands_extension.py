@@ -17,6 +17,11 @@ class CommandsExtension(Extension):
 
         self._receivers = {}
 
+    def initialize(self, trainer):
+        commands_path = self._commands_path(trainer)
+        if os.path.isfile(commands_path):
+            os.remove(commands_path)
+
     def __call__(self, trainer):
         if not self._trigger(trainer):
             return
@@ -44,11 +49,11 @@ class CommandsExtension(Extension):
 
 
     def add_receiver(self, command_name, receiver):
-        self._receivers[command_name] = receiver
         if command_name is None:
             raise ValueError('command name is not given')
         if not callable(receiver):
             raise ValueError('receiver is not callable')
+        self._receivers[command_name] = receiver
 
 
     def _load_commands(self, trainer):
@@ -57,7 +62,10 @@ class CommandsExtension(Extension):
 
         if os.path.isfile(commands_path):
             with open(commands_path, 'r') as f:
-                commands = json.load(f)
+                try:
+                    commands = json.load(f)
+                except json.decoder.JSONDecodeError as e:
+                    pass
 
         return commands
 
