@@ -40,6 +40,12 @@ def receive_take_snapshot(trainer, body):
     savefun = npz.save_npz
     _snapshot_object(trainer, trainer, filename.format(trainer), savefun)
 
+def receive_hyperparams(trainer, body):
+    print(body)
+    for key, value in body.items():
+        optimizer = trainer.updater.get_optimizer('main')
+        setattr(optimizer, key, value)
+
 # ----- receive command from ui ---->
 
 # Network definition
@@ -127,6 +133,7 @@ def main():
     commands = CommandsExtension()
     commands.add_receiver('hello', receive_hello)
     commands.add_receiver('take_snapshot', receive_take_snapshot)
+    commands.add_receiver('hyperparams', receive_hyperparams)
     trainer.extend(commands)
     # ---- my extension ---->
 
