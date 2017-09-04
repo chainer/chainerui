@@ -26,6 +26,13 @@ from commands_extension import CommandsExtension
 def receive_hello(trainer, body):
     print(trainer.updater.epoch)
     print('hello world')
+
+def receive_hyperparams(trainer, body):
+    print(body)
+    for key, value in body.items():
+        optimizer = trainer.updater.get_optimizer('main')
+        setattr(optimizer, key, value)
+
 # ----- receive command from ui ---->
 
 # Network definition
@@ -112,6 +119,7 @@ def main():
 
     commands = CommandsExtension()
     commands.add_receiver('hello', receive_hello)
+    commands.add_receiver('hyperparams', receive_hyperparams)
     trainer.extend(commands)
     # ---- my extension ---->
 
