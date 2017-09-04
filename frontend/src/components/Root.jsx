@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { Router, Route } from 'react-router';
 import ChainerUIContainer from '../containers/ChainerUIContainer';
+import ResultDetail from '../containers/ResultDetail';
 
 
 const Root = ({ store, history }) => (
   <Provider store={store}>
     <Router history={history}>
       <Route path="/" component={ChainerUIContainer} />
+      <Route path="/results/(:resultId)" component={ResultDetail} />
     </Router>
   </Provider>
 );
