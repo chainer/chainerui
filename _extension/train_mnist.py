@@ -18,6 +18,10 @@ import chainer.links as L
 from chainer import training
 from chainer.training import extensions
 
+# for taking snapshot
+from chainer.serializers import npz
+from chainer.training.extensions._snapshot import _snapshot_object
+
 from args_report import ArgsReport
 from commands_extension import CommandsExtension
 
@@ -29,6 +33,13 @@ def receive_hello(trainer, body):
         username = body['username']
     print('epoch: {}'.format(trainer.updater.epoch))
     print('hello, {}'.format(username))
+
+def receive_take_snapshot(trainer, body):
+    print('taking a snapshot...')
+    filename = 'snapshot_iter_{.updater.iteration}'
+    savefun = npz.save_npz
+    _snapshot_object(trainer, trainer, filename.format(trainer), savefun)
+
 # ----- receive command from ui ---->
 
 # Network definition
@@ -115,6 +126,7 @@ def main():
 
     commands = CommandsExtension()
     commands.add_receiver('hello', receive_hello)
+    commands.add_receiver('take_snapshot', receive_take_snapshot)
     trainer.extend(commands)
     # ---- my extension ---->
 
