@@ -58,11 +58,6 @@ def crawl_result_table():
 
         result.commands = [Command(cmd['name'], json.dumps(cmd['body']), json.dumps(cmd['executed_at'])) for cmd in crawl_result['commands']]
 
-
-        print(crawl_result['snapshots'])
-
-        
-
         result.snapshots = [Snapshot(s, int(s.split('snapshot_iter_')[1])) for s in crawl_result['snapshots']]
 
         db_session.commit()
