@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
@@ -226,7 +227,8 @@ const config = combineReducers({
 const rootReducer = combineReducers({
   entities,
   fetchState,
-  config: persistReducer({ key: 'config', storage }, config)
+  config: persistReducer({ key: 'config', storage }, config),
+  routing: routerReducer
 });
 
 export default rootReducer;
