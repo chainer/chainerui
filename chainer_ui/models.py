@@ -19,6 +19,7 @@ class Result(BASE):
     name = Column(String(512))
     logs = relationship('Log', cascade='all, delete-orphan')
     args = relationship('Argument', uselist=False, cascade='all, delete-orphan')
+    commands = relationship('Command', cascade='all, delete-orphan')
 
     def __init__(self, path_name=None, name=None):
         self.path_name = path_name
@@ -35,7 +36,8 @@ class Result(BASE):
             'pathName': self.path_name,
             'name': self.name,
             'logs': [log.serialize for log in self.logs],
-            'args': self.args.serialize if self.args is not None else []
+            'args': self.args.serialize if self.args is not None else [],
+            'commands': [cmd.serialize for cmd in self.commands]
         }
 
 
@@ -102,3 +104,72 @@ class Argument(BASE):
                 })
 
         return arguments
+
+class Command(BASE):
+    ''' Command Model '''
+    __tablename__ = 'command'
+
+    id = Column(Integer, primary_key=True)
+    result_id = Column(Integer, ForeignKey('result.id'))
+    name = Column(String(1024))
+    body = Column(String(1024))
+    executed_at = Column(DateTime)
+
+    def __init__(self, name=None, body=None, executed_at=None):
+        self.name = name
+        self.body = body
+
+    def __repr__(self):
+        return '<Command id: %r />' % (self.id)
+
+    @property
+    def serialize(self):
+        ''' serialize '''
+
+        return {
+            "id": self.id,
+            "name": self.name,
+            "body": self.body,
+            "executedAt": self.executed_at
+        }
+
+        # arguments = []
+
+        # if isinstance(json.loads(self.data), dict):
+        #     for item in json.loads(self.data).items():
+        #         arguments.append({
+        #             'resultId': self.result_id,
+        #             'key': item[0],
+        #             'value': item[1]
+        #         })
+
+        # return arguments
+# class Snapshot(BASE):
+#     ''' Snapshot Model '''
+#     __tablename__ = 'snapshot'
+
+#     id = Column(Integer, primary_key=True)
+#     result_id = Column(Integer, ForeignKey('result.id'))
+#     filename = Column(String(1024))
+
+#     def __init__(self, filename=None):
+#         self.filename = filename
+
+#     def __repr__(self):
+#         return '<Argument id: %r />' % (self.id)
+
+#     @property
+#     def serialize(self):
+#         ''' serialize '''
+
+#         arguments = []
+
+#         if isinstance(json.loads(self.data), dict):
+#             for item in json.loads(self.data).items():
+#                 arguments.append({
+#                     'resultId': self.result_id,
+#                     'key': item[0],
+#                     'value': item[1]
+#                 })
+
+#         return arguments

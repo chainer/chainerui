@@ -6,7 +6,7 @@ import os
 import json
 
 from database import create_db_session
-from models import Result, Log, Argument
+from models import Result, Log, Argument, Command
 
 
 
@@ -27,12 +27,14 @@ def explore_result_dir(path):
     ''' explore_result_dir '''
     result = {
         'logs': [],
-        'args': []
+        'args': [],
+        'commands': []
     }
 
     if os.path.isdir(path):
         result['logs'] = explore_log_file(path, 'log')
         result['args'] = explore_log_file(path, 'args')
+        result['commands'] = explore_log_file(path, 'commands')
 
     return result
 
@@ -51,5 +53,7 @@ def crawl_result_table():
         if len(result.logs) < len(crawl_result['logs']):
             for log in crawl_result['logs'][len(result.logs):]:
                 result.logs.append(Log(json.dumps(log)))
+
+        result.commands = [Command(cmd['name'], json.dumps(cmd['body']), json.dumps(cmd['executed_at'])) for cmd in crawl_result['commands']]
 
         db_session.commit()
