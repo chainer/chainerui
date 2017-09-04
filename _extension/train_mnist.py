@@ -19,7 +19,14 @@ from chainer import training
 from chainer.training import extensions
 
 from args_report import ArgsReport
+from commands_extension import CommandsExtension
 
+
+# <---- receive command from ui -----
+def receive_hello(trainer, body):
+    print(trainer.updater.epoch)
+    print('hello world')
+# ----- receive command from ui ---->
 
 # Network definition
 class MLP(chainer.Chain):
@@ -102,6 +109,10 @@ def main():
 
     # <--- my extension -----
     trainer.extend(ArgsReport(args))
+
+    commands = CommandsExtension()
+    commands.add_receiver('hello', receive_hello)
+    trainer.extend(commands)
     # ---- my extension ---->
 
     # Save two plot images to the result dir
