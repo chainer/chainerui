@@ -24,8 +24,11 @@ from commands_extension import CommandsExtension
 
 # <---- receive command from ui -----
 def receive_hello(trainer, body):
-    print(trainer.updater.epoch)
-    print('hello world')
+    username = 'user'
+    if 'username' in body:
+        username = body['username']
+    print('epoch: {}'.format(trainer.updater.epoch))
+    print('hello, {}'.format(username))
 # ----- receive command from ui ---->
 
 # Network definition
