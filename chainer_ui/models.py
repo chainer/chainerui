@@ -20,6 +20,7 @@ class Result(BASE):
     logs = relationship('Log', cascade='all, delete-orphan')
     args = relationship('Argument', uselist=False, cascade='all, delete-orphan')
     commands = relationship('Command', cascade='all, delete-orphan')
+    snapshots = relationship('Snapshot', cascade='all, delete-orphan')
 
     def __init__(self, path_name=None, name=None):
         self.path_name = path_name
@@ -37,7 +38,8 @@ class Result(BASE):
             'name': self.name,
             'logs': [log.serialize for log in self.logs],
             'args': self.args.serialize if self.args is not None else [],
-            'commands': [cmd.serialize for cmd in self.commands]
+            'commands': [cmd.serialize for cmd in self.commands],
+            'snapshots': [cmd.serialize for cmd in self.snapshots]
         }
 
 
@@ -113,7 +115,6 @@ class Command(BASE):
     result_id = Column(Integer, ForeignKey('result.id'))
     name = Column(String(1024))
     body = Column(String(1024))
-    executed_at = Column(DateTime)
 
     def __init__(self, name=None, body=None, executed_at=None):
         self.name = name
@@ -129,47 +130,33 @@ class Command(BASE):
         return {
             "id": self.id,
             "name": self.name,
-            "body": self.body,
-            "executedAt": self.executed_at
+            "body": self.body
         }
 
-        # arguments = []
 
-        # if isinstance(json.loads(self.data), dict):
-        #     for item in json.loads(self.data).items():
-        #         arguments.append({
-        #             'resultId': self.result_id,
-        #             'key': item[0],
-        #             'value': item[1]
-        #         })
+class Snapshot(BASE):
+    ''' Snapshot Model '''
+    __tablename__ = 'snapshot'
 
-        # return arguments
-# class Snapshot(BASE):
-#     ''' Snapshot Model '''
-#     __tablename__ = 'snapshot'
+    id = Column(Integer, primary_key=True)
+    result_id = Column(Integer, ForeignKey('result.id'))
+    name = Column(String(1024))
+    iteration = Column(Integer)
+    
 
-#     id = Column(Integer, primary_key=True)
-#     result_id = Column(Integer, ForeignKey('result.id'))
-#     filename = Column(String(1024))
+    def __init__(self, name=None, iteration=None):
+        self.name = name
+        self.iteration = iteration
 
-#     def __init__(self, filename=None):
-#         self.filename = filename
+    def __repr__(self):
+        return '<Snapshot id: %r />' % (self.id)
 
-#     def __repr__(self):
-#         return '<Argument id: %r />' % (self.id)
+    @property
+    def serialize(self):
+        ''' serialize '''
 
-#     @property
-#     def serialize(self):
-#         ''' serialize '''
-
-#         arguments = []
-
-#         if isinstance(json.loads(self.data), dict):
-#             for item in json.loads(self.data).items():
-#                 arguments.append({
-#                     'resultId': self.result_id,
-#                     'key': item[0],
-#                     'value': item[1]
-#                 })
-
-#         return arguments
+        return {
+            "id": self.id,
+            "name": self.name,
+            "iteration": self.iteration
+        }

@@ -6,7 +6,7 @@ import os
 import json
 
 from database import create_db_session
-from models import Result, Log, Argument, Command
+from models import Result, Log, Argument, Command, Snapshot
 
 
 
@@ -28,13 +28,15 @@ def explore_result_dir(path):
     result = {
         'logs': [],
         'args': [],
-        'commands': []
+        'commands': [],
+        'snapshots': []
     }
 
     if os.path.isdir(path):
         result['logs'] = explore_log_file(path, 'log')
         result['args'] = explore_log_file(path, 'args')
         result['commands'] = explore_log_file(path, 'commands')
+        result['snapshots'] = [x for x in os.listdir(path) if x.count('snapshot_iter_')]
 
     return result
 
@@ -55,5 +57,12 @@ def crawl_result_table():
                 result.logs.append(Log(json.dumps(log)))
 
         result.commands = [Command(cmd['name'], json.dumps(cmd['body']), json.dumps(cmd['executed_at'])) for cmd in crawl_result['commands']]
+
+
+        print(crawl_result['snapshots'])
+
+        
+
+        result.snapshots = [Snapshot(s, int(s.split('snapshot_iter_')[1])) for s in crawl_result['snapshots']]
 
         db_session.commit()
