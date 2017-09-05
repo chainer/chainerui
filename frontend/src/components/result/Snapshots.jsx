@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 
 const createSnapshotRowElems = (snapshots) => snapshots.sort((a, b) =>
-  // sort commands in decending order
+  // sort snapshots by their iteration
   a.iteration - b.iteration
 ).map((snapshot) => (
   <tr className="command-row" key={snapshot.id}>
