@@ -1,0 +1,11 @@
+[
+    {
+        "name": "hyperparams",
+        "body": {
+            "alpha": 0.0007,
+            "beta1": 0.8,
+            "beta2": 0.8
+        },
+        "executed_at": "2017-09-04T12:39:18.241315"
+    }
+]
