@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { displayName, truncate, getLastLogDict } from '../utils';
+import { displayName, truncate, getLastLogDict, argValue2string } from '../utils';
 
 
 const emptyStr = '-';
@@ -66,10 +66,7 @@ class ResultRow extends React.Component {
     args.forEach((arg) => {
       argDict[arg.key] = arg.value;
     });
-    const argElems = stats.argKeys.map((argKey) => {
-      const content = (argKey in argDict) ? argDict[argKey] : emptyStr;
-      return (<td key={`args-${argKey}`}>{(typeof content === 'boolean') ? String(content) : content}</td>);
-    });
+    const argElems = stats.argKeys.map((argKey) => (<td key={`args-${argKey}`}>{argValue2string(argDict[argKey])}</td>));
 
     return (
       <tr className="result-row">

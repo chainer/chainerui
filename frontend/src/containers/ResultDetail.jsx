@@ -9,6 +9,7 @@ import {
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import ResultSummary from '../components/result/ResultSummary';
+import Args from '../components/result/Args';
 import { defaultConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
@@ -49,6 +50,9 @@ class ResultDetail extends React.Component {
           <div className="row">
             <div className="col-sm-6">
               <ResultSummary result={result} />
+            </div>
+            <div className="col-sm-6">
+              <Args args={result.args || []} />
             </div>
           </div>
         </Container>

@@ -33,3 +33,11 @@ export const getLastLogDict = (result = {}) => {
   return lastLogDict;
 };
 
+export const argValue2string = (argValue) => {
+  const emptyStr = '-';
+  if (argValue == null) {
+    return emptyStr;
+  }
+  return (typeof argValue === 'boolean') ? String(argValue) : argValue;
+};
+
