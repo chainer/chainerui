@@ -41,3 +41,12 @@ export const argValue2string = (argValue) => {
   return (typeof argValue === 'boolean') ? String(argValue) : argValue;
 };
 
+export const isJsonString = (str) => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};
+
