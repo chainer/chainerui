@@ -11,6 +11,7 @@ import NavigationBar from '../components/NavigationBar';
 import ResultSummary from '../components/result/ResultSummary';
 import Args from '../components/result/Args';
 import Commands from '../components/result/Commands';
+import Snapshots from '../components/result/Snapshots';
 import { defaultConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
@@ -57,6 +58,9 @@ class ResultDetail extends React.Component {
             </div>
             <div className="col-sm-6 p-2">
               <Commands commands={result.commands || []} />
+            </div>
+            <div className="col-sm-6 p-2">
+              <Snapshots snapshots={result.snapshots || []} />
             </div>
           </div>
         </Container>

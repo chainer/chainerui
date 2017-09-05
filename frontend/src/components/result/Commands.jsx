@@ -19,10 +19,10 @@ const createCommandRowElems = (commands) => commands.sort((a, b) =>
 const Commands = (props) => {
   const { commands } = props;
   return (
-    <div className="commands card">
+    <div className="card">
       <div className="card-header">Commands</div>
       <div className="card-body">
-        <table className="table table-sm">
+        <table className="table table-sm table-xy-overflow-scroll">
           <thead>
             <tr>
               <th>command name</th>
