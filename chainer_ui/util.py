@@ -56,7 +56,7 @@ def crawl_result_table():
             for log in crawl_result['logs'][len(result.logs):]:
                 result.logs.append(Log(json.dumps(log)))
 
-        result.commands = [Command(cmd['name'], json.dumps(cmd['body']), json.dumps(cmd['executed_at'])) for cmd in crawl_result['commands']]
+        result.commands = [Command(cmd['name'], json.dumps(cmd['body'], indent=4)) for cmd in crawl_result['commands']]
 
         result.snapshots = [Snapshot(s, int(s.split('snapshot_iter_')[1])) for s in crawl_result['snapshots']]
 
