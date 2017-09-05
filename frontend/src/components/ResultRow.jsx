@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { displayName, truncate } from '../utils';
 
@@ -75,7 +76,9 @@ class ResultRow extends React.Component {
 
     return (
       <tr className="result-row">
-        <td>{result.id}</td>
+        <td>
+          <Link to={`results/${result.id}`}>{result.id}</Link>
+        </td>
         <td>
           <input
             className="form-control result-name"
