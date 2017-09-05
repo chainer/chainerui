@@ -5,10 +5,12 @@
 import os
 import json
 
-from database import create_db_session
-from models import Result, Log, Argument, Command, Snapshot
-
-
+from chainer_ui import create_db_session
+from chainer_ui.models.result import Result
+from chainer_ui.models.log import Log
+from chainer_ui.models.argument import Argument
+from chainer_ui.models.command import Command
+from chainer_ui.models.snapshot import Snapshot
 
 
 def explore_log_file(result_path, log_file_name):
@@ -36,7 +38,9 @@ def explore_result_dir(path):
         result['logs'] = explore_log_file(path, 'log')
         result['args'] = explore_log_file(path, 'args')
         result['commands'] = explore_log_file(path, 'commands')
-        result['snapshots'] = [x for x in os.listdir(path) if x.count('snapshot_iter_')]
+        result['snapshots'] = [
+            x for x in os.listdir(path) if x.count('snapshot_iter_')
+        ]
 
     return result
 
@@ -56,8 +60,14 @@ def crawl_result_table():
             for log in crawl_result['logs'][len(result.logs):]:
                 result.logs.append(Log(json.dumps(log)))
 
-        result.commands = [Command(cmd['name'], json.dumps(cmd['body']), json.dumps(cmd['executed_at'])) for cmd in crawl_result['commands']]
+        result.commands = [
+            Command(cmd['name'], json.dumps(cmd['body']))
+            for cmd in crawl_result['commands']
+        ]
 
-        result.snapshots = [Snapshot(s, int(s.split('snapshot_iter_')[1])) for s in crawl_result['snapshots']]
+        result.snapshots = [
+            Snapshot(s, int(s.split('snapshot_iter_')[1]))
+            for s in crawl_result['snapshots']
+        ]
 
         db_session.commit()
