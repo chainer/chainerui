@@ -1,0 +1,53 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+
+const createCommandRowElems = (commands) => commands.sort((a, b) =>
+  // sort commands in decending order
+  b.id - a.id
+).map((command) => (
+  <tr className="command-row" key={command.id}>
+    <td>{command.name}</td>
+    <td>
+      <pre>
+        <code>{command.body}</code>
+      </pre>
+    </td>
+  </tr>
+));
+
+const Commands = (props) => {
+  const { commands } = props;
+  return (
+    <div className="commands card">
+      <div className="card-header">Commands</div>
+      <div className="card-body">
+        <table className="table table-sm">
+          <thead>
+            <tr>
+              <th>command name</th>
+              <th>body</th>
+            </tr>
+          </thead>
+          <tbody>
+            {createCommandRowElems(commands)}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+Commands.propTypes = {
+  commands: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    body: PropTypes.string
+  })).isRequired
+};
+
+Commands.defaultProps = {
+};
+
+export default Commands;
+
