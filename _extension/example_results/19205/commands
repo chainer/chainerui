@@ -1,0 +1,42 @@
+[
+    {
+        "name": "hyperparams",
+        "body": {
+            "alpha": 0.002
+        },
+        "executed_at": "2017-09-04T12:34:16.817559"
+    },
+    {
+        "name": "hyperparams",
+        "body": {
+            "alpha": 0.0007
+        },
+        "executed_at": "2017-09-04T12:34:54.884605"
+    },
+    {
+        "name": "hyperparams",
+        "body": {
+            "alpha": 0.0007,
+            "beta1": 0.8
+        },
+        "executed_at": "2017-09-04T12:37:26.351383"
+    },
+    {
+        "name": "hyperparams",
+        "body": {
+            "alpha": 0.0007,
+            "beta1": 0.8,
+            "beta2": 1.0
+        },
+        "executed_at": "2017-09-04T12:38:42.676347"
+    },
+    {
+        "name": "hyperparams",
+        "body": {
+            "alpha": 0.0007,
+            "beta1": 0.8,
+            "beta2": 0.8
+        },
+        "executed_at": "2017-09-04T12:39:18.241315"
+    }
+]
