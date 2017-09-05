@@ -15,24 +15,13 @@ import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
+import { startResultsPolling, stopResultsPolling } from '../utils';
 
-let resultsPollingTimer;
-
-const startResultsPolling = (func, pollingRate) => {
-  if (pollingRate > 0) {
-    resultsPollingTimer = setInterval(func, pollingRate);
-  }
-};
-
-const stopPolling = (timer) => {
-  clearInterval(timer);
-};
 
 class ChainerUIContainer extends React.Component {
   componentDidMount() {
     const { pollingRate } = this.props.config.global;
-    this.props.loadResults();
-    startResultsPolling(this.props.loadResults, pollingRate);
+    this.resultsPollingTimer = startResultsPolling(this.props.loadResults, pollingRate);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -40,13 +29,13 @@ class ChainerUIContainer extends React.Component {
     const nextPollingRate = nextProps.config.global.pollingRate;
 
     if (currentPollingRate !== nextPollingRate) {
-      stopPolling(resultsPollingTimer);
-      startResultsPolling(this.props.loadResults, nextPollingRate);
+      stopResultsPolling(this.resultsPollingTimer);
+      this.resultsPollingTimer = startResultsPolling(this.props.loadResults, nextPollingRate);
     }
   }
 
   componentWillUnmount() {
-    stopPolling(resultsPollingTimer);
+    stopResultsPolling(this.resultsPollingTimer);
   }
 
   render() {
