@@ -1,4 +1,3 @@
-
 export const chartSizeOptions = [
   {
     id: 1,
@@ -58,7 +57,8 @@ export const pollingOptions = [
   }
 ];
 
-export default {
-  chartSizeOptions,
-  pollingOptions
+export const defaultConfig = {
+  axes: {},
+  global: {}
 };
+
