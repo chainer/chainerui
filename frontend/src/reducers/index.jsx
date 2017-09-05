@@ -56,6 +56,13 @@ const fetchState = (state = { results: '' }, action) => {
         ...state,
         results: action.type
       };
+    case ActionTypes.COMMAND_CREATE_REQUEST:
+    case ActionTypes.COMMAND_CREATE_SUCCESS:
+    case ActionTypes.COMMAND_CREATE_FAILUE:
+      return {
+        ...state,
+        commandCreate: action.type
+      };
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
       if (action.pollingRate === 0) {
         return {

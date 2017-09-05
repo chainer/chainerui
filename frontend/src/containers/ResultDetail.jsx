@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   loadResults,
+  createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize
 } from '../actions';
@@ -57,7 +58,11 @@ class ResultDetail extends React.Component {
               <Args args={result.args || []} />
             </div>
             <div className="col-sm-6 p-2">
-              <Commands commands={result.commands || []} />
+              <Commands
+                resultId={result.id}
+                commands={result.commands || []}
+                onCommandSubmit={this.props.createCommand}
+              />
             </div>
             <div className="col-sm-6 p-2">
               <Snapshots snapshots={result.snapshots || []} />
@@ -96,12 +101,14 @@ ResultDetail.propTypes = {
     global: PropTypes.objectOf(PropTypes.any)
   }).isRequired,
   loadResults: PropTypes.func.isRequired,
+  createCommand: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, {
   loadResults,
+  createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize
 })(ResultDetail);

@@ -37,13 +37,17 @@ class CommandForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    const { resultId, onCommandSubmit } = this.props;
     const { commandName, commandBody } = this.state;
     if (!isValidName(commandName) || !isValidBody(commandBody)) {
       this.setState({
         showNameError: true,
         showBodyError: true
       });
+      return;
     }
+    const commandBodyJson = commandBody === '' ? {} : JSON.parse(commandBody);
+    onCommandSubmit(resultId, commandName, commandBodyJson);
   }
 
   handleClear() {
@@ -93,9 +97,8 @@ class CommandForm extends React.Component {
 }
 
 CommandForm.propTypes = {
-};
-
-CommandForm.defaultProps = {
+  resultId: PropTypes.number.isRequired,
+  onCommandSubmit: PropTypes.func.isRequired
 };
 
 export default CommandForm;

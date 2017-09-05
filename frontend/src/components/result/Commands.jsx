@@ -18,14 +18,17 @@ const createCommandRowElems = (commands) => commands.sort((a, b) =>
 ));
 
 const Commands = (props) => {
-  const { commands } = props;
+  const { resultId, commands, onCommandSubmit } = props;
   return (
     <div className="card">
       <div className="card-header">Commands</div>
       <div className="card-body">
         <div className="mb-2 card">
           <div className="card-body">
-            <CommandForm />
+            <CommandForm
+              resultId={resultId}
+              onCommandSubmit={onCommandSubmit}
+            />
           </div>
         </div>
         <table className="table table-sm table-xy-overflow-scroll">
@@ -45,11 +48,13 @@ const Commands = (props) => {
 };
 
 Commands.propTypes = {
+  resultId: PropTypes.number.isRequired,
   commands: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
     body: PropTypes.string
-  })).isRequired
+  })).isRequired,
+  onCommandSubmit: PropTypes.func.isRequired
 };
 
 Commands.defaultProps = {
