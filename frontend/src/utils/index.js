@@ -24,3 +24,12 @@ export const displayName = (result = {}) => (
 
 export const line2name = (line, result = {}) => `${displayName(result)}/${line.logKey}`;
 
+export const getLastLogDict = (result = {}) => {
+  const { logs = [] } = result;
+  const lastLog = logs[logs.length - 1] || {};
+  const { logItems = [] } = lastLog;
+  const lastLogDict = {};
+  logItems.forEach((logItem) => { lastLogDict[logItem.key] = logItem.value; });
+  return lastLogDict;
+};
+

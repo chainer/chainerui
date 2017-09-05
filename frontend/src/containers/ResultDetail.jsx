@@ -8,6 +8,7 @@ import {
   updateGlobalChartSize
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
+import ResultSummary from '../components/result/ResultSummary';
 import { defaultConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
@@ -33,7 +34,7 @@ class ResultDetail extends React.Component {
 
   render() {
     const {
-      resultId, config, fetchState
+      result, config, fetchState
     } = this.props;
     return (
       <div className="result-detail">
@@ -44,8 +45,11 @@ class ResultDetail extends React.Component {
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
         <Container fluid>
+          <h3>{result.name}</h3>
           <div className="row">
-            <h3>resultId: {resultId}</h3>
+            <div className="col-sm-6">
+              <ResultSummary result={result} />
+            </div>
           </div>
         </Container>
       </div>
@@ -61,11 +65,18 @@ const mapStateToProps = (state, ownProps) => {
     config = defaultConfig
   } = state;
   const { results = {} } = entities;
-  return { resultId, results, fetchState, config };
+  const result = results[resultId] || {};
+  return { result, fetchState, config };
 };
 
 ResultDetail.propTypes = {
-  resultId: PropTypes.number.isRequired,
+  result: PropTypes.shape({
+    id: PropTypes.number,
+    pathName: PropTypes.string,
+    name: PropTypes.string,
+    args: PropTypes.arrayOf(PropTypes.any),
+    logs: PropTypes.arrayOf(PropTypes.any)
+  }).isRequired,
   fetchState: PropTypes.shape({
     results: PropTypes.string
   }).isRequired,

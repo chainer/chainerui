@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { displayName, truncate } from '../utils';
+import { displayName, truncate, getLastLogDict } from '../utils';
 
 
 const emptyStr = '-';
@@ -58,12 +58,9 @@ class ResultRow extends React.Component {
   render() {
     const { resultName, showUnwatchModal } = this.state;
     const { result, stats } = this.props;
-    const { args, logs } = result;
+    const { args } = result;
 
-    const lastLog = logs[logs.length - 1] || {};
-    const { logItems = [] } = lastLog;
-    const lastLogDict = {};
-    logItems.forEach((logItem) => { lastLogDict[logItem.key] = logItem.value; });
+    const lastLogDict = getLastLogDict(result);
 
     const argDict = {};
     args.forEach((arg) => {
