@@ -1,24 +1,44 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
-import { Router, Route } from 'react-router';
+import { Router, Route, browserHistory } from 'react-router';
+import { persistStore } from 'redux-persist';
+import { syncHistoryWithStore } from 'react-router-redux';
+import configureStore from '../store/configureStore';
 import ChainerUIContainer from '../containers/ChainerUIContainer';
 import ResultDetail from '../containers/ResultDetail';
 
 
-const Root = ({ store, history }) => (
-  <Provider store={store}>
-    <Router history={history}>
-      <Route path="/" component={ChainerUIContainer} />
-      <Route path="/results/(:resultId)" component={ResultDetail} />
-    </Router>
-  </Provider>
-);
+const store = configureStore();
+const history = syncHistoryWithStore(browserHistory, store);
 
-Root.propTypes = {
-  store: PropTypes.objectOf(PropTypes.any).isRequired,
-  history: PropTypes.objectOf(PropTypes.any).isRequired
-};
+class Root extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      rehydrated: false
+    };
+  }
+
+  componentDidMount() {
+    persistStore(store, {}, () => {
+      this.setState({ rehydrated: true });
+    });
+  }
+
+  render() {
+    if (!this.state.rehydrated) {
+      return (<div>loading...</div>);
+    }
+    return (
+      <Provider store={store}>
+        <Router history={history}>
+          <Route path="/" component={ChainerUIContainer} />
+          <Route path="/results/(:resultId)" component={ResultDetail} />
+        </Router>
+      </Provider>
+    );
+  }
+}
 
 export default Root;
 

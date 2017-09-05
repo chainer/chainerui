@@ -1,19 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import { browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
-import configureStore from './store/configureStore';
 import Root from './components/Root';
 
-
-const store = configureStore();
-const history = syncHistoryWithStore(browserHistory, store);
 
 const render = (Component, appNode) => {
   ReactDOM.render(
     <AppContainer>
-      <Component store={store} history={history} />
+      <Component />
     </AppContainer>,
     appNode
   );
