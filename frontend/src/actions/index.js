@@ -128,6 +128,14 @@ export const updateAxisScaleRangeNumber = (axisName, scale, isMin, rangeNumber) 
   rangeNumber
 });
 
+// results config
+export const RESULTS_CONFIG_SELECT_TOGGLE = 'RESULTS_CONFIG_SELECT_TOGGLE';
+
+export const toggleResultsConfigSelect = (resultId) => ({
+  type: RESULTS_CONFIG_SELECT_TOGGLE,
+  resultId
+});
+
 
 // global config
 

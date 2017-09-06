@@ -202,6 +202,23 @@ const axes = (state = {}, action) => {
   }
 };
 
+const resultsConfig = (state = {}, action) => {
+  const { resultId } = action;
+  const resultConfig = state[resultId] || {};
+  switch (action.type) {
+    case ActionTypes.RESULTS_CONFIG_SELECT_TOGGLE:
+      return {
+        ...state,
+        [resultId]: {
+          ...resultConfig,
+          selected: !resultConfig.selected
+        }
+      };
+    default:
+      return state;
+  }
+};
+
 const defaultGlobaState = {
   pollingRate: pollingOptions[1].value,
   chartSize: chartSizeOptions[0]
@@ -228,6 +245,7 @@ const global = (state = defaultGlobaState, action) => {
 
 const config = combineReducers({
   axes,
+  resultsConfig,
   global
 });
 

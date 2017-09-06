@@ -6,6 +6,7 @@ import {
   loadResults, updateResult, deleteResult,
   addLineToAxis, updateLineInAxis, removeLineFromAxis,
   updateAxisScale,
+  toggleResultsConfigSelect,
   updateGlobalPollingRate, updateGlobalChartSize,
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber
@@ -78,6 +79,8 @@ class ChainerUIContainer extends React.Component {
               <ExperimentsTable
                 results={results}
                 stats={stats}
+                config={config}
+                onResultsConfigSelectToggle={this.props.toggleResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
                 onResultDelete={this.props.deleteResult}
               />
@@ -125,6 +128,7 @@ ChainerUIContainer.propTypes = {
   }).isRequired,
   config: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
+    resultsConfig: PropTypes.objectOf(PropTypes.any),
     global: PropTypes.objectOf(PropTypes.any)
   }).isRequired,
   stats: PropTypes.shape({
@@ -138,6 +142,7 @@ ChainerUIContainer.propTypes = {
   updateLineInAxis: PropTypes.func.isRequired,
   removeLineFromAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
+  toggleResultsConfigSelect: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
@@ -153,6 +158,7 @@ export default connect(mapStateToProps, {
   updateLineInAxis,
   removeLineFromAxis,
   updateAxisScale,
+  toggleResultsConfigSelect,
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateXAxisKey,
