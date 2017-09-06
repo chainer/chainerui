@@ -32,7 +32,7 @@ def register_handler(args):
     from chainer_ui.models.result import Result
 
     if contain_log_file(result_path):
-        new_result_path = Result(result_path)
+        new_result_path = Result(os.path.abspath(result_path))
         db_session.add(new_result_path)
         db_session.commit()
 
@@ -40,7 +40,7 @@ def register_handler(args):
         print('ng')
 
 
-def register_db(args):
+def db_handler(args):
     ''' db_handler '''
     print('db_handler', args)
 
@@ -51,6 +51,7 @@ def register_db(args):
         context = MigrationContext.configure(ENGINE.connect())
         current_rev = context.get_current_revision()
         print(current_rev)
+        print('plz use: `alembic upgrade head`')
 
     if args.type == 'drop':
         os.remove(DB_FILE_PATH)
@@ -62,24 +63,20 @@ def main():
     subparsers = parser.add_subparsers()
 
     parser_server = subparsers.add_parser(
-        'server', help='see `chainer-ui server -h`'
-    )
+        'server', help='see `chainer-ui server -h`')
     parser_server.add_argument(
-        '-p', '--port', required=False, type=int, help='port', default=5000
-    )
+        '-p', '--port', required=False, type=int, help='port', default=5000)
     parser_server.set_defaults(handler=server_handler)
 
     parser_register = subparsers.add_parser(
-        'register', help='see `chainer-ui register -h`'
-    )
+        'register', help='see `chainer-ui register -h`')
     parser_register.add_argument(
-        '-d', '--result-dir', required=True, type=str, help='result-dir'
-    )
+        '-d', '--result-dir', required=True, type=str, help='result-dir')
     parser_register.set_defaults(handler=register_handler)
 
     parser_db = subparsers.add_parser('db', help='see `chainer-ui db -h`')
     parser_db.add_argument('type', choices=['create', 'drop', 'migrate'])
-    parser_db.set_defaults(handler=register_db)
+    parser_db.set_defaults(handler=db_handler)
 
     args = parser.parse_args()
 

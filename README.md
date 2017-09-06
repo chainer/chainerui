@@ -8,6 +8,10 @@ Chainer UI is a visualization and management tool for chainer.
 git clone git@github.com:pfn-intern/intern-chainer-ui.git
 cd intern-chainer-ui
 pip install -r requirements.txt
+pip install -e .
+cd chainer_ui
+chainer-ui db create
+alembic upgrade head
 ```
 
 ## Quick start
@@ -16,14 +20,14 @@ pip install -r requirements.txt
 cd chainer_ui
 
 # register sample result directories
-python register.py ../_extension/example_results/18003
-python register.py ../_extension/example_results/18948
-python register.py ../_extension/example_results/19204
-python register.py ../_extension/example_results/19205
-python register.py ../_extension/example_results/19208
+chainer-ui register -d ../_extension/example_results/18003
+chainer-ui register -d ../_extension/example_results/18948
+chainer-ui register -d ../_extension/example_results/19204
+chainer-ui register -d ../_extension/example_results/19205
+chainer-ui register -d ../_extension/example_results/19208
 
 # run Chainer UI server
-python main.py
+chainer-ui server
 ```
 
 Then open http://localhost:5000/ .

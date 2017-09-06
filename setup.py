@@ -13,5 +13,10 @@ setup(
     author='',
     author_email='',
     url='https://github.com/pfn-intern/intern-chainer-ui',
-    packages=find_packages(exclude=('tests', 'docs'))
+    packages=find_packages(exclude=('tests', 'docs')),
+    entry_points={
+        "console_scripts": [
+            "chainer-ui=chainer_ui.app:main",
+        ]
+    }
 )

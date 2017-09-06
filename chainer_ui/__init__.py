@@ -2,7 +2,9 @@
 
 
 import os
-from flask import Flask, render_template, url_for
+
+
+from flask import Flask, render_template, url_for, jsonify, request
 from flask_apscheduler import APScheduler
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -14,7 +16,6 @@ PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
 DB_FILE_DIR = '/tmp'
 DB_FILE_PATH = os.path.join(DB_FILE_DIR, 'chainer-ui.db')
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DB_FILE_PATH
-SQLALCHEMY_MIGRATE_REPO = os.path.join(PACKAGE_DIR, 'migration_repository')
 ENGINE = create_engine(
     SQLALCHEMY_DATABASE_URI,
     convert_unicode=True,
@@ -26,6 +27,7 @@ DB_BASE = declarative_base()
 
 def create_db():
     ''' create_db '''
+    print('DB_FILE_PATH: ', DB_FILE_PATH)
     DB_BASE.metadata.create_all(ENGINE)
 
 
@@ -44,6 +46,7 @@ def create_app():
     app.config['DEBUG'] = True
 
     from chainer_ui.utils import crawl_result_table
+    from chainer_ui.models.result import Result
 
     class CrawlJobConfig(object):
         ''' job config '''
@@ -60,6 +63,7 @@ def create_app():
 
     scheduler = APScheduler()
     scheduler.init_app(app)
+    scheduler.start()
 
     def dated_url_for(endpoint, **values):
         ''' dated_url_for '''
@@ -70,12 +74,6 @@ def create_app():
                 values['_'] = int(os.stat(file_path).st_mtime)
         return url_for(endpoint, **values)
 
-    from chainer_ui.views.result import ResultAPI
-    app.add_url_rule(
-        '/api/v1/results/',
-        view_func=ResultAPI.as_view('results')
-    )
-
     @app.context_processor
     def override_url_for():
         ''' override_url_for '''
@@ -85,5 +83,24 @@ def create_app():
     def index():
         ''' / '''
         return render_template('index.html')
+
+    from chainer_ui.views.result import ResultAPI
+    from chainer_ui.views.result_command import ResultCommandAPI
+    result_resource = ResultAPI.as_view('result_resource')
+    result_command_resource = ResultCommandAPI.as_view(
+        'result_command_resource'
+    )
+    app.add_url_rule(
+        '/api/v1/results/',
+        defaults={'id': None}, view_func=result_resource, methods=['GET']
+    )
+    app.add_url_rule(
+        '/api/v1/results/<int:id>',
+        view_func=result_resource, methods=['PUT', 'DELETE']
+    )
+    app.add_url_rule(
+        '/api/v1/results/<int:id>/commands',
+        view_func=result_command_resource, methods=['POST']
+    )
 
     return app
