@@ -39,8 +39,9 @@ def dated_url_for(endpoint, **values):
 
 
 @APP.route('/')
-def index():
-    ''' / '''
+@APP.route('/results/<int:result_id>')
+def index(**kwargs):
+    ''' render react app '''
     return render_template('index.html')
 
 

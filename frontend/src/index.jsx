@@ -1,20 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import { AppContainer } from 'react-hot-loader';
-import configureStore from './store/configureStore';
-import ChainerUIContainer from './containers/ChainerUIContainer';
+import Root from './components/Root';
 
-
-const store = configureStore();
 
 const render = (Component, appNode) => {
   ReactDOM.render(
-    <Provider store={store}>
-      <AppContainer>
-        <Component />
-      </AppContainer>
-    </Provider>,
+    <AppContainer>
+      <Component />
+    </AppContainer>,
     appNode
   );
 };
@@ -22,13 +16,13 @@ const render = (Component, appNode) => {
 if (module.hot) {
   const appNode = document.createElement('div');
   document.body.appendChild(appNode);
-  render(ChainerUIContainer, appNode);
-  module.hot.accept('./containers/ChainerUIContainer', () => { render(ChainerUIContainer, appNode); });
+  render(Root, appNode);
+  module.hot.accept('./containers/Root', () => { render(Root, appNode); });
 } else {
   document.addEventListener('DOMContentLoaded', () => {
     const appNode = document.getElementById('chainer_ui-root');
     if (appNode) {
-      render(ChainerUIContainer, appNode);
+      render(Root, appNode);
     }
   });
 }
