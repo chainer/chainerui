@@ -64,3 +64,9 @@ export const defaultConfig = {
   global: {}
 };
 
+export const defaultLine = {
+  config: {
+    color: '#ABCDEF',
+    isVisible: true
+  }
+};

@@ -1,17 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { defaultLine } from '../constants';
 import { line2key, getSelectedResults, getSelectedLogKeys } from '../utils';
 import LinesConfiguratorRow from './LinesConfiguratorRow';
 import LineConfigurator from './LineConfigurator';
 
-
-const defaultLine = {
-  config: {
-    color: '#ABCDEF',
-    isVisible: true
-  }
-};
 
 const checkErrors = (line = defaultLine, isNewLine, targetLineKey, lines) => {
   const hasSameLine = isNewLine ?
@@ -131,6 +125,9 @@ class LinesConfigurator extends React.Component {
     const lineConfiguratorElems = [];
     selectedResults.forEach((resultId) => {
       const result = results[resultId];
+      if (!result) {
+        return;
+      }
       selectedLogKeys.forEach((logKey) => {
         const line = lines[line2key({ resultId, logKey })] || {
           ...defaultLine,

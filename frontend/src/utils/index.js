@@ -50,14 +50,14 @@ export const isJsonString = (str) => {
   return true;
 };
 
-export const getSelectedLogKeys = (logKeysConfig = {}) => (
-  Object.keys(logKeysConfig).filter((logKey) => (logKeysConfig[logKey].selected))
-);
-
 export const getSelectedResults = (resultsConfig = {}) => (
   Object.keys(resultsConfig).filter((resultId) => (
     resultsConfig[resultId].selected
   )).map((resultId) => (
     Number(resultId)
   ))
+);
+
+export const getSelectedLogKeys = (logKeysConfig = {}) => (
+  Object.keys(logKeysConfig).filter((logKey) => (logKeysConfig[logKey].selected))
 );
