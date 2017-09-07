@@ -100,13 +100,14 @@ const axes = (state = {}, action) => {
     axisName,
     line,
     lineKey,
+    logKey,
     scale = 'linear',
     xAxisKey,
     rangeType = 'auto',
     isMin, rangeNumber
   } = action;
   const axisConfig = state[axisName] || { axisName };
-  const { lines = [], scaleRange = {} } = axisConfig;
+  const { lines = [], logKeys = {}, scaleRange = {} } = axisConfig;
   const idx = isMin ? 0 : 1;
   const rangeConfig = scaleRange[scale] || {};
   const { rangeTypes = [], range = [] } = rangeConfig;
@@ -191,6 +192,23 @@ const axes = (state = {}, action) => {
           }
         }
       };
+    case ActionTypes.AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE: {
+      const logKeysConfig = logKeys[logKey] || {};
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          logKeys: {
+            ...logKeys,
+            [logKey]: {
+              ...logKeysConfig,
+              selected: !logKeysConfig.selected
+            }
+          }
+
+        }
+      };
+    }
     case ActionTypes.RESULT_DELETE_SUCCESS:
       if (action.response && action.response.result) {
         const resultId = action.response.result.id;

@@ -80,6 +80,7 @@ export const AXIS_CONFIG_SCALE_UPDATE = 'AXIS_CONFIG_SCALE_UPDATE';
 export const AXIS_CONFIG_X_KEY_UPDATE = 'AXIS_CONFIG_X_KEY_UPDATE';
 export const AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE';
 export const AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE';
+export const AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE = 'AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE';
 
 export const addLineToAxis = (axisName, line) => ({
   type: AXIS_CONFIG_LINE_ADD,
@@ -126,6 +127,12 @@ export const updateAxisScaleRangeNumber = (axisName, scale, isMin, rangeNumber) 
   scale,
   isMin,
   rangeNumber
+});
+
+export const toggleLogKeySelect = (axisName, logKey) => ({
+  type: AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE,
+  axisName,
+  logKey
 });
 
 // results config
