@@ -93,6 +93,7 @@ if __name__ == '__main__':
     init_db()
 
     PARSER = argparse.ArgumentParser(description='chainer ui')
+    PARSER.add_argument('-H', '--host', required=False, help='host', default='localhost')
     PARSER.add_argument('-p', '--port', required=False, type=int, help='port', default=5000)
     ARGS = PARSER.parse_args()
 
@@ -115,4 +116,4 @@ if __name__ == '__main__':
     SCHEDULER.init_app(APP)
 
     SCHEDULER.start()
-    APP.run(port=ARGS.port)
+    APP.run(host=ARGS.host, port=ARGS.port)
