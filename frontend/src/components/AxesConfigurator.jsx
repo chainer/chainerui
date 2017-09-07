@@ -49,6 +49,11 @@ const AxesConfigurator = (props) => {
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
         onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
       >
+        <AxisLogKeySelector
+          axisConfig={yRightAxis}
+          stats={stats}
+          onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
+        />
         <LinesConfigurator
           results={results}
           config={config}

@@ -76,20 +76,16 @@ const fetchState = (state = { results: '' }, action) => {
 };
 
 
-const axesStateWithoutResult = (state, resultId) => {
+const resultsConfigWithoutResult = (state, resultId) => {
   if (!Number.isInteger(resultId)) {
     return state;
   }
   const newState = {};
-  Object.keys(state).forEach((axisName) => {
-    const axisConfig = state[axisName];
-    const { lines = [] } = axisConfig;
-    newState[axisName] = {
-      ...axisConfig,
-      lines: lines.filter((line = {}) => (
-        line.resultId != null && line.resultId !== resultId
-      ))
-    };
+  Object.keys(state).forEach((id) => {
+    if (id === resultId) {
+      return;
+    }
+    newState[id] = state[id];
   });
   return newState;
 };
@@ -171,12 +167,6 @@ const axes = (state = {}, action) => {
         }
       };
     }
-    case ActionTypes.RESULT_DELETE_SUCCESS:
-      if (action.response && action.response.result) {
-        const resultId = action.response.result.id;
-        return axesStateWithoutResult(state, resultId);
-      }
-      return state;
     default:
       return state;
   }
@@ -197,6 +187,8 @@ const resultsConfig = (state = {}, action) => {
           selected: !resultConfig.selected
         }
       };
+    case ActionTypes.RESULT_DELETE_SUCCESS:
+      return resultsConfigWithoutResult(state, resultId);
     default:
       return state;
   }

@@ -62,7 +62,6 @@ class LinesConfigurator extends React.Component {
 
   handleEditingLineChange(newLine) {
     const errors = checkErrors(newLine);
-    console.log(newLine);
 
     this.setState({
       editingLine: newLine,
@@ -92,7 +91,6 @@ class LinesConfigurator extends React.Component {
   }
 
   render() {
-    console.log('render');
     const { axisName, results, config } = this.props;
     const { editingLine, errors, showError } = this.state;
     const { axes = {}, resultsConfig = {}, lines = {} } = config;
