@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   loadResults, updateResult, deleteResult,
-  addLineToAxis, updateLineInAxis, removeLineFromAxis,
+  updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
   toggleResultsConfigSelect,
   updateGlobalPollingRate, updateGlobalChartSize,
@@ -57,9 +57,7 @@ class ChainerUIContainer extends React.Component {
                 results={results}
                 stats={stats}
                 config={config}
-                onAxisConfigLineAdd={this.props.addLineToAxis}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
-                onAxisConfigLineRemove={this.props.removeLineFromAxis}
                 onAxisConfigScaleUpdate={this.props.updateAxisScale}
                 onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
                 onAxisConfigScaleRangeTypeUpdate={this.props.updateAxisScaleRangeType}
@@ -72,11 +70,6 @@ class ChainerUIContainer extends React.Component {
                 results={results}
                 stats={stats}
                 config={config}
-                onAxisConfigLineAdd={this.props.addLineToAxis}
-                onAxisConfigLineUpdate={this.props.updateLineInAxis}
-                onAxisConfigLineRemove={this.props.removeLineFromAxis}
-                onAxisConfigScaleUpdate={this.props.updateAxisScale}
-                onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
               />
               <ExperimentsTable
                 results={results}
@@ -148,9 +141,7 @@ ChainerUIContainer.propTypes = {
   loadResults: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
   deleteResult: PropTypes.func.isRequired,
-  addLineToAxis: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
-  removeLineFromAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
   toggleLogKeySelect: PropTypes.func.isRequired,
   toggleResultsConfigSelect: PropTypes.func.isRequired,
@@ -165,9 +156,7 @@ export default connect(mapStateToProps, {
   loadResults,
   updateResult,
   deleteResult,
-  addLineToAxis,
   updateLineInAxis,
-  removeLineFromAxis,
   updateAxisScale,
   toggleLogKeySelect,
   toggleResultsConfigSelect,

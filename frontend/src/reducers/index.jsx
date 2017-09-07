@@ -205,18 +205,14 @@ const resultsConfig = (state = {}, action) => {
 const lines = (state = {}, action) => {
   const { line, lineKey } = action;
   switch (action.type) {
-    case ActionTypes.LINES_CONFIG_LINE_ADD:
-      return state;
     case ActionTypes.LINES_CONFIG_LINE_UPDATE:
       if (lineKey == null) {
         return state;
       }
       return {
         ...state,
-        [lineKey]: line
+        [lineKey]: { ...state[lineKey], ...line }
       };
-    case ActionTypes.LINES_CONFIG_LINE_REMOVE:
-      return state;
     default:
       return state;
   }

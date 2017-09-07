@@ -126,27 +126,13 @@ export const toggleResultsConfigSelect = (resultId) => ({
 
 // lines config
 
-export const LINES_CONFIG_LINE_ADD = 'LINES_CONFIG_LINE_ADD';
 export const LINES_CONFIG_LINE_UPDATE = 'LINES_CONFIG_LINE_UPDATE';
-export const LINES_CONFIG_LINE_REMOVE = 'LINES_CONFIG_LINE_REMOVE';
-
-export const addLineToAxis = (axisName, line) => ({
-  type: LINES_CONFIG_LINE_ADD,
-  axisName,
-  line
-});
 
 export const updateLineInAxis = (axisName, lineKey, line) => ({
   type: LINES_CONFIG_LINE_UPDATE,
   axisName,
   lineKey,
   line
-});
-
-export const removeLineFromAxis = (axisName, lineKey) => ({
-  type: LINES_CONFIG_LINE_REMOVE,
-  axisName,
-  lineKey
 });
 
 
