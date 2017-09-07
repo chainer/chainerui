@@ -24,7 +24,7 @@ def main():
 
     arguments = parser.parse_args()
 
-    result_path = arguments.result
+    result_path = os.path.abspath(arguments.result)
 
     if contain_log_file(result_path):
         new_result_path = Result(result_path)
