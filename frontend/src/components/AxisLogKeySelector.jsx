@@ -20,7 +20,7 @@ class AxisLogKeySelector extends React.Component {
     const {
       axisConfig, stats
     } = this.props;
-    const logKeysConfig = axisConfig.logKeys || {};
+    const { logKeysConfig = {} } = axisConfig;
     const { logKeys } = stats;
 
     const axisLogKeySelectorRowElems = logKeys.map((logKey) => (

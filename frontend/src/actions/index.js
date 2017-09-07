@@ -73,33 +73,11 @@ export const createCommand = (resultId, commandName, commandBody) => {
 
 // axis config
 
-export const AXIS_CONFIG_LINE_ADD = 'AXIS_CONFIG_LINE_ADD';
-export const AXIS_CONFIG_LINE_UPDATE = 'AXIS_CONFIG_LINE_UPDATE';
-export const AXIS_CONFIG_LINE_REMOVE = 'AXIS_CONFIG_LINE_REMOVE';
 export const AXIS_CONFIG_SCALE_UPDATE = 'AXIS_CONFIG_SCALE_UPDATE';
 export const AXIS_CONFIG_X_KEY_UPDATE = 'AXIS_CONFIG_X_KEY_UPDATE';
 export const AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE';
 export const AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE';
 export const AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE = 'AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE';
-
-export const addLineToAxis = (axisName, line) => ({
-  type: AXIS_CONFIG_LINE_ADD,
-  axisName,
-  line
-});
-
-export const updateLineInAxis = (axisName, lineKey, line) => ({
-  type: AXIS_CONFIG_LINE_UPDATE,
-  axisName,
-  lineKey,
-  line
-});
-
-export const removeLineFromAxis = (axisName, lineKey) => ({
-  type: AXIS_CONFIG_LINE_REMOVE,
-  axisName,
-  lineKey
-});
 
 export const updateAxisScale = (axisName, scale) => ({
   type: AXIS_CONFIG_SCALE_UPDATE,
@@ -135,12 +113,40 @@ export const toggleLogKeySelect = (axisName, logKey) => ({
   logKey
 });
 
+
 // results config
+
 export const RESULTS_CONFIG_SELECT_TOGGLE = 'RESULTS_CONFIG_SELECT_TOGGLE';
 
 export const toggleResultsConfigSelect = (resultId) => ({
   type: RESULTS_CONFIG_SELECT_TOGGLE,
   resultId
+});
+
+
+// lines config
+
+export const LINES_CONFIG_LINE_ADD = 'LINES_CONFIG_LINE_ADD';
+export const LINES_CONFIG_LINE_UPDATE = 'LINES_CONFIG_LINE_UPDATE';
+export const LINES_CONFIG_LINE_REMOVE = 'LINES_CONFIG_LINE_REMOVE';
+
+export const addLineToAxis = (axisName, line) => ({
+  type: LINES_CONFIG_LINE_ADD,
+  axisName,
+  line
+});
+
+export const updateLineInAxis = (axisName, lineKey, line) => ({
+  type: LINES_CONFIG_LINE_UPDATE,
+  axisName,
+  lineKey,
+  line
+});
+
+export const removeLineFromAxis = (axisName, lineKey) => ({
+  type: LINES_CONFIG_LINE_REMOVE,
+  axisName,
+  lineKey
 });
 
 

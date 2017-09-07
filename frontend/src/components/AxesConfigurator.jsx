@@ -38,8 +38,8 @@ const AxesConfigurator = (props) => {
         />
         <LinesConfigurator
           results={results}
+          config={config}
           axisName="yLeftAxis"
-          lines={yLeftAxis.lines}
           onAxisConfigLineAdd={onAxisConfigLineAdd}
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
           onAxisConfigLineRemove={onAxisConfigLineRemove}
@@ -53,8 +53,8 @@ const AxesConfigurator = (props) => {
       >
         <LinesConfigurator
           results={results}
+          config={config}
           axisName="yRightAxis"
-          lines={yRightAxis.lines}
           onAxisConfigLineAdd={onAxisConfigLineAdd}
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
           onAxisConfigLineRemove={onAxisConfigLineRemove}
