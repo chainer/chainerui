@@ -2,3 +2,11 @@
   width: 240px;
 }
 
+.table-xy-overflow-scroll {
+  display: block;
+  width: 100%;
+  max-height: 400px;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+

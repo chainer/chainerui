@@ -1,8 +1,10 @@
-const line2key = (line) => `${line.resultId}_${line.logKey}`;
+export * from './polling';
 
-const line2dataKey = (line, axisName) => `${axisName}_${line2key(line)}`;
+export const line2key = (line) => `${line.resultId}_${line.logKey}`;
 
-const truncate = (string, options = {}) => {
+export const line2dataKey = (line, axisName) => `${axisName}_${line2key(line)}`;
+
+export const truncate = (string, options = {}) => {
   const { length = 20, restStr = '...', forward = false } = options;
   let str = string || '';
   const chars = [...str];
@@ -16,18 +18,35 @@ const truncate = (string, options = {}) => {
   return str;
 };
 
-const displayName = (result = {}) => (
+export const displayName = (result = {}) => (
   truncate(result.name) || truncate(result.pathName, { forward: true })
 );
 
-const line2name = (line, result = {}) => `${displayName(result)}/${line.logKey}`;
+export const line2name = (line, result = {}) => `${displayName(result)}/${line.logKey}`;
 
+export const getLastLogDict = (result = {}) => {
+  const { logs = [] } = result;
+  const lastLog = logs[logs.length - 1] || {};
+  const { logItems = [] } = lastLog;
+  const lastLogDict = {};
+  logItems.forEach((logItem) => { lastLogDict[logItem.key] = logItem.value; });
+  return lastLogDict;
+};
 
-export {
-  line2key,
-  line2name,
-  line2dataKey,
-  displayName,
-  truncate
+export const argValue2string = (argValue) => {
+  const emptyStr = '-';
+  if (argValue == null) {
+    return emptyStr;
+  }
+  return (typeof argValue === 'boolean') ? String(argValue) : argValue;
+};
+
+export const isJsonString = (str) => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
 };
 

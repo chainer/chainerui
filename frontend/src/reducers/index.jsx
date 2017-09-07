@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
@@ -54,6 +55,13 @@ const fetchState = (state = { results: '' }, action) => {
       return {
         ...state,
         results: action.type
+      };
+    case ActionTypes.COMMAND_CREATE_REQUEST:
+    case ActionTypes.COMMAND_CREATE_SUCCESS:
+    case ActionTypes.COMMAND_CREATE_FAILUE:
+      return {
+        ...state,
+        commandCreate: action.type
       };
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
       if (action.pollingRate === 0) {
@@ -226,7 +234,8 @@ const config = combineReducers({
 const rootReducer = combineReducers({
   entities,
   fetchState,
-  config: persistReducer({ key: 'config', storage }, config)
+  config: persistReducer({ key: 'config', storage }, config),
+  routing: routerReducer
 });
 
 export default rootReducer;

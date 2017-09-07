@@ -12,6 +12,9 @@ export const RESULT_UPDATE_FAILUE = 'RESULT_UPDATE_FAILUE';
 export const RESULT_DELETE_REQUEST = 'RESULT_DELETE_REQUEST';
 export const RESULT_DELETE_SUCCESS = 'RESULT_DELETE_SUCCESS';
 export const RESULT_DELETE_FAILUE = 'RESULT_DELETE_FAILUE';
+export const COMMAND_CREATE_REQUEST = 'COMMAND_CREATE_REQUEST';
+export const COMMAND_CREATE_SUCCESS = 'COMMAND_CREATE_SUCCESS';
+export const COMMAND_CREATE_FAILUE = 'COMMAND_CREATE_FAILUE';
 
 const fetchResults = () => ({
   [CALL_API]: {
@@ -46,6 +49,23 @@ export const deleteResult = (resultId) => {
       types: [RESULT_DELETE_REQUEST, RESULT_DELETE_SUCCESS, RESULT_DELETE_FAILUE],
       endpoint: `results/${resultId}`,
       method: 'DELETE'
+    }
+  };
+};
+
+export const createCommand = (resultId, commandName, commandBody) => {
+  if (!Number.isInteger(resultId)) {
+    throw new Error('Result id is invalid.');
+  }
+  return {
+    [CALL_API]: {
+      types: [COMMAND_CREATE_REQUEST, COMMAND_CREATE_SUCCESS, COMMAND_CREATE_FAILUE],
+      endpoint: `results/${resultId}/commands`,
+      method: 'POST',
+      body: {
+        name: commandName,
+        body: commandBody
+      }
     }
   };
 };

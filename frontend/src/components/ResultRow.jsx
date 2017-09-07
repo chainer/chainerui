@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { displayName, truncate } from '../utils';
+import { displayName, truncate, getLastLogDict, argValue2string } from '../utils';
 
 
 const emptyStr = '-';
@@ -57,25 +58,21 @@ class ResultRow extends React.Component {
   render() {
     const { resultName, showUnwatchModal } = this.state;
     const { result, stats } = this.props;
-    const { args, logs } = result;
+    const { args } = result;
 
-    const lastLog = logs[logs.length - 1] || {};
-    const { logItems = [] } = lastLog;
-    const lastLogDict = {};
-    logItems.forEach((logItem) => { lastLogDict[logItem.key] = logItem.value; });
+    const lastLogDict = getLastLogDict(result);
 
     const argDict = {};
     args.forEach((arg) => {
       argDict[arg.key] = arg.value;
     });
-    const argElems = stats.argKeys.map((argKey) => {
-      const content = (argKey in argDict) ? argDict[argKey] : emptyStr;
-      return (<td key={`args-${argKey}`}>{(typeof content === 'boolean') ? String(content) : content}</td>);
-    });
+    const argElems = stats.argKeys.map((argKey) => (<td key={`args-${argKey}`}>{argValue2string(argDict[argKey])}</td>));
 
     return (
       <tr className="result-row">
-        <td>{result.id}</td>
+        <td>
+          <Link to={`results/${result.id}`}>{result.id}</Link>
+        </td>
         <td>
           <input
             className="form-control result-name"
@@ -87,9 +84,11 @@ class ResultRow extends React.Component {
             onBlur={this.handleResultUpdate}
           />
         </td>
-        <td>{lastLogDict.epoch}</td>
-        <td>{lastLogDict.iteration}</td>
-        <td>{lastLogDict.elapsed_time}</td>
+        <td className="text-right">{lastLogDict.epoch}</td>
+        <td className="text-right">{lastLogDict.iteration}</td>
+        <td className="text-right">
+          {lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2)}
+        </td>
         {argElems}
         <td>
           <Button className="close" aria-label="Close" onClick={this.toggleUnwatchModal}>

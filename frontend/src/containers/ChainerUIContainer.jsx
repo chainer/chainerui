@@ -6,36 +6,22 @@ import {
   loadResults, updateResult, deleteResult,
   addLineToAxis, updateLineInAxis, removeLineFromAxis,
   updateAxisScale,
-  updateGlobalPollingRate,
+  updateGlobalPollingRate, updateGlobalChartSize,
   updateXAxisKey,
-  updateAxisScaleRangeType, updateAxisScaleRangeNumber,
-  updateGlobalChartSize
+  updateAxisScaleRangeType, updateAxisScaleRangeNumber
 } from '../actions';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
+import { defaultConfig } from '../constants';
+import { startPolling, stopPolling } from '../utils';
 
-let resultsPollingTimer;
-
-const startResultsPolling = (func, pollingRate) => {
-  if (pollingRate > 0) {
-    resultsPollingTimer = setInterval(func, pollingRate);
-  }
-};
-
-const stopPolling = (timer) => {
-  clearInterval(timer);
-};
 
 class ChainerUIContainer extends React.Component {
-  componentWillMount() {
-    this.props.loadResults();
-  }
-
   componentDidMount() {
     const { pollingRate } = this.props.config.global;
-    startResultsPolling(this.props.loadResults, pollingRate);
+    this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -43,13 +29,13 @@ class ChainerUIContainer extends React.Component {
     const nextPollingRate = nextProps.config.global.pollingRate;
 
     if (currentPollingRate !== nextPollingRate) {
-      stopPolling(resultsPollingTimer);
-      startResultsPolling(this.props.loadResults, nextPollingRate);
+      stopPolling(this.resultsPollingTimer);
+      this.resultsPollingTimer = startPolling(this.props.loadResults, nextPollingRate);
     }
   }
 
   componentWillUnmount() {
-    stopPolling(resultsPollingTimer);
+    stopPolling(this.resultsPollingTimer);
   }
 
   render() {
@@ -121,11 +107,6 @@ const mapEntitiesToStats = (entities) => {
   return { axes, argKeys };
 };
 
-const defaultConfig = {
-  axes: {},
-  global: {}
-};
-
 const mapStateToProps = (state) => {
   const {
     entities,
@@ -158,10 +139,10 @@ ChainerUIContainer.propTypes = {
   removeLineFromAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
+  updateGlobalChartSize: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
-  updateAxisScaleRangeNumber: PropTypes.func.isRequired,
-  updateGlobalChartSize: PropTypes.func.isRequired
+  updateAxisScaleRangeNumber: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, {
@@ -173,9 +154,9 @@ export default connect(mapStateToProps, {
   removeLineFromAxis,
   updateAxisScale,
   updateGlobalPollingRate,
+  updateGlobalChartSize,
   updateXAxisKey,
   updateAxisScaleRangeType,
-  updateAxisScaleRangeNumber,
-  updateGlobalChartSize
+  updateAxisScaleRangeNumber
 })(ChainerUIContainer);
 
