@@ -6,8 +6,11 @@ import os
 
 
 from chainer_ui import create_app, create_db, create_db_session
-from chainer_ui import DB_FILE_PATH, ENGINE
+from chainer_ui import DB_FILE_PATH, ENGINE, SQLALCHEMY_DATABASE_URI, PACKAGE_DIR
+from alembic import context
 from alembic.migration import MigrationContext
+from alembic.command import upgrade
+from alembic.config import Config
 
 
 def server_handler(args):
@@ -48,10 +51,16 @@ def db_handler(args):
         create_db()
 
     if args.type == 'migrate':
-        context = MigrationContext.configure(ENGINE.connect())
-        current_rev = context.get_current_revision()
+        ctx = MigrationContext.configure(ENGINE.connect())
+        current_rev = ctx.get_current_revision()
         print(current_rev)
         print('plz use: `alembic upgrade head`')
+
+    if args.type == 'upgrade':
+        ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
+        config = Config(ini_path)
+        config.set_main_option("script_location", os.path.join(PACKAGE_DIR, 'migration'))
+        upgrade(config, 'head')
 
     if args.type == 'drop':
         os.remove(DB_FILE_PATH)
@@ -75,7 +84,9 @@ def main():
     parser_register.set_defaults(handler=register_handler)
 
     parser_db = subparsers.add_parser('db', help='see `chainer-ui db -h`')
-    parser_db.add_argument('type', choices=['create', 'drop', 'migrate'])
+    parser_db.add_argument('type', choices=[
+        'create', 'drop', 'migrate', 'upgrade'
+    ])
     parser_db.set_defaults(handler=db_handler)
 
     args = parser.parse_args()

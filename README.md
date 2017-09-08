@@ -9,9 +9,8 @@ git clone git@github.com:pfn-intern/intern-chainer-ui.git
 cd intern-chainer-ui
 pip install -r requirements.txt
 pip install -e .
-cd chainer_ui
 chainer-ui db create
-alembic upgrade head
+chainer-ui db upgrade
 ```
 
 ## Quick start
