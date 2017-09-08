@@ -80,8 +80,9 @@ def create_app():
         return dict(url_for=dated_url_for)
 
     @app.route('/')
-    def index():
-        ''' / '''
+    @app.route('/results/<int:result_id>')
+    def index(**kwargs):
+        ''' render react app '''
         return render_template('index.html')
 
     from chainer_ui.views.result import ResultAPI
