@@ -8,37 +8,6 @@ import { displayName } from '../utils';
 const RESULT_NONE = -1;
 const LOG_KEY_NONE = '';
 
-const getLogKeys = (result = {}) => {
-  const { logs = [] } = result;
-  const logKeySet = {};
-  logs.forEach((log) => {
-    const { logItems = [] } = log;
-    logItems.forEach((logItem) => {
-      logKeySet[logItem.key] = true;
-    });
-  });
-  return Object.keys(logKeySet);
-};
-
-const createResultOptionElems = (results = []) => [
-  <option value={RESULT_NONE} key={RESULT_NONE} disabled>-- select result --</option>,
-  ...Object.keys(results).map((resultId) => {
-    const result = results[resultId];
-    return (
-      <option value={result.id} key={result.id}>{result.id}: {displayName(result)}</option>
-    );
-  })
-];
-
-const createLogKeyOptionElems = (result = {}) => {
-  const logKeys = getLogKeys(result);
-  return [
-    <option value={LOG_KEY_NONE} key={LOG_KEY_NONE} disabled>-- select log key --</option>,
-    ...logKeys.map((logKey) => (
-      <option value={logKey} key={logKey}>{logKey}</option>
-    ))
-  ];
-};
 
 class LineConfigurator extends React.Component {
   constructor() {
@@ -105,11 +74,14 @@ class LineConfigurator extends React.Component {
       backgroundColor: color
     };
 
-    const resultOptionElems = createResultOptionElems(results);
-    const logKeyOptionElems = createLogKeyOptionElems(result);
-
     return (
       <div className="line-configurator">
+        <dl>
+          <dt>result name</dt>
+          <dd>{displayName(result)}</dd>
+          <dt>log key</dt>
+          <dd>{logKey}</dd>
+        </dl>
         <Form>
           <FormGroup>
             <Label>color</Label>
@@ -131,39 +103,6 @@ class LineConfigurator extends React.Component {
             <Button onClick={this.togglePicker} size="sm" className="my-2">Toggle color picker</Button>
           </FormGroup>
           <FormGroup>
-            <Label for="line-configurator-result-select">result</Label><br />
-            <Input
-              className={`form-control${errors.resultIdNone ? ' is-invalid' : ''}`}
-              type="select"
-              name="select"
-              id="line-configurator-result-select"
-              value={resultId}
-              onChange={this.handleResultChange}
-            >
-              {resultOptionElems}
-            </Input>
-            <div className="invalid-feedback">
-              Select a result!!
-            </div>
-          </FormGroup>
-          <FormGroup>
-            <Label for="line-configurator-log-key-select">log key</Label><br />
-            <Input
-              className={`form-control${errors.logKeyNone ? ' is-invalid' : ''}`}
-              type="select"
-              name="select"
-              id="line-configurator-log-key-select"
-              value={logKey}
-              disabled={resultId === RESULT_NONE}
-              onChange={this.handleLogKeyChange}
-            >
-              {logKeyOptionElems}
-            </Input>
-            <div className="invalid-feedback">
-              Select a log key!!
-            </div>
-          </FormGroup>
-          <FormGroup>
             <Row>
               <Label for="line-configurator-select-visibility" sm={{ size: 2 }}>visibility</Label>
               <Col sm={{ size: 10 }}>
@@ -172,7 +111,7 @@ class LineConfigurator extends React.Component {
                     <Input
                       type="checkbox"
                       id="line-configurator-select-visibility"
-                      defaultChecked={isVisible}
+                      checked={isVisible}
                       onChange={this.handleVisibilityChange}
                     />{' '}
                   </Label>
