@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   loadResults, updateResult, deleteResult,
+  resetConfig,
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
   toggleResultsConfigSelect,
@@ -57,6 +58,7 @@ class ChainerUIContainer extends React.Component {
                 results={results}
                 stats={stats}
                 config={config}
+                onConfigReset={this.props.resetConfig}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
                 onAxisConfigScaleUpdate={this.props.updateAxisScale}
                 onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
@@ -141,6 +143,7 @@ ChainerUIContainer.propTypes = {
   loadResults: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
   deleteResult: PropTypes.func.isRequired,
+  resetConfig: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
   toggleLogKeySelect: PropTypes.func.isRequired,
@@ -156,6 +159,7 @@ export default connect(mapStateToProps, {
   loadResults,
   updateResult,
   deleteResult,
+  resetConfig,
   updateLineInAxis,
   updateAxisScale,
   toggleLogKeySelect,

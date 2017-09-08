@@ -71,6 +71,15 @@ export const createCommand = (resultId, commandName, commandBody) => {
 };
 
 
+// config
+
+export const CONFIG_RESET = 'CONFIG_RESET';
+
+export const resetConfig = () => ({
+  type: CONFIG_RESET
+});
+
+
 // axis config
 
 export const AXIS_CONFIG_SCALE_UPDATE = 'AXIS_CONFIG_SCALE_UPDATE';
