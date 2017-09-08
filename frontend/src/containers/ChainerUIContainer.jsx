@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   loadResults, updateResult, deleteResult,
-  updateLineInAxis,
-  updateAxisScale, toggleLogKeySelect,
-  toggleResultsConfigSelect,
+  addLineToAxis, updateLineInAxis, removeLineFromAxis,
+  updateAxisScale,
   updateGlobalPollingRate, updateGlobalChartSize,
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber
@@ -55,14 +54,14 @@ class ChainerUIContainer extends React.Component {
             <div className="col-md-4 col-lg-3">
               <SideBar
                 results={results}
-                stats={stats}
                 config={config}
+                onAxisConfigLineAdd={this.props.addLineToAxis}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
+                onAxisConfigLineRemove={this.props.removeLineFromAxis}
                 onAxisConfigScaleUpdate={this.props.updateAxisScale}
                 onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
                 onAxisConfigScaleRangeTypeUpdate={this.props.updateAxisScaleRangeType}
                 onAxisConfigScaleRangeNumberUpdate={this.props.updateAxisScaleRangeNumber}
-                onAxisConfigLogKeySelectToggle={this.props.toggleLogKeySelect}
               />
             </div>
             <div className="col-md-8 col-lg-9">
@@ -70,12 +69,15 @@ class ChainerUIContainer extends React.Component {
                 results={results}
                 stats={stats}
                 config={config}
+                onAxisConfigLineAdd={this.props.addLineToAxis}
+                onAxisConfigLineUpdate={this.props.updateLineInAxis}
+                onAxisConfigLineRemove={this.props.removeLineFromAxis}
+                onAxisConfigScaleUpdate={this.props.updateAxisScale}
+                onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
               />
               <ExperimentsTable
                 results={results}
                 stats={stats}
-                config={config}
-                onResultsConfigSelectToggle={this.props.toggleResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
                 onResultDelete={this.props.deleteResult}
               />
@@ -88,28 +90,21 @@ class ChainerUIContainer extends React.Component {
 }
 
 const mapEntitiesToStats = (entities) => {
+  const { results = {} } = entities;
+  const argKeySet = {};
+  Object.keys(results).forEach((resultId) => {
+    const result = results[resultId];
+    result.args.forEach((arg) => { argKeySet[arg.key] = true; });
+  });
+  const argKeys = Object.keys(argKeySet);
+
   const axes = {
     xAxis: {},
     yLeftAxis: {},
     yRightAxis: {}
   };
 
-  const { results = {} } = entities;
-  const argKeySet = {};
-  const logKeySet = {};
-  Object.keys(results).forEach((resultId) => {
-    const result = results[resultId];
-    result.args.forEach((arg) => { argKeySet[arg.key] = true; });
-    result.logs.forEach((log) => {
-      log.logItems.forEach((logItem) => {
-        logKeySet[logItem.key] = true;
-      });
-    });
-  });
-  const argKeys = Object.keys(argKeySet);
-  const logKeys = Object.keys(logKeySet).sort();
-
-  return { axes, argKeys, logKeys };
+  return { axes, argKeys };
 };
 
 const mapStateToProps = (state) => {
@@ -130,21 +125,19 @@ ChainerUIContainer.propTypes = {
   }).isRequired,
   config: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
-    resultsConfig: PropTypes.objectOf(PropTypes.any),
     global: PropTypes.objectOf(PropTypes.any)
   }).isRequired,
   stats: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
-    argKeys: PropTypes.arrayOf(PropTypes.string),
-    logKeys: PropTypes.arrayOf(PropTypes.string)
+    argKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   loadResults: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
   deleteResult: PropTypes.func.isRequired,
+  addLineToAxis: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
+  removeLineFromAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
-  toggleLogKeySelect: PropTypes.func.isRequired,
-  toggleResultsConfigSelect: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
@@ -156,10 +149,10 @@ export default connect(mapStateToProps, {
   loadResults,
   updateResult,
   deleteResult,
+  addLineToAxis,
   updateLineInAxis,
+  removeLineFromAxis,
   updateAxisScale,
-  toggleLogKeySelect,
-  toggleResultsConfigSelect,
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateXAxisKey,

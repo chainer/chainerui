@@ -6,13 +6,11 @@ import AxesConfigurator from './AxesConfigurator';
 const SideBar = (props) => {
   const {
     results,
-    stats,
     config,
-    onAxisConfigLineUpdate,
+    onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
     onAxisConfigScaleUpdate,
     onAxisConfigXKeyUpdate,
-    onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate,
-    onAxisConfigLogKeySelectToggle
+    onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
   } = props;
   return (
     <div className="side-bar">
@@ -20,14 +18,14 @@ const SideBar = (props) => {
         {
         ...{
           results,
-          stats,
           config,
+          onAxisConfigLineAdd,
           onAxisConfigLineUpdate,
+          onAxisConfigLineRemove,
           onAxisConfigScaleUpdate,
           onAxisConfigXKeyUpdate,
           onAxisConfigScaleRangeTypeUpdate,
-          onAxisConfigScaleRangeNumberUpdate,
-          onAxisConfigLogKeySelectToggle
+          onAxisConfigScaleRangeNumberUpdate
         }
         }
       />
@@ -37,9 +35,6 @@ const SideBar = (props) => {
 
 SideBar.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
-  stats: PropTypes.shape({
-    logKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
   config: PropTypes.shape({
     axes: PropTypes.shape({
       xAxis: PropTypes.any,
@@ -47,12 +42,13 @@ SideBar.propTypes = {
       yRightAxis: PropTypes.any
     })
   }).isRequired,
+  onAxisConfigLineAdd: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
+  onAxisConfigLineRemove: PropTypes.func.isRequired,
   onAxisConfigScaleUpdate: PropTypes.func.isRequired,
   onAxisConfigXKeyUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
-  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
-  onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
+  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired
 };
 
 SideBar.defaultProps = {

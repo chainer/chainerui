@@ -12,6 +12,7 @@ class LinesConfiguratorRow extends React.Component {
     super(props);
 
     this.handleEditClick = this.handleEditClick.bind(this);
+    this.handleRemoveClick = this.handleRemoveClick.bind(this);
     this.handleLineVisibilityUpdate = this.handleLineVisibilityUpdate.bind(this);
   }
 
@@ -21,6 +22,14 @@ class LinesConfiguratorRow extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     onEditClick(line);
+  }
+
+  handleRemoveClick(e) {
+    const { line, onRemove } = this.props;
+
+    e.preventDefault();
+    e.stopPropagation();
+    onRemove(line2key(line));
   }
 
   handleLineVisibilityUpdate(e) {
@@ -55,7 +64,7 @@ class LinesConfiguratorRow extends React.Component {
                 <Label check>
                   <Input
                     type="checkbox"
-                    checked={isVisible}
+                    defaultChecked={isVisible}
                     onChange={this.handleLineVisibilityUpdate}
                   />{' '}
                 </Label>
@@ -71,6 +80,16 @@ class LinesConfiguratorRow extends React.Component {
           </Col>
           <Col>{displayName(result)}</Col>
           <Col>{line.logKey}</Col>
+          <Col xs="1">
+            <button
+              type="button"
+              className="close"
+              aria-label="Close"
+              onClick={this.handleRemoveClick}
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </Col>
         </Row>
       </div>
     );
@@ -92,11 +111,13 @@ LinesConfiguratorRow.propTypes = {
     logs: PropTypes.arrayOf(PropTypes.any)
   }).isRequired,
   onEditClick: PropTypes.func,
+  onRemove: PropTypes.func,
   onVisibilityUpdate: PropTypes.func
 };
 
 LinesConfiguratorRow.defaultProps = {
   onEditClick: () => {},
+  onRemove: () => {},
   onVisibilityUpdate: () => {}
 };
 

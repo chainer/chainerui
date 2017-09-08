@@ -76,10 +76,7 @@ AxisConfigurator.propTypes = {
       })
     )
   }).isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(React.PropTypes.node),
-    PropTypes.node
-  ]),
+  children: PropTypes.element,
   onChangeScale: PropTypes.func.isRequired,
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired

@@ -3,6 +3,7 @@ import { routerReducer } from 'react-router-redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
+import { line2key } from '../utils';
 import { chartSizeOptions, pollingOptions } from '../constants';
 
 
@@ -76,16 +77,20 @@ const fetchState = (state = { results: '' }, action) => {
 };
 
 
-const resultsConfigWithoutResult = (state, resultId) => {
+const axesStateWithoutResult = (state, resultId) => {
   if (!Number.isInteger(resultId)) {
     return state;
   }
   const newState = {};
-  Object.keys(state).forEach((id) => {
-    if (id === resultId) {
-      return;
-    }
-    newState[id] = state[id];
+  Object.keys(state).forEach((axisName) => {
+    const axisConfig = state[axisName];
+    const { lines = [] } = axisConfig;
+    newState[axisName] = {
+      ...axisConfig,
+      lines: lines.filter((line = {}) => (
+        line.resultId != null && line.resultId !== resultId
+      ))
+    };
   });
   return newState;
 };
@@ -93,19 +98,55 @@ const resultsConfigWithoutResult = (state, resultId) => {
 const axes = (state = {}, action) => {
   const {
     axisName,
-    logKey,
+    line,
+    lineKey,
     scale = 'linear',
     xAxisKey,
     rangeType = 'auto',
     isMin, rangeNumber
   } = action;
   const axisConfig = state[axisName] || { axisName };
-  const { logKeysConfig = {}, scaleRange = {} } = axisConfig;
+  const { lines = [], scaleRange = {} } = axisConfig;
   const idx = isMin ? 0 : 1;
   const rangeConfig = scaleRange[scale] || {};
   const { rangeTypes = [], range = [] } = rangeConfig;
 
   switch (action.type) {
+    case ActionTypes.AXIS_CONFIG_LINE_ADD:
+      if (line == null) {
+        return state;
+      }
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          lines: [...lines, line]
+        }
+      };
+    case ActionTypes.AXIS_CONFIG_LINE_UPDATE:
+      for (let i = 0; i < lines.length; i += 1) {
+        if (line2key(lines[i]) === lineKey) {
+          return {
+            ...state,
+            [axisName]: {
+              ...axisConfig,
+              lines: Object.assign([], lines, { [i]: line })
+            }
+          };
+        }
+      }
+      return state;
+    case ActionTypes.AXIS_CONFIG_LINE_REMOVE:
+      if (lineKey == null) {
+        return state;
+      }
+      return {
+        ...state,
+        [axisName]: {
+          ...axisConfig,
+          lines: [...lines.filter((l) => line2key(l) !== lineKey)]
+        }
+      };
     case ActionTypes.AXIS_CONFIG_SCALE_UPDATE:
       return {
         ...state,
@@ -150,61 +191,12 @@ const axes = (state = {}, action) => {
           }
         }
       };
-    case ActionTypes.AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE: {
-      const logKeyConfig = logKeysConfig[logKey] || {};
-      return {
-        ...state,
-        [axisName]: {
-          ...axisConfig,
-          logKeysConfig: {
-            ...logKeysConfig,
-            [logKey]: {
-              ...logKeyConfig,
-              selected: !logKeyConfig.selected
-            }
-          }
-
-        }
-      };
-    }
-    default:
-      return state;
-  }
-};
-
-const resultsConfig = (state = {}, action) => {
-  const { resultId } = action;
-  const resultConfig = state[resultId] || {};
-  switch (action.type) {
-    case ActionTypes.RESULTS_CONFIG_SELECT_TOGGLE:
-      if (resultId == null) {
-        return state;
-      }
-      return {
-        ...state,
-        [Number(resultId)]: {
-          ...resultConfig,
-          selected: !resultConfig.selected
-        }
-      };
     case ActionTypes.RESULT_DELETE_SUCCESS:
-      return resultsConfigWithoutResult(state, resultId);
-    default:
-      return state;
-  }
-};
-
-const lines = (state = {}, action) => {
-  const { line, lineKey } = action;
-  switch (action.type) {
-    case ActionTypes.LINES_CONFIG_LINE_UPDATE:
-      if (lineKey == null) {
-        return state;
+      if (action.response && action.response.result) {
+        const resultId = action.response.result.id;
+        return axesStateWithoutResult(state, resultId);
       }
-      return {
-        ...state,
-        [lineKey]: { ...state[lineKey], ...line }
-      };
+      return state;
     default:
       return state;
   }
@@ -236,8 +228,6 @@ const global = (state = defaultGlobaState, action) => {
 
 const config = combineReducers({
   axes,
-  resultsConfig,
-  lines,
   global
 });
 
