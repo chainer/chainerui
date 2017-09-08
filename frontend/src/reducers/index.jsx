@@ -226,10 +226,19 @@ const global = (state = defaultGlobaState, action) => {
   }
 };
 
-const config = combineReducers({
+const configReducers = combineReducers({
   axes,
   global
 });
+
+const config = (state, action) => {
+  switch (action.type) {
+    case ActionTypes.CONFIG_RESET:
+      return configReducers(undefined, action);
+    default:
+      return configReducers(state, action);
+  }
+};
 
 const rootReducer = combineReducers({
   entities,

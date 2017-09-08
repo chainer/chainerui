@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   loadResults, updateResult, deleteResult,
+  resetConfig,
   addLineToAxis, updateLineInAxis, removeLineFromAxis,
   updateAxisScale,
   updateGlobalPollingRate, updateGlobalChartSize,
@@ -55,6 +56,7 @@ class ChainerUIContainer extends React.Component {
               <SideBar
                 results={results}
                 config={config}
+                onConfigReset={this.props.resetConfig}
                 onAxisConfigLineAdd={this.props.addLineToAxis}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
                 onAxisConfigLineRemove={this.props.removeLineFromAxis}
@@ -134,6 +136,7 @@ ChainerUIContainer.propTypes = {
   loadResults: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
   deleteResult: PropTypes.func.isRequired,
+  resetConfig: PropTypes.func.isRequired,
   addLineToAxis: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
   removeLineFromAxis: PropTypes.func.isRequired,
@@ -149,6 +152,7 @@ export default connect(mapStateToProps, {
   loadResults,
   updateResult,
   deleteResult,
+  resetConfig,
   addLineToAxis,
   updateLineInAxis,
   removeLineFromAxis,

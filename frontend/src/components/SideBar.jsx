@@ -1,37 +1,78 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+  Button,
+  Modal, ModalHeader, ModalFooter, ModalBody
+} from 'reactstrap';
 import AxesConfigurator from './AxesConfigurator';
 
 
-const SideBar = (props) => {
-  const {
-    results,
-    config,
-    onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
-    onAxisConfigScaleUpdate,
-    onAxisConfigXKeyUpdate,
-    onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
-  } = props;
-  return (
-    <div className="side-bar">
-      <AxesConfigurator
-        {
-        ...{
-          results,
-          config,
-          onAxisConfigLineAdd,
-          onAxisConfigLineUpdate,
-          onAxisConfigLineRemove,
-          onAxisConfigScaleUpdate,
-          onAxisConfigXKeyUpdate,
-          onAxisConfigScaleRangeTypeUpdate,
-          onAxisConfigScaleRangeNumberUpdate
-        }
-        }
-      />
-    </div>
-  );
-};
+class SideBar extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleModalToggle = this.handleModalToggle.bind(this);
+    this.handleConfigReset = this.handleConfigReset.bind(this);
+
+    this.state = {
+      showModal: false
+    };
+  }
+
+  handleModalToggle() {
+    this.setState({
+      showModal: !this.state.showModal
+    });
+  }
+
+  handleConfigReset() {
+    this.handleModalToggle();
+    this.props.onConfigReset();
+  }
+
+  render() {
+    const {
+      results,
+      config,
+      onAxisConfigLineAdd, onAxisConfigLineUpdate, onAxisConfigLineRemove,
+      onAxisConfigScaleUpdate,
+      onAxisConfigXKeyUpdate,
+      onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
+    } = this.props;
+    return (
+      <div className="side-bar">
+        <AxesConfigurator
+          {
+          ...{
+            results,
+            config,
+            onAxisConfigLineAdd,
+            onAxisConfigLineUpdate,
+            onAxisConfigLineRemove,
+            onAxisConfigScaleUpdate,
+            onAxisConfigXKeyUpdate,
+            onAxisConfigScaleRangeTypeUpdate,
+            onAxisConfigScaleRangeNumberUpdate
+          }
+          }
+        />
+        <Button color="primary" className="m-2" onClick={this.handleModalToggle}>
+        Reset settings
+        </Button>
+        <Modal isOpen={this.state.showModal} toggle={this.handleModalToggle} className="">
+          <ModalHeader toggle={this.handleModalToggle}>Reset settings</ModalHeader>
+          <ModalBody>
+            Are you sure to reset settings?
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={this.handleModalToggle}>Cancel</Button>
+            <Button color="primary" className="mx-2" onClick={this.handleConfigReset}>Reset</Button>
+          </ModalFooter>
+        </Modal>
+      </div>
+    );
+  }
+}
 
 SideBar.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
@@ -42,6 +83,7 @@ SideBar.propTypes = {
       yRightAxis: PropTypes.any
     })
   }).isRequired,
+  onConfigReset: PropTypes.func.isRequired,
   onAxisConfigLineAdd: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigLineRemove: PropTypes.func.isRequired,
