@@ -12,6 +12,8 @@ from chainer_ui.models.argument import Argument
 from chainer_ui.models.command import Command
 from chainer_ui.models.snapshot import Snapshot
 
+from chainer_ui.tasks import collect_results, crawl_results
+
 
 def explore_log_file(result_path, log_file_name):
     ''' explore_log_file '''
@@ -48,26 +50,29 @@ def explore_result_dir(path):
 def crawl_result_table():
     ''' crawl_result_table '''
 
-    db_session = create_db_session()
+    crawl_results()
 
-    for result in db_session.query(Result).all():
-        crawl_result = explore_result_dir(result.path_name)
+    collect_results()
+    # db_session = create_db_session()
 
-        if result.args is None:
-            result.args = Argument(json.dumps(crawl_result['args']))
+    # for result in db_session.query(Result).all():
+    #     crawl_result = explore_result_dir(result.path_name)
 
-        if len(result.logs) < len(crawl_result['logs']):
-            for log in crawl_result['logs'][len(result.logs):]:
-                result.logs.append(Log(json.dumps(log)))
+    #     if result.args is None:
+    #         result.args = Argument(json.dumps(crawl_result['args']))
 
-        result.commands = [
-            Command(cmd['name'], json.dumps(cmd['body'], indent=4))
-            for cmd in crawl_result['commands']
-        ]
+    #     if len(result.logs) < len(crawl_result['logs']):
+    #         for log in crawl_result['logs'][len(result.logs):]:
+    #             result.logs.append(Log(json.dumps(log)))
 
-        result.snapshots = [
-            Snapshot(s, int(s.split('snapshot_iter_')[1]))
-            for s in crawl_result['snapshots']
-        ]
+    #     result.commands = [
+    #         Command(cmd['name'], json.dumps(cmd['body'], indent=4))
+    #         for cmd in crawl_result['commands']
+    #     ]
 
-        db_session.commit()
+    #     result.snapshots = [
+    #         Snapshot(s, int(s.split('snapshot_iter_')[1]))
+    #         for s in crawl_result['snapshots']
+    #     ]
+
+    #     db_session.commit()
