@@ -59,6 +59,14 @@ export const pollingOptions = [
 
 export const defaultConfig = {
   axes: {},
+  resultsConfig: {},
+  lines: {},
   global: {}
 };
 
+export const defaultLine = {
+  config: {
+    color: '#ABCDEF',
+    isVisible: true
+  }
+};

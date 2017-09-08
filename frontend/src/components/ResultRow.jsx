@@ -11,6 +11,7 @@ class ResultRow extends React.Component {
   constructor(props) {
     super(props);
 
+    this.handleSelectToggle = this.handleSelectToggle.bind(this);
     this.handleResultNameChange = this.handleResultNameChange.bind(this);
     this.handleResultNameKeyPress = this.handleResultNameKeyPress.bind(this);
     this.handleResultUpdate = this.handleResultUpdate.bind(this);
@@ -21,6 +22,11 @@ class ResultRow extends React.Component {
     this.state = {
       resultName: result.name
     };
+  }
+
+  handleSelectToggle() {
+    const { result, onResultsConfigSelectToggle } = this.props;
+    onResultsConfigSelectToggle(result.id);
   }
 
   handleResultNameChange(e) {
@@ -57,7 +63,7 @@ class ResultRow extends React.Component {
 
   render() {
     const { resultName, showUnwatchModal } = this.state;
-    const { result, stats } = this.props;
+    const { result, stats, resultConfig } = this.props;
     const { args } = result;
 
     const lastLogDict = getLastLogDict(result);
@@ -70,6 +76,9 @@ class ResultRow extends React.Component {
 
     return (
       <tr className="result-row">
+        <td>
+          <input type="checkbox" checked={resultConfig.selected} onChange={this.handleSelectToggle} />
+        </td>
         <td>
           <Link to={`results/${result.id}`}>{result.id}</Link>
         </td>
@@ -121,6 +130,10 @@ ResultRow.propTypes = {
   stats: PropTypes.shape({
     argKeys: PropTypes.arrayOf(PropTypes.string)
   }),
+  resultConfig: PropTypes.shape({
+    selected: PropTypes.bool
+  }),
+  onResultsConfigSelectToggle: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
   onResultDelete: PropTypes.func.isRequired
 };
@@ -128,7 +141,8 @@ ResultRow.propTypes = {
 ResultRow.defaultProps = {
   stats: {
     argKeys: []
-  }
+  },
+  resultConfig: { selected: false }
 };
 
 export default ResultRow;
