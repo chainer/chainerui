@@ -1,33 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { line2key } from '../utils';
+import { defaultLine } from '../constants';
+import { line2key, getSelectedResults, getSelectedLogKeys } from '../utils';
 import LinesConfiguratorRow from './LinesConfiguratorRow';
 import LineConfigurator from './LineConfigurator';
 
 
-const defaultLine = {
-  config: {
-    color: '#ABCDEF',
-    isVisible: true
-  }
-};
-
-const checkErrors = (line = defaultLine, isNewLine, targetLineKey, lines) => {
-  const hasSameLine = isNewLine ?
-    lines.some((l) => line2key(l) === line2key(line)) :
-    (targetLineKey !== line2key(line) && lines.some((l) => line2key(l) === line2key(line)));
-
-  return {
-    resultIdNone: !Number.isInteger(line.resultId),
-    logKeyNone: !line.logKey,
-    hasSameLine
-  };
-};
+const checkErrors = (line = defaultLine) => ({
+  resultIdNone: !Number.isInteger(line.resultId),
+  logKeyNone: !line.logKey
+});
 
 const hasError = (errors = {}) => {
-  const { resultIdNone, logKeyNone, hasSameLine } = errors;
-  return resultIdNone || logKeyNone || hasSameLine;
+  const { resultIdNone, logKeyNone } = errors;
+  return resultIdNone || logKeyNone;
 };
 
 
@@ -39,15 +26,13 @@ class LinesConfigurator extends React.Component {
     this.handleModalOpen = this.handleModalOpen.bind(this);
     this.handleModalClose = this.handleModalClose.bind(this);
     this.handleEditingLineChange = this.handleEditingLineChange.bind(this);
-    this.handleAxisConfigLineAdd = this.handleAxisConfigLineAdd.bind(this);
-    this.handleAxisConfigLineRemove = this.handleAxisConfigLineRemove.bind(this);
+    this.handleAxisConfigLineSave = this.handleAxisConfigLineSave.bind(this);
     this.handleLineVisibilityUpdate = this.handleLineVisibilityUpdate.bind(this);
 
     this.state = {
       showModal: false,
       showError: false,
-      editingLine: defaultLine,
-      isNewLine: true
+      editingLine: defaultLine
     };
   }
 
@@ -65,7 +50,6 @@ class LinesConfigurator extends React.Component {
       showError: false,
       targetLineKey: line2key(line),
       editingLine: line,
-      isNewLine: (line === defaultLine),
       errors: {}
     });
   }
@@ -77,9 +61,7 @@ class LinesConfigurator extends React.Component {
   }
 
   handleEditingLineChange(newLine) {
-    const { lines } = this.props;
-    const { isNewLine, targetLineKey } = this.state;
-    const errors = checkErrors(newLine, isNewLine, targetLineKey, lines);
+    const errors = checkErrors(newLine);
 
     this.setState({
       editingLine: newLine,
@@ -87,30 +69,20 @@ class LinesConfigurator extends React.Component {
     });
   }
 
-  handleAxisConfigLineAdd() {
+  handleAxisConfigLineSave() {
     const {
       axisName,
-      onAxisConfigLineAdd, onAxisConfigLineUpdate,
-      lines
+      onAxisConfigLineUpdate
     } = this.props;
-    const { targetLineKey, editingLine, isNewLine } = this.state;
-    const errors = checkErrors(editingLine, isNewLine, targetLineKey, lines);
+    const { targetLineKey, editingLine } = this.state;
+    const errors = checkErrors(editingLine);
 
     if (hasError(errors)) {
       this.setState({ showError: true, errors });
     } else {
-      if (isNewLine) {
-        onAxisConfigLineAdd(axisName, editingLine);
-      } else {
-        onAxisConfigLineUpdate(axisName, targetLineKey, editingLine);
-      }
+      onAxisConfigLineUpdate(axisName, targetLineKey, editingLine);
       this.handleModalClose();
     }
-  }
-
-  handleAxisConfigLineRemove(lineKey) {
-    const { axisName, onAxisConfigLineRemove } = this.props;
-    onAxisConfigLineRemove(axisName, lineKey);
   }
 
   handleLineVisibilityUpdate(targetLineKey, line) {
@@ -119,32 +91,44 @@ class LinesConfigurator extends React.Component {
   }
 
   render() {
-    const { results, lines = [] } = this.props;
-    const { editingLine, isNewLine, errors, showError } = this.state;
+    const { axisName, results, config } = this.props;
+    const { editingLine, errors, showError } = this.state;
+    const { axes = {}, resultsConfig = {}, lines = {} } = config;
+    const axisConfig = axes[axisName] || {};
+    const { logKeysConfig = {} } = axisConfig;
 
-    const lineConfiguratorElems = lines.map((line) => {
-      const result = results[line.resultId] || {};
-
-      return (
-        <LinesConfiguratorRow
-          line={line}
-          result={result}
-          onEditClick={this.handleModalOpen}
-          onRemove={this.handleAxisConfigLineRemove}
-          onVisibilityUpdate={this.handleLineVisibilityUpdate}
-          key={line2key(line)}
-        />
-      );
+    const selectedResults = getSelectedResults(resultsConfig);
+    const selectedLogKeys = getSelectedLogKeys(logKeysConfig);
+    const lineConfiguratorElems = [];
+    selectedResults.forEach((resultId) => {
+      const result = results[resultId];
+      if (!result) {
+        return;
+      }
+      selectedLogKeys.forEach((logKey) => {
+        const line = lines[line2key({ resultId, logKey })] || {
+          ...defaultLine,
+          resultId,
+          logKey
+        };
+        lineConfiguratorElems.push(
+          <LinesConfiguratorRow
+            line={line}
+            result={result}
+            onEditClick={this.handleModalOpen}
+            onVisibilityUpdate={this.handleLineVisibilityUpdate}
+            key={line2key(line)}
+          />
+        );
+      });
     });
 
     return (
       <div className="list-group list-group-flush">
         {lineConfiguratorElems}
         <div className="list-group-item text-right">
-          <Button color="primary" onClick={this.handleModalToggle}>Add</Button>
-
           <Modal isOpen={this.state.showModal} toggle={this.handleModalToggle} className="">
-            <ModalHeader toggle={this.handleModalToggle}>{isNewLine ? 'Add a line' : 'Edit a line'}</ModalHeader>
+            <ModalHeader toggle={this.handleModalToggle}>Edit a line</ModalHeader>
             <ModalBody>
               <LineConfigurator
                 results={results}
@@ -157,9 +141,9 @@ class LinesConfigurator extends React.Component {
               <Button color="secondary" onClick={this.handleModalToggle}>Cancel</Button>{' '}
               <Button
                 color="primary"
-                onClick={this.handleAxisConfigLineAdd}
+                onClick={this.handleAxisConfigLineSave}
                 disabled={hasError(showError ? errors : {})}
-              >{isNewLine ? 'Add' : 'Save'}</Button>
+              >Save</Button>
             </ModalFooter>
           </Modal>
 
@@ -172,19 +156,32 @@ class LinesConfigurator extends React.Component {
 LinesConfigurator.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   axisName: PropTypes.string.isRequired,
-  lines: PropTypes.arrayOf(
-    PropTypes.shape({
-      resultId: PropTypes.number,
-      logKey: PropTypes.string
-    })
-  ),
-  onAxisConfigLineAdd: PropTypes.func.isRequired,
-  onAxisConfigLineUpdate: PropTypes.func.isRequired,
-  onAxisConfigLineRemove: PropTypes.func.isRequired
+  config: PropTypes.shape({
+    axes: PropTypes.objectOf(PropTypes.shape({
+      axisName: PropTypes.string,
+      logKeysConfig: PropTypes.objectOf(PropTypes.shape({
+        selected: PropTypes.bool
+      }))
+    })),
+    resultsConfig: PropTypes.objectOf(PropTypes.shape({
+      selected: PropTypes.bool
+    })),
+    lines: PropTypes.objectOf(
+      PropTypes.shape({
+        resultId: PropTypes.number,
+        logKey: PropTypes.string,
+        config: PropTypes.shape({
+          color: PropTypes.string,
+          isVisible: PropTypes.bool
+        })
+      })
+    )
+  }),
+  onAxisConfigLineUpdate: PropTypes.func.isRequired
 };
 
 LinesConfigurator.defaultProps = {
-  lines: []
+  config: {}
 };
 
 export default LinesConfigurator;
