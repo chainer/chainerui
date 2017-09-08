@@ -65,7 +65,7 @@ class LineConfigurator extends React.Component {
   }
 
   render() {
-    const { results, line = {}, errors = {} } = this.props;
+    const { results, line = {} } = this.props;
     const { resultId = RESULT_NONE, logKey = LOG_KEY_NONE, config = {} } = line;
     const result = results[resultId] || {};
     const { color, isVisible } = config;
@@ -119,15 +119,6 @@ class LineConfigurator extends React.Component {
               </Col>
             </Row>
           </FormGroup>
-          <FormGroup>
-            <Input
-              className={`form-control${errors.hasSameLine ? ' is-invalid' : ''}`}
-              hidden
-            />
-            <div className="invalid-feedback">
-              Cannot add this line because it already exists.
-            </div>
-          </FormGroup>
         </Form>
       </div>
     );
@@ -144,17 +135,11 @@ LineConfigurator.propTypes = {
       isVisible: PropTypes.bool
     })
   }),
-  errors: PropTypes.shape({
-    resultIdNone: PropTypes.bool,
-    logKeyNone: PropTypes.bool,
-    hasSameLine: PropTypes.bool
-  }),
   onChange: PropTypes.func
 };
 
 LineConfigurator.defaultProps = {
   line: {},
-  errors: {},
   onChange: () => {}
 };
 

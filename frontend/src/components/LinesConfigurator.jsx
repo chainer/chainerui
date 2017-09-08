@@ -1,21 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { defaultLine } from '../constants';
-import { line2key, getSelectedResults, getSelectedLogKeys } from '../utils';
+import { line2key, getSelectedResults, getSelectedLogKeys, createLine } from '../utils';
 import LinesConfiguratorRow from './LinesConfiguratorRow';
 import LineConfigurator from './LineConfigurator';
-
-
-const checkErrors = (line = defaultLine) => ({
-  resultIdNone: !Number.isInteger(line.resultId),
-  logKeyNone: !line.logKey
-});
-
-const hasError = (errors = {}) => {
-  const { resultIdNone, logKeyNone } = errors;
-  return resultIdNone || logKeyNone;
-};
 
 
 class LinesConfigurator extends React.Component {
@@ -31,8 +19,7 @@ class LinesConfigurator extends React.Component {
 
     this.state = {
       showModal: false,
-      showError: false,
-      editingLine: defaultLine
+      editingLine: undefined
     };
   }
 
@@ -44,13 +31,11 @@ class LinesConfigurator extends React.Component {
     }
   }
 
-  handleModalOpen(line = defaultLine) {
+  handleModalOpen(line) {
     this.setState({
       showModal: true,
-      showError: false,
       targetLineKey: line2key(line),
-      editingLine: line,
-      errors: {}
+      editingLine: line
     });
   }
 
@@ -61,11 +46,8 @@ class LinesConfigurator extends React.Component {
   }
 
   handleEditingLineChange(newLine) {
-    const errors = checkErrors(newLine);
-
     this.setState({
-      editingLine: newLine,
-      errors
+      editingLine: newLine
     });
   }
 
@@ -75,14 +57,8 @@ class LinesConfigurator extends React.Component {
       onAxisConfigLineUpdate
     } = this.props;
     const { targetLineKey, editingLine } = this.state;
-    const errors = checkErrors(editingLine);
-
-    if (hasError(errors)) {
-      this.setState({ showError: true, errors });
-    } else {
-      onAxisConfigLineUpdate(axisName, targetLineKey, editingLine);
-      this.handleModalClose();
-    }
+    onAxisConfigLineUpdate(axisName, targetLineKey, editingLine);
+    this.handleModalClose();
   }
 
   handleLineVisibilityUpdate(targetLineKey, line) {
@@ -91,8 +67,9 @@ class LinesConfigurator extends React.Component {
   }
 
   render() {
-    const { axisName, results, config } = this.props;
-    const { editingLine, errors, showError } = this.state;
+    const { axisName, results, stats, config } = this.props;
+    const { editingLine } = this.state;
+    const { logKeys = [] } = stats;
     const { axes = {}, resultsConfig = {}, lines = {} } = config;
     const axisConfig = axes[axisName] || {};
     const { logKeysConfig = {} } = axisConfig;
@@ -106,11 +83,8 @@ class LinesConfigurator extends React.Component {
         return;
       }
       selectedLogKeys.forEach((logKey) => {
-        const line = lines[line2key({ resultId, logKey })] || {
-          ...defaultLine,
-          resultId,
-          logKey
-        };
+        const line = lines[line2key({ resultId, logKey })] ||
+          createLine(resultId, logKey, results, logKeys);
         lineConfiguratorElems.push(
           <LinesConfiguratorRow
             line={line}
@@ -133,7 +107,6 @@ class LinesConfigurator extends React.Component {
               <LineConfigurator
                 results={results}
                 line={editingLine}
-                errors={showError ? errors : {}}
                 onChange={this.handleEditingLineChange}
               />
             </ModalBody>
@@ -142,7 +115,6 @@ class LinesConfigurator extends React.Component {
               <Button
                 color="primary"
                 onClick={this.handleAxisConfigLineSave}
-                disabled={hasError(showError ? errors : {})}
               >Save</Button>
             </ModalFooter>
           </Modal>
@@ -156,6 +128,9 @@ class LinesConfigurator extends React.Component {
 LinesConfigurator.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   axisName: PropTypes.string.isRequired,
+  stats: PropTypes.shape({
+    logKeys: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
   config: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.shape({
       axisName: PropTypes.string,

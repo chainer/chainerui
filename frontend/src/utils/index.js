@@ -1,3 +1,6 @@
+import { lineColorGenerator } from '../utils';
+
+export * from './color';
 export * from './polling';
 
 export const line2key = (line) => `${line.resultId}_${line.logKey}`;
@@ -61,3 +64,13 @@ export const getSelectedResults = (resultsConfig = {}) => (
 export const getSelectedLogKeys = (logKeysConfig = {}) => (
   Object.keys(logKeysConfig).filter((logKey) => (logKeysConfig[logKey].selected))
 );
+
+export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
+  resultId,
+  logKey,
+  config: {
+    color: lineColorGenerator(resultId, logKey, results, logKeys),
+    isVisible: true
+  }
+});
+
