@@ -55,7 +55,7 @@ class LinesConfiguratorRow extends React.Component {
                 <Label check>
                   <Input
                     type="checkbox"
-                    defaultChecked={isVisible}
+                    checked={isVisible}
                     onChange={this.handleLineVisibilityUpdate}
                   />{' '}
                 </Label>
