@@ -16,14 +16,14 @@ chainer-ui db upgrade
 ## Quick start
 
 ```sh
-cd chainer_ui
+cd intern-chainer-ui
 
 # register sample result directories
-chainer-ui register -d ../_extension/example_results/18003
-chainer-ui register -d ../_extension/example_results/18948
-chainer-ui register -d ../_extension/example_results/19204
-chainer-ui register -d ../_extension/example_results/19205
-chainer-ui register -d ../_extension/example_results/19208
+chainer-ui register -d _extension/example_results/18003
+chainer-ui register -d _extension/example_results/18948
+chainer-ui register -d _extension/example_results/19204
+chainer-ui register -d _extension/example_results/19205
+chainer-ui register -d _extension/example_results/19208
 
 # run Chainer UI server
 chainer-ui server
