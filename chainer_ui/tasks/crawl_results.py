@@ -54,8 +54,6 @@ def crawl_results():
 
         crawled_result = crawl_result_path(current_result.path_name)
 
-        # print(len(current_result.logs), len(crawled_result['logs']))
-
         need_reset = len(crawled_result['logs']) < len(current_result.logs)
 
         if need_reset:
