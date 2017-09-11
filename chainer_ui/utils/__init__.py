@@ -5,7 +5,7 @@
 import os
 import json
 
-from chainer_ui import create_db_session
+from chainer_ui import DB_SESSION
 from chainer_ui.models.result import Result
 from chainer_ui.models.log import Log
 from chainer_ui.models.argument import Argument
@@ -48,9 +48,7 @@ def explore_result_dir(path):
 def crawl_result_table():
     ''' crawl_result_table '''
 
-    db_session = create_db_session()
-
-    for result in db_session.query(Result).all():
+    for result in DB_SESSION.query(Result).all():
         crawl_result = explore_result_dir(result.path_name)
 
         if result.args is None:
@@ -70,4 +68,4 @@ def crawl_result_table():
             for s in crawl_result['snapshots']
         ]
 
-        db_session.commit()
+        DB_SESSION.commit()

@@ -5,8 +5,9 @@ import argparse
 import os
 
 
-from chainer_ui import create_app, create_db, create_db_session
-from chainer_ui import DB_FILE_PATH, ENGINE, SQLALCHEMY_DATABASE_URI, PACKAGE_DIR
+from chainer_ui import create_app, create_db
+from chainer_ui import (DB_FILE_PATH, ENGINE, SQLALCHEMY_DATABASE_URI,
+                        PACKAGE_DIR, DB_SESSION)
 from alembic import context
 from alembic.migration import MigrationContext
 from alembic.command import upgrade
@@ -29,15 +30,13 @@ def register_handler(args):
         log_path = os.path.join(result_path, 'log')
         return os.path.isfile(log_path)
 
-    db_session = create_db_session()
-
     result_path = os.path.abspath(args.result_dir)
     from chainer_ui.models.result import Result
 
     if contain_log_file(result_path):
         new_result_path = Result(os.path.abspath(result_path))
-        db_session.add(new_result_path)
-        db_session.commit()
+        DB_SESSION.add(new_result_path)
+        DB_SESSION.commit()
 
     else:
         print('ng')

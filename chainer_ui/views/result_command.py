@@ -10,7 +10,7 @@ from flask import jsonify, request
 from flask.views import MethodView
 
 
-from chainer_ui import create_db_session
+from chainer_ui import DB_SESSION
 from chainer_ui.models.result import Result
 
 
@@ -20,8 +20,7 @@ class ResultCommandAPI(MethodView):
     def post(self, id):
         ''' POST /api/v1/results/<int:id>/commands '''
 
-        db_session = create_db_session()
-        result = db_session.query(Result).filter_by(id=id).first()
+        result = DB_SESSION.query(Result).filter_by(id=id).first()
         if result is None:
             response = jsonify({'result': None, 'message': 'No interface defined for URL.'})
             return response, 404
