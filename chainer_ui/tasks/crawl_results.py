@@ -56,7 +56,7 @@ def crawl_results():
 
         # print(len(current_result.logs), len(crawled_result['logs']))
 
-        need_reset = len(current_result.logs) < len(crawled_result['logs'])
+        need_reset = len(crawled_result['logs']) < len(current_result.logs)
 
         if need_reset:
             current_result.logs = []
