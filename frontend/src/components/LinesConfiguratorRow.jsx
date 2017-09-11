@@ -57,7 +57,7 @@ class LinesConfiguratorRow extends React.Component {
                     type="checkbox"
                     checked={isVisible}
                     onChange={this.handleLineVisibilityUpdate}
-                  />{' '}
+                  />
                 </Label>
               </FormGroup>
             </Form>

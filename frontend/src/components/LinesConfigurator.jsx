@@ -107,6 +107,7 @@ class LinesConfigurator extends React.Component {
               <LineConfigurator
                 results={results}
                 line={editingLine}
+                stats={stats}
                 onChange={this.handleEditingLineChange}
               />
             </ModalBody>
