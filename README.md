@@ -18,7 +18,7 @@ chainer-ui db upgrade
 cd intern-chainer-ui
 
 # run Chainer UI server
-chainer-ui server -d ./
+chainer-ui server -d .
 ```
 
 or 
