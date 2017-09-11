@@ -5,7 +5,7 @@ import os
 
 
 from flask import Flask, render_template, url_for, jsonify, request
-from flask_apscheduler import APScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -39,30 +39,20 @@ def create_db_session():
     return session()
 
 
-def create_app():
+def create_app(args):
     ''' create_app '''
 
     app = Flask(__name__)
-    app.config['DEBUG'] = True
+    app.config['DEBUG'] = False
 
-    from chainer_ui.utils import crawl_result_table
     from chainer_ui.models.result import Result
+    from chainer_ui.tasks import collect_results, crawl_results
 
-    class CrawlJobConfig(object):
-        ''' job config '''
-        JOBS = [
-            {
-                'id': 'job1',
-                'func': crawl_result_table,
-                'trigger': 'interval',
-                'seconds': 5
-            }
-        ]
-
-    app.config.from_object(CrawlJobConfig())
-
-    scheduler = APScheduler()
-    scheduler.init_app(app)
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(
+        collect_results, 'interval', seconds=5, args=[[args.target_dir]]
+    )
+    scheduler.add_job(crawl_results, 'interval', seconds=5)
     scheduler.start()
 
     def dated_url_for(endpoint, **values):
