@@ -17,7 +17,7 @@ from alembic.config import Config
 def server_handler(args):
     ''' server_handler '''
     print('server_handler', args)
-    app = create_app()
+    app = create_app(args)
     app.run(host=args.host, port=args.port, threaded=True)
 
 
@@ -76,6 +76,10 @@ def main():
     )
     parser_server.add_argument(
         '-p', '--port', required=False, type=int, help='port', default=5000
+    )
+    parser_server.add_argument(
+        '-d', '--target-dir', required=False,
+        type=str, help='target-dir', default=''
     )
     parser_server.set_defaults(handler=server_handler)
 

@@ -5,7 +5,7 @@ import os
 
 
 from flask import Flask, render_template, url_for, jsonify, request
-from flask_apscheduler import APScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -28,37 +28,34 @@ DB_SESSION = scoped_session(
 )
 
 
-
 def create_db():
     ''' create_db '''
     print('DB_FILE_PATH: ', DB_FILE_PATH)
     DB_BASE.metadata.create_all(ENGINE)
 
 
-def create_app():
+def create_db_session():
+    ''' create_db_session '''
+    session = scoped_session(
+        sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
+    )
+    return session()
+
+
+def create_app(args):
     ''' create_app '''
 
     app = Flask(__name__)
-    app.config['DEBUG'] = True
+    app.config['DEBUG'] = False
 
-    from chainer_ui.utils import crawl_result_table
     from chainer_ui.models.result import Result
+    from chainer_ui.tasks import collect_results, crawl_results
 
-    class CrawlJobConfig(object):
-        ''' job config '''
-        JOBS = [
-            {
-                'id': 'job1',
-                'func': crawl_result_table,
-                'trigger': 'interval',
-                'seconds': 5
-            }
-        ]
-
-    app.config.from_object(CrawlJobConfig())
-
-    scheduler = APScheduler()
-    scheduler.init_app(app)
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(
+        collect_results, 'interval', seconds=5, args=[[args.target_dir]]
+    )
+    scheduler.add_job(crawl_results, 'interval', seconds=5)
     scheduler.start()
 
     def dated_url_for(endpoint, **values):
@@ -69,6 +66,11 @@ def create_app():
                 file_path = os.path.join(app.root_path, endpoint, filename)
                 values['_'] = int(os.stat(file_path).st_mtime)
         return url_for(endpoint, **values)
+
+    @app.before_first_request
+    def app_initialize():
+        collect_results([args.target_dir])
+        crawl_results()
 
     @app.context_processor
     def override_url_for():

@@ -7,13 +7,22 @@ Chainer UI is a visualization and management tool for chainer.
 ```sh
 git clone git@github.com:pfn-intern/intern-chainer-ui.git
 cd intern-chainer-ui
-pip install -r requirements.txt
 pip install -e .
 chainer-ui db create
 chainer-ui db upgrade
 ```
 
 ## Quick start
+
+```sh
+cd intern-chainer-ui
+
+# run Chainer UI server
+chainer-ui server -d .
+```
+
+or 
+
 
 ```sh
 cd intern-chainer-ui
