@@ -250,10 +250,27 @@ const config = (state, action) => {
   }
 };
 
+const currentStoreVersion = 20170911.0;
+
+const persistConfig = {
+  key: 'config',
+  version: currentStoreVersion,
+  storage,
+  migrate: (restoredState) => {
+    // eslint-disable-next-line no-underscore-dangle
+    const restoredVersion = restoredState._persist.version;
+    if (restoredVersion < currentStoreVersion) {
+      // ignore any restored state whoes version is older than currentStoreVersion
+      return Promise.resolve(undefined);
+    }
+    return Promise.resolve(restoredState);
+  }
+};
+
 const rootReducer = combineReducers({
   entities,
   fetchState,
-  config: persistReducer({ key: 'config', storage }, config),
+  config: persistReducer(persistConfig, config),
   routing: routerReducer
 });
 
