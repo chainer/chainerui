@@ -77,7 +77,7 @@ AxisConfigurator.propTypes = {
     )
   }).isRequired,
   children: PropTypes.oneOfType([
-    PropTypes.arrayOf(React.PropTypes.node),
+    PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]),
   onChangeScale: PropTypes.func.isRequired,
