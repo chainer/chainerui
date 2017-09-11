@@ -64,6 +64,11 @@ def create_app(args):
                 values['_'] = int(os.stat(file_path).st_mtime)
         return url_for(endpoint, **values)
 
+    @app.before_first_request
+    def app_initialize():
+        collect_results([args.target_dir])
+        crawl_results()
+
     @app.context_processor
     def override_url_for():
         ''' override_url_for '''
