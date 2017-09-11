@@ -23,20 +23,16 @@ ENGINE = create_engine(
     echo=(CHAINER_UI_ENV == 'development')
 )
 DB_BASE = declarative_base()
+DB_SESSION = scoped_session(
+    sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
+)
+
 
 
 def create_db():
     ''' create_db '''
     print('DB_FILE_PATH: ', DB_FILE_PATH)
     DB_BASE.metadata.create_all(ENGINE)
-
-
-def create_db_session():
-    ''' create_db_session '''
-    session = scoped_session(
-        sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
-    )
-    return session()
 
 
 def create_app():
@@ -78,6 +74,10 @@ def create_app():
     def override_url_for():
         ''' override_url_for '''
         return dict(url_for=dated_url_for)
+
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        DB_SESSION.remove()
 
     @app.route('/')
     @app.route('/results/<int:result_id>')
