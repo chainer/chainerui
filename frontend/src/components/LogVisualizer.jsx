@@ -11,10 +11,10 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import 'rc-slider/assets/index.css';
-import { defaultLine } from '../constants';
 import {
   line2key, line2name, line2dataKey,
-  getSelectedResults, getSelectedLogKeys
+  getSelectedResults, getSelectedLogKeys,
+  createLine
 } from '../utils';
 
 
@@ -50,7 +50,7 @@ const buildLineElem = (line, axisName, result) => {
   );
 };
 
-const buildLineElems = (selectedResults, selectedLogKeys, axisName, results, config) => {
+const buildLineElems = (selectedResults, selectedLogKeys, axisName, results, config, logKeys) => {
   const { lines = {} } = config;
 
   const lineElems = [];
@@ -60,11 +60,8 @@ const buildLineElems = (selectedResults, selectedLogKeys, axisName, results, con
       return;
     }
     selectedLogKeys.forEach((logKey) => {
-      const line = lines[line2key({ resultId, logKey })] || {
-        ...defaultLine,
-        resultId,
-        logKey
-      };
+      const line = lines[line2key({ resultId, logKey })] ||
+        createLine(resultId, logKey, results, logKeys);
       if (line.config.isVisible) {
         lineElems.push(buildLineElem(line, axisName, result));
       }
@@ -84,9 +81,11 @@ class LogVisualizer extends React.Component {
   render() {
     const {
       results = {},
-      config = {}
+      config = {},
+      stats
     } = this.props;
     const { axes, resultsConfig = {}, lines = {} } = config;
+    const { logKeys = [] } = stats;
     const {
       xAxis = { axisName: 'xAxis' },
       yLeftAxis = { axisName: 'yLeftAxis' },
@@ -107,11 +106,8 @@ class LogVisualizer extends React.Component {
           return;
         }
         selectedLogKeys[axisName].forEach((logKey) => {
-          const line = lines[line2key({ resultId, logKey })] || {
-            ...defaultLine,
-            resultId,
-            logKey
-          };
+          const line = lines[line2key({ resultId, logKey })] ||
+            createLine(resultId, logKey, results, logKeys);
           const logs = result.logs || [];
           logs.forEach((log) => {
             const logDict = {};
@@ -132,8 +128,8 @@ class LogVisualizer extends React.Component {
     const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
     const lineElems = [
-      ...buildLineElems(selectedResults, selectedLogKeys.yLeftAxis, 'yLeftAxis', results, config),
-      ...buildLineElems(selectedResults, selectedLogKeys.yRightAxis, 'yRightAxis', results, config)
+      ...buildLineElems(selectedResults, selectedLogKeys.yLeftAxis, 'yLeftAxis', results, config, logKeys),
+      ...buildLineElems(selectedResults, selectedLogKeys.yRightAxis, 'yRightAxis', results, config, logKeys)
     ];
 
     const { chartSize } = this.props.config.global;
@@ -180,6 +176,9 @@ class LogVisualizer extends React.Component {
 
 LogVisualizer.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
+  stats: PropTypes.shape({
+    logKeys: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
   config: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.shape({
       axisName: PropTypes.string,

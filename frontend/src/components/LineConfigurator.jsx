@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Label, Input, Collapse, Button, Col, Row } from 'reactstrap';
-import { ChromePicker, SwatchesPicker } from 'react-color';
-import { displayName } from '../utils';
+import { ChromePicker, GithubPicker } from 'react-color';
+import { displayName, lineColorGenerator } from '../utils';
 
 
 const RESULT_NONE = -1;
@@ -17,6 +17,7 @@ class LineConfigurator extends React.Component {
     this.handleLogKeyChange = this.handleLogKeyChange.bind(this);
     this.handleLineColorChange = this.handleLineColorChange.bind(this);
     this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+    this.handleResetColorClick = this.handleResetColorClick.bind(this);
     this.togglePicker = this.togglePicker.bind(this);
 
     this.state = { colorPickerCollapse: false };
@@ -64,8 +65,21 @@ class LineConfigurator extends React.Component {
     });
   }
 
+  handleResetColorClick() {
+    const { line, results, stats, onChange } = this.props;
+    const { config } = line;
+    const { logKeys = [] } = stats;
+    onChange({
+      ...line,
+      config: {
+        ...config,
+        color: lineColorGenerator(line.resultId, line.logKey, results, logKeys)
+      }
+    });
+  }
+
   render() {
-    const { results, line = {}, errors = {} } = this.props;
+    const { results, line = {} } = this.props;
     const { resultId = RESULT_NONE, logKey = LOG_KEY_NONE, config = {} } = line;
     const result = results[resultId] || {};
     const { color, isVisible } = config;
@@ -85,7 +99,7 @@ class LineConfigurator extends React.Component {
         <Form>
           <FormGroup>
             <Label>color</Label>
-            <div style={colorBlockStyle}>{color}</div>
+            <div style={colorBlockStyle} className="mb-2">{color}</div>
             <Collapse isOpen={this.state.colorPickerCollapse}>
               <ChromePicker
                 color={color}
@@ -94,13 +108,14 @@ class LineConfigurator extends React.Component {
               />
             </Collapse>
             <Collapse isOpen={!this.state.colorPickerCollapse}>
-              <SwatchesPicker
+              <GithubPicker
                 color={color}
-                width={470}
+                width={212}
                 onChange={this.handleLineColorChange}
               />
             </Collapse>
             <Button onClick={this.togglePicker} size="sm" className="my-2">Toggle color picker</Button>
+            <Button onClick={this.handleResetColorClick} size="sm" className="m-2">Reset color</Button>
           </FormGroup>
           <FormGroup>
             <Row>
@@ -119,15 +134,6 @@ class LineConfigurator extends React.Component {
               </Col>
             </Row>
           </FormGroup>
-          <FormGroup>
-            <Input
-              className={`form-control${errors.hasSameLine ? ' is-invalid' : ''}`}
-              hidden
-            />
-            <div className="invalid-feedback">
-              Cannot add this line because it already exists.
-            </div>
-          </FormGroup>
         </Form>
       </div>
     );
@@ -144,17 +150,14 @@ LineConfigurator.propTypes = {
       isVisible: PropTypes.bool
     })
   }),
-  errors: PropTypes.shape({
-    resultIdNone: PropTypes.bool,
-    logKeyNone: PropTypes.bool,
-    hasSameLine: PropTypes.bool
-  }),
+  stats: PropTypes.shape({
+    logKeys: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
   onChange: PropTypes.func
 };
 
 LineConfigurator.defaultProps = {
   line: {},
-  errors: {},
   onChange: () => {}
 };
 

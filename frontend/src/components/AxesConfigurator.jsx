@@ -38,6 +38,7 @@ const AxesConfigurator = (props) => {
         />
         <LinesConfigurator
           results={results}
+          stats={stats}
           config={config}
           axisName="yLeftAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
@@ -56,6 +57,7 @@ const AxesConfigurator = (props) => {
         />
         <LinesConfigurator
           results={results}
+          stats={stats}
           config={config}
           axisName="yRightAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
