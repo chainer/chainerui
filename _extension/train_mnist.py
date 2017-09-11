@@ -22,8 +22,8 @@ from chainer.training import extensions
 from chainer.serializers import npz
 from chainer.training.extensions._snapshot import _snapshot_object
 
-from args_report import ArgsReport
-from commands_extension import CommandsExtension
+from chainer_ui.extensions import ArgsReport
+from chainer_ui.extensions import CommandsExtension
 
 
 # <---- receive command from ui -----

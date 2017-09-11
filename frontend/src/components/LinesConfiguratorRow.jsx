@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Row, Col, Button,
+  Row, Col,
   Form, FormGroup, Label, Input
 } from 'reactstrap';
 import { line2key, displayName } from '../utils';
@@ -12,7 +12,6 @@ class LinesConfiguratorRow extends React.Component {
     super(props);
 
     this.handleEditClick = this.handleEditClick.bind(this);
-    this.handleRemoveClick = this.handleRemoveClick.bind(this);
     this.handleLineVisibilityUpdate = this.handleLineVisibilityUpdate.bind(this);
   }
 
@@ -22,14 +21,6 @@ class LinesConfiguratorRow extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     onEditClick(line);
-  }
-
-  handleRemoveClick(e) {
-    const { line, onRemove } = this.props;
-
-    e.preventDefault();
-    e.stopPropagation();
-    onRemove(line2key(line));
   }
 
   handleLineVisibilityUpdate(e) {
@@ -53,42 +44,29 @@ class LinesConfiguratorRow extends React.Component {
 
     return (
       <div
-        className="list-group-item"
+        className="list-group-item py-0"
         key={line2key(line)}
         style={{ borderLeft: `3px solid ${color}` }}
       >
         <Row>
-          <Col xs="2">
+          <Col xs="3" lg="2">
             <Form>
               <FormGroup check>
                 <Label check>
                   <Input
                     type="checkbox"
-                    defaultChecked={isVisible}
+                    checked={isVisible}
                     onChange={this.handleLineVisibilityUpdate}
-                  />{' '}
+                  />
                 </Label>
               </FormGroup>
             </Form>
-
-            <Button
-              size="sm"
-              color="link"
-              className="m-0 p-0"
-              onClick={this.handleEditClick}
-            >edit</Button>
           </Col>
-          <Col>{displayName(result)}</Col>
-          <Col>{line.logKey}</Col>
-          <Col xs="1">
-            <button
-              type="button"
-              className="close"
-              aria-label="Close"
-              onClick={this.handleRemoveClick}
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
+          <Col xs="9" lg="5" className="text-truncate" title={result.name || result.pathName}>
+            <a href="" className="text-dark" onClick={this.handleEditClick}>{displayName(result, { length: 10 })}</a>
+          </Col>
+          <Col xs="12" lg="5" className="text-truncate" title={line.logKey}>
+            <a href="" className="text-dark" onClick={this.handleEditClick}>{line.logKey}</a>
           </Col>
         </Row>
       </div>
@@ -111,13 +89,11 @@ LinesConfiguratorRow.propTypes = {
     logs: PropTypes.arrayOf(PropTypes.any)
   }).isRequired,
   onEditClick: PropTypes.func,
-  onRemove: PropTypes.func,
   onVisibilityUpdate: PropTypes.func
 };
 
 LinesConfiguratorRow.defaultProps = {
   onEditClick: () => {},
-  onRemove: () => {},
   onVisibilityUpdate: () => {}
 };
 

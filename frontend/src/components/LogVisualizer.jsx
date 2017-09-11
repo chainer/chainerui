@@ -11,7 +11,11 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import 'rc-slider/assets/index.css';
-import { line2name, line2dataKey } from '../utils';
+import {
+  line2key, line2name, line2dataKey,
+  getSelectedResults, getSelectedLogKeys,
+  createLine
+} from '../utils';
 
 
 const getDomain = (axisConfig = {}) => {
@@ -29,9 +33,8 @@ const getDomain = (axisConfig = {}) => {
   return domain;
 };
 
-const buildLineElem = (line, axisName, results) => {
+const buildLineElem = (line, axisName, result) => {
   const { config = {} } = line;
-  const result = results[line.resultId] || {};
 
   return (
     <Line
@@ -47,11 +50,25 @@ const buildLineElem = (line, axisName, results) => {
   );
 };
 
-const buildLineElems = (axisName, results, config) => {
-  const axisConfig = config.axes[axisName] || {};
-  const { lines = [] } = axisConfig;
-  const visibleLines = lines.filter((line) => line.config.isVisible);
-  return visibleLines.map((line) => buildLineElem(line, axisName, results));
+const buildLineElems = (selectedResults, selectedLogKeys, axisName, results, config, logKeys) => {
+  const { lines = {} } = config;
+
+  const lineElems = [];
+  selectedResults.forEach((resultId) => {
+    const result = results[resultId];
+    if (!result) {
+      return;
+    }
+    selectedLogKeys.forEach((logKey) => {
+      const line = lines[line2key({ resultId, logKey })] ||
+        createLine(resultId, logKey, results, logKeys);
+      if (line.config.isVisible) {
+        lineElems.push(buildLineElem(line, axisName, result));
+      }
+    });
+  });
+
+  return lineElems;
 };
 
 class LogVisualizer extends React.Component {
@@ -64,51 +81,55 @@ class LogVisualizer extends React.Component {
   render() {
     const {
       results = {},
-      config = {}
+      config = {},
+      stats
     } = this.props;
+    const { axes, resultsConfig = {}, lines = {} } = config;
+    const { logKeys = [] } = stats;
     const {
       xAxis = { axisName: 'xAxis' },
       yLeftAxis = { axisName: 'yLeftAxis' },
       yRightAxis = { axisName: 'yRightAxis' }
-    } = config.axes || {};
+    } = axes || {};
     const { xAxisKey = 'epoch' } = xAxis;
-    const leftLines = yLeftAxis.lines || [];
-    const rightLines = yRightAxis.lines || [];
-    const axisLines = {
-      yLeftAxis: leftLines,
-      yRightAxis: rightLines
+    const selectedResults = getSelectedResults(resultsConfig);
+    const selectedLogKeys = {
+      yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
+      yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
     };
 
     const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
-    Object.keys(axisLines).forEach((axisName) => {
-      const lines = axisLines[axisName];
-      lines.forEach((line) => {
-        const { resultId, logKey } = line;
+    ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {
+      selectedResults.forEach((resultId) => {
         const result = results[resultId];
         if (result == null) {
           return;
         }
-        const logs = result.logs || [];
-        logs.forEach((log) => {
-          const logDict = {};
-          log.logItems.forEach((logItem) => {
-            logDict[logItem.key] = logItem.value;
+        selectedLogKeys[axisName].forEach((logKey) => {
+          const line = lines[line2key({ resultId, logKey })] ||
+            createLine(resultId, logKey, results, logKeys);
+          const logs = result.logs || [];
+          logs.forEach((log) => {
+            const logDict = {};
+            log.logItems.forEach((logItem) => {
+              logDict[logItem.key] = logItem.value;
+            });
+            if (logDict[xAxisKey] == null || logDict[logKey] == null) {
+              return;
+            }
+            if (dataDict[logDict[xAxisKey]] == null) {
+              dataDict[logDict[xAxisKey]] = { [xAxisKey]: logDict[xAxisKey] };
+            }
+            dataDict[logDict[xAxisKey]][line2dataKey(line, axisName)] = logDict[logKey];
           });
-          if (logDict[xAxisKey] == null || logDict[logKey] == null) {
-            return;
-          }
-          if (dataDict[logDict[xAxisKey]] == null) {
-            dataDict[logDict[xAxisKey]] = { [xAxisKey]: logDict[xAxisKey] };
-          }
-          dataDict[logDict[xAxisKey]][line2dataKey(line, axisName)] = logDict[logKey];
         });
       });
     });
     const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
     const lineElems = [
-      ...buildLineElems('yLeftAxis', results, config),
-      ...buildLineElems('yRightAxis', results, config)
+      ...buildLineElems(selectedResults, selectedLogKeys.yLeftAxis, 'yLeftAxis', results, config, logKeys),
+      ...buildLineElems(selectedResults, selectedLogKeys.yRightAxis, 'yRightAxis', results, config, logKeys)
     ];
 
     const { chartSize } = this.props.config.global;
@@ -155,12 +176,29 @@ class LogVisualizer extends React.Component {
 
 LogVisualizer.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
+  stats: PropTypes.shape({
+    logKeys: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
   config: PropTypes.shape({
-    axes: PropTypes.shape({
-      xAxis: PropTypes.any,
-      yLeftAxis: PropTypes.any,
-      yRightAxis: PropTypes.any
-    }),
+    axes: PropTypes.objectOf(PropTypes.shape({
+      axisName: PropTypes.string,
+      logKeysConfig: PropTypes.objectOf(PropTypes.shape({
+        selected: PropTypes.bool
+      }))
+    })),
+    resultsConfig: PropTypes.objectOf(PropTypes.shape({
+      selected: PropTypes.bool
+    })),
+    lines: PropTypes.objectOf(
+      PropTypes.shape({
+        resultId: PropTypes.number,
+        logKey: PropTypes.string,
+        config: PropTypes.shape({
+          color: PropTypes.string,
+          isVisible: PropTypes.bool
+        })
+      })
+    ),
     global: PropTypes.shape({
       chartSize: PropTypes.shape({
         width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

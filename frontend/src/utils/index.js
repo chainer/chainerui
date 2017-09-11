@@ -1,3 +1,6 @@
+import { lineColorGenerator } from '../utils';
+
+export * from './color';
 export * from './polling';
 
 export const line2key = (line) => `${line.resultId}_${line.logKey}`;
@@ -18,8 +21,8 @@ export const truncate = (string, options = {}) => {
   return str;
 };
 
-export const displayName = (result = {}) => (
-  truncate(result.name) || truncate(result.pathName, { forward: true })
+export const displayName = (result = {}, config = {}) => (
+  truncate(result.name, config) || truncate(result.pathName, { ...config, forward: true })
 );
 
 export const line2name = (line, result = {}) => `${displayName(result)}/${line.logKey}`;
@@ -49,4 +52,25 @@ export const isJsonString = (str) => {
   }
   return true;
 };
+
+export const getSelectedResults = (resultsConfig = {}) => (
+  Object.keys(resultsConfig).filter((resultId) => (
+    resultsConfig[resultId].selected
+  )).map((resultId) => (
+    Number(resultId)
+  ))
+);
+
+export const getSelectedLogKeys = (logKeysConfig = {}) => (
+  Object.keys(logKeysConfig).filter((logKey) => (logKeysConfig[logKey].selected))
+);
+
+export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
+  resultId,
+  logKey,
+  config: {
+    color: lineColorGenerator(resultId, logKey, results, logKeys),
+    isVisible: true
+  }
+});
 

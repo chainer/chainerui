@@ -1,0 +1,3 @@
+include chainer_ui/migration_repository/migrate.cfg
+include chainer_ui/templates/*
+include chainer_ui/static/**/*
