@@ -99,7 +99,7 @@ class LineConfigurator extends React.Component {
         <Form>
           <FormGroup>
             <Label>color</Label>
-            <div style={colorBlockStyle} className="my-2">{color}</div>
+            <div style={colorBlockStyle} className="mb-2">{color}</div>
             <Collapse isOpen={this.state.colorPickerCollapse}>
               <ChromePicker
                 color={color}
@@ -110,7 +110,7 @@ class LineConfigurator extends React.Component {
             <Collapse isOpen={!this.state.colorPickerCollapse}>
               <GithubPicker
                 color={color}
-                width={470}
+                width={212}
                 onChange={this.handleLineColorChange}
               />
             </Collapse>
