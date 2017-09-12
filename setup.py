@@ -14,6 +14,12 @@ setup(
     description='chainer ui',
     long_description=readme,
     install_requires=required,
+    package_data={
+        'chainer_ui': [
+            'templates/*',
+            'static/**/*'
+        ],
+    },
     author='',
     author_email='',
     url='https://github.com/pfn-intern/intern-chainer-ui',
