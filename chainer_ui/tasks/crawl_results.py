@@ -38,9 +38,12 @@ def crawl_result_path(result_path):
         result['logs'] = load_result_json(result_path, 'log')
         result['args'] = load_result_json(result_path, 'args')
         result['commands'] = load_result_json(result_path, 'commands')
-        result['snapshots'] = [
+
+        snapshots = [
             x for x in os.listdir(result_path) if x.count('snapshot_iter_')
         ]
+        snapshots.sort()
+        result['snapshots'] = snapshots
 
     return result
 
