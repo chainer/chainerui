@@ -4,18 +4,39 @@ import shutil
 import tempfile
 from datetime import datetime
 
-from chainer.training.extension import Extension
+from chainer.training import extension
 from chainer.training import trigger as trigger_module
+from chainer.serializers import npz
+from chainer.training.extensions._snapshot import _snapshot_object
 
 
-class CommandsExtension(Extension):
+def take_snapshot(trainer, body):
+    filename = 'snapshot_iter_{.updater.iteration}'
+    savefun = npz.save_npz
+    _snapshot_object(trainer, trainer, filename.format(trainer), savefun)
 
-    def __init__(self, trigger=Extension.trigger, priority=Extension.priority, file_name='commands'):
+
+def adjust_hyperparams(trainer, body):
+    for key, value in body.items():
+        optimizer = trainer.updater.get_optimizer('main')
+        setattr(optimizer, key, value)
+
+
+class CommandsExtension(extension.Extension):
+
+    priority = extension.PRIORITY_READER
+    default_receivers = {
+        'take_snapshot': take_snapshot,
+        'adjust_hyperparams': adjust_hyperparams
+    }
+
+    def __init__(self, trigger=(1, 'iteration'), receivers={},
+                 file_name='commands'):
         self._trigger = trigger_module.get_trigger(trigger)
-        self._priority = priority
         self._file_name = file_name
 
-        self._receivers = {}
+        self._receivers = self.default_receivers.copy()
+        self._receivers.update(receivers)
 
     def initialize(self, trainer):
         commands_path = self._commands_path(trainer)
@@ -29,16 +50,15 @@ class CommandsExtension(Extension):
         commands = self._load_commands(trainer)
 
         for command in commands:
-            if ('executed_at' in command) and (command['executed_at'] is not None):
+            if command.get('executed_at', None) is not None:
                 # already executed
                 continue
-            if command['name'] not in self._receivers:
+            receiver = self._receivers.get(command['name'], None)
+            if receiver is None:
                 continue
-            receiver = self._receivers[command['name']]
-            command_body = command['body']
             command['executed_at'] = datetime.now().isoformat()
             try:
-                receiver(trainer, command_body)
+                receiver(trainer, command['body'])
             except Exception as e:
                 print ('catched execption from receiver:', e.args)
 
@@ -48,12 +68,12 @@ class CommandsExtension(Extension):
         pass
 
 
-    def add_receiver(self, command_name, receiver):
+    def add_receiver(self, command_name, function):
         if command_name is None:
             raise ValueError('command name is not given')
-        if not callable(receiver):
+        if not callable(function):
             raise ValueError('receiver is not callable')
-        self._receivers[command_name] = receiver
+        self._receivers[command_name] = function
 
 
     def _load_commands(self, trainer):
