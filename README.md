@@ -21,18 +21,18 @@ cd intern-chainer-ui
 chainer-ui server -d .
 ```
 
-or 
+or
 
 
 ```sh
 cd intern-chainer-ui
 
 # register sample result directories
-chainer-ui register -d _extension/example_results/18003
-chainer-ui register -d _extension/example_results/18948
-chainer-ui register -d _extension/example_results/19204
-chainer-ui register -d _extension/example_results/19205
-chainer-ui register -d _extension/example_results/19208
+chainer-ui register -d examples/example_results/18003
+chainer-ui register -d examples/example_results/18948
+chainer-ui register -d examples/example_results/19204
+chainer-ui register -d examples/example_results/19205
+chainer-ui register -d examples/example_results/19208
 
 # run Chainer UI server
 chainer-ui server
@@ -52,7 +52,7 @@ chainer-ui register -d path/to/result
 The Chainer UI server watches two files under the registerd directories.
 
 - `log`: a json file created by `LogReport` extension.
-- `args`: *(optional)* a json file, which includes key-value pairs you want to see on Chainer UI along with logs. See [`args_report.py`](https://github.com/pfn-intern/intern-chainer-ui/tree/master/_extension) for a sample extension to dump command line arguments to `args` file.
+- `args`: *(optional)* a json file, which includes key-value pairs you want to see on Chainer UI along with logs. See [`args_report.py`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainer_ui/extensions/args_report.py) for a sample extension to dump command line arguments to `args` file.
 
 ```
 path/to/result
