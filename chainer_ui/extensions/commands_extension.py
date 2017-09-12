@@ -60,13 +60,12 @@ class CommandsExtension(extension.Extension):
             try:
                 receiver(trainer, command['body'])
             except Exception as e:
-                print ('catched execption from receiver:', e.args)
+                print('catched execption from receiver:', e.args)
 
         self._write_commands(trainer, commands)
 
     def finalize(self):
         pass
-
 
     def add_receiver(self, command_name, function):
         if command_name is None:
@@ -74,7 +73,6 @@ class CommandsExtension(extension.Extension):
         if not callable(function):
             raise ValueError('receiver is not callable')
         self._receivers[command_name] = function
-
 
     def _load_commands(self, trainer):
         commands_path = self._commands_path(trainer)
@@ -101,4 +99,3 @@ class CommandsExtension(extension.Extension):
 
     def _commands_path(self, trainer):
         return os.path.join(trainer.out, self._file_name)
-
