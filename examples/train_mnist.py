@@ -18,35 +18,8 @@ import chainer.links as L
 from chainer import training
 from chainer.training import extensions
 
-# for taking snapshot
-from chainer.serializers import npz
-from chainer.training.extensions._snapshot import _snapshot_object
+from chainer_ui.extensions import ArgsReport, CommandsExtension
 
-from chainer_ui.extensions import ArgsReport
-from chainer_ui.extensions import CommandsExtension
-
-
-# <---- receive command from ui -----
-def receive_hello(trainer, body):
-    username = 'user'
-    if 'username' in body:
-        username = body['username']
-    print('epoch: {}'.format(trainer.updater.epoch))
-    print('hello, {}'.format(username))
-
-def receive_take_snapshot(trainer, body):
-    print('taking a snapshot...')
-    filename = 'snapshot_iter_{.updater.iteration}'
-    savefun = npz.save_npz
-    _snapshot_object(trainer, trainer, filename.format(trainer), savefun)
-
-def receive_hyperparams(trainer, body):
-    print(body)
-    for key, value in body.items():
-        optimizer = trainer.updater.get_optimizer('main')
-        setattr(optimizer, key, value)
-
-# ----- receive command from ui ---->
 
 # Network definition
 class MLP(chainer.Chain):
@@ -130,11 +103,7 @@ def main():
     # <--- my extension -----
     trainer.extend(ArgsReport(args))
 
-    commands = CommandsExtension()
-    commands.add_receiver('hello', receive_hello)
-    commands.add_receiver('take_snapshot', receive_take_snapshot)
-    commands.add_receiver('hyperparams', receive_hyperparams)
-    trainer.extend(commands)
+    trainer.extend(CommandsExtension())
     # ---- my extension ---->
 
     # Save two plot images to the result dir
