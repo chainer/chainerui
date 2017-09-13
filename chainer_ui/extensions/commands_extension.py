@@ -18,6 +18,25 @@ def is_jsonable(obj):
     return True
 
 
+def shouldExecute(trainer, command):
+    if 'response' in command:
+        # already executed
+        return False
+    request = command.get('request', {})
+    if 'schedule' in request:
+        schedule = request['schedule']
+        if schedule['key'] == 'epoch':
+            if trainer.updater.epoch != schedule['value']:
+                return False
+        elif schedule['key'] == 'iteration':
+            if trainer.updater.iteration != schedule['value']:
+                return False
+        else:
+            # invalid schedule key
+            return False
+    return True
+
+
 def take_snapshot(trainer, body):
     filename = 'snapshot_iter_{.updater.iteration}'
     savefun = npz.save_npz
@@ -61,16 +80,8 @@ class CommandsExtension(extension.Extension):
         commands = self._load_commands(trainer)
 
         for command in commands:
-            if 'response' in command:
-                # already executed
+            if not shouldExecute(trainer, command):
                 continue
-            if 'schedule' in command['request']:
-                schedule = command['request']['schedule']
-                trigger = trigger_module.get_trigger(
-                    (schedule['value'], schedule['key'])
-                )
-                if not trigger(trainer):
-                    continue
 
             response = self._execute_command(
                 trainer, command['name'], command['request'])
