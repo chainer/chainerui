@@ -10,6 +10,14 @@ from chainer.serializers import npz
 from chainer.training.extensions._snapshot import _snapshot_object
 
 
+def is_jsonable(obj):
+    try:
+        json.dumps(obj)
+    except:
+        return False
+    return True
+
+
 def take_snapshot(trainer, body):
     filename = 'snapshot_iter_{.updater.iteration}'
     savefun = npz.save_npz
@@ -23,6 +31,9 @@ def adjust_hyperparams(trainer, body):
 
 
 class CommandsExtension(extension.Extension):
+
+    STATUS_SUCCESS = 'SUCCESS'
+    STATUS_FAILUE = 'FAILUE'
 
     priority = extension.PRIORITY_READER
     default_receivers = {
@@ -50,17 +61,20 @@ class CommandsExtension(extension.Extension):
         commands = self._load_commands(trainer)
 
         for command in commands:
-            if command.get('executed_at', None) is not None:
+            if 'response' in command:
                 # already executed
                 continue
-            receiver = self._receivers.get(command['name'], None)
-            if receiver is None:
-                continue
-            command['executed_at'] = datetime.now().isoformat()
-            try:
-                receiver(trainer, command['body'])
-            except Exception as e:
-                print('catched execption from receiver:', e.args)
+            if 'schedule' in command['request']:
+                schedule = command['request']['schedule']
+                trigger = trigger_module.get_trigger(
+                    (schedule['value'], schedule['key'])
+                )
+                if not trigger(trainer):
+                    continue
+
+            response = self._execute_command(
+                trainer, command['name'], command['request'])
+            command['response'] = response
 
         self._write_commands(trainer, commands)
 
@@ -73,6 +87,29 @@ class CommandsExtension(extension.Extension):
         if not callable(function):
             raise ValueError('receiver is not callable')
         self._receivers[command_name] = function
+
+    def _execute_command(self, trainer, command_name, request):
+        response = {
+            'body': None
+        }
+
+        receiver = self._receivers.get(command_name, None)
+        try:
+            response_body = receiver(trainer, request.get('body', None))
+        except Exception as e:
+            print('catched execption from receiver:', e.args)
+            response['status'] = self.STATUS_FAILUE
+        else:
+            response['status'] = self.STATUS_SUCCESS
+
+        if is_jsonable(response_body):
+            response['body'] = response_body
+        response['epoch'] = trainer.updater.epoch
+        response['iteration'] = trainer.updater.iteration
+        response['elapsed_time'] = trainer.elapsed_time
+        response['executed_at'] = datetime.now().isoformat()
+
+        return response
 
     def _load_commands(self, trainer):
         commands_path = self._commands_path(trainer)
