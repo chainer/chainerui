@@ -39,7 +39,7 @@ class ResultCommandAPI(MethodView):
 
         if 'schedule' in request_json:
 
-            if list(request_json['schedule'].keys()) != ['key', 'value']:
+            if set(request_json['schedule'].keys()) != {'key', 'value'}:
                 return jsonify({
                     'message': 'The schedule required key and value'
                 }), 400
