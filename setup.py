@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-with open('README.md') as f:
+with open('README.md', 'r', encoding='utf-8') as f:
     readme = f.read()
 
 with open('requirements.txt') as f:
@@ -10,7 +10,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='chainer_ui',
-    version='0.0.5',
+    version='0.0.6',
     description='chainer ui',
     long_description=readme,
     install_requires=required,

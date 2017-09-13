@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CommandForm from './CommandForm';
+import CommandButton from './CommandButton';
 
 
 const createCommandRowElems = (commands) => commands.sort((a, b) =>
@@ -25,12 +26,23 @@ const Commands = (props) => {
       <div className="card-body">
         <div className="mb-2 card">
           <div className="card-body">
+            <CommandButton
+              resultId={resultId}
+              commandName="take_snapshot"
+              label="Take snapshot"
+              onCommandSubmit={onCommandSubmit}
+            />
+          </div>
+        </div>
+        <div className="mb-2 card">
+          <div className="card-body">
             <CommandForm
               resultId={resultId}
               onCommandSubmit={onCommandSubmit}
             />
           </div>
         </div>
+        <hr />
         <table className="table table-sm table-xy-overflow-scroll">
           <thead>
             <tr>
