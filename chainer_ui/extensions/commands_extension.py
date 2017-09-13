@@ -9,13 +9,7 @@ from chainer.training import trigger as trigger_module
 from chainer.serializers import npz
 from chainer.training.extensions._snapshot import _snapshot_object
 
-
-def is_jsonable(obj):
-    try:
-        json.dumps(obj)
-    except:
-        return False
-    return True
+from chainer_ui.utils import is_jsonable
 
 
 def shouldExecute(trainer, command):
