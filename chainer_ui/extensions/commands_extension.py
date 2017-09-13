@@ -79,6 +79,7 @@ class CommandsExtension(extension.Extension):
 
         commands = self._load_commands(trainer)
 
+        isUpdated = False
         for command in commands:
             if not shouldExecute(trainer, command):
                 continue
@@ -86,8 +87,10 @@ class CommandsExtension(extension.Extension):
             response = self._execute_command(
                 trainer, command['name'], command['request'])
             command['response'] = response
+            isUpdated = True
 
-        self._write_commands(trainer, commands)
+        if isUpdated:
+            self._write_commands(trainer, commands)
 
     def finalize(self):
         pass
