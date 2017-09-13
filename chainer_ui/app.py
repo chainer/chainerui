@@ -10,7 +10,7 @@ from chainer_ui import (DB_FILE_PATH, ENGINE, SQLALCHEMY_DATABASE_URI,
                         PACKAGE_DIR, DB_SESSION)
 from alembic import context
 from alembic.migration import MigrationContext
-from alembic.command import upgrade
+from alembic.command import upgrade, revision
 from alembic.config import Config
 
 
@@ -60,6 +60,12 @@ def db_handler(args):
         config.set_main_option("script_location", os.path.join(PACKAGE_DIR, 'migration'))
         upgrade(config, 'head')
 
+    if args.type == 'revision':
+        ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
+        config = Config(ini_path)
+        config.set_main_option("script_location", os.path.join(PACKAGE_DIR, 'migration'))
+        revision(config)
+
     if args.type == 'drop':
         os.remove(DB_FILE_PATH)
 
@@ -91,7 +97,7 @@ def main():
 
     parser_db = subparsers.add_parser('db', help='see `chainer-ui db -h`')
     parser_db.add_argument('type', choices=[
-        'create', 'drop', 'migrate', 'upgrade'
+        'create', 'drop', 'migrate', 'upgrade', 'revision'
     ])
     parser_db.set_defaults(handler=db_handler)
 
