@@ -258,7 +258,8 @@ const persistConfig = {
   storage,
   migrate: (restoredState) => {
     // eslint-disable-next-line no-underscore-dangle
-    const restoredVersion = restoredState._persist.version;
+    const persist = restoredState ? restoredState._persist : {};
+    const restoredVersion = (persist.version === undefined) ? -1 : persist.version;
     if (restoredVersion < currentStoreVersion) {
       // ignore any restored state whoes version is older than currentStoreVersion
       return Promise.resolve(undefined);
