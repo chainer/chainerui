@@ -12,11 +12,13 @@ class Command(DB_BASE):
     id = Column(Integer, primary_key=True)
     result_id = Column(Integer, ForeignKey('result.id'))
     name = Column(String(1024))
-    body = Column(String(1024))
+    request = Column(String(1024))
+    response = Column(String(1024))
 
-    def __init__(self, name=None, body=None):
+    def __init__(self, name=None, request=None, response=None):
         self.name = name
-        self.body = body
+        self.request = request
+        self.response = response
 
     def __repr__(self):
         return '<Command id: %r />' % (self.id)
@@ -26,7 +28,8 @@ class Command(DB_BASE):
         ''' serialize '''
 
         return {
-            "id": self.id,
-            "name": self.name,
-            "body": self.body
+            'id': self.id,
+            'name': self.name,
+            'request': self.request,
+            'response': self.response
         }
