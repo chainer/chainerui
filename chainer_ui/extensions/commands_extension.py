@@ -69,7 +69,7 @@ class CommandsExtension(extension.Extension):
 
             body, status = self._execute_command(
                 trainer, command.name, command.request)
-            command.set_response(trainer, body, status)
+            command.set_response(trainer, status, body)
             is_updated = True
 
         if is_updated:

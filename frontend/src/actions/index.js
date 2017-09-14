@@ -53,7 +53,7 @@ export const deleteResult = (resultId) => {
   };
 };
 
-export const createCommand = (resultId, commandName, commandBody) => {
+export const createCommand = (resultId, commandName, requestBody = null) => {
   if (!Number.isInteger(resultId)) {
     throw new Error('Result id is invalid.');
   }
@@ -64,7 +64,7 @@ export const createCommand = (resultId, commandName, commandBody) => {
       method: 'POST',
       body: {
         name: commandName,
-        body: commandBody
+        body: requestBody
       }
     }
   };
