@@ -17,11 +17,9 @@ class CommandItem:
     DEFAULT_FILE_NAME = 'commands'
 
     def __init__(self, **kwargs):
-        self.from_dict({
-            'name': kwargs.get('name', None),
-            'request': kwargs.get('request', None),
-            'response': kwargs.get('response', None)
-        })
+        self._name = kwargs.get('name', None)
+        self._request = kwargs.get('request', None)
+        self._response = kwargs.get('response', None)
 
     @property
     def name(self):
@@ -149,12 +147,6 @@ class CommandItem:
                       f, indent=4)
 
         shutil.move(path, commands_path)
-
-    def from_dict(self, command_dict):
-        self._name = command_dict.get('name', None)
-        self._request = command_dict.get('request', None)
-        self._response = command_dict.get('response', None)
-        return self
 
     def to_dict(self):
         return {
