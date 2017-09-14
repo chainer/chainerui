@@ -6,18 +6,18 @@ import shutil
 import tempfile
 from datetime import datetime
 
-from is_jsonable import is_jsonable
+from chainer_ui.utils import is_jsonable
 
 
-class CommmandItem:
+class CommandItem:
 
     file_name = 'commands'
 
-    def __init__(self, name=None, request=None, response=None):
+    def __init__(self, **kwargs):
         self.from_dict({
-            'name': name,
-            'request': request,
-            'response': response
+            'name': kwargs.get('name', None),
+            'request': kwargs.get('request', None),
+            'response': kwargs.get('response', None)
         })
 
     @property
@@ -31,6 +31,18 @@ class CommmandItem:
     @property
     def response(self):
         return self._response
+
+    @property
+    def request_body(self):
+        if self._request is None:
+            return None
+        return self._request.get('body', None)
+
+    @property
+    def response_body(self):
+        if self._response is None:
+            return None
+        return self._response.get('body', None)
 
     def set_response(self, trainer, response_status, response_body):
         response = {
@@ -72,8 +84,8 @@ class CommmandItem:
 
         return True
 
-    @staticmethod
-    def load_commands(result_path, file_name=self.file_name):
+    @classmethod
+    def load_commands(cls, result_path, file_name=file_name):
         result_path = os.path.abspath(result_path)
         commands_path = os.path.join(result_path, file_name)
         commands = []
@@ -85,10 +97,10 @@ class CommmandItem:
                 except json.decoder.JSONDecodeError as e:
                     pass
 
-        return list(map(lambda cmd: CommmandItem(**cmd), commands))
+        return list(map(lambda cmd: cls(**cmd), commands))
 
-    @staticmethod
-    def dump_commands(commands, result_path, file_name=self.file_name):
+    @classmethod
+    def dump_commands(cls, commands, result_path, file_name=file_name):
         result_path = os.path.abspath(result_path)
         commands_path = os.path.join(result_path, file_name)
 
