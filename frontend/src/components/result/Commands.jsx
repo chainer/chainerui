@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CommandForm from './CommandForm';
 import CommandButton from './CommandButton';
+import { responseStatusToIcon } from '../../utils';
 
 
 const createCommandRowElems = (commands) => commands.sort((a, b) =>
@@ -14,7 +15,7 @@ const createCommandRowElems = (commands) => commands.sort((a, b) =>
   return (
     <tr className="command-row" key={command.id}>
       <td>{command.name}</td>
-      <td>{response.status}</td>
+      <td>{responseStatusToIcon(response.status)}</td>
       <td>{(new Date(request.created_at)).toLocaleString()}</td>
       <td>{schedule ? `${schedule.value} ${schedule.key}` : ''}</td>
       <td>{(new Date(response.executed_at)).toLocaleString()}</td>
