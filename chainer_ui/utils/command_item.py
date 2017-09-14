@@ -6,12 +6,15 @@ import shutil
 import tempfile
 from datetime import datetime
 
-from chainer_ui.utils import is_jsonable
+from chainer_ui.utils.is_jsonable import is_jsonable
 
 
 class CommandItem:
 
-    file_name = 'commands'
+    REQUEST_OPEN = 'OPEN'
+    RESPONSE_SUCCESS = 'SUCCESS'
+    RESPONSE_FAILUE = 'FAILUE'
+    DEFAULT_FILE_NAME = 'commands'
 
     def __init__(self, **kwargs):
         self.from_dict({
@@ -44,6 +47,25 @@ class CommandItem:
             return None
         return self._response.get('body', None)
 
+    def set_request(self, request_status, request_body, schedule):
+        request = {
+            'created_at': datetime.now().isoformat(),
+            'status': request_status
+        }
+
+        if is_jsonable(request_body):
+            request['body'] = request_body
+        else:
+            request['body'] = None
+
+        if self.is_valid_schedule(schedule):
+            request['schedule'] = schedule
+        else:
+            request['schedule'] = None
+
+        self._request = request
+        return request
+
     def set_response(self, trainer, response_status, response_body):
         response = {
             'executed_at': datetime.now().isoformat(),
@@ -70,8 +92,8 @@ class CommandItem:
         if request is None:
             return False
 
-        if 'schedule' in request:
-            schedule = request['schedule']
+        schedule = request.get('schedule', None)
+        if schedule is not None:
             if schedule['key'] == 'epoch':
                 if trainer.updater.epoch != schedule['value']:
                     return False
@@ -85,9 +107,27 @@ class CommandItem:
         return True
 
     @classmethod
-    def load_commands(cls, result_path, file_name=file_name):
-        result_path = os.path.abspath(result_path)
-        commands_path = os.path.join(result_path, file_name)
+    def is_valid_schedule(cls, schedule):
+        if schedule is None:
+            return True
+        if schedule.get('key', None) in ['epoch', 'iteration'] \
+                and isinstance(schedule.get('value', None), int):
+            return True
+        return False
+
+    @classmethod
+    def commands_path(cls, result_path, file_name=DEFAULT_FILE_NAME):
+        return os.path.join(os.path.abspath(result_path), file_name)
+
+    @classmethod
+    def remove_commands_file(cls, result_path, file_name=DEFAULT_FILE_NAME):
+        commands_path = cls.commands_path(result_path, file_name)
+        if os.path.isfile(commands_path):
+            os.remove(commands_path)
+
+    @classmethod
+    def load_commands(cls, result_path, file_name=DEFAULT_FILE_NAME):
+        commands_path = cls.commands_path(result_path, file_name)
         commands = []
 
         if os.path.isfile(commands_path):
@@ -100,9 +140,8 @@ class CommandItem:
         return list(map(lambda cmd: cls(**cmd), commands))
 
     @classmethod
-    def dump_commands(cls, commands, result_path, file_name=file_name):
-        result_path = os.path.abspath(result_path)
-        commands_path = os.path.join(result_path, file_name)
+    def dump_commands(cls, commands, result_path, file_name=DEFAULT_FILE_NAME):
+        commands_path = cls.commands_path(result_path, file_name)
 
         fd, path = tempfile.mkstemp(prefix=file_name, dir=result_path)
         with os.fdopen(fd, 'w') as f:

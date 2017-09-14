@@ -6,13 +6,12 @@ import tempfile
 import shutil
 from datetime import datetime
 
-
 from flask import jsonify, request
 from flask.views import MethodView
 
-
 from chainer_ui import DB_SESSION
 from chainer_ui.models.result import Result
+from chainer_ui.utils.command_item import CommandItem
 
 
 class ResultCommandAPI(MethodView):
@@ -24,60 +23,42 @@ class ResultCommandAPI(MethodView):
         result = DB_SESSION.query(Result).filter_by(id=id).first()
 
         if result is None:
-            response = jsonify({
+            return jsonify({
                 'result': None,
                 'message': 'No interface defined for URL.'
-            })
-            return response, 404
+            }), 404
 
         request_json = request.get_json()
-
-        if 'name' not in request_json:
+        if request_json is None:
             return jsonify({
-                'message': 'Name is required'
+                'message': 'Empty request.'
             }), 400
 
-        if 'schedule' in request_json:
+        command_name = request_json.get('name', None)
+        if command_name is None:
+            return jsonify({
+                'message': 'Name is required.'
+            }), 400
 
-            if set(request_json['schedule'].keys()) != {'key', 'value'}:
-                return jsonify({
-                    'message': 'The schedule required key and value'
-                }), 400
+        schedule = request_json.get('schedule', None)
+        if not CommandItem.is_valid_schedule(schedule):
+            return jsonify({
+                'message': 'Schedule is invalid.'
+            }), 400
 
-            if request_json['schedule']['key'] not in ['epoch', 'iteration']:
-                return jsonify({
-                    'message': 'Schedule key should be epoch or iteration.'
-                }), 400
+        command = CommandItem(
+            name=command_name,
+        )
 
-        command = {
-            'request': {
-                'status': 'open'
-            }
-        }
+        command.set_request(
+            CommandItem.REQUEST_OPEN,
+            request_json.get('body', None),
+            request_json.get('schedule', None)
+        )
 
-        command['name'] = request_json['name']
-        command['request']['created_at'] = datetime.now().isoformat()
+        commands = CommandItem.load_commands(result.path_name)
+        commands.append(command)
 
-        if 'body' in request_json:
-            command['request']['body'] = request_json['body']
+        CommandItem.dump_commands(commands, result.path_name)
 
-        if 'schedule' in request_json:
-            command['request']['schedule'] = request_json['schedule']
-
-        command_path = os.path.join(result.path_name, 'commands')
-
-        if os.path.isfile(command_path):
-            with open(command_path) as json_data:
-                command_list = json.load(json_data)
-        else:
-            command_list = []
-
-        command_list.append(command)
-
-        _fd, path = tempfile.mkstemp(prefix='commands', dir=result.path_name)
-        with os.fdopen(_fd, 'w') as _f:
-            json.dump(command_list, _f, indent=4)
-
-        shutil.move(path, command_path)
-
-        return jsonify(command)
+        return jsonify(command.to_dict())

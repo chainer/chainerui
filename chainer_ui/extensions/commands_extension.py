@@ -9,7 +9,7 @@ from chainer.training import trigger as trigger_module
 from chainer.serializers import npz
 from chainer.training.extensions._snapshot import _snapshot_object
 
-from chainer_ui.utils import is_jsonable
+from chainer_ui.utils.command_item import CommandItem
 
 
 def shouldExecute(trainer, command):
@@ -45,9 +45,6 @@ def adjust_hyperparams(trainer, body):
 
 class CommandsExtension(extension.Extension):
 
-    STATUS_SUCCESS = 'SUCCESS'
-    STATUS_FAILUE = 'FAILUE'
-
     priority = extension.PRIORITY_READER
     default_receivers = {
         'take_snapshot': take_snapshot,
@@ -63,28 +60,26 @@ class CommandsExtension(extension.Extension):
         self._receivers.update(receivers)
 
     def initialize(self, trainer):
-        commands_path = self._commands_path(trainer)
-        if os.path.isfile(commands_path):
-            os.remove(commands_path)
+        CommandItem.remove_commands_file(trainer.out)
 
     def __call__(self, trainer):
         if not self._trigger(trainer):
             return
 
-        commands = self._load_commands(trainer)
+        commands = CommandItem.load_commands(trainer.out)
 
-        isUpdated = False
+        is_updated = False
         for command in commands:
-            if not shouldExecute(trainer, command):
+            if not command.should_execute(trainer):
                 continue
 
-            response = self._execute_command(
-                trainer, command['name'], command['request'])
-            command['response'] = response
-            isUpdated = True
+            body, status = self._execute_command(
+                trainer, command.name, command.request)
+            command.set_response(trainer, body, status)
+            is_updated = True
 
-        if isUpdated:
-            self._write_commands(trainer, commands)
+        if is_updated:
+            CommandItem.dump_commands(commands, trainer.out)
 
     def finalize(self):
         pass
@@ -97,50 +92,13 @@ class CommandsExtension(extension.Extension):
         self._receivers[command_name] = function
 
     def _execute_command(self, trainer, command_name, request):
-        response = {
-            'body': None
-        }
-
         receiver = self._receivers.get(command_name, None)
         try:
             response_body = receiver(trainer, request.get('body', None))
+            response_status = CommandItem.RESPONSE_SUCCESS
         except Exception as e:
             print('catched execption from receiver:', e.args)
-            response['status'] = self.STATUS_FAILUE
-        else:
-            response['status'] = self.STATUS_SUCCESS
+            response_body = None
+            response_status = CommandItem.RESPONSE_FAILUE
 
-        if is_jsonable(response_body):
-            response['body'] = response_body
-        response['epoch'] = trainer.updater.epoch
-        response['iteration'] = trainer.updater.iteration
-        response['elapsed_time'] = trainer.elapsed_time
-        response['executed_at'] = datetime.now().isoformat()
-
-        return response
-
-    def _load_commands(self, trainer):
-        commands_path = self._commands_path(trainer)
-        commands = []
-
-        if os.path.isfile(commands_path):
-            with open(commands_path, 'r') as f:
-                try:
-                    commands = json.load(f)
-                except json.decoder.JSONDecodeError as e:
-                    pass
-
-        return commands
-
-    def _write_commands(self, trainer, commands):
-        file_name = self._file_name
-
-        fd, path = tempfile.mkstemp(prefix=file_name, dir=trainer.out)
-        with os.fdopen(fd, 'w') as f:
-            json.dump(commands, f, indent=4)
-
-        new_path = self._commands_path(trainer)
-        shutil.move(path, new_path)
-
-    def _commands_path(self, trainer):
-        return os.path.join(trainer.out, self._file_name)
+        return response_body, response_status

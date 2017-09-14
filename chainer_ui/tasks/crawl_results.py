@@ -38,7 +38,7 @@ def crawl_result_path(result_path):
     if os.path.isdir(result_path):
         result['logs'] = load_result_json(result_path, 'log')
         result['args'] = load_result_json(result_path, 'args')
-        result['commands'] = CommandItem.load_commands(result_path, 'commands')
+        result['commands'] = CommandItem.load_commands(result_path)
 
         snapshots = [
             x for x in os.listdir(result_path) if x.count('snapshot_iter_')
