@@ -1,5 +1,6 @@
 ''' command.py '''
 
+import json
 
 from sqlalchemy import Column, Integer, String, ForeignKey
 from chainer_ui import DB_BASE
@@ -17,8 +18,8 @@ class Command(DB_BASE):
 
     def __init__(self, name=None, request=None, response=None):
         self.name = name
-        self.request = request
-        self.response = response
+        self.request = json.dumps(request, indent=4)
+        self.response = json.dumps(response, indent=4)
 
     def __repr__(self):
         return '<Command id: %r />' % (self.id)
@@ -27,9 +28,19 @@ class Command(DB_BASE):
     def serialize(self):
         ''' serialize '''
 
+        if self.request is None:
+            request = None
+        else:
+            request = json.loads(self.request)
+
+        if self.response is None:
+            response = None
+        else:
+            response = json.loads(self.response)
+
         return {
             'id': self.id,
             'name': self.name,
-            'request': self.request,
-            'response': self.response
+            'request': request,
+            'response': response
         }

@@ -159,6 +159,6 @@ class CommandItem:
     def to_model(self):
         return Command(
             name=self._name,
-            request=json.dumps(self._request, indent=4),
-            response=json.dumps(self._response, indent=4)
+            request=self._request,
+            response=self._response
         )
