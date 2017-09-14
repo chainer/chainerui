@@ -71,9 +71,7 @@ def crawl_results():
         for cmd in crawled_result['commands'][
                 len(current_result.commands):
         ]:
-            current_result.commands.append(
-                Command(cmd.name, json.dumps(cmd.request_body, indent=4))
-            )
+            current_result.commands.append(cmd.to_model())
 
         for snapshot in crawled_result['snapshots'][
                 len(current_result.snapshots):

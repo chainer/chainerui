@@ -6,6 +6,7 @@ import shutil
 import tempfile
 from datetime import datetime
 
+from chainer_ui.models.command import Command
 from chainer_ui.utils.is_jsonable import is_jsonable
 
 
@@ -154,3 +155,10 @@ class CommandItem:
             'request': self._request,
             'response': self._response
         }
+
+    def to_model(self):
+        return Command(
+            name=self._name,
+            request=json.dumps(self._request, indent=4),
+            response=json.dumps(self._response, indent=4)
+        )
