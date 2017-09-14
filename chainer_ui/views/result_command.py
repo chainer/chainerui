@@ -1,11 +1,5 @@
 """ results.py """
 
-import os
-import json
-import tempfile
-import shutil
-from datetime import datetime
-
 from flask import jsonify, request
 from flask.views import MethodView
 

@@ -1,9 +1,7 @@
 ''' crawl_results.py '''
 
-
 import os
 import json
-
 
 from chainer_ui import DB_SESSION
 from chainer_ui.models.result import Result

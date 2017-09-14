@@ -1,9 +1,3 @@
-import json
-import os
-import shutil
-import tempfile
-from datetime import datetime
-
 from chainer.training import extension
 from chainer.training import trigger as trigger_module
 from chainer.serializers import npz
