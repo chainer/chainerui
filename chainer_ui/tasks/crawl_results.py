@@ -59,8 +59,9 @@ def crawl_results():
         if need_reset:
             current_result.logs = []
             current_result.args = None
-            current_result.commands = []
-            current_result.snapshots = []
+
+        current_result.commands = []
+        current_result.snapshots = []
 
         for log in crawled_result['logs'][len(current_result.logs):]:
             current_result.logs.append(Log(json.dumps(log)))
