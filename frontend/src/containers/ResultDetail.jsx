@@ -58,11 +58,15 @@ class ResultDetail extends React.Component {
               <Args args={result.args || []} />
             </div>
             <div className="col-sm-6 p-2">
-              <Commands
-                resultId={result.id}
-                commands={result.commands || []}
-                onCommandSubmit={this.props.createCommand}
-              />
+              {
+                (result.id != null) ? (
+                  <Commands
+                    resultId={result.id}
+                    commands={result.commands || []}
+                    onCommandSubmit={this.props.createCommand}
+                  />
+                ) : null
+              }
             </div>
             <div className="col-sm-6 p-2">
               <Snapshots snapshots={result.snapshots || []} />

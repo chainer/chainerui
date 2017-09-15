@@ -23,9 +23,8 @@ class CommandButton extends React.Component {
       commandName,
       freezeTime
     } = this.props;
-    const commandBodyJson = {};
 
-    onCommandSubmit(resultId, commandName, commandBodyJson);
+    onCommandSubmit(resultId, commandName);
 
     this.setState({ disabled: true });
     setTimeout(() => {
