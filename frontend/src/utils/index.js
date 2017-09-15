@@ -56,7 +56,7 @@ export const isJsonString = (str) => {
 
 export const getSelectedResults = (resultsConfig = {}) => (
   Object.keys(resultsConfig).filter((resultId) => (
-    resultsConfig[resultId].selected
+    !resultsConfig[resultId].hidden
   )).map((resultId) => (
     Number(resultId)
   ))

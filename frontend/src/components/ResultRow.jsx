@@ -77,7 +77,7 @@ class ResultRow extends React.Component {
     return (
       <tr className="result-row">
         <td>
-          <input type="checkbox" checked={resultConfig.selected} onChange={this.handleSelectToggle} />
+          <input type="checkbox" checked={!resultConfig.hidden} onChange={this.handleSelectToggle} />
         </td>
         <td>
           <Link to={`results/${result.id}`}>{result.id}</Link>
@@ -131,7 +131,7 @@ ResultRow.propTypes = {
     argKeys: PropTypes.arrayOf(PropTypes.string)
   }),
   resultConfig: PropTypes.shape({
-    selected: PropTypes.bool
+    hidden: PropTypes.bool
   }),
   onResultsConfigSelectToggle: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired
@@ -141,7 +141,7 @@ ResultRow.defaultProps = {
   stats: {
     argKeys: []
   },
-  resultConfig: { selected: false }
+  resultConfig: { hidden: false }
 };
 
 export default ResultRow;

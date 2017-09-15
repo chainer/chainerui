@@ -189,7 +189,7 @@ const resultsConfig = (state = {}, action) => {
         ...state,
         [Number(resultId)]: {
           ...resultConfig,
-          selected: !resultConfig.selected
+          hidden: !resultConfig.hidden
         }
       };
     case ActionTypes.RESULT_UPDATE_SUCCESS:

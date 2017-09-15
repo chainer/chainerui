@@ -60,7 +60,7 @@ ExperimentsTable.propTypes = {
   ),
   config: PropTypes.shape({
     resultsConfig: PropTypes.objectOf(PropTypes.shape({
-      selected: PropTypes.bool
+      hidden: PropTypes.bool
     }))
   }).isRequired,
   stats: PropTypes.shape({

@@ -140,7 +140,7 @@ LinesConfigurator.propTypes = {
       }))
     })),
     resultsConfig: PropTypes.objectOf(PropTypes.shape({
-      selected: PropTypes.bool
+      hidden: PropTypes.bool
     })),
     lines: PropTypes.objectOf(
       PropTypes.shape({
