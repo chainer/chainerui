@@ -80,7 +80,18 @@ const fetchState = (state = { results: '' }, action) => {
 };
 
 
-const axes = (state = {}, action) => {
+const defaultAxisState = {
+  yLeftAxis: {
+    axisName: 'yLeftAxis',
+    logKeysConfig: {
+      'main/loss': {
+        selected: true
+      }
+    }
+  }
+};
+
+const axes = (state = defaultAxisState, action) => {
   const {
     axisName,
     logKey,
