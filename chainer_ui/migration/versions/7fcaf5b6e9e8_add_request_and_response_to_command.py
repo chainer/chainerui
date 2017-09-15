@@ -27,4 +27,4 @@ def downgrade():
     with op.batch_alter_table('command') as batch_op:
         batch_op.drop_column('request')
         batch_op.drop_column('response')
-        batch_op.add_column(sa.Column('body', sa.String(1024)))
+        batch_op.add_column(sa.Column('body', sa.String(1024), nullable=True))
