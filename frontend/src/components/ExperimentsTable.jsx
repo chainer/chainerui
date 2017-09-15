@@ -6,7 +6,7 @@ import ResultRow from './ResultRow';
 const ExperimentsTable = (props) => {
   const {
     results = {}, stats, config,
-    onResultsConfigSelectToggle, onResultUpdate, onResultDelete
+    onResultsConfigSelectToggle, onResultUpdate
   } = props;
   const { argKeys } = stats;
   const { resultsConfig = {} } = config;
@@ -24,7 +24,6 @@ const ExperimentsTable = (props) => {
         key={key}
         onResultsConfigSelectToggle={onResultsConfigSelectToggle}
         onResultUpdate={onResultUpdate}
-        onResultDelete={onResultDelete}
       />
     );
   });
@@ -68,8 +67,7 @@ ExperimentsTable.propTypes = {
     argKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   onResultsConfigSelectToggle: PropTypes.func.isRequired,
-  onResultUpdate: PropTypes.func.isRequired,
-  onResultDelete: PropTypes.func.isRequired
+  onResultUpdate: PropTypes.func.isRequired
 };
 ExperimentsTable.defaultProps = {
   results: {},

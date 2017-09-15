@@ -39,7 +39,7 @@ class Result(DB_BASE):
             'id': self.id,
             'pathName': self.path_name,
             'name': self.name,
-            'is_unregistered': self.is_unregistered,
+            'isUnregistered': self.is_unregistered,
             'logs': [log.serialize for log in self.logs],
             'args': self.args.serialize if self.args is not None else [],
             'commands': [cmd.serialize for cmd in self.commands],

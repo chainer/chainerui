@@ -50,8 +50,8 @@ class ResultRow extends React.Component {
   }
 
   handleUnregister() {
-    const { result, onResultDelete } = this.props;
-    onResultDelete(result.id);
+    const { result, onResultUpdate } = this.props;
+    onResultUpdate({ ...result, isUnregistered: true });
     this.toggleUnregisterModal();
   }
 
@@ -134,8 +134,7 @@ ResultRow.propTypes = {
     selected: PropTypes.bool
   }),
   onResultsConfigSelectToggle: PropTypes.func.isRequired,
-  onResultUpdate: PropTypes.func.isRequired,
-  onResultDelete: PropTypes.func.isRequired
+  onResultUpdate: PropTypes.func.isRequired
 };
 
 ResultRow.defaultProps = {

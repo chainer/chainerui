@@ -25,11 +25,16 @@ class ResultAPI(MethodView):
             return response, 404
 
         request_json = request.get_json()
+        print(request_json)
         request_result = request_json.get('result')
 
         name = request_result.get('name', None)
         if name is not None:
             result.name = name
+
+        is_unregistered = request_result.get('isUnregistered', None)
+        if is_unregistered is not None:
+            result.is_unregistered = is_unregistered
 
         DB_SESSION.add(result)
         DB_SESSION.commit()
