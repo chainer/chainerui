@@ -14,7 +14,7 @@ class ResultAPI(MethodView):
 
     def get(self, id=None):
         """ get """
-        results = DB_SESSION.query(Result).all()
+        results = DB_SESSION.query(Result).filter_by(is_unregistered=False)
         return jsonify({'results': [result.serialize for result in results]})
 
     def put(self, id):
@@ -25,7 +25,6 @@ class ResultAPI(MethodView):
             return response, 404
 
         request_json = request.get_json()
-        print(request_json)
         request_result = request_json.get('result')
 
         name = request_result.get('name', None)
