@@ -12,8 +12,10 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 
 CHAINER_UI_ENV = os.getenv('CHAINER_UI_ENV', 'prouction')
+CHAINER_UI_ROOT = os.path.abspath(
+    os.path.expanduser(os.getenv('CHAINER_UI_ROOT', '~/.chainer_ui')))
 PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_FILE_DIR = '/tmp'
+DB_FILE_DIR = os.path.join(CHAINER_UI_ROOT, 'db')
 DB_FILE_PATH = os.path.join(DB_FILE_DIR, 'chainer-ui.db')
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DB_FILE_PATH
 ENGINE = create_engine(
@@ -31,6 +33,8 @@ DB_SESSION = scoped_session(
 def create_db():
     ''' create_db '''
     print('DB_FILE_PATH: ', DB_FILE_PATH)
+    if not os.path.isdir(DB_FILE_DIR):
+        os.makedirs(DB_FILE_DIR, exist_ok=True)
     DB_BASE.metadata.create_all(ENGINE)
 
 
