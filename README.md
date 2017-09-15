@@ -68,6 +68,37 @@ chainer-ui server
 
 Then open http://localhost:5000/ .
 
+### Unregister results
+
+When you want to unregister a result, click `X` button at the right end of the result table in http://localhost:5000/ .
+
+When you want to unregister all results, drop and create a new database as follows.
+
+```
+chainer-ui db drop
+chainer-ui db create
+chainer-ui db upgrade
+```
+
+
+## Upgrade guide
+
+If you want to keep registerd results, move sqlite database file and upgrade the database.
+
+```
+mkdir -p ~/.chainer_ui/db
+mv /tmp/chainer-ui.db ~/.chainer_ui/db
+chainer-ui db upgrade
+```
+
+Or, if it is OK to clear all registrations, create a new database.
+
+```
+chainer-ui db create
+chainer-ui db upgrade
+```
+
+
 
 ## Client side (only for development)
 
@@ -83,6 +114,3 @@ npm run build:watch
 - Clone and try using Chainer UI.
 - Any bug reports are welcome. Issue page: https://github.com/pfn-intern/intern-chainer-ui/issues
 - Any feature requests are welcome. Slack channel: [#ext-chainer-ui](https://preferred.slack.com/messages/ext-chainer-ui/)
-
-
-
