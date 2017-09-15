@@ -80,7 +80,18 @@ const fetchState = (state = { results: '' }, action) => {
 };
 
 
-const axes = (state = {}, action) => {
+const defaultAxisState = {
+  yLeftAxis: {
+    axisName: 'yLeftAxis',
+    logKeysConfig: {
+      'main/loss': {
+        selected: true
+      }
+    }
+  }
+};
+
+const axes = (state = defaultAxisState, action) => {
   const {
     axisName,
     logKey,
@@ -189,7 +200,7 @@ const resultsConfig = (state = {}, action) => {
         ...state,
         [Number(resultId)]: {
           ...resultConfig,
-          selected: !resultConfig.selected
+          hidden: !resultConfig.hidden
         }
       };
     case ActionTypes.RESULT_UPDATE_SUCCESS:

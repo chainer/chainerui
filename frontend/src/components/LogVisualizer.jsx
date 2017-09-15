@@ -92,7 +92,7 @@ class LogVisualizer extends React.Component {
       yRightAxis = { axisName: 'yRightAxis' }
     } = axes || {};
     const { xAxisKey = 'epoch' } = xAxis;
-    const selectedResults = getSelectedResults(resultsConfig);
+    const selectedResults = getSelectedResults(results, resultsConfig);
     const selectedLogKeys = {
       yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
       yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
@@ -187,7 +187,7 @@ LogVisualizer.propTypes = {
       }))
     })),
     resultsConfig: PropTypes.objectOf(PropTypes.shape({
-      selected: PropTypes.bool
+      hidden: PropTypes.bool
     })),
     lines: PropTypes.objectOf(
       PropTypes.shape({
