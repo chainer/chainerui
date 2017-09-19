@@ -65,7 +65,8 @@ export const createCommand = (resultId, commandName, requestBody = null, schedul
       body: {
         name: commandName,
         body: requestBody,
-        schedule
+        schedule,
+        resultId
       }
     }
   };
