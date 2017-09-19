@@ -86,7 +86,8 @@ def create_app(args):
         DB_SESSION.remove()
 
     @app.route('/')
-    @app.route('/results/<int:result_id>')
+    @app.route('/projects/<int:project_id>')
+    @app.route('/projects/<int:project_id>/results/<int:result_id>')
     def index(**kwargs):
         ''' render react app '''
         return render_template('index.html')
