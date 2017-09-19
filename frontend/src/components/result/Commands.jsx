@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CommandForm from './CommandForm';
 import CommandButton from './CommandButton';
 import { responseStatusToIcon } from '../../utils';
 
@@ -48,14 +47,6 @@ const Commands = (props) => {
               resultId={resultId}
               commandName="take_snapshot"
               label="Take snapshot"
-              onCommandSubmit={onCommandSubmit}
-            />
-          </div>
-        </div>
-        <div className="mb-2 card">
-          <div className="card-body">
-            <CommandForm
-              resultId={resultId}
               onCommandSubmit={onCommandSubmit}
             />
           </div>
