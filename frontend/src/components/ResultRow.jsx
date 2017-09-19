@@ -2,7 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { displayName, truncate, getLastLogDict, argValue2string } from '../utils';
+import {
+  displayName,
+  truncate,
+  getLastLogDict,
+  argValue2string,
+  urlForResultDetail
+} from '../utils';
 
 
 const emptyStr = '-';
@@ -80,7 +86,7 @@ class ResultRow extends React.Component {
           <input type="checkbox" checked={!resultConfig.hidden} onChange={this.handleSelectToggle} />
         </td>
         <td>
-          <Link to={`results/${result.id}`}>{result.id}</Link>
+          <Link to={urlForResultDetail(1, result.id)}>{result.id}</Link>
         </td>
         <td>
           <input

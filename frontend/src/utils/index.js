@@ -3,6 +3,7 @@ import { lineColorGenerator } from '../utils';
 export * from './color';
 export * from './command.jsx';
 export * from './polling';
+export * from './url';
 
 export const line2key = (line) => `${line.resultId}_${line.logKey}`;
 
