@@ -46,8 +46,6 @@ const entities = (state = { results: {} }, action) => {
       return state;
     case ActionTypes.COMMAND_CREATE_SUCCESS:
       if (action.response && action.response.commands) {
-        console.log(action);
-
         const newResults = { ...state.results };
         newResults[action.body.resultId].commands = action.response.commands;
 
