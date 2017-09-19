@@ -20,7 +20,7 @@ import { defaultConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
-class ChainerUIContainer extends React.Component {
+class PlotContainer extends React.Component {
   componentDidMount() {
     const { pollingRate } = this.props.config.global;
     this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
@@ -124,7 +124,7 @@ const mapStateToProps = (state) => {
   return { results, fetchState, config, stats };
 };
 
-ChainerUIContainer.propTypes = {
+PlotContainer.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
     results: PropTypes.string
@@ -166,5 +166,5 @@ export default connect(mapStateToProps, {
   updateXAxisKey,
   updateAxisScaleRangeType,
   updateAxisScaleRangeNumber
-})(ChainerUIContainer);
+})(PlotContainer);
 

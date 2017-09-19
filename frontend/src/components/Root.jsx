@@ -4,7 +4,7 @@ import { Router, Route, browserHistory } from 'react-router';
 import { persistStore } from 'redux-persist';
 import { syncHistoryWithStore } from 'react-router-redux';
 import configureStore from '../store/configureStore';
-import ChainerUIContainer from '../containers/ChainerUIContainer';
+import PlotContainer from '../containers/PlotContainer';
 import ResultDetail from '../containers/ResultDetail';
 
 
@@ -32,7 +32,7 @@ class Root extends React.Component {
     return (
       <Provider store={store}>
         <Router history={history}>
-          <Route path="/" component={ChainerUIContainer} />
+          <Route path="/" component={PlotContainer} />
           <Route path="/results/(:resultId)" component={ResultDetail} />
         </Router>
       </Provider>
