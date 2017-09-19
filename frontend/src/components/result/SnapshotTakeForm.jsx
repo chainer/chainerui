@@ -21,7 +21,7 @@ class SnapshotTakeForm extends React.Component {
   constructor() {
     super();
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleScheduleTypeChange = this.handleScheduleTypeChange.bind(this);
     this.handleScheduleValueChange = this.handleScheduleValueChange.bind(this);
     this.handleScheduleKeyChange = this.handleScheduleKeyChange.bind(this);
@@ -29,7 +29,7 @@ class SnapshotTakeForm extends React.Component {
     this.state = initialState;
   }
 
-  handleClick(e) {
+  handleSubmit(e) {
     e.preventDefault();
     const {
       resultId,
@@ -58,7 +58,7 @@ class SnapshotTakeForm extends React.Component {
     const { schedule } = this.state;
     this.setState({
       schedule: {
-        value: e.target.value,
+        value: Number(e.target.value),
         key: schedule.key
       }
     });
@@ -80,11 +80,11 @@ class SnapshotTakeForm extends React.Component {
     return (
       <div className="card">
         <div className="card-body">
-          <Form className="form-inline">
+          <Form className="form-inline" onSubmit={this.handleSubmit}>
             <Button
+              type="submit"
               color="primary"
               disabled={disabled}
-              onClick={this.handleClick}
             >
               { buttonLabel }
             </Button>
@@ -111,6 +111,8 @@ class SnapshotTakeForm extends React.Component {
                   <Input
                     type="number"
                     size="sm"
+                    min="0"
+                    step="1"
                     placeholder={`# ${schedule.key}`}
                     disabled={scheduleType !== SCHEDULE_CUSTOM}
                     value={schedule.value}
@@ -144,7 +146,7 @@ SnapshotTakeForm.propTypes = {
 };
 
 SnapshotTakeForm.defaultProps = {
-  freezeTime: 5000
+  freezeTime: 1000
 };
 
 export default SnapshotTakeForm;
