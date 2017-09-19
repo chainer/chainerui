@@ -12,6 +12,7 @@ import {
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber
 } from '../actions';
+import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
@@ -52,6 +53,7 @@ class PlotContainer extends React.Component {
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
         <Container fluid>
+          <BreadcrumbLink />
           <div className="row">
             <div className="col-md-4 col-lg-3">
               <SideBar
