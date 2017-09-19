@@ -54,7 +54,9 @@ export default (store) => (next) => (action) => {
   return callApi(endpoint, method, body).then(
     (response) => next(actionWith({
       response,
-      type: successType
+      type: successType,
+      endpoint,
+      body
     })),
     (error) => next(actionWith({
       type: failureType,

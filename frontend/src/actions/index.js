@@ -64,7 +64,8 @@ export const createCommand = (resultId, commandName, requestBody = null) => {
       method: 'POST',
       body: {
         name: commandName,
-        body: requestBody
+        body: requestBody,
+        resultId
       }
     }
   };
