@@ -46,7 +46,7 @@ class CommandForm extends React.Component {
       });
       return;
     }
-    const commandBodyJson = commandBody === '' ? {} : JSON.parse(commandBody);
+    const commandBodyJson = commandBody === '' ? null : JSON.parse(commandBody);
     onCommandSubmit(resultId, commandName, commandBodyJson);
   }
 

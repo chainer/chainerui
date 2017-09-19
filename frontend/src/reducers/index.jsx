@@ -21,20 +21,23 @@ const entities = (state = { results: {} }, action) => {
     case ActionTypes.RESULT_UPDATE_SUCCESS:
       if (action.response && action.response.result) {
         const { result } = action.response;
+        const newResults = { ...state.results };
+        if (result.isUnregistered) {
+          delete newResults[result.id];
+        } else {
+          newResults[result.id] = result;
+        }
         return {
           ...state,
-          results: {
-            ...state.results,
-            [result.id]: result
-          }
+          results: newResults
         };
       }
       return state;
     case ActionTypes.RESULT_DELETE_SUCCESS:
       if (action.response && action.response.result) {
-        const resultId = action.response.result.id;
+        const { result } = action.response;
         const newResults = { ...state.results };
-        delete newResults[resultId];
+        delete newResults[result.id];
         return {
           ...state,
           results: newResults
@@ -45,6 +48,7 @@ const entities = (state = { results: {} }, action) => {
       return state;
   }
 };
+
 
 const fetchState = (state = { results: '' }, action) => {
   switch (action.type) {
@@ -76,21 +80,18 @@ const fetchState = (state = { results: '' }, action) => {
 };
 
 
-const resultsConfigWithoutResult = (state, resultId) => {
-  if (!Number.isInteger(resultId)) {
-    return state;
-  }
-  const newState = {};
-  Object.keys(state).forEach((id) => {
-    if (id === resultId) {
-      return;
+const defaultAxisState = {
+  yLeftAxis: {
+    axisName: 'yLeftAxis',
+    logKeysConfig: {
+      'main/loss': {
+        selected: true
+      }
     }
-    newState[id] = state[id];
-  });
-  return newState;
+  }
 };
 
-const axes = (state = {}, action) => {
+const axes = (state = defaultAxisState, action) => {
   const {
     axisName,
     logKey,
@@ -172,6 +173,21 @@ const axes = (state = {}, action) => {
   }
 };
 
+
+const resultsConfigWithoutResult = (state, resultId) => {
+  if (!Number.isInteger(resultId)) {
+    return state;
+  }
+  const newState = {};
+  Object.keys(state).forEach((id) => {
+    if (Number(id) === resultId) {
+      return;
+    }
+    newState[id] = state[id];
+  });
+  return newState;
+};
+
 const resultsConfig = (state = {}, action) => {
   const { resultId } = action;
   const resultConfig = state[resultId] || {};
@@ -184,15 +200,24 @@ const resultsConfig = (state = {}, action) => {
         ...state,
         [Number(resultId)]: {
           ...resultConfig,
-          selected: !resultConfig.selected
+          hidden: !resultConfig.hidden
         }
       };
+    case ActionTypes.RESULT_UPDATE_SUCCESS:
+      if (action.response && action.response.result) {
+        const { result } = action.response;
+        if (result.isUnregistered) {
+          return resultsConfigWithoutResult(state, result.id);
+        }
+      }
+      return state;
     case ActionTypes.RESULT_DELETE_SUCCESS:
       return resultsConfigWithoutResult(state, resultId);
     default:
       return state;
   }
 };
+
 
 const lines = (state = {}, action) => {
   const { line, lineKey } = action;
@@ -209,6 +234,7 @@ const lines = (state = {}, action) => {
       return state;
   }
 };
+
 
 const defaultGlobaState = {
   pollingRate: pollingOptions[1].value,
@@ -233,6 +259,7 @@ const global = (state = defaultGlobaState, action) => {
       return state;
   }
 };
+
 
 const configReducers = combineReducers({
   axes,

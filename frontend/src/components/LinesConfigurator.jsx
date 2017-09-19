@@ -74,7 +74,7 @@ class LinesConfigurator extends React.Component {
     const axisConfig = axes[axisName] || {};
     const { logKeysConfig = {} } = axisConfig;
 
-    const selectedResults = getSelectedResults(resultsConfig);
+    const selectedResults = getSelectedResults(results, resultsConfig);
     const selectedLogKeys = getSelectedLogKeys(logKeysConfig);
     const lineConfiguratorElems = [];
     selectedResults.forEach((resultId) => {
@@ -140,7 +140,7 @@ LinesConfigurator.propTypes = {
       }))
     })),
     resultsConfig: PropTypes.objectOf(PropTypes.shape({
-      selected: PropTypes.bool
+      hidden: PropTypes.bool
     })),
     lines: PropTypes.objectOf(
       PropTypes.shape({

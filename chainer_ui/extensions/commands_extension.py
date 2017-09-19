@@ -1,13 +1,28 @@
-import json
-import os
-import shutil
-import tempfile
-from datetime import datetime
-
 from chainer.training import extension
 from chainer.training import trigger as trigger_module
 from chainer.serializers import npz
 from chainer.training.extensions._snapshot import _snapshot_object
+
+from chainer_ui.utils.command_item import CommandItem
+
+
+def shouldExecute(trainer, command):
+    if 'response' in command:
+        # already executed
+        return False
+    request = command.get('request', {})
+    if 'schedule' in request:
+        schedule = request['schedule']
+        if schedule['key'] == 'epoch':
+            if trainer.updater.epoch != schedule['value']:
+                return False
+        elif schedule['key'] == 'iteration':
+            if trainer.updater.iteration != schedule['value']:
+                return False
+        else:
+            # invalid schedule key
+            return False
+    return True
 
 
 def take_snapshot(trainer, body):
@@ -39,30 +54,26 @@ class CommandsExtension(extension.Extension):
         self._receivers.update(receivers)
 
     def initialize(self, trainer):
-        commands_path = self._commands_path(trainer)
-        if os.path.isfile(commands_path):
-            os.remove(commands_path)
+        CommandItem.remove_commands_file(trainer.out)
 
     def __call__(self, trainer):
         if not self._trigger(trainer):
             return
 
-        commands = self._load_commands(trainer)
+        commands = CommandItem.load_commands(trainer.out)
 
+        is_updated = False
         for command in commands:
-            if command.get('executed_at', None) is not None:
-                # already executed
+            if not command.should_execute(trainer):
                 continue
-            receiver = self._receivers.get(command['name'], None)
-            if receiver is None:
-                continue
-            command['executed_at'] = datetime.now().isoformat()
-            try:
-                receiver(trainer, command['body'])
-            except Exception as e:
-                print('catched execption from receiver:', e.args)
 
-        self._write_commands(trainer, commands)
+            body, status = self._execute_command(
+                trainer, command.name, command.request)
+            command.set_response(trainer, status, body)
+            is_updated = True
+
+        if is_updated:
+            CommandItem.dump_commands(commands, trainer.out)
 
     def finalize(self):
         pass
@@ -74,28 +85,14 @@ class CommandsExtension(extension.Extension):
             raise ValueError('receiver is not callable')
         self._receivers[command_name] = function
 
-    def _load_commands(self, trainer):
-        commands_path = self._commands_path(trainer)
-        commands = []
+    def _execute_command(self, trainer, command_name, request):
+        receiver = self._receivers.get(command_name, None)
+        try:
+            response_body = receiver(trainer, request.get('body', None))
+            response_status = CommandItem.RESPONSE_SUCCESS
+        except Exception as e:
+            print('catched execption from receiver:', e.args)
+            response_body = None
+            response_status = CommandItem.RESPONSE_FAILUE
 
-        if os.path.isfile(commands_path):
-            with open(commands_path, 'r') as f:
-                try:
-                    commands = json.load(f)
-                except json.decoder.JSONDecodeError as e:
-                    pass
-
-        return commands
-
-    def _write_commands(self, trainer, commands):
-        file_name = self._file_name
-
-        fd, path = tempfile.mkstemp(prefix=file_name, dir=trainer.out)
-        with os.fdopen(fd, 'w') as f:
-            json.dump(commands, f, indent=4)
-
-        new_path = self._commands_path(trainer)
-        shutil.move(path, new_path)
-
-    def _commands_path(self, trainer):
-        return os.path.join(trainer.out, self._file_name)
+        return response_body, response_status

@@ -1,9 +1,7 @@
 ''' crawl_results.py '''
 
-
 import os
 import json
-
 
 from chainer_ui import DB_SESSION
 from chainer_ui.models.result import Result
@@ -11,6 +9,7 @@ from chainer_ui.models.log import Log
 from chainer_ui.models.argument import Argument
 from chainer_ui.models.command import Command
 from chainer_ui.models.snapshot import Snapshot
+from chainer_ui.utils.command_item import CommandItem
 
 
 def load_result_json(result_path, json_file_name):
@@ -37,7 +36,7 @@ def crawl_result_path(result_path):
     if os.path.isdir(result_path):
         result['logs'] = load_result_json(result_path, 'log')
         result['args'] = load_result_json(result_path, 'args')
-        result['commands'] = load_result_json(result_path, 'commands')
+        result['commands'] = CommandItem.load_commands(result_path)
 
         snapshots = [
             x for x in os.listdir(result_path) if x.count('snapshot_iter_')
@@ -60,8 +59,9 @@ def crawl_results():
         if need_reset:
             current_result.logs = []
             current_result.args = None
-            current_result.commands = []
-            current_result.snapshots = []
+
+        current_result.commands = []
+        current_result.snapshots = []
 
         for log in crawled_result['logs'][len(current_result.logs):]:
             current_result.logs.append(Log(json.dumps(log)))
@@ -72,9 +72,7 @@ def crawl_results():
         for cmd in crawled_result['commands'][
                 len(current_result.commands):
         ]:
-            current_result.commands.append(
-                Command(cmd['name'], json.dumps(cmd['body'], indent=4))
-            )
+            current_result.commands.append(cmd.to_model())
 
         for snapshot in crawled_result['snapshots'][
                 len(current_result.snapshots):

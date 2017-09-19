@@ -15,8 +15,8 @@ class ResultRow extends React.Component {
     this.handleResultNameChange = this.handleResultNameChange.bind(this);
     this.handleResultNameKeyPress = this.handleResultNameKeyPress.bind(this);
     this.handleResultUpdate = this.handleResultUpdate.bind(this);
-    this.handleUnwatch = this.handleUnwatch.bind(this);
-    this.toggleUnwatchModal = this.toggleUnwatchModal.bind(this);
+    this.handleUnregister = this.handleUnregister.bind(this);
+    this.toggleUnregisterModal = this.toggleUnregisterModal.bind(this);
 
     const { result } = this.props;
     this.state = {
@@ -49,20 +49,20 @@ class ResultRow extends React.Component {
     }
   }
 
-  handleUnwatch() {
-    const { result, onResultDelete } = this.props;
-    onResultDelete(result.id);
-    this.toggleUnwatchModal();
+  handleUnregister() {
+    const { result, onResultUpdate } = this.props;
+    onResultUpdate({ ...result, isUnregistered: true });
+    this.toggleUnregisterModal();
   }
 
-  toggleUnwatchModal() {
+  toggleUnregisterModal() {
     this.setState({
-      showUnwatchModal: !this.state.showUnwatchModal
+      showUnregisterModal: !this.state.showUnregisterModal
     });
   }
 
   render() {
-    const { resultName, showUnwatchModal } = this.state;
+    const { resultName, showUnregisterModal } = this.state;
     const { result, stats, resultConfig } = this.props;
     const { args } = result;
 
@@ -77,7 +77,7 @@ class ResultRow extends React.Component {
     return (
       <tr className="result-row">
         <td>
-          <input type="checkbox" checked={resultConfig.selected} onChange={this.handleSelectToggle} />
+          <input type="checkbox" checked={!resultConfig.hidden} onChange={this.handleSelectToggle} />
         </td>
         <td>
           <Link to={`results/${result.id}`}>{result.id}</Link>
@@ -100,17 +100,17 @@ class ResultRow extends React.Component {
         </td>
         {argElems}
         <td>
-          <Button className="close" aria-label="Close" onClick={this.toggleUnwatchModal}>
+          <Button className="close" aria-label="Close" onClick={this.toggleUnregisterModal}>
             <span aria-hidden>&times;</span>
           </Button>
-          <Modal isOpen={showUnwatchModal}>
-            <ModalHeader>Unwatch a result</ModalHeader>
+          <Modal isOpen={showUnregisterModal}>
+            <ModalHeader>Unregister a result</ModalHeader>
             <ModalBody>
-              Are you sure to unwatch {displayName(result)} ?
+              Are you sure to unregister {displayName(result)} ?
             </ModalBody>
             <ModalFooter>
-              <Button color="secondary" onClick={this.toggleUnwatchModal}>Cancel</Button>
-              <Button color="danger" onClick={this.handleUnwatch}>Unwatch</Button>
+              <Button color="secondary" onClick={this.toggleUnregisterModal}>Cancel</Button>
+              <Button color="danger" onClick={this.handleUnregister}>Unregister</Button>
             </ModalFooter>
           </Modal>
         </td>
@@ -131,18 +131,17 @@ ResultRow.propTypes = {
     argKeys: PropTypes.arrayOf(PropTypes.string)
   }),
   resultConfig: PropTypes.shape({
-    selected: PropTypes.bool
+    hidden: PropTypes.bool
   }),
   onResultsConfigSelectToggle: PropTypes.func.isRequired,
-  onResultUpdate: PropTypes.func.isRequired,
-  onResultDelete: PropTypes.func.isRequired
+  onResultUpdate: PropTypes.func.isRequired
 };
 
 ResultRow.defaultProps = {
   stats: {
     argKeys: []
   },
-  resultConfig: { selected: false }
+  resultConfig: { hidden: false }
 };
 
 export default ResultRow;

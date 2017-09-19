@@ -1,6 +1,7 @@
 import { lineColorGenerator } from '../utils';
 
 export * from './color';
+export * from './command.jsx';
 export * from './polling';
 
 export const line2key = (line) => `${line.resultId}_${line.logKey}`;
@@ -53,9 +54,9 @@ export const isJsonString = (str) => {
   return true;
 };
 
-export const getSelectedResults = (resultsConfig = {}) => (
-  Object.keys(resultsConfig).filter((resultId) => (
-    resultsConfig[resultId].selected
+export const getSelectedResults = (results = {}, resultsConfig = {}) => (
+  Object.keys(results).filter((resultId) => (
+    !resultsConfig[resultId] || !resultsConfig[resultId].hidden
   )).map((resultId) => (
     Number(resultId)
   ))

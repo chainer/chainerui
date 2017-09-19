@@ -10,7 +10,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='chainer_ui',
-    version='0.0.6',
+    version='0.0.7',
     description='chainer ui',
     long_description=readme,
     install_requires=required,

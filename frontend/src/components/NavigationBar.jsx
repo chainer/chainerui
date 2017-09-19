@@ -8,7 +8,7 @@ import {
   Button
 } from 'reactstrap';
 import ResultsFetchState from './ResultsFetchState';
-import { chartSizeOptions, pollingOptions } from '../constants';
+import { chartSizeOptions, pollingOptions, CHAINER_UI_VERSION } from '../constants';
 
 
 const createPollingOptionElems = (options) => [
@@ -102,6 +102,7 @@ class NavigationBar extends React.Component {
                 </select>
               </FormGroup>
             </Form>
+            <p className="my-0"><small>Chainer UI {CHAINER_UI_VERSION}</small></p>
           </PopoverContent>
         </Popover>
       </Navbar>

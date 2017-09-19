@@ -8,9 +8,10 @@ import os
 from chainer_ui import create_app, create_db
 from chainer_ui import (DB_FILE_PATH, ENGINE, SQLALCHEMY_DATABASE_URI,
                         PACKAGE_DIR, DB_SESSION)
+from chainer_ui.models.result import Result
 from alembic import context
 from alembic.migration import MigrationContext
-from alembic.command import upgrade
+from alembic.command import upgrade, revision
 from alembic.config import Config
 
 
@@ -31,11 +32,19 @@ def register_handler(args):
         return os.path.isfile(log_path)
 
     result_path = os.path.abspath(args.result_dir)
-    from chainer_ui.models.result import Result
 
     if contain_log_file(result_path):
-        new_result_path = Result(os.path.abspath(result_path))
-        DB_SESSION.add(new_result_path)
+        result = DB_SESSION.query(Result).\
+            filter_by(path_name=result_path).first()
+
+        if result is None:
+            # register new result
+            result = Result(result_path)
+        else:
+            # update existiong result
+            result.is_unregistered = False
+
+        DB_SESSION.add(result)
         DB_SESSION.commit()
 
     else:
@@ -59,6 +68,12 @@ def db_handler(args):
         config = Config(ini_path)
         config.set_main_option("script_location", os.path.join(PACKAGE_DIR, 'migration'))
         upgrade(config, 'head')
+
+    if args.type == 'revision':
+        ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
+        config = Config(ini_path)
+        config.set_main_option("script_location", os.path.join(PACKAGE_DIR, 'migration'))
+        revision(config)
 
     if args.type == 'drop':
         os.remove(DB_FILE_PATH)
@@ -91,7 +106,7 @@ def main():
 
     parser_db = subparsers.add_parser('db', help='see `chainer-ui db -h`')
     parser_db.add_argument('type', choices=[
-        'create', 'drop', 'migrate', 'upgrade'
+        'create', 'drop', 'migrate', 'upgrade', 'revision'
     ])
     parser_db.set_defaults(handler=db_handler)
 

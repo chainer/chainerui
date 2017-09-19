@@ -1,22 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CommandForm from './CommandForm';
 import CommandButton from './CommandButton';
+import { responseStatusToIcon } from '../../utils';
 
 
 const createCommandRowElems = (commands) => commands.sort((a, b) =>
   // sort commands in decending order
   b.id - a.id
-).map((command) => (
-  <tr className="command-row" key={command.id}>
-    <td>{command.name}</td>
-    <td>
-      <pre>
-        <code>{command.body}</code>
-      </pre>
-    </td>
-  </tr>
-));
+).map((command) => {
+  const request = command.request || {};
+  const response = command.response || {};
+  const { schedule } = request;
+  return (
+    <tr className="command-row" key={command.id}>
+      <td>{command.name}</td>
+      <td>{responseStatusToIcon(response.status)}</td>
+      <td>{(new Date(request.created_at)).toLocaleString()}</td>
+      <td>{schedule ? `${schedule.value} ${schedule.key}` : ''}</td>
+      <td>{(new Date(response.executed_at)).toLocaleString()}</td>
+      <td>{response.epoch}</td>
+      <td>{response.iteration}</td>
+      <td>{response.elapsed_time != null ? response.elapsed_time.toFixed(2) : ''}</td>
+      <td>
+        <pre>
+          <code>{request.body ? JSON.stringify(request.body) : ''}</code>
+        </pre>
+      </td>
+      <td>
+        <pre>
+          <code>{response.body ? JSON.stringify(response.body) : ''}</code>
+        </pre>
+      </td>
+    </tr>
+  );
+});
 
 const Commands = (props) => {
   const { resultId, commands, onCommandSubmit } = props;
@@ -34,20 +51,20 @@ const Commands = (props) => {
             />
           </div>
         </div>
-        <div className="mb-2 card">
-          <div className="card-body">
-            <CommandForm
-              resultId={resultId}
-              onCommandSubmit={onCommandSubmit}
-            />
-          </div>
-        </div>
         <hr />
         <table className="table table-sm table-xy-overflow-scroll">
           <thead>
             <tr>
               <th>command name</th>
-              <th>body</th>
+              <th>response status</th>
+              <th>created at</th>
+              <th>schedule</th>
+              <th>executed at</th>
+              <th>epoch</th>
+              <th>iteraion</th>
+              <th>elapsed time</th>
+              <th>request body</th>
+              <th>response body</th>
             </tr>
           </thead>
           <tbody>
