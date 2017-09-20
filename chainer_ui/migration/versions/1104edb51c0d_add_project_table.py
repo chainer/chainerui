@@ -20,7 +20,7 @@ def upgrade():
     op.create_table('project',
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('path_name',
-                              sa.String(length=512), nullable=True),
+                              sa.String(length=512), nullable=False),
                     sa.Column('name', sa.String(length=512), nullable=True),
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('path_name')
