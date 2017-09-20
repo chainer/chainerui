@@ -23,11 +23,11 @@ export const truncate = (string, options = {}) => {
   return str;
 };
 
-export const displayName = (result = {}, config = {}) => (
+export const displayResultName = (result = {}, config = {}) => (
   truncate(result.name, config) || truncate(result.pathName, { ...config, forward: true })
 );
 
-export const line2name = (line, result = {}) => `${displayName(result)}/${line.logKey}`;
+export const line2name = (line, result = {}) => `${displayResultName(result)}/${line.logKey}`;
 
 export const getLastLogDict = (result = {}) => {
   const { logs = [] } = result;

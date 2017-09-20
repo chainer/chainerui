@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import {
-  displayName,
+  displayResultName,
   truncate,
   getLastLogDict,
   argValue2string,
@@ -112,7 +112,7 @@ class ResultRow extends React.Component {
           <Modal isOpen={showUnregisterModal}>
             <ModalHeader>Unregister a result</ModalHeader>
             <ModalBody>
-              Are you sure to unregister {displayName(result)} ?
+              Are you sure to unregister {displayResultName(result)} ?
             </ModalBody>
             <ModalFooter>
               <Button color="secondary" onClick={this.toggleUnregisterModal}>Cancel</Button>

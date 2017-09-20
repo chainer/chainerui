@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, IndexLink } from 'react-router';
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
-import { displayName, urlForPlot, urlForResultDetail } from '../utils';
+import { displayResultName, urlForPlot, urlForResultDetail } from '../utils';
 
 
 const BreadcrumbLink = (props) => {
@@ -26,7 +26,7 @@ const BreadcrumbLink = (props) => {
     items.push(
       <BreadcrumbItem key="resultDetail">
         <Link to={urlForResultDetail(project.id, result.id)}>
-          {displayName(result)}
+          {displayResultName(result)}
         </Link>
       </BreadcrumbItem>
     );

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Label, Input, Collapse, Button, Col, Row } from 'reactstrap';
 import { ChromePicker, GithubPicker } from 'react-color';
-import { displayName, lineColorGenerator } from '../utils';
+import { displayResultName, lineColorGenerator } from '../utils';
 
 
 const RESULT_NONE = -1;
@@ -92,7 +92,7 @@ class LineConfigurator extends React.Component {
       <div className="line-configurator">
         <dl>
           <dt>result name</dt>
-          <dd>{displayName(result)}</dd>
+          <dd>{displayResultName(result)}</dd>
           <dt>log key</dt>
           <dd>{logKey}</dd>
         </dl>
