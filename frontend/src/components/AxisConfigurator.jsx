@@ -31,6 +31,7 @@ class AxisConfigurator extends React.Component {
 
   render() {
     const {
+      projectId,
       axisConfig,
       onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
     } = this.props;
@@ -47,12 +48,14 @@ class AxisConfigurator extends React.Component {
           <Button size="sm" className="my-2" onClick={this.toggleRangeConfig}>Toggle range setting</Button>
           <Collapse isOpen={this.state.showRangeConfig}>
             <AxisRangeConfigurator
+              projectId={projectId}
               axisConfig={axisConfig}
               isMin={false}
               onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
               onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
             />
             <AxisRangeConfigurator
+              projectId={projectId}
               axisConfig={axisConfig}
               isMin
               onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}

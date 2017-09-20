@@ -251,7 +251,6 @@ const projectsConfig = (state = {}, action) => {
   const { projectId } = action;
 
   if (projectId) {
-    console.log(projectId);
     let projectConfig;
     switch (action.type) {
       case ActionTypes.PROJECT_CONFIG_RESET:
