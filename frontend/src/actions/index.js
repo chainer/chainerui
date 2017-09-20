@@ -7,11 +7,20 @@ export const PROJECT_LIST_REQUEST = 'PROJECT_LIST_REQUEST';
 export const PROJECT_LIST_SUCCESS = 'PROJECT_LIST_SUCCESS';
 export const PROJECT_LIST_FAILUE = 'PROJECT_LIST_FAILUE';
 export const PROJECT_REQUEST = 'PROJECT_REQUEST';
+export const PROJECT_SUCCESS = 'PROJECT_SUCCESS';
+export const PROJECT_FAILUE = 'PROJECT_FAILUE';
 
 export const getProjectList = () => ({
   [CALL_API]: {
     types: [PROJECT_LIST_REQUEST, PROJECT_LIST_SUCCESS, PROJECT_LIST_FAILUE],
     endpoint: 'projects'
+  }
+});
+
+export const getProject = (projectId) => ({
+  [CALL_API]: {
+    types: [PROJECT_REQUEST, PROJECT_SUCCESS, PROJECT_FAILUE],
+    endpoint: `projects/${projectId}`
   }
 });
 
