@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
+  getProject,
   loadResults, updateResult,
   resetProjectConfig,
   updateLineInAxis,
@@ -23,7 +24,9 @@ import { startPolling, stopPolling } from '../utils';
 
 class PlotContainer extends React.Component {
   componentDidMount() {
-    const { pollingRate } = this.props.globalConfig;
+    const { projectId, globalConfig } = this.props;
+    const { pollingRate } = globalConfig;
+    this.props.getProject(projectId);
     this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
   }
 
@@ -44,6 +47,7 @@ class PlotContainer extends React.Component {
   render() {
     const {
       projectId,
+      project,
       results,
       fetchState,
       projectConfig,
@@ -64,7 +68,7 @@ class PlotContainer extends React.Component {
             <div className="col-md-4 col-lg-3">
               <BreadcrumbLink
                 length={2}
-                project={{ id: 1, name: 'MyProjectMyProjectMyProjectMyProjectMyProjectMyProject' }}
+                project={project}
               />
               <SideBar
                 projectId={projectId}
@@ -135,15 +139,30 @@ const mapStateToProps = (state, ownProps) => {
     fetchState,
     config = defaultConfig
   } = state;
-  const { results = {} } = entities;
+  const { projects = {}, results = {} } = entities;
+  const project = projects[projectId];
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
   const globalConfig = config.global;
   const stats = mapEntitiesToStats(entities);
-  return { projectId, results, fetchState, projectConfig, globalConfig, stats };
+
+  return {
+    projectId,
+    project,
+    results,
+    fetchState,
+    projectConfig,
+    globalConfig,
+    stats
+  };
 };
 
 PlotContainer.propTypes = {
   projectId: PropTypes.number.isRequired,
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    pathName: PropTypes.string
+  }),
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
     results: PropTypes.string
@@ -162,6 +181,7 @@ PlotContainer.propTypes = {
     argKeys: PropTypes.arrayOf(PropTypes.string),
     logKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
+  getProject: PropTypes.func.isRequired,
   loadResults: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
   resetProjectConfig: PropTypes.func.isRequired,
@@ -176,7 +196,12 @@ PlotContainer.propTypes = {
   updateAxisScaleRangeNumber: PropTypes.func.isRequired
 };
 
+PlotContainer.defaultProps = {
+  project: {}
+};
+
 export default connect(mapStateToProps, {
+  getProject,
   loadResults,
   updateResult,
   resetProjectConfig,

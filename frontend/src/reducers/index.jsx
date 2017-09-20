@@ -18,6 +18,15 @@ const projectsReducer = (state = {}, action) => {
         return projects;
       }
       return state;
+    case ActionTypes.PROJECT_SUCCESS:
+      if (action.response && action.response.project) {
+        const { project } = action.response;
+        return {
+          ...state,
+          [project.id]: project
+        };
+      }
+      return state;
     default:
       return state;
   }
