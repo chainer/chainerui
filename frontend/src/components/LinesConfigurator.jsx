@@ -53,17 +53,18 @@ class LinesConfigurator extends React.Component {
 
   handleAxisConfigLineSave() {
     const {
+      projectId,
       axisName,
       onAxisConfigLineUpdate
     } = this.props;
     const { targetLineKey, editingLine } = this.state;
-    onAxisConfigLineUpdate(axisName, targetLineKey, editingLine);
+    onAxisConfigLineUpdate(projectId, axisName, targetLineKey, editingLine);
     this.handleModalClose();
   }
 
   handleLineVisibilityUpdate(targetLineKey, line) {
-    const { axisName, onAxisConfigLineUpdate } = this.props;
-    onAxisConfigLineUpdate(axisName, targetLineKey, line);
+    const { projectId, axisName, onAxisConfigLineUpdate } = this.props;
+    onAxisConfigLineUpdate(projectId, axisName, targetLineKey, line);
   }
 
   render() {
@@ -127,6 +128,7 @@ class LinesConfigurator extends React.Component {
 }
 
 LinesConfigurator.propTypes = {
+  projectId: PropTypes.number.isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   axisName: PropTypes.string.isRequired,
   stats: PropTypes.shape({
