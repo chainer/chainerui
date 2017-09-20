@@ -60,9 +60,24 @@ export const pollingOptions = [
 ];
 
 export const defaultConfig = {
-  axes: {},
-  resultsConfig: {},
-  lines: {},
+  projectsConfig: {},
   global: {}
+};
+
+export const defaultAxisConfig = {
+  yLeftAxis: {
+    axisName: 'yLeftAxis',
+    logKeysConfig: {
+      'main/loss': {
+        selected: true
+      }
+    }
+  }
+};
+
+export const defaultProjectConfig = {
+  axes: defaultAxisConfig,
+  resultsConig: {},
+  lines: {}
 };
 

@@ -12,13 +12,13 @@ class AxisRangeConfigurator extends React.Component {
   }
 
   handleRangeTypeChange(e) {
-    const { axisConfig, isMin, onAxisConfigScaleRangeTypeUpdate } = this.props;
+    const { projectId, axisConfig, isMin, onAxisConfigScaleRangeTypeUpdate } = this.props;
     const { axisName, scale = 'linear' } = axisConfig;
-    onAxisConfigScaleRangeTypeUpdate(axisName, scale, isMin, e.target.value);
+    onAxisConfigScaleRangeTypeUpdate(projectId, axisName, scale, isMin, e.target.value);
   }
 
   handleNumberChange(e) {
-    const { axisConfig, isMin, onAxisConfigScaleRangeNumberUpdate } = this.props;
+    const { projectId, axisConfig, isMin, onAxisConfigScaleRangeNumberUpdate } = this.props;
     const { axisName, scale = 'linear' } = axisConfig;
 
     let rangeNumber = null;
@@ -27,7 +27,7 @@ class AxisRangeConfigurator extends React.Component {
       rangeNumber = (isNaN(num) || !isFinite(num)) ? null : num;
     }
 
-    onAxisConfigScaleRangeNumberUpdate(axisName, scale, isMin, rangeNumber);
+    onAxisConfigScaleRangeNumberUpdate(projectId, axisName, scale, isMin, rangeNumber);
   }
 
   render() {
@@ -98,6 +98,7 @@ class AxisRangeConfigurator extends React.Component {
 }
 
 AxisRangeConfigurator.propTypes = {
+  projectId: PropTypes.number.isRequired,
   axisConfig: PropTypes.shape({
     axisName: PropTypes.string.isRequired,
     scale: PropTypes.string,

@@ -31,8 +31,8 @@ class ResultRow extends React.Component {
   }
 
   handleSelectToggle() {
-    const { result, onResultsConfigSelectToggle } = this.props;
-    onResultsConfigSelectToggle(result.id);
+    const { projectId, result, onResultsConfigSelectToggle } = this.props;
+    onResultsConfigSelectToggle(projectId, result.id);
   }
 
   handleResultNameChange(e) {
@@ -126,6 +126,7 @@ class ResultRow extends React.Component {
 }
 
 ResultRow.propTypes = {
+  projectId: PropTypes.number.isRequired,
   result: PropTypes.shape({
     id: PropTypes.number,
     pathName: PropTypes.string,

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   loadResults, updateResult,
-  resetConfig,
+  resetProjectConfig,
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
   toggleResultsConfigSelect,
@@ -17,19 +17,19 @@ import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
-import { defaultConfig } from '../constants';
+import { defaultConfig, defaultProjectConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
 class PlotContainer extends React.Component {
   componentDidMount() {
-    const { pollingRate } = this.props.config.global;
+    const { pollingRate } = this.props.globalConfig;
     this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
   }
 
   componentWillReceiveProps(nextProps) {
-    const currentPollingRate = this.props.config.global.pollingRate;
-    const nextPollingRate = nextProps.config.global.pollingRate;
+    const currentPollingRate = this.props.globalConfig.pollingRate;
+    const nextPollingRate = nextProps.globalConfig.pollingRate;
 
     if (currentPollingRate !== nextPollingRate) {
       stopPolling(this.resultsPollingTimer);
@@ -42,13 +42,20 @@ class PlotContainer extends React.Component {
   }
 
   render() {
-    const { results, fetchState, config, stats } = this.props;
+    const {
+      projectId,
+      results,
+      fetchState,
+      projectConfig,
+      globalConfig,
+      stats
+    } = this.props;
 
     return (
       <div className="chainer-ui-container">
         <NavigationBar
           fetchState={fetchState}
-          config={config}
+          globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
@@ -60,10 +67,11 @@ class PlotContainer extends React.Component {
                 project={{ id: 1, name: 'MyProjectMyProjectMyProjectMyProjectMyProjectMyProject' }}
               />
               <SideBar
+                projectId={projectId}
                 results={results}
                 stats={stats}
-                config={config}
-                onConfigReset={this.props.resetConfig}
+                projectConfig={projectConfig}
+                onProjectConfigReset={this.props.resetProjectConfig}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
                 onAxisConfigScaleUpdate={this.props.updateAxisScale}
                 onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
@@ -76,12 +84,14 @@ class PlotContainer extends React.Component {
               <LogVisualizer
                 results={results}
                 stats={stats}
-                config={config}
+                projectConfig={projectConfig}
+                globalConfig={globalConfig}
               />
               <ExperimentsTable
+                projectId={projectId}
                 results={results}
                 stats={stats}
-                config={config}
+                projectConfig={projectConfig}
                 onResultsConfigSelectToggle={this.props.toggleResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
               />
@@ -118,26 +128,34 @@ const mapEntitiesToStats = (entities) => {
   return { axes, argKeys, logKeys };
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  const projectId = Number(ownProps.params.projectId);
   const {
     entities,
     fetchState,
     config = defaultConfig
   } = state;
   const { results = {} } = entities;
+  const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
+  const globalConfig = config.global;
   const stats = mapEntitiesToStats(entities);
-  return { results, fetchState, config, stats };
+  return { projectId, results, fetchState, projectConfig, globalConfig, stats };
 };
 
 PlotContainer.propTypes = {
+  projectId: PropTypes.number.isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
     results: PropTypes.string
   }).isRequired,
-  config: PropTypes.shape({
+  projectConfig: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
     resultsConfig: PropTypes.objectOf(PropTypes.any),
     global: PropTypes.objectOf(PropTypes.any)
+  }).isRequired,
+  globalConfig: PropTypes.shape({
+    pollingRate: PropTypes.number,
+    chartSize: PropTypes.objectOf(PropTypes.any)
   }).isRequired,
   stats: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
@@ -146,7 +164,7 @@ PlotContainer.propTypes = {
   }).isRequired,
   loadResults: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
-  resetConfig: PropTypes.func.isRequired,
+  resetProjectConfig: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
   toggleLogKeySelect: PropTypes.func.isRequired,
@@ -161,7 +179,7 @@ PlotContainer.propTypes = {
 export default connect(mapStateToProps, {
   loadResults,
   updateResult,
-  resetConfig,
+  resetProjectConfig,
   updateLineInAxis,
   updateAxisScale,
   toggleLogKeySelect,

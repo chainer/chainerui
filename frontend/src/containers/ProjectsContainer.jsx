@@ -13,13 +13,13 @@ import { } from '../utils';
 class ProjectsContainer extends React.Component {
   render() {
     const {
-      config, fetchState
+      globalConfig, fetchState
     } = this.props;
     return (
       <div className="result-detail">
         <NavigationBar
           fetchState={fetchState}
-          config={config}
+          globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
@@ -38,7 +38,8 @@ const mapStateToProps = (state) => {
     config
   } = state;
   const { projects = {}, results = {} } = entities;
-  return { projects, results, fetchState, config };
+  const globalConfig = config.global;
+  return { projects, results, fetchState, globalConfig };
 };
 
 ProjectsContainer.propTypes = {
@@ -47,9 +48,7 @@ ProjectsContainer.propTypes = {
   fetchState: PropTypes.shape({
     results: PropTypes.string
   }).isRequired,
-  config: PropTypes.shape({
-    global: PropTypes.objectOf(PropTypes.any)
-  }).isRequired,
+  globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired
 };

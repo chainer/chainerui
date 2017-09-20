@@ -3,7 +3,7 @@ import { routerReducer } from 'react-router-redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions } from '../constants';
+import { chartSizeOptions, pollingOptions, defaultAxisConfig } from '../constants';
 
 
 const entities = (state = { results: {} }, action) => {
@@ -91,18 +91,7 @@ const fetchState = (state = { results: '' }, action) => {
 };
 
 
-const defaultAxisState = {
-  yLeftAxis: {
-    axisName: 'yLeftAxis',
-    logKeysConfig: {
-      'main/loss': {
-        selected: true
-      }
-    }
-  }
-};
-
-const axes = (state = defaultAxisState, action) => {
+const axes = (state = defaultAxisConfig, action) => {
   const {
     axisName,
     logKey,
@@ -247,6 +236,33 @@ const lines = (state = {}, action) => {
 };
 
 
+const projectsConfig = (state = {}, action) => {
+  const { projectId } = action;
+
+  if (projectId) {
+    let projectConfig;
+    switch (action.type) {
+      case ActionTypes.PROJECT_CONFIG_RESET:
+        projectConfig = {};
+        break;
+      default:
+        projectConfig = state[projectId] || {};
+    }
+
+    return {
+      ...state,
+      [projectId]: {
+        axes: axes(projectConfig.axes, action),
+        resultsConfig: resultsConfig(projectConfig.resultsConfig, action),
+        lines: lines(projectConfig.lines, action)
+      }
+    };
+  }
+
+  return state;
+};
+
+
 const defaultGlobaState = {
   pollingRate: pollingOptions[1].value,
   chartSize: chartSizeOptions[0]
@@ -272,23 +288,13 @@ const global = (state = defaultGlobaState, action) => {
 };
 
 
-const configReducers = combineReducers({
-  axes,
-  resultsConfig,
-  lines,
+const config = combineReducers({
+  projectsConfig,
   global
 });
 
-const config = (state, action) => {
-  switch (action.type) {
-    case ActionTypes.CONFIG_RESET:
-      return configReducers(undefined, action);
-    default:
-      return configReducers(state, action);
-  }
-};
 
-const currentStoreVersion = 20170911.0;
+const currentStoreVersion = 20170920.0;
 
 const persistConfig = {
   key: 'config',

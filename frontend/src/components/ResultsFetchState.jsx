@@ -4,11 +4,11 @@ import { RESULTS_REQUEST, RESULTS_SUCCESS, RESULTS_FAILUE } from '../actions';
 
 
 const ResultsFetchState = (props) => {
-  const { fetchState = {}, config = { global: {} } } = props;
+  const { fetchState = {}, globalConfig = {} } = props;
   const resultsFetchState = fetchState.results;
 
   let colorClass;
-  if (config.global.pollingRate === 0) {
+  if (globalConfig.pollingRate === 0) {
     colorClass = 'text-muted';
   } else {
     switch (resultsFetchState) {
@@ -35,7 +35,7 @@ ResultsFetchState.propTypes = {
   fetchState: PropTypes.shape({
     results: PropTypes.string
   }).isRequired,
-  config: PropTypes.shape({
+  globalConfig: PropTypes.shape({
     global: PropTypes.shape({
       pollingRate: PropTypes.number
     })

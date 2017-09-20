@@ -50,8 +50,10 @@ const buildLineElem = (line, axisName, result) => {
   );
 };
 
-const buildLineElems = (selectedResults, selectedLogKeys, axisName, results, config, logKeys) => {
-  const { lines = {} } = config;
+const buildLineElems = (
+  selectedResults, selectedLogKeys, axisName, results, projectConfig, logKeys
+) => {
+  const { lines = {} } = projectConfig;
 
   const lineElems = [];
   selectedResults.forEach((resultId) => {
@@ -81,10 +83,10 @@ class LogVisualizer extends React.Component {
   render() {
     const {
       results = {},
-      config = {},
+      projectConfig = {},
       stats
     } = this.props;
-    const { axes, resultsConfig = {}, lines = {} } = config;
+    const { axes, resultsConfig = {}, lines = {} } = projectConfig;
     const { logKeys = [] } = stats;
     const {
       xAxis = { axisName: 'xAxis' },
@@ -128,11 +130,11 @@ class LogVisualizer extends React.Component {
     const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
     const lineElems = [
-      ...buildLineElems(selectedResults, selectedLogKeys.yLeftAxis, 'yLeftAxis', results, config, logKeys),
-      ...buildLineElems(selectedResults, selectedLogKeys.yRightAxis, 'yRightAxis', results, config, logKeys)
+      ...buildLineElems(selectedResults, selectedLogKeys.yLeftAxis, 'yLeftAxis', results, projectConfig, logKeys),
+      ...buildLineElems(selectedResults, selectedLogKeys.yRightAxis, 'yRightAxis', results, projectConfig, logKeys)
     ];
 
-    const { chartSize } = this.props.config.global;
+    const { chartSize } = this.props.globalConfig;
 
     return (
       <div className="log-visualizer-root">
@@ -179,7 +181,7 @@ LogVisualizer.propTypes = {
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  config: PropTypes.shape({
+  projectConfig: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.shape({
       axisName: PropTypes.string,
       logKeysConfig: PropTypes.objectOf(PropTypes.shape({
@@ -198,13 +200,13 @@ LogVisualizer.propTypes = {
           isVisible: PropTypes.bool
         })
       })
-    ),
-    global: PropTypes.shape({
-      chartSize: PropTypes.shape({
-        width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        aspect: PropTypes.number.isRequired
-      })
+    )
+  }).isRequired,
+  globalConfig: PropTypes.shape({
+    chartSize: PropTypes.shape({
+      width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      aspect: PropTypes.number.isRequired
     })
   }).isRequired
 };
