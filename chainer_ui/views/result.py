@@ -1,4 +1,4 @@
-''' project.py '''
+''' result.py '''
 
 
 from flask import jsonify, request
