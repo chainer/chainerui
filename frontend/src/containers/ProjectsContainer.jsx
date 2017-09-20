@@ -31,9 +31,19 @@ class ProjectsContainer extends React.Component {
   }
 }
 
-const mapStateToProps = (state, /* ownProps */) => state;
+const mapStateToProps = (state) => {
+  const {
+    entities,
+    fetchState,
+    config
+  } = state;
+  const { projects = {}, results = {} } = entities;
+  return { projects, results, fetchState, config };
+};
 
 ProjectsContainer.propTypes = {
+  projects: PropTypes.objectOf(PropTypes.any).isRequired,
+  results: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
     results: PropTypes.string
   }).isRequired,
