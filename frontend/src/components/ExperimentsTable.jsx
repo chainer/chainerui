@@ -5,11 +5,11 @@ import ResultRow from './ResultRow';
 
 const ExperimentsTable = (props) => {
   const {
-    results = {}, stats, config,
+    results = {}, stats, projectConfig,
     onResultsConfigSelectToggle, onResultUpdate
   } = props;
   const { argKeys } = stats;
-  const { resultsConfig = {} } = config;
+  const { resultsConfig = {} } = projectConfig;
 
   const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}>{`(${argKey})`}</th>));
 
@@ -58,7 +58,7 @@ ExperimentsTable.propTypes = {
       logs: PropTypes.arrayOf(PropTypes.any)
     })
   ),
-  config: PropTypes.shape({
+  projectConfig: PropTypes.shape({
     resultsConfig: PropTypes.objectOf(PropTypes.shape({
       hidden: PropTypes.bool
     }))

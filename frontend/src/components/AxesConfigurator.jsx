@@ -11,7 +11,7 @@ const AxesConfigurator = (props) => {
     projectId,
     results,
     stats,
-    config,
+    projectConfig,
     onAxisConfigLineUpdate,
     onAxisConfigScaleUpdate,
     onAxisConfigXKeyUpdate,
@@ -22,7 +22,7 @@ const AxesConfigurator = (props) => {
     xAxis = { axisName: 'xAxis' },
     yLeftAxis = { axisName: 'yLeftAxis' },
     yRightAxis = { axisName: 'yRightAxis' }
-  } = config.axes || {};
+  } = projectConfig.axes || {};
 
   return (
     <div className="axes-configurator">
@@ -41,7 +41,7 @@ const AxesConfigurator = (props) => {
         <LinesConfigurator
           results={results}
           stats={stats}
-          config={config}
+          projectConfig={projectConfig}
           axisName="yLeftAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
@@ -61,7 +61,7 @@ const AxesConfigurator = (props) => {
         <LinesConfigurator
           results={results}
           stats={stats}
-          config={config}
+          projectConfig={projectConfig}
           axisName="yRightAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
@@ -89,7 +89,7 @@ AxesConfigurator.propTypes = {
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  config: PropTypes.shape({
+  projectConfig: PropTypes.shape({
     axes: PropTypes.shape({
       xAxis: PropTypes.any,
       yLeftAxis: PropTypes.any,

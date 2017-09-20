@@ -36,7 +36,7 @@ class SideBar extends React.Component {
       projectId,
       results,
       stats,
-      config,
+      projectConfig,
       onAxisConfigLineUpdate,
       onAxisConfigScaleUpdate,
       onAxisConfigXKeyUpdate,
@@ -51,7 +51,7 @@ class SideBar extends React.Component {
             projectId,
             results,
             stats,
-            config,
+            projectConfig,
             onAxisConfigLineUpdate,
             onAxisConfigScaleUpdate,
             onAxisConfigXKeyUpdate,
@@ -85,7 +85,7 @@ SideBar.propTypes = {
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  config: PropTypes.shape({
+  projectConfig: PropTypes.shape({
     axes: PropTypes.shape({
       xAxis: PropTypes.any,
       yLeftAxis: PropTypes.any,

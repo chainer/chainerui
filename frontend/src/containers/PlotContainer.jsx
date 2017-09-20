@@ -23,13 +23,13 @@ import { startPolling, stopPolling } from '../utils';
 
 class PlotContainer extends React.Component {
   componentDidMount() {
-    const { pollingRate } = this.props.config.global;
+    const { pollingRate } = this.props.globalConfig;
     this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
   }
 
   componentWillReceiveProps(nextProps) {
-    const currentPollingRate = this.props.config.global.pollingRate;
-    const nextPollingRate = nextProps.config.global.pollingRate;
+    const currentPollingRate = this.props.globalConfig.pollingRate;
+    const nextPollingRate = nextProps.globalConfig.pollingRate;
 
     if (currentPollingRate !== nextPollingRate) {
       stopPolling(this.resultsPollingTimer);
@@ -42,13 +42,20 @@ class PlotContainer extends React.Component {
   }
 
   render() {
-    const { projectId, results, fetchState, config, stats } = this.props;
+    const {
+      projectId,
+      results,
+      fetchState,
+      projectConfig,
+      globalConfig,
+      stats
+    } = this.props;
 
     return (
       <div className="chainer-ui-container">
         <NavigationBar
           fetchState={fetchState}
-          config={config}
+          globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
@@ -63,7 +70,7 @@ class PlotContainer extends React.Component {
                 projectId={projectId}
                 results={results}
                 stats={stats}
-                config={config}
+                projectConfig={projectConfig}
                 onConfigReset={this.props.resetConfig}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
                 onAxisConfigScaleUpdate={this.props.updateAxisScale}
@@ -77,12 +84,13 @@ class PlotContainer extends React.Component {
               <LogVisualizer
                 results={results}
                 stats={stats}
-                config={config}
+                projectConfig={projectConfig}
+                globalConfig={globalConfig}
               />
               <ExperimentsTable
                 results={results}
                 stats={stats}
-                config={config}
+                projectConfig={projectConfig}
                 onResultsConfigSelectToggle={this.props.toggleResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
               />
@@ -128,8 +136,9 @@ const mapStateToProps = (state, ownProps) => {
   } = state;
   const { results = {} } = entities;
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
+  const globalConfig = config.global;
   const stats = mapEntitiesToStats(entities);
-  return { projectId, results, fetchState, config, stats };
+  return { projectId, results, fetchState, projectConfig, globalConfig, stats };
 };
 
 PlotContainer.propTypes = {
@@ -138,10 +147,14 @@ PlotContainer.propTypes = {
   fetchState: PropTypes.shape({
     results: PropTypes.string
   }).isRequired,
-  config: PropTypes.shape({
+  projectConfig: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
     resultsConfig: PropTypes.objectOf(PropTypes.any),
     global: PropTypes.objectOf(PropTypes.any)
+  }).isRequired,
+  globalConfig: PropTypes.shape({
+    pollingRate: PropTypes.number,
+    chartSize: PropTypes.objectOf(PropTypes.any)
   }).isRequired,
   stats: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),

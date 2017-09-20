@@ -19,13 +19,13 @@ import { startPolling, stopPolling } from '../utils';
 
 class ResultDetail extends React.Component {
   componentDidMount() {
-    const { pollingRate } = this.props.config.global;
+    const { pollingRate } = this.props.globalConfig;
     this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
   }
 
   componentWillReceiveProps(nextProps) {
-    const currentPollingRate = this.props.config.global.pollingRate;
-    const nextPollingRate = nextProps.config.global.pollingRate;
+    const currentPollingRate = this.props.globalConfig.pollingRate;
+    const nextPollingRate = nextProps.globalConfig.pollingRate;
 
     if (currentPollingRate !== nextPollingRate) {
       stopPolling(this.resultsPollingTimer);
@@ -39,13 +39,13 @@ class ResultDetail extends React.Component {
 
   render() {
     const {
-      result, config, fetchState
+      result, globalConfig, fetchState
     } = this.props;
     return (
       <div className="result-detail">
         <NavigationBar
           fetchState={fetchState}
-          config={config}
+          globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
@@ -90,9 +90,10 @@ const mapStateToProps = (state, ownProps) => {
     fetchState,
     config = defaultConfig
   } = state;
+  const globalConfig = config.global;
   const { results = {} } = entities;
   const result = results[resultId] || {};
-  return { result, fetchState, config };
+  return { result, fetchState, globalConfig };
 };
 
 ResultDetail.propTypes = {
@@ -106,9 +107,7 @@ ResultDetail.propTypes = {
   fetchState: PropTypes.shape({
     results: PropTypes.string
   }).isRequired,
-  config: PropTypes.shape({
-    global: PropTypes.objectOf(PropTypes.any)
-  }).isRequired,
+  globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
   loadResults: PropTypes.func.isRequired,
   createCommand: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
