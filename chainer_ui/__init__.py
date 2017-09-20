@@ -89,25 +89,40 @@ def create_app(args):
         ''' render react app '''
         return render_template('index.html')
 
-    from chainer_ui.views.result import ResultAPI
+    from chainer_ui.views.old_result import OldResultAPI
     from chainer_ui.views.result_command import ResultCommandAPI
+
     from chainer_ui.views.project import ProjectAPI
-    result_resource = ResultAPI.as_view('result_resource')
+    from chainer_ui.views.result import ResultAPI
+
+    oldresult_resource = OldResultAPI.as_view('oldresult_resource')
     result_command_resource = ResultCommandAPI.as_view(
-        'result_command_resource'
-    )
+        'result_command_resource')
+
     project_resource = ProjectAPI.as_view('project_resource')
+    result_resource = ResultAPI.as_view('result_resource')
+
+    # project API
     app.add_url_rule(
         '/api/v1/projects',
-        defaults={'id': None}, view_func=project_resource, methods=['GET']
-    )
+        defaults={'id': None}, view_func=project_resource, methods=['GET'])
+    app.add_url_rule(
+        '/api/v1/projects/<int:id>',
+        view_func=project_resource, methods=['GET'])
+
+    # result API
+    app.add_url_rule(
+        '/api/v1/projects/<int:project_id>/results',
+        defaults={'id': None}, view_func=result_resource, methods=['GET'])
+
+    # old apis
     app.add_url_rule(
         '/api/v1/results/',
-        defaults={'id': None}, view_func=result_resource, methods=['GET']
+        defaults={'id': None}, view_func=oldresult_resource, methods=['GET']
     )
     app.add_url_rule(
         '/api/v1/results/<int:id>',
-        view_func=result_resource, methods=['PUT', 'DELETE']
+        view_func=oldresult_resource, methods=['PUT', 'DELETE']
     )
     app.add_url_rule(
         '/api/v1/results/<int:id>/commands',
