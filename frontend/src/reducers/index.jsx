@@ -3,7 +3,7 @@ import { routerReducer } from 'react-router-redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions } from '../constants';
+import { chartSizeOptions, pollingOptions, defaultAxisConfig } from '../constants';
 
 
 const entities = (state = { results: {} }, action) => {
@@ -91,18 +91,7 @@ const fetchState = (state = { results: '' }, action) => {
 };
 
 
-const defaultAxisState = {
-  yLeftAxis: {
-    axisName: 'yLeftAxis',
-    logKeysConfig: {
-      'main/loss': {
-        selected: true
-      }
-    }
-  }
-};
-
-const axes = (state = defaultAxisState, action) => {
+const axes = (state = defaultAxisConfig, action) => {
   const {
     axisName,
     logKey,

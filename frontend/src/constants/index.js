@@ -64,8 +64,20 @@ export const defaultConfig = {
   global: {}
 };
 
+export const defaultAxisConfig = {
+  yLeftAxis: {
+    axisName: 'yLeftAxis',
+    logKeysConfig: {
+      'main/loss': {
+        selected: true
+      }
+    }
+  }
+};
+
 export const defaultProjectConfig = {
-  axes: {},
+  axes: defaultAxisConfig,
   resultsConig: {},
   lines: {}
 };
+
