@@ -75,7 +75,11 @@ const AxesConfigurator = (props) => {
       >
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
-            <XAxisKeySelector value={xAxis.xAxisKey} onChange={onAxisConfigXKeyUpdate} />
+            <XAxisKeySelector
+              projectId={projectId}
+              value={xAxis.xAxisKey}
+              onChange={onAxisConfigXKeyUpdate}
+            />
           </li>
         </ul>
       </AxisConfigurator>
