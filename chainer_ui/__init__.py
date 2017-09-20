@@ -114,6 +114,9 @@ def create_app(args):
     app.add_url_rule(
         '/api/v1/projects/<int:project_id>/results',
         defaults={'id': None}, view_func=result_resource, methods=['GET'])
+    app.add_url_rule(
+        '/api/v1/projects/<int:project_id>/results/<int:id>',
+        view_func=result_resource, methods=['GET'])
 
     # old apis
     app.add_url_rule(
