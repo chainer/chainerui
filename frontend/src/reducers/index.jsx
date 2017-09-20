@@ -6,8 +6,23 @@ import * as ActionTypes from '../actions';
 import { chartSizeOptions, pollingOptions, defaultAxisConfig } from '../constants';
 
 
-const entities = (state = { results: {} }, action) => {
+const initialEntities = {
+  projects: {},
+  results: {}
+};
+
+const entities = (state = initialEntities, action) => {
   switch (action.type) {
+    case ActionTypes.PROJECTS_LIST_SUCCESS:
+      if (action.response && action.response.projects) {
+        const projectList = action.response.projects;
+        const projects = {};
+        projectList.forEach((project) => {
+          projects[project.id] = project;
+        });
+        return { ...state, projects };
+      }
+      return state;
     case ActionTypes.RESULTS_SUCCESS:
       if (action.response && action.response.results) {
         const resultsList = action.response.results;
