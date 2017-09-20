@@ -1,4 +1,4 @@
-''' result.py '''
+''' project.py '''
 
 
 from sqlalchemy import Column, Integer, String
