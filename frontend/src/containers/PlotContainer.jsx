@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   loadResults, updateResult,
-  resetConfig,
+  resetProjectConfig,
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
   toggleResultsConfigSelect,
@@ -71,7 +71,7 @@ class PlotContainer extends React.Component {
                 results={results}
                 stats={stats}
                 projectConfig={projectConfig}
-                onConfigReset={this.props.resetConfig}
+                onProjectConfigReset={this.props.resetProjectConfig}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
                 onAxisConfigScaleUpdate={this.props.updateAxisScale}
                 onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
@@ -163,7 +163,7 @@ PlotContainer.propTypes = {
   }).isRequired,
   loadResults: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
-  resetConfig: PropTypes.func.isRequired,
+  resetProjectConfig: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
   toggleLogKeySelect: PropTypes.func.isRequired,
@@ -178,7 +178,7 @@ PlotContainer.propTypes = {
 export default connect(mapStateToProps, {
   loadResults,
   updateResult,
-  resetConfig,
+  resetProjectConfig,
   updateLineInAxis,
   updateAxisScale,
   toggleLogKeySelect,

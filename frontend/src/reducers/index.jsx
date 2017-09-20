@@ -249,8 +249,18 @@ const lines = (state = {}, action) => {
 
 const projectsConfig = (state = {}, action) => {
   const { projectId } = action;
+
   if (projectId) {
-    const projectConfig = state[projectId] || {};
+    console.log(projectId);
+    let projectConfig;
+    switch (action.type) {
+      case ActionTypes.PROJECT_CONFIG_RESET:
+        projectConfig = {};
+        break;
+      default:
+        projectConfig = state[projectId] || {};
+    }
+
     return {
       ...state,
       [projectId]: {
@@ -260,6 +270,7 @@ const projectsConfig = (state = {}, action) => {
       }
     };
   }
+
   return state;
 };
 
@@ -289,19 +300,11 @@ const global = (state = defaultGlobaState, action) => {
 };
 
 
-const configReducers = combineReducers({
+const config = combineReducers({
   projectsConfig,
   global
 });
 
-const config = (state, action) => {
-  switch (action.type) {
-    case ActionTypes.CONFIG_RESET:
-      return configReducers(undefined, action);
-    default:
-      return configReducers(state, action);
-  }
-};
 
 const currentStoreVersion = 20170920.0;
 

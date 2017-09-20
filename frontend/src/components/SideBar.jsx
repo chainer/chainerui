@@ -26,9 +26,9 @@ class SideBar extends React.Component {
   }
 
   handleConfigReset() {
-    const { projectId, onConfigReset } = this.props;
+    const { projectId, onProjectConfigReset } = this.props;
     this.handleModalToggle();
-    onConfigReset(projectId);
+    onProjectConfigReset(projectId);
   }
 
   render() {
@@ -92,7 +92,7 @@ SideBar.propTypes = {
       yRightAxis: PropTypes.any
     })
   }).isRequired,
-  onConfigReset: PropTypes.func.isRequired,
+  onProjectConfigReset: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleUpdate: PropTypes.func.isRequired,
   onAxisConfigXKeyUpdate: PropTypes.func.isRequired,

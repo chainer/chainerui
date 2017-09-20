@@ -75,10 +75,10 @@ export const createCommand = (resultId, commandName, requestBody = null, schedul
 
 // config
 
-export const CONFIG_RESET = 'CONFIG_RESET';
+export const PROJECT_CONFIG_RESET = 'PROJECT_CONFIG_RESET';
 
-export const resetConfig = (projectId) => ({
-  type: CONFIG_RESET,
+export const resetProjectConfig = (projectId) => ({
+  type: PROJECT_CONFIG_RESET,
   projectId
 });
 
