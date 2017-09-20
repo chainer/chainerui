@@ -5,6 +5,7 @@ import ResultRow from './ResultRow';
 
 const ExperimentsTable = (props) => {
   const {
+    projectId,
     results = {}, stats, projectConfig,
     onResultsConfigSelectToggle, onResultUpdate
   } = props;
@@ -18,6 +19,7 @@ const ExperimentsTable = (props) => {
     const key = `result-row-${result.id}`;
     return (
       <ResultRow
+        projectId={projectId}
         result={result}
         stats={stats}
         resultConfig={resultsConfig[resultId]}
@@ -50,6 +52,7 @@ const ExperimentsTable = (props) => {
 };
 
 ExperimentsTable.propTypes = {
+  projectId: PropTypes.number.isRequired,
   results: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.number,
