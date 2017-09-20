@@ -77,8 +77,9 @@ export const createCommand = (resultId, commandName, requestBody = null, schedul
 
 export const CONFIG_RESET = 'CONFIG_RESET';
 
-export const resetConfig = () => ({
-  type: CONFIG_RESET
+export const resetConfig = (projectId) => ({
+  type: CONFIG_RESET,
+  projectId
 });
 
 
@@ -90,36 +91,41 @@ export const AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_TYPE
 export const AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE';
 export const AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE = 'AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE';
 
-export const updateAxisScale = (axisName, scale) => ({
+export const updateAxisScale = (projectId, axisName, scale) => ({
   type: AXIS_CONFIG_SCALE_UPDATE,
+  projectId,
   axisName,
   scale
 });
 
-export const updateXAxisKey = (xAxisKey) => ({
+export const updateXAxisKey = (projectId, xAxisKey) => ({
   type: AXIS_CONFIG_X_KEY_UPDATE,
+  projectId,
   axisName: 'xAxis',
   xAxisKey
 });
 
-export const updateAxisScaleRangeType = (axisName, scale, isMin, rangeType = 'auto') => ({
+export const updateAxisScaleRangeType = (projectId, axisName, scale, isMin, rangeType = 'auto') => ({
   type: AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE,
+  projectId,
   axisName,
   scale,
   isMin,
   rangeType
 });
 
-export const updateAxisScaleRangeNumber = (axisName, scale, isMin, rangeNumber) => ({
+export const updateAxisScaleRangeNumber = (projectId, axisName, scale, isMin, rangeNumber) => ({
   type: AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE,
+  projectId,
   axisName,
   scale,
   isMin,
   rangeNumber
 });
 
-export const toggleLogKeySelect = (axisName, logKey) => ({
+export const toggleLogKeySelect = (projectId, axisName, logKey) => ({
   type: AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE,
+  projectId,
   axisName,
   logKey
 });
@@ -129,8 +135,9 @@ export const toggleLogKeySelect = (axisName, logKey) => ({
 
 export const RESULTS_CONFIG_SELECT_TOGGLE = 'RESULTS_CONFIG_SELECT_TOGGLE';
 
-export const toggleResultsConfigSelect = (resultId) => ({
+export const toggleResultsConfigSelect = (projectId, resultId) => ({
   type: RESULTS_CONFIG_SELECT_TOGGLE,
+  projectId,
   resultId
 });
 
@@ -139,8 +146,9 @@ export const toggleResultsConfigSelect = (resultId) => ({
 
 export const LINES_CONFIG_LINE_UPDATE = 'LINES_CONFIG_LINE_UPDATE';
 
-export const updateLineInAxis = (axisName, lineKey, line) => ({
+export const updateLineInAxis = (projectId, axisName, lineKey, line) => ({
   type: LINES_CONFIG_LINE_UPDATE,
+  projectId,
   axisName,
   lineKey,
   line
