@@ -33,7 +33,7 @@ const BreadcrumbLink = (props) => {
   }
 
   return (
-    <Breadcrumb className="p-0">
+    <Breadcrumb className="breadcrumb-link p-0">
       {items}
     </Breadcrumb>
   );

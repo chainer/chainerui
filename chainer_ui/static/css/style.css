@@ -10,7 +10,10 @@
   overflow-y: auto;
 }
 
-.breadcrumb {
+.breadcrumb-link {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
   background-color: inherit;
 }
 

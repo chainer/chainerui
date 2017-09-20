@@ -57,7 +57,7 @@ class PlotContainer extends React.Component {
             <div className="col-md-4 col-lg-3">
               <BreadcrumbLink
                 length={2}
-                project={{ id: 1, name: 'MyProject' }}
+                project={{ id: 1, name: 'MyProjectMyProjectMyProjectMyProjectMyProjectMyProject' }}
               />
               <SideBar
                 results={results}
