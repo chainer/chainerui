@@ -42,7 +42,7 @@ class PlotContainer extends React.Component {
   }
 
   render() {
-    const { results, fetchState, config, stats } = this.props;
+    const { projectId, results, fetchState, config, stats } = this.props;
 
     return (
       <div className="chainer-ui-container">
@@ -60,6 +60,7 @@ class PlotContainer extends React.Component {
                 project={{ id: 1, name: 'MyProjectMyProjectMyProjectMyProjectMyProjectMyProject' }}
               />
               <SideBar
+                projectId={projectId}
                 results={results}
                 stats={stats}
                 config={config}
@@ -118,7 +119,8 @@ const mapEntitiesToStats = (entities) => {
   return { axes, argKeys, logKeys };
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  const projectId = Number(ownProps.params.projectId);
   const {
     entities,
     fetchState,
@@ -126,10 +128,11 @@ const mapStateToProps = (state) => {
   } = state;
   const { results = {} } = entities;
   const stats = mapEntitiesToStats(entities);
-  return { results, fetchState, config, stats };
+  return { projectId, results, fetchState, config, stats };
 };
 
 PlotContainer.propTypes = {
+  projectId: PropTypes.number.isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
     results: PropTypes.string

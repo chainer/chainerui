@@ -26,8 +26,9 @@ class SideBar extends React.Component {
   }
 
   handleConfigReset() {
+    const { projectId, onConfigReset } = this.props;
     this.handleModalToggle();
-    this.props.onConfigReset();
+    onConfigReset(projectId);
   }
 
   render() {
@@ -77,6 +78,7 @@ class SideBar extends React.Component {
 }
 
 SideBar.propTypes = {
+  projectId: PropTypes.number.isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string)
