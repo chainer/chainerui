@@ -32,10 +32,9 @@ DB_SESSION = scoped_session(
 
 def create_db():
     ''' create_db '''
-    print('DB_FILE_PATH: ', DB_FILE_PATH)
     if not os.path.isdir(DB_FILE_DIR):
         os.makedirs(DB_FILE_DIR, exist_ok=True)
-    DB_BASE.metadata.create_all(ENGINE)
+    print('DB_FILE_PATH: ', DB_FILE_PATH)
 
 
 def create_db_session():
