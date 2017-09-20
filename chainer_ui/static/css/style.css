@@ -10,3 +10,7 @@
   overflow-y: auto;
 }
 
+.breadcrumb {
+  background-color: inherit;
+}
+

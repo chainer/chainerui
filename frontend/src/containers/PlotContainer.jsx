@@ -53,9 +53,12 @@ class PlotContainer extends React.Component {
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
         <Container fluid>
-          <BreadcrumbLink />
           <div className="row">
             <div className="col-md-4 col-lg-3">
+              <BreadcrumbLink
+                length={2}
+                project={{ id: 1, name: 'MyProject' }}
+              />
               <SideBar
                 results={results}
                 stats={stats}
