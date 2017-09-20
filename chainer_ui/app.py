@@ -64,7 +64,7 @@ def project_handler(args):
         if project is None:
             project = Project(project_path, project_name)
         else:
-            print('error')
+            print('Pathname already registered.')
 
         DB_SESSION.add(project)
         DB_SESSION.commit()
