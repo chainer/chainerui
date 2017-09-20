@@ -247,6 +247,23 @@ const lines = (state = {}, action) => {
 };
 
 
+const projectsConfig = (state = {}, action) => {
+  const { projectId } = action;
+  if (projectId) {
+    const projectConfig = state[projectId] || {};
+    return {
+      ...state,
+      [projectId]: {
+        axes: axes(projectConfig.axes, action),
+        resultsConfig: resultsConfig(projectConfig.resultsConfig, action),
+        lines: lines(projectConfig.lines, action)
+      }
+    };
+  }
+  return state;
+};
+
+
 const defaultGlobaState = {
   pollingRate: pollingOptions[1].value,
   chartSize: chartSizeOptions[0]
@@ -273,9 +290,7 @@ const global = (state = defaultGlobaState, action) => {
 
 
 const configReducers = combineReducers({
-  axes,
-  resultsConfig,
-  lines,
+  projectsConfig,
   global
 });
 
@@ -288,7 +303,7 @@ const config = (state, action) => {
   }
 };
 
-const currentStoreVersion = 20170911.0;
+const currentStoreVersion = 20170920.0;
 
 const persistConfig = {
   key: 'config',
