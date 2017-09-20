@@ -18,7 +18,7 @@ class AxisRangeConfigurator extends React.Component {
   }
 
   handleNumberChange(e) {
-    const { axisConfig, isMin, onAxisConfigScaleRangeNumberUpdate } = this.props;
+    const { projectId, axisConfig, isMin, onAxisConfigScaleRangeNumberUpdate } = this.props;
     const { axisName, scale = 'linear' } = axisConfig;
 
     let rangeNumber = null;
@@ -27,7 +27,7 @@ class AxisRangeConfigurator extends React.Component {
       rangeNumber = (isNaN(num) || !isFinite(num)) ? null : num;
     }
 
-    onAxisConfigScaleRangeNumberUpdate(axisName, scale, isMin, rangeNumber);
+    onAxisConfigScaleRangeNumberUpdate(projectId, axisName, scale, isMin, rangeNumber);
   }
 
   render() {
