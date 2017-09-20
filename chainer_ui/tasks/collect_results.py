@@ -2,6 +2,8 @@
 
 import os
 
+from chainer_ui import DB_SESSION
+from chainer_ui.models.project import Project
 
 
 def _list_result_paths(target_path, log_file_name='log'):
@@ -17,7 +19,7 @@ def _list_result_paths(target_path, log_file_name='log'):
     return result_list
 
 
-def _register_result(result_path):
+def _register_result(project_id, result_path):
     from chainer_ui import DB_SESSION
     from chainer_ui.models.result import Result
 
@@ -33,22 +35,19 @@ def _register_result(result_path):
     ).count()
 
     if result_size is 0:
-        new_result = Result(result_path)
+        new_result = Result(project_id=project_id, path_name=result_path)
         DB_SESSION.add(new_result)
         DB_SESSION.commit()
 
 
-def collect_results(target_dir_list=None):
+def collect_results():
     ''' collect_results '''
 
-    if target_dir_list is None:
-        return
+    for project in DB_SESSION.query(Project).all():
+        result_paths = []
 
-    result_paths = []
+        if os.path.isdir(project.path_name):
+            result_paths.extend(_list_result_paths(project.path_name))
 
-    for target_path in target_dir_list:
-        if os.path.isdir(target_path):
-            result_paths.extend(_list_result_paths(target_path))
-
-    for result_path in result_paths:
-        _register_result(result_path)
+        for result_path in result_paths:
+            _register_result(project.id, result_path)

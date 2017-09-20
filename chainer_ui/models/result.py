@@ -1,7 +1,7 @@
 ''' result.py '''
 
 
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from chainer_ui import DB_BASE
 from chainer_ui.models.log import Log
@@ -15,6 +15,7 @@ class Result(DB_BASE):
     __tablename__ = 'result'
 
     id = Column(Integer, primary_key=True)
+    project_id = Column(Integer, ForeignKey('project.id'))
     path_name = Column(String(512), unique=True)
     name = Column(String(512))
     is_unregistered = Column(Boolean(), default=False)
@@ -25,9 +26,10 @@ class Result(DB_BASE):
     commands = relationship('Command', cascade='all, delete-orphan')
     snapshots = relationship('Snapshot', cascade='all, delete-orphan')
 
-    def __init__(self, path_name=None, name=None):
+    def __init__(self, path_name=None, name=None, project_id=None):
         self.path_name = path_name
         self.name = name
+        self.project_id = project_id
 
     def __repr__(self):
         return '<Result id: %r, path_name: %r />' % (self.id, self.path_name)
