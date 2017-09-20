@@ -34,6 +34,7 @@ const AxesConfigurator = (props) => {
         onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
       >
         <AxisLogKeySelector
+          projectId={projectId}
           axisConfig={yLeftAxis}
           stats={stats}
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
@@ -54,6 +55,7 @@ const AxesConfigurator = (props) => {
         onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
       >
         <AxisLogKeySelector
+          projectId={projectId}
           axisConfig={yRightAxis}
           stats={stats}
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}

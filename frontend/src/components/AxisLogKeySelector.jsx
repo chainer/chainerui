@@ -11,9 +11,9 @@ class AxisLogKeySelector extends React.Component {
   }
 
   handleLogKeySelectToggle(logKey) {
-    const { axisConfig, onAxisConfigLogKeySelectToggle } = this.props;
+    const { projectId, axisConfig, onAxisConfigLogKeySelectToggle } = this.props;
     const { axisName } = axisConfig;
-    onAxisConfigLogKeySelectToggle(axisName, logKey);
+    onAxisConfigLogKeySelectToggle(projectId, axisName, logKey);
   }
 
   render() {
@@ -42,6 +42,7 @@ class AxisLogKeySelector extends React.Component {
 
 
 AxisLogKeySelector.propTypes = {
+  projectId: PropTypes.number.isRequired,
   axisConfig: PropTypes.shape({
     axisName: PropTypes.string,
     logKeys: PropTypes.objectOf(PropTypes.shape({
