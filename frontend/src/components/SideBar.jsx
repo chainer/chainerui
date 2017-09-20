@@ -33,6 +33,7 @@ class SideBar extends React.Component {
 
   render() {
     const {
+      projectId,
       results,
       stats,
       config,
@@ -47,6 +48,7 @@ class SideBar extends React.Component {
         <AxesConfigurator
           {
           ...{
+            projectId,
             results,
             stats,
             config,

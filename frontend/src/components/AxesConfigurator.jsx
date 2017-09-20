@@ -8,6 +8,7 @@ import AxisLogKeySelector from './AxisLogKeySelector';
 
 const AxesConfigurator = (props) => {
   const {
+    projectId,
     results,
     stats,
     config,
@@ -26,6 +27,7 @@ const AxesConfigurator = (props) => {
   return (
     <div className="axes-configurator">
       <AxisConfigurator
+        projectId={projectId}
         axisConfig={yLeftAxis}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
@@ -45,6 +47,7 @@ const AxesConfigurator = (props) => {
         />
       </AxisConfigurator>
       <AxisConfigurator
+        projectId={projectId}
         axisConfig={yRightAxis}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
@@ -64,6 +67,7 @@ const AxesConfigurator = (props) => {
         />
       </AxisConfigurator>
       <AxisConfigurator
+        projectId={projectId}
         axisConfig={xAxis}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
@@ -80,6 +84,7 @@ const AxesConfigurator = (props) => {
 };
 
 AxesConfigurator.propTypes = {
+  projectId: PropTypes.number.isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string)

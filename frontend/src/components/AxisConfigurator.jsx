@@ -18,8 +18,9 @@ class AxisConfigurator extends React.Component {
   }
 
   handleChangeScale(scale) {
-    const { axisName } = this.props.axisConfig;
-    this.props.onChangeScale(axisName, scale);
+    const { projectId, axisConfig } = this.props;
+    const { axisName } = axisConfig;
+    this.props.onChangeScale(projectId, axisName, scale);
   }
 
   toggleRangeConfig() {
@@ -66,6 +67,7 @@ class AxisConfigurator extends React.Component {
 }
 
 AxisConfigurator.propTypes = {
+  projectId: PropTypes.number.isRequired,
   axisConfig: PropTypes.shape({
     axisName: PropTypes.string.isRequired,
     scale: PropTypes.string,
