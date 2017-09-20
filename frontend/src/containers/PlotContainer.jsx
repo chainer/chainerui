@@ -12,6 +12,7 @@ import {
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber
 } from '../actions';
+import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
@@ -20,7 +21,7 @@ import { defaultConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
-class ChainerUIContainer extends React.Component {
+class PlotContainer extends React.Component {
   componentDidMount() {
     const { pollingRate } = this.props.config.global;
     this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
@@ -54,6 +55,10 @@ class ChainerUIContainer extends React.Component {
         <Container fluid>
           <div className="row">
             <div className="col-md-4 col-lg-3">
+              <BreadcrumbLink
+                length={2}
+                project={{ id: 1, name: 'MyProjectMyProjectMyProjectMyProjectMyProjectMyProject' }}
+              />
               <SideBar
                 results={results}
                 stats={stats}
@@ -124,7 +129,7 @@ const mapStateToProps = (state) => {
   return { results, fetchState, config, stats };
 };
 
-ChainerUIContainer.propTypes = {
+PlotContainer.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
     results: PropTypes.string
@@ -166,5 +171,5 @@ export default connect(mapStateToProps, {
   updateXAxisKey,
   updateAxisScaleRangeType,
   updateAxisScaleRangeNumber
-})(ChainerUIContainer);
+})(PlotContainer);
 

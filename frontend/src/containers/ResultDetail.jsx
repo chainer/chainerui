@@ -9,6 +9,7 @@ import {
   updateGlobalChartSize
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
+import BreadcrumbLink from '../components/BreadcrumbLink';
 import ResultSummary from '../components/result/ResultSummary';
 import Args from '../components/result/Args';
 import Commands from '../components/result/Commands';
@@ -49,7 +50,11 @@ class ResultDetail extends React.Component {
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
         <Container fluid>
-          <h3>{result.name}</h3>
+          <BreadcrumbLink
+            length={3}
+            project={{ id: 1, name: 'MyProject' }}
+            result={result}
+          />
           <div className="row">
             <div className="col-sm-6 p-2">
               <ResultSummary result={result} />
