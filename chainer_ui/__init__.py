@@ -55,9 +55,7 @@ def create_app(args):
     from chainer_ui.tasks import collect_results, crawl_results
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(
-        collect_results, 'interval', seconds=5, args=[[args.target_dir]]
-    )
+    scheduler.add_job(collect_results, 'interval', seconds=5)
     scheduler.add_job(crawl_results, 'interval', seconds=5)
     scheduler.start()
 
@@ -72,7 +70,7 @@ def create_app(args):
 
     @app.before_first_request
     def app_initialize():
-        collect_results([args.target_dir])
+        collect_results()
         crawl_results()
 
     @app.context_processor
@@ -92,9 +90,15 @@ def create_app(args):
 
     from chainer_ui.views.result import ResultAPI
     from chainer_ui.views.result_command import ResultCommandAPI
+    from chainer_ui.views.project import ProjectAPI
     result_resource = ResultAPI.as_view('result_resource')
     result_command_resource = ResultCommandAPI.as_view(
         'result_command_resource'
+    )
+    project_resource = ProjectAPI.as_view('project_resource')
+    app.add_url_rule(
+        '/api/v1/projects',
+        defaults={'id': None}, view_func=project_resource, methods=['GET']
     )
     app.add_url_rule(
         '/api/v1/results/',
