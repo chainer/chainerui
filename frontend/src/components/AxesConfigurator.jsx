@@ -40,6 +40,7 @@ const AxesConfigurator = (props) => {
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
         />
         <LinesConfigurator
+          projectId={projectId}
           results={results}
           stats={stats}
           projectConfig={projectConfig}
@@ -61,6 +62,7 @@ const AxesConfigurator = (props) => {
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
         />
         <LinesConfigurator
+          projectId={projectId}
           results={results}
           stats={stats}
           projectConfig={projectConfig}

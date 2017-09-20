@@ -68,10 +68,10 @@ class LinesConfigurator extends React.Component {
   }
 
   render() {
-    const { axisName, results, stats, config } = this.props;
+    const { axisName, results, stats, projectConfig } = this.props;
     const { editingLine } = this.state;
     const { logKeys = [] } = stats;
-    const { axes = {}, resultsConfig = {}, lines = {} } = config;
+    const { axes = {}, resultsConfig = {}, lines = {} } = projectConfig;
     const axisConfig = axes[axisName] || {};
     const { logKeysConfig = {} } = axisConfig;
 
@@ -134,7 +134,7 @@ LinesConfigurator.propTypes = {
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  config: PropTypes.shape({
+  projectConfig: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.shape({
       axisName: PropTypes.string,
       logKeysConfig: PropTypes.objectOf(PropTypes.shape({
@@ -154,12 +154,11 @@ LinesConfigurator.propTypes = {
         })
       })
     )
-  }),
+  }).isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired
 };
 
 LinesConfigurator.defaultProps = {
-  config: {}
 };
 
 export default LinesConfigurator;
