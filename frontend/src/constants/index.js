@@ -60,9 +60,12 @@ export const pollingOptions = [
 ];
 
 export const defaultConfig = {
-  axes: {},
-  resultsConfig: {},
-  lines: {},
+  projectsConfig: {},
   global: {}
 };
 
+export const defaultProjectConfig = {
+  axes: {},
+  resultsConig: {},
+  lines: {}
+};

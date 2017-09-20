@@ -17,7 +17,7 @@ import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
-import { defaultConfig } from '../constants';
+import { defaultConfig, defaultProjectConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
@@ -127,6 +127,7 @@ const mapStateToProps = (state, ownProps) => {
     config = defaultConfig
   } = state;
   const { results = {} } = entities;
+  const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
   const stats = mapEntitiesToStats(entities);
   return { projectId, results, fetchState, config, stats };
 };
