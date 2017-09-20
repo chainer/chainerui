@@ -3,13 +3,14 @@ import { CALL_API } from '../middleware/api';
 
 // projects API
 
-export const PROJECTS_LIST_REQUEST = 'PROJECTS_LIST_REQUEST';
-export const PROJECTS_LIST_SUCCESS = 'PROJECTS_LIST_SUCCESS';
-export const PROJECTS_LIST_FAILUE = 'PROJECTS_LIST_FAILUE';
+export const PROJECT_LIST_REQUEST = 'PROJECT_LIST_REQUEST';
+export const PROJECT_LIST_SUCCESS = 'PROJECT_LIST_SUCCESS';
+export const PROJECT_LIST_FAILUE = 'PROJECT_LIST_FAILUE';
+export const PROJECT_REQUEST = 'PROJECT_REQUEST';
 
 export const getProjectList = () => ({
   [CALL_API]: {
-    types: [PROJECTS_LIST_REQUEST, PROJECTS_LIST_SUCCESS, PROJECTS_LIST_FAILUE],
+    types: [PROJECT_LIST_REQUEST, PROJECT_LIST_SUCCESS, PROJECT_LIST_FAILUE],
     endpoint: 'projects'
   }
 });

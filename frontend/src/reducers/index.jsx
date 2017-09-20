@@ -13,7 +13,7 @@ const initialEntities = {
 
 const entities = (state = initialEntities, action) => {
   switch (action.type) {
-    case ActionTypes.PROJECTS_LIST_SUCCESS:
+    case ActionTypes.PROJECT_LIST_SUCCESS:
       if (action.response && action.response.projects) {
         const projectList = action.response.projects;
         const projects = {};
