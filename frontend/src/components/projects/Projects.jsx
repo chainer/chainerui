@@ -11,23 +11,25 @@ const createProjectsNotFoundElem = () => (
   </div>
 );
 
-const createProjectRowElems = (projects) => (
+const createProjectRowElems = (projects, onProjectUpdate, onProjectDelete) => (
   Object.keys(projects).sort().map((projectId) => (
     <ProjectRow
       project={projects[projectId]}
+      onProjectUpdate={onProjectUpdate}
+      onProjectDelete={onProjectDelete}
       key={projectId}
     />
   ))
 );
 
 const Projects = (props) => {
-  const { projects } = props;
+  const { projects, onProjectUpdate, onProjectDelete } = props;
 
   return (
     <div className="mt-4 border border-left-0 border-right-0 border-bottom-0">
       {(Object.keys(projects).length === 0) ?
         createProjectsNotFoundElem() :
-        createProjectRowElems(projects)}
+        createProjectRowElems(projects, onProjectUpdate, onProjectDelete)}
     </div>
   );
 };
@@ -39,7 +41,9 @@ Projects.propTypes = {
       name: PropTypes.string,
       pathName: PropTypes.string
     })
-  )
+  ),
+  onProjectUpdate: PropTypes.func.isRequired,
+  onProjectDelete: PropTypes.func.isRequired
 };
 
 Projects.defaultProps = {
