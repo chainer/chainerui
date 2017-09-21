@@ -10,6 +10,7 @@ from chainer_ui.models.argument import Argument
 from chainer_ui.models.command import Command
 from chainer_ui.models.snapshot import Snapshot
 from chainer_ui.utils.command_item import CommandItem
+from chainer_ui.utils import is_numberable
 
 
 def load_result_json(result_path, json_file_name):
@@ -77,8 +78,11 @@ def crawl_results():
         for snapshot in crawled_result['snapshots'][
                 len(current_result.snapshots):
         ]:
-            current_result.snapshots.append(
-                Snapshot(snapshot, int(snapshot.split('snapshot_iter_')[1]))
-            )
+
+            number_str = snapshot.split('snapshot_iter_')[1]
+            if is_numberable(number_str):
+                current_result.snapshots.append(
+                    Snapshot(snapshot, int(number_str))
+                )
 
         DB_SESSION.commit()
