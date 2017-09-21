@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   getProject,
-  loadResults,
+  getResultList,
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize
@@ -23,7 +23,7 @@ class ResultDetail extends React.Component {
     const { projectId, globalConfig } = this.props;
     const { pollingRate } = globalConfig;
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
+    this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -32,7 +32,7 @@ class ResultDetail extends React.Component {
 
     if (currentPollingRate !== nextPollingRate) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.loadResults, nextPollingRate);
+      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate);
     }
   }
 
@@ -120,7 +120,7 @@ ResultDetail.propTypes = {
   }).isRequired,
   globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
   getProject: PropTypes.func.isRequired,
-  loadResults: PropTypes.func.isRequired,
+  getResultList: PropTypes.func.isRequired,
   createCommand: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired
@@ -133,7 +133,7 @@ ResultDetail.defaultProps = {
 
 export default connect(mapStateToProps, {
   getProject,
-  loadResults,
+  getResultList,
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize

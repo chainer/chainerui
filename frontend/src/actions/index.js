@@ -27,9 +27,9 @@ export const getProject = (projectId) => ({
 
 // results API
 
-export const RESULTS_REQUEST = 'RESULTS_REQUEST';
-export const RESULTS_SUCCESS = 'RESULTS_SUCCESS';
-export const RESULTS_FAILUE = 'RESULTS_FAILUE';
+export const RESULT_LIST_REQUEST = 'RESULT_LIST_REQUEST';
+export const RESULT_LIST_SUCCESS = 'RESULT_LIST_SUCCESS';
+export const RESULT_LIST_FAILUE = 'RESULT_LIST_FAILUE';
 export const RESULT_UPDATE_REQUEST = 'RESULT_UPDATE_REQUEST';
 export const RESULT_UPDATE_SUCCESS = 'RESULT_UPDATE_SUCCESS';
 export const RESULT_UPDATE_FAILUE = 'RESULT_UPDATE_FAILUE';
@@ -40,14 +40,12 @@ export const COMMAND_CREATE_REQUEST = 'COMMAND_CREATE_REQUEST';
 export const COMMAND_CREATE_SUCCESS = 'COMMAND_CREATE_SUCCESS';
 export const COMMAND_CREATE_FAILUE = 'COMMAND_CREATE_FAILUE';
 
-const fetchResults = () => ({
+export const getResultList = (projectId) => ({
   [CALL_API]: {
-    types: [RESULTS_REQUEST, RESULTS_SUCCESS, RESULTS_FAILUE],
-    endpoint: 'results'
+    types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILUE],
+    endpoint: `projects/${projectId}/results`
   }
 });
-
-export const loadResults = () => (dispatch) => dispatch(fetchResults());
 
 export const updateResult = (result = {}) => {
   const { id, name, isUnregistered } = result;

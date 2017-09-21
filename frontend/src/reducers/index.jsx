@@ -35,7 +35,7 @@ const projectsReducer = (state = {}, action) => {
 
 const resultsReducer = (state = {}, action) => {
   switch (action.type) {
-    case ActionTypes.RESULTS_SUCCESS:
+    case ActionTypes.RESULT_LIST_SUCCESS:
       if (action.response && action.response.results) {
         const resultsList = action.response.results;
         const results = {};
@@ -86,9 +86,9 @@ const entities = combineReducers({
 
 const fetchState = (state = { results: '' }, action) => {
   switch (action.type) {
-    case ActionTypes.RESULTS_REQUEST:
-    case ActionTypes.RESULTS_SUCCESS:
-    case ActionTypes.RESULTS_FAILUE:
+    case ActionTypes.RESULT_LIST_REQUEST:
+    case ActionTypes.RESULT_LIST_SUCCESS:
+    case ActionTypes.RESULT_LIST_FAILUE:
       return {
         ...state,
         results: action.type

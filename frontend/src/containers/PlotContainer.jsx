@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   getProject,
-  loadResults, updateResult,
+  getResultList, updateResult,
   resetProjectConfig,
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
@@ -27,7 +27,7 @@ class PlotContainer extends React.Component {
     const { projectId, globalConfig } = this.props;
     const { pollingRate } = globalConfig;
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
+    this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,7 +36,7 @@ class PlotContainer extends React.Component {
 
     if (currentPollingRate !== nextPollingRate) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.loadResults, nextPollingRate);
+      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate);
     }
   }
 
@@ -182,7 +182,7 @@ PlotContainer.propTypes = {
     logKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   getProject: PropTypes.func.isRequired,
-  loadResults: PropTypes.func.isRequired,
+  getResultList: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
   resetProjectConfig: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
@@ -202,7 +202,7 @@ PlotContainer.defaultProps = {
 
 export default connect(mapStateToProps, {
   getProject,
-  loadResults,
+  getResultList,
   updateResult,
   resetProjectConfig,
   updateLineInAxis,
