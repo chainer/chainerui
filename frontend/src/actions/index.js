@@ -57,7 +57,7 @@ export const getResult = (projectId, resultId) => ({
   }
 });
 
-export const updateResult = (result = {}) => {
+export const updateResult = (projectId, result = {}) => {
   const { id, name, isUnregistered } = result;
   if (!Number.isInteger(id)) {
     throw new Error('Result id is invalid.');
@@ -65,7 +65,7 @@ export const updateResult = (result = {}) => {
   return {
     [CALL_API]: {
       types: [RESULT_UPDATE_REQUEST, RESULT_UPDATE_SUCCESS, RESULT_UPDATE_FAILUE],
-      endpoint: `results/${id}`,
+      endpoint: `projects/${projectId}/results/${id}`,
       method: 'PUT',
       body: { result: { id, name, isUnregistered } }
     }
