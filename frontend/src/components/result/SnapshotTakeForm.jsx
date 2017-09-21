@@ -90,8 +90,7 @@ class SnapshotTakeForm extends React.Component {
               { buttonLabel }
             </Button>
             <FormGroup>
-              <span className="mx-2">schedule:</span>
-              <FormGroup check className="form-check-inline">
+              <FormGroup check className="form-check-inline ml-3">
                 <Label check>
                   <Input
                     type="radio"
@@ -108,9 +107,10 @@ class SnapshotTakeForm extends React.Component {
                     name={SCHEDULE_CUSTOM}
                     checked={scheduleType === SCHEDULE_CUSTOM}
                     onChange={this.handleScheduleTypeChange}
-                  />
+                  />schedule
                   <Input
                     type="number"
+                    className="ml-3"
                     size="sm"
                     min="0"
                     step="1"
