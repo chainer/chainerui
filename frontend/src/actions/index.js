@@ -9,6 +9,12 @@ export const PROJECT_LIST_FAILUE = 'PROJECT_LIST_FAILUE';
 export const PROJECT_REQUEST = 'PROJECT_REQUEST';
 export const PROJECT_SUCCESS = 'PROJECT_SUCCESS';
 export const PROJECT_FAILUE = 'PROJECT_FAILUE';
+export const PROJECT_UPDATE_REQUEST = 'PROJECT_UPDATE_REQUEST';
+export const PROJECT_UPDATE_SUCCESS = 'PROJECT_UPDATE_SUCCESS';
+export const PROJECT_UPDATE_FAILUE = 'PROJECT_UPDATE_FAILUE';
+export const PROJECT_DELETE_REQUEST = 'PROJECT_DELETE_REQUEST';
+export const PROJECT_DELETE_SUCCESS = 'PROJECT_DELETE_SUCCESS';
+export const PROJECT_DELETE_FAILUE = 'PROJECT_DELETE_FAILUE';
 
 export const getProjectList = () => ({
   [CALL_API]: {
@@ -23,6 +29,34 @@ export const getProject = (projectId) => ({
     endpoint: `projects/${projectId}`
   }
 });
+
+export const updateProject = (project = {}) => {
+  const { id, name } = project;
+  if (!Number.isInteger(id)) {
+    throw new Error('Project id is invalid.');
+  }
+  return {
+    [CALL_API]: {
+      types: [PROJECT_UPDATE_REQUEST, PROJECT_UPDATE_SUCCESS, PROJECT_UPDATE_FAILUE],
+      endpoint: `projects/${id}`,
+      method: 'PUT',
+      body: { project: { id, name } }
+    }
+  };
+};
+
+export const deleteProject = (projectId) => {
+  if (!Number.isInteger(projectId)) {
+    throw new Error('Project id is invalid.');
+  }
+  return {
+    [CALL_API]: {
+      types: [PROJECT_DELETE_REQUEST, PROJECT_DELETE_SUCCESS, PROJECT_DELETE_FAILUE],
+      endpoint: `projects/${projectId}`,
+      method: 'DELETE'
+    }
+  };
+};
 
 
 // results API
@@ -39,9 +73,6 @@ export const RESULT_UPDATE_FAILUE = 'RESULT_UPDATE_FAILUE';
 export const RESULT_DELETE_REQUEST = 'RESULT_DELETE_REQUEST';
 export const RESULT_DELETE_SUCCESS = 'RESULT_DELETE_SUCCESS';
 export const RESULT_DELETE_FAILUE = 'RESULT_DELETE_FAILUE';
-export const COMMAND_CREATE_REQUEST = 'COMMAND_CREATE_REQUEST';
-export const COMMAND_CREATE_SUCCESS = 'COMMAND_CREATE_SUCCESS';
-export const COMMAND_CREATE_FAILUE = 'COMMAND_CREATE_FAILUE';
 
 export const getResultList = (projectId) => ({
   [CALL_API]: {
@@ -84,6 +115,13 @@ export const deleteResult = (projectId, resultId) => {
     }
   };
 };
+
+
+// commands API
+
+export const COMMAND_CREATE_REQUEST = 'COMMAND_CREATE_REQUEST';
+export const COMMAND_CREATE_SUCCESS = 'COMMAND_CREATE_SUCCESS';
+export const COMMAND_CREATE_FAILUE = 'COMMAND_CREATE_FAILUE';
 
 export const createCommand = (
   projectId, resultId, commandName, requestBody = null, schedule = null
