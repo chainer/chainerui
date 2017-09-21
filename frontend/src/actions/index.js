@@ -85,14 +85,16 @@ export const deleteResult = (projectId, resultId) => {
   };
 };
 
-export const createCommand = (resultId, commandName, requestBody = null, schedule = null) => {
+export const createCommand = (
+  projectId, resultId, commandName, requestBody = null, schedule = null
+) => {
   if (!Number.isInteger(resultId)) {
     throw new Error('Result id is invalid.');
   }
   return {
     [CALL_API]: {
       types: [COMMAND_CREATE_REQUEST, COMMAND_CREATE_SUCCESS, COMMAND_CREATE_FAILUE],
-      endpoint: `results/${resultId}/commands`,
+      endpoint: `projects/${projectId}/results/${resultId}/commands`,
       method: 'POST',
       body: {
         name: commandName,

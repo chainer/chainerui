@@ -36,13 +36,14 @@ const createCommandRowElems = (commands) => commands.sort((a, b) =>
 });
 
 const Commands = (props) => {
-  const { resultId, commands, onCommandSubmit } = props;
+  const { projectId, resultId, commands, onCommandSubmit } = props;
   return (
     <div className="card">
       <div className="card-header">Commands</div>
       <div className="card-body">
         <div className="mb-2">
           <SnapshotTakeForm
+            projectId={projectId}
             resultId={resultId}
             commandName="take_snapshot"
             onCommandSubmit={onCommandSubmit}
@@ -74,6 +75,7 @@ const Commands = (props) => {
 };
 
 Commands.propTypes = {
+  projectId: PropTypes.number.isRequired,
   resultId: PropTypes.number.isRequired,
   commands: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,

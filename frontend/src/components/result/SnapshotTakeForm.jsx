@@ -32,6 +32,7 @@ class SnapshotTakeForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const {
+      projectId,
       resultId,
       onCommandSubmit,
       commandName,
@@ -40,7 +41,7 @@ class SnapshotTakeForm extends React.Component {
     const { scheduleType } = this.state;
 
     const schedule = (scheduleType === SCHEDULE_CUSTOM) ? this.state.schedule : null;
-    onCommandSubmit(resultId, commandName, null, schedule);
+    onCommandSubmit(projectId, resultId, commandName, null, schedule);
 
     this.setState({ disabled: true });
     setTimeout(() => {
@@ -139,6 +140,7 @@ class SnapshotTakeForm extends React.Component {
 }
 
 SnapshotTakeForm.propTypes = {
+  projectId: PropTypes.number.isRequired,
   resultId: PropTypes.number.isRequired,
   commandName: PropTypes.string.isRequired,
   freezeTime: PropTypes.number,

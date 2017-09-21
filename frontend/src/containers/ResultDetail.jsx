@@ -47,7 +47,7 @@ class ResultDetail extends React.Component {
 
   render() {
     const {
-      project, result, globalConfig, fetchState
+      projectId, project, result, globalConfig, fetchState
     } = this.props;
     return (
       <div className="result-detail">
@@ -74,6 +74,7 @@ class ResultDetail extends React.Component {
               {
                 (result.id != null) ? (
                   <Commands
+                    projectId={projectId}
                     resultId={result.id}
                     commands={result.commands || []}
                     onCommandSubmit={this.props.createCommand}
