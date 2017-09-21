@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { RESULTS_REQUEST, RESULTS_SUCCESS, RESULTS_FAILUE } from '../actions';
+import { RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILUE } from '../actions';
 
 
 const ResultsFetchState = (props) => {
@@ -12,13 +12,13 @@ const ResultsFetchState = (props) => {
     colorClass = 'text-muted';
   } else {
     switch (resultsFetchState) {
-      case RESULTS_REQUEST:
+      case RESULT_LIST_REQUEST:
         colorClass = 'text-primary';
         break;
-      case RESULTS_SUCCESS:
+      case RESULT_LIST_SUCCESS:
         colorClass = 'text-success';
         break;
-      case RESULTS_FAILUE:
+      case RESULT_LIST_FAILUE:
         colorClass = 'text-danger';
         break;
       default:

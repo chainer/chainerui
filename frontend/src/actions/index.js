@@ -3,23 +3,36 @@ import { CALL_API } from '../middleware/api';
 
 // projects API
 
-export const PROJECTS_LIST_REQUEST = 'PROJECTS_LIST_REQUEST';
-export const PROJECTS_LIST_SUCCESS = 'PROJECTS_LIST_SUCCESS';
-export const PROJECTS_LIST_FAILUE = 'PROJECTS_LIST_FAILUE';
+export const PROJECT_LIST_REQUEST = 'PROJECT_LIST_REQUEST';
+export const PROJECT_LIST_SUCCESS = 'PROJECT_LIST_SUCCESS';
+export const PROJECT_LIST_FAILUE = 'PROJECT_LIST_FAILUE';
+export const PROJECT_REQUEST = 'PROJECT_REQUEST';
+export const PROJECT_SUCCESS = 'PROJECT_SUCCESS';
+export const PROJECT_FAILUE = 'PROJECT_FAILUE';
 
 export const getProjectList = () => ({
   [CALL_API]: {
-    types: [PROJECTS_LIST_REQUEST, PROJECTS_LIST_SUCCESS, PROJECTS_LIST_FAILUE],
+    types: [PROJECT_LIST_REQUEST, PROJECT_LIST_SUCCESS, PROJECT_LIST_FAILUE],
     endpoint: 'projects'
+  }
+});
+
+export const getProject = (projectId) => ({
+  [CALL_API]: {
+    types: [PROJECT_REQUEST, PROJECT_SUCCESS, PROJECT_FAILUE],
+    endpoint: `projects/${projectId}`
   }
 });
 
 
 // results API
 
-export const RESULTS_REQUEST = 'RESULTS_REQUEST';
-export const RESULTS_SUCCESS = 'RESULTS_SUCCESS';
-export const RESULTS_FAILUE = 'RESULTS_FAILUE';
+export const RESULT_LIST_REQUEST = 'RESULT_LIST_REQUEST';
+export const RESULT_LIST_SUCCESS = 'RESULT_LIST_SUCCESS';
+export const RESULT_LIST_FAILUE = 'RESULT_LIST_FAILUE';
+export const RESULT_REQUEST = 'RESULT_REQUEST';
+export const RESULT_SUCCESS = 'RESULT_SUCCESS';
+export const RESULT_FAILUE = 'RESULT_FAILUE';
 export const RESULT_UPDATE_REQUEST = 'RESULT_UPDATE_REQUEST';
 export const RESULT_UPDATE_SUCCESS = 'RESULT_UPDATE_SUCCESS';
 export const RESULT_UPDATE_FAILUE = 'RESULT_UPDATE_FAILUE';
@@ -30,16 +43,21 @@ export const COMMAND_CREATE_REQUEST = 'COMMAND_CREATE_REQUEST';
 export const COMMAND_CREATE_SUCCESS = 'COMMAND_CREATE_SUCCESS';
 export const COMMAND_CREATE_FAILUE = 'COMMAND_CREATE_FAILUE';
 
-const fetchResults = () => ({
+export const getResultList = (projectId) => ({
   [CALL_API]: {
-    types: [RESULTS_REQUEST, RESULTS_SUCCESS, RESULTS_FAILUE],
-    endpoint: 'results'
+    types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILUE],
+    endpoint: `projects/${projectId}/results`
   }
 });
 
-export const loadResults = () => (dispatch) => dispatch(fetchResults());
+export const getResult = (projectId, resultId) => ({
+  [CALL_API]: {
+    types: [RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILUE],
+    endpoint: `projects/${projectId}/results/${resultId}`
+  }
+});
 
-export const updateResult = (result = {}) => {
+export const updateResult = (projectId, result = {}) => {
   const { id, name, isUnregistered } = result;
   if (!Number.isInteger(id)) {
     throw new Error('Result id is invalid.');
@@ -47,34 +65,36 @@ export const updateResult = (result = {}) => {
   return {
     [CALL_API]: {
       types: [RESULT_UPDATE_REQUEST, RESULT_UPDATE_SUCCESS, RESULT_UPDATE_FAILUE],
-      endpoint: `results/${id}`,
+      endpoint: `projects/${projectId}/results/${id}`,
       method: 'PUT',
       body: { result: { id, name, isUnregistered } }
     }
   };
 };
 
-export const deleteResult = (resultId) => {
+export const deleteResult = (projectId, resultId) => {
   if (!Number.isInteger(resultId)) {
     throw new Error('Result id is invalid.');
   }
   return {
     [CALL_API]: {
       types: [RESULT_DELETE_REQUEST, RESULT_DELETE_SUCCESS, RESULT_DELETE_FAILUE],
-      endpoint: `results/${resultId}`,
+      endpoint: `projects/${projectId}/results/${resultId}`,
       method: 'DELETE'
     }
   };
 };
 
-export const createCommand = (resultId, commandName, requestBody = null, schedule = null) => {
+export const createCommand = (
+  projectId, resultId, commandName, requestBody = null, schedule = null
+) => {
   if (!Number.isInteger(resultId)) {
     throw new Error('Result id is invalid.');
   }
   return {
     [CALL_API]: {
       types: [COMMAND_CREATE_REQUEST, COMMAND_CREATE_SUCCESS, COMMAND_CREATE_FAILUE],
-      endpoint: `results/${resultId}/commands`,
+      endpoint: `projects/${projectId}/results/${resultId}/commands`,
       method: 'POST',
       body: {
         name: commandName,

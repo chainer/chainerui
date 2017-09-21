@@ -48,16 +48,16 @@ class ResultRow extends React.Component {
   }
 
   handleResultUpdate() {
-    const { result, onResultUpdate } = this.props;
+    const { projectId, result, onResultUpdate } = this.props;
     const { resultName } = this.state;
     if (resultName !== result.name) {
-      onResultUpdate({ ...result, name: resultName });
+      onResultUpdate(projectId, { ...result, name: resultName });
     }
   }
 
   handleUnregister() {
-    const { result, onResultUpdate } = this.props;
-    onResultUpdate({ ...result, isUnregistered: true });
+    const { projectId, result, onResultUpdate } = this.props;
+    onResultUpdate(projectId, { ...result, isUnregistered: true });
     this.toggleUnregisterModal();
   }
 

@@ -28,7 +28,9 @@ class ProjectAPI(MethodView):
                     'project': None,
                     'message': 'No interface defined for URL.'
                 }), 404
-            return jsonify(project.serialize)
+            return jsonify({
+                'project': project.serialize
+            })
 
     def put(self, id):
         """ put """

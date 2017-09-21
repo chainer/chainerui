@@ -6,67 +6,24 @@ import * as ActionTypes from '../actions';
 import { chartSizeOptions, pollingOptions, defaultAxisConfig } from '../constants';
 
 
-const initialEntities = {
-  projects: {},
-  results: {}
-};
-
-const entities = (state = initialEntities, action) => {
+const projectsReducer = (state = {}, action) => {
   switch (action.type) {
-    case ActionTypes.PROJECTS_LIST_SUCCESS:
+    case ActionTypes.PROJECT_LIST_SUCCESS:
       if (action.response && action.response.projects) {
         const projectList = action.response.projects;
         const projects = {};
         projectList.forEach((project) => {
           projects[project.id] = project;
         });
-        return { ...state, projects };
+        return projects;
       }
       return state;
-    case ActionTypes.RESULTS_SUCCESS:
-      if (action.response && action.response.results) {
-        const resultsList = action.response.results;
-        const results = {};
-        resultsList.forEach((result) => {
-          results[result.id] = result;
-        });
-        return { ...state, results };
-      }
-      return state;
-    case ActionTypes.RESULT_UPDATE_SUCCESS:
-      if (action.response && action.response.result) {
-        const { result } = action.response;
-        const newResults = { ...state.results };
-        if (result.isUnregistered) {
-          delete newResults[result.id];
-        } else {
-          newResults[result.id] = result;
-        }
+    case ActionTypes.PROJECT_SUCCESS:
+      if (action.response && action.response.project) {
+        const { project } = action.response;
         return {
           ...state,
-          results: newResults
-        };
-      }
-      return state;
-    case ActionTypes.RESULT_DELETE_SUCCESS:
-      if (action.response && action.response.result) {
-        const { result } = action.response;
-        const newResults = { ...state.results };
-        delete newResults[result.id];
-        return {
-          ...state,
-          results: newResults
-        };
-      }
-      return state;
-    case ActionTypes.COMMAND_CREATE_SUCCESS:
-      if (action.response && action.response.commands) {
-        const newResults = { ...state.results };
-        newResults[action.body.resultId].commands = action.response.commands;
-
-        return {
-          ...state,
-          results: newResults
+          [project.id]: project
         };
       }
       return state;
@@ -76,11 +33,71 @@ const entities = (state = initialEntities, action) => {
 };
 
 
+const resultsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.RESULT_LIST_SUCCESS:
+      if (action.response && action.response.results) {
+        const resultsList = action.response.results;
+        const results = {};
+        resultsList.forEach((result) => {
+          results[result.id] = result;
+        });
+        return results;
+      }
+      return state;
+    case ActionTypes.RESULT_SUCCESS:
+      if (action.response && action.response.result) {
+        const { result } = action.response;
+        return {
+          ...state,
+          [result.id]: result
+        };
+      }
+      return state;
+    case ActionTypes.RESULT_UPDATE_SUCCESS:
+      if (action.response && action.response.result) {
+        const { result } = action.response;
+        const newResults = { ...state };
+        if (result.isUnregistered) {
+          delete newResults[result.id];
+        } else {
+          newResults[result.id] = result;
+        }
+        return newResults;
+      }
+      return state;
+    case ActionTypes.RESULT_DELETE_SUCCESS:
+      if (action.response && action.response.result) {
+        const { result } = action.response;
+        const newResults = { ...state };
+        delete newResults[result.id];
+        return newResults;
+      }
+      return state;
+    case ActionTypes.COMMAND_CREATE_SUCCESS:
+      if (action.response && action.response.commands) {
+        const newResults = { ...state };
+        newResults[action.body.resultId].commands = action.response.commands;
+
+        return newResults;
+      }
+      return state;
+    default:
+      return state;
+  }
+};
+
+const entities = combineReducers({
+  projects: projectsReducer,
+  results: resultsReducer
+});
+
+
 const fetchState = (state = { results: '' }, action) => {
   switch (action.type) {
-    case ActionTypes.RESULTS_REQUEST:
-    case ActionTypes.RESULTS_SUCCESS:
-    case ActionTypes.RESULTS_FAILUE:
+    case ActionTypes.RESULT_LIST_REQUEST:
+    case ActionTypes.RESULT_LIST_SUCCESS:
+    case ActionTypes.RESULT_LIST_FAILUE:
       return {
         ...state,
         results: action.type

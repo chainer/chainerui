@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
-  loadResults,
+  getProject,
+  getResult,
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize
@@ -19,17 +20,24 @@ import { startPolling, stopPolling } from '../utils';
 
 class ResultDetail extends React.Component {
   componentDidMount() {
-    const { pollingRate } = this.props.globalConfig;
-    this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
+    const { projectId, resultId, globalConfig } = this.props;
+    const { pollingRate } = globalConfig;
+    this.props.getProject(projectId);
+    this.resultsPollingTimer = startPolling(
+      this.props.getResult, pollingRate, projectId, resultId
+    );
   }
 
   componentWillReceiveProps(nextProps) {
-    const currentPollingRate = this.props.globalConfig.pollingRate;
+    const { projectId, resultId, globalConfig } = this.props;
+    const currentPollingRate = globalConfig.pollingRate;
     const nextPollingRate = nextProps.globalConfig.pollingRate;
 
     if (currentPollingRate !== nextPollingRate) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.loadResults, nextPollingRate);
+      this.resultsPollingTimer = startPolling(
+        this.props.getResult, nextPollingRate, projectId, resultId
+      );
     }
   }
 
@@ -39,7 +47,7 @@ class ResultDetail extends React.Component {
 
   render() {
     const {
-      result, globalConfig, fetchState
+      projectId, project, result, globalConfig, fetchState
     } = this.props;
     return (
       <div className="result-detail">
@@ -52,7 +60,7 @@ class ResultDetail extends React.Component {
         <Container fluid>
           <BreadcrumbLink
             length={3}
-            project={{ id: 1, name: 'MyProject' }}
+            project={project}
             result={result}
           />
           <div className="row">
@@ -66,6 +74,7 @@ class ResultDetail extends React.Component {
               {
                 (result.id != null) ? (
                   <Commands
+                    projectId={projectId}
                     resultId={result.id}
                     commands={result.commands || []}
                     onCommandSubmit={this.props.createCommand}
@@ -84,6 +93,7 @@ class ResultDetail extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const projectId = Number(ownProps.params.projectId);
   const resultId = Number(ownProps.params.resultId);
   const {
     entities,
@@ -91,31 +101,46 @@ const mapStateToProps = (state, ownProps) => {
     config = defaultConfig
   } = state;
   const globalConfig = config.global;
-  const { results = {} } = entities;
-  const result = results[resultId] || {};
-  return { result, fetchState, globalConfig };
+  const { projects = {}, results = {} } = entities;
+  const project = projects[projectId];
+  const result = results[resultId];
+  return { projectId, resultId, project, result, fetchState, globalConfig };
 };
 
 ResultDetail.propTypes = {
+  projectId: PropTypes.number.isRequired,
+  resultId: PropTypes.number.isRequired,
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    pathName: PropTypes.string,
+    name: PropTypes.string
+  }),
   result: PropTypes.shape({
     id: PropTypes.number,
     pathName: PropTypes.string,
     name: PropTypes.string,
     args: PropTypes.arrayOf(PropTypes.any),
     logs: PropTypes.arrayOf(PropTypes.any)
-  }).isRequired,
+  }),
   fetchState: PropTypes.shape({
     results: PropTypes.string
   }).isRequired,
   globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
-  loadResults: PropTypes.func.isRequired,
+  getProject: PropTypes.func.isRequired,
+  getResult: PropTypes.func.isRequired,
   createCommand: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired
 };
 
+ResultDetail.defaultProps = {
+  project: {},
+  result: {}
+};
+
 export default connect(mapStateToProps, {
-  loadResults,
+  getProject,
+  getResult,
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize
