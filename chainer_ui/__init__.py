@@ -99,7 +99,8 @@ def create_app(args):
 
     project_resource = ProjectAPI.as_view('project_resource')
     result_resource = ResultAPI.as_view('result_resource')
-    result_command_resource = ResultCommandAPI.as_view('command_resource')
+    result_command_resource = ResultCommandAPI.as_view(
+        'result_command_resource')
 
     # project API
     app.add_url_rule(
