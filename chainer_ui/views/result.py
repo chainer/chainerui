@@ -41,3 +41,38 @@ class ResultAPI(MethodView):
             return jsonify({
                 'result': result.serialize
             })
+
+    def put(self, id, project_id=None):
+        """ put """
+        result = DB_SESSION.query(Result).filter_by(id=id).first()
+        if result is None:
+            response = jsonify({'result': None, 'message': 'No interface defined for URL.'})
+            return response, 404
+
+        request_json = request.get_json()
+        request_result = request_json.get('result')
+
+        name = request_result.get('name', None)
+        if name is not None:
+            result.name = name
+
+        is_unregistered = request_result.get('isUnregistered', None)
+        if is_unregistered is not None:
+            result.is_unregistered = is_unregistered
+
+        DB_SESSION.add(result)
+        DB_SESSION.commit()
+
+        return jsonify({'result': result.serialize})
+
+    def delete(self, id, project_id=None):
+        """ delete """
+        result = DB_SESSION.query(Result).filter_by(id=id).first()
+        if result is None:
+            response = jsonify({'result': None, 'message': 'No interface defined for URL.'})
+            return response, 404
+
+        DB_SESSION.delete(result)
+        DB_SESSION.commit()
+
+        return jsonify({'result': result.serialize})
