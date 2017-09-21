@@ -72,14 +72,14 @@ export const updateResult = (projectId, result = {}) => {
   };
 };
 
-export const deleteResult = (resultId) => {
+export const deleteResult = (projectId, resultId) => {
   if (!Number.isInteger(resultId)) {
     throw new Error('Result id is invalid.');
   }
   return {
     [CALL_API]: {
       types: [RESULT_DELETE_REQUEST, RESULT_DELETE_SUCCESS, RESULT_DELETE_FAILUE],
-      endpoint: `results/${resultId}`,
+      endpoint: `projects/${projectId}/results/${resultId}`,
       method: 'DELETE'
     }
   };
