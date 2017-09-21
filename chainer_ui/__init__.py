@@ -90,17 +90,16 @@ def create_app(args):
         return render_template('index.html')
 
     from chainer_ui.views.old_result import OldResultAPI
-    from chainer_ui.views.result_command import ResultCommandAPI
 
     from chainer_ui.views.project import ProjectAPI
     from chainer_ui.views.result import ResultAPI
+    from chainer_ui.views.result_command import ResultCommandAPI
 
     oldresult_resource = OldResultAPI.as_view('oldresult_resource')
-    result_command_resource = ResultCommandAPI.as_view(
-        'result_command_resource')
 
     project_resource = ProjectAPI.as_view('project_resource')
     result_resource = ResultAPI.as_view('result_resource')
+    result_command_resource = ResultCommandAPI.as_view('command_resource')
 
     # project API
     app.add_url_rule(
@@ -117,6 +116,11 @@ def create_app(args):
     app.add_url_rule(
         '/api/v1/projects/<int:project_id>/results/<int:id>',
         view_func=result_resource, methods=['GET', 'PUT', 'DELETE'])
+
+    # result command API
+    app.add_url_rule(
+        '/api/v1/projects/<int:project_id>/results/<int:result_id>/commands',
+        view_func=result_command_resource, methods=['POST'])
 
     # old apis
     app.add_url_rule(
