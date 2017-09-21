@@ -30,6 +30,9 @@ export const getProject = (projectId) => ({
 export const RESULT_LIST_REQUEST = 'RESULT_LIST_REQUEST';
 export const RESULT_LIST_SUCCESS = 'RESULT_LIST_SUCCESS';
 export const RESULT_LIST_FAILUE = 'RESULT_LIST_FAILUE';
+export const RESULT_REQUEST = 'RESULT_REQUEST';
+export const RESULT_SUCCESS = 'RESULT_SUCCESS';
+export const RESULT_FAILUE = 'RESULT_FAILUE';
 export const RESULT_UPDATE_REQUEST = 'RESULT_UPDATE_REQUEST';
 export const RESULT_UPDATE_SUCCESS = 'RESULT_UPDATE_SUCCESS';
 export const RESULT_UPDATE_FAILUE = 'RESULT_UPDATE_FAILUE';
@@ -44,6 +47,13 @@ export const getResultList = (projectId) => ({
   [CALL_API]: {
     types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILUE],
     endpoint: `projects/${projectId}/results`
+  }
+});
+
+export const getResult = (projectId, resultId) => ({
+  [CALL_API]: {
+    types: [RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILUE],
+    endpoint: `projects/${projectId}/results/${resultId}`
   }
 });
 

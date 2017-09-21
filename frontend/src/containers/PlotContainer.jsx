@@ -31,12 +31,13 @@ class PlotContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const currentPollingRate = this.props.globalConfig.pollingRate;
+    const { projectId, globalConfig } = this.props;
+    const currentPollingRate = globalConfig.pollingRate;
     const nextPollingRate = nextProps.globalConfig.pollingRate;
 
     if (currentPollingRate !== nextPollingRate) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate);
+      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate, projectId);
     }
   }
 

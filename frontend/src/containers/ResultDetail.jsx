@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   getProject,
-  getResultList,
+  getResult,
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize
@@ -20,19 +20,24 @@ import { startPolling, stopPolling } from '../utils';
 
 class ResultDetail extends React.Component {
   componentDidMount() {
-    const { projectId, globalConfig } = this.props;
+    const { projectId, resultId, globalConfig } = this.props;
     const { pollingRate } = globalConfig;
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId);
+    this.resultsPollingTimer = startPolling(
+      this.props.getResult, pollingRate, projectId, resultId
+    );
   }
 
   componentWillReceiveProps(nextProps) {
-    const currentPollingRate = this.props.globalConfig.pollingRate;
+    const { projectId, resultId, globalConfig } = this.props;
+    const currentPollingRate = globalConfig.pollingRate;
     const nextPollingRate = nextProps.globalConfig.pollingRate;
 
     if (currentPollingRate !== nextPollingRate) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate);
+      this.resultsPollingTimer = startPolling(
+        this.props.getResult, nextPollingRate, projectId, resultId
+      );
     }
   }
 
@@ -98,11 +103,12 @@ const mapStateToProps = (state, ownProps) => {
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId];
   const result = results[resultId];
-  return { projectId, project, result, fetchState, globalConfig };
+  return { projectId, resultId, project, result, fetchState, globalConfig };
 };
 
 ResultDetail.propTypes = {
   projectId: PropTypes.number.isRequired,
+  resultId: PropTypes.number.isRequired,
   project: PropTypes.shape({
     id: PropTypes.number,
     pathName: PropTypes.string,
@@ -120,7 +126,7 @@ ResultDetail.propTypes = {
   }).isRequired,
   globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
   getProject: PropTypes.func.isRequired,
-  getResultList: PropTypes.func.isRequired,
+  getResult: PropTypes.func.isRequired,
   createCommand: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired
@@ -133,7 +139,7 @@ ResultDetail.defaultProps = {
 
 export default connect(mapStateToProps, {
   getProject,
-  getResultList,
+  getResult,
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize

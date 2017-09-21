@@ -45,6 +45,15 @@ const resultsReducer = (state = {}, action) => {
         return results;
       }
       return state;
+    case ActionTypes.RESULT_SUCCESS:
+      if (action.response && action.response.result) {
+        const { result } = action.response;
+        return {
+          ...state,
+          [result.id]: result
+        };
+      }
+      return state;
     case ActionTypes.RESULT_UPDATE_SUCCESS:
       if (action.response && action.response.result) {
         const { result } = action.response;
