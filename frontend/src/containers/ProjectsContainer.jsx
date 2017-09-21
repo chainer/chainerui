@@ -8,19 +8,10 @@ import {
   updateGlobalChartSize
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
-import ProjectRow from '../components/projects/ProjectRow';
+import Projects from '../components/projects/Projects';
 import { } from '../constants';
 import { } from '../utils';
 
-
-const createProjectRows = (projects) => (
-  Object.keys(projects).sort().map((projectId) => (
-    <ProjectRow
-      project={projects[projectId]}
-      key={projectId}
-    />
-  ))
-);
 
 class ProjectsContainer extends React.Component {
   componentDidMount() {
@@ -43,9 +34,7 @@ class ProjectsContainer extends React.Component {
           <Row>
             <Col sm={10} lg={8} className="m-auto">
               <h2>Projects</h2>
-              <div className="mt-4 border border-left-0 border-right-0 border-bottom-0">
-                {createProjectRows(projects)}
-              </div>
+              <Projects projects={projects} />
             </Col>
           </Row>
         </Container>
