@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 const keyOptions = ['epoch', 'iteration', 'elapsed_time'];
 
 const XAxisKeySelector = (props) => {
-  const { value, onChange } = props;
+  const { projectId, value, onChange } = props;
   const handleChangeXAxisKey = (e) => {
-    onChange(e.target.value);
+    onChange(projectId, e.target.value);
   };
 
   const options = keyOptions.map((key) => (
@@ -21,6 +21,7 @@ const XAxisKeySelector = (props) => {
 };
 
 XAxisKeySelector.propTypes = {
+  projectId: PropTypes.number.isRequired,
   value: PropTypes.string,
   onChange: PropTypes.func
 };

@@ -4,7 +4,7 @@ import {
   Row, Col,
   Form, FormGroup, Label, Input
 } from 'reactstrap';
-import { line2key, displayName } from '../utils';
+import { line2key, displayResultName } from '../utils';
 
 
 class LinesConfiguratorRow extends React.Component {
@@ -63,7 +63,7 @@ class LinesConfiguratorRow extends React.Component {
             </Form>
           </Col>
           <Col xs="9" lg="5" className="text-truncate" title={result.name || result.pathName}>
-            <a href="" className="text-dark" onClick={this.handleEditClick}>{displayName(result, { length: 10 })}</a>
+            <a href="" className="text-dark" onClick={this.handleEditClick}>{displayResultName(result, { length: 10 })}</a>
           </Col>
           <Col xs="12" lg="5" className="text-truncate" title={line.logKey}>
             <a href="" className="text-dark" onClick={this.handleEditClick}>{line.logKey}</a>

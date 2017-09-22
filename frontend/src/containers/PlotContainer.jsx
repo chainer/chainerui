@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
-  loadResults, updateResult,
-  resetConfig,
+  getProject,
+  getResultList, updateResult,
+  resetProjectConfig,
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
   toggleResultsConfigSelect,
@@ -12,27 +13,31 @@ import {
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber
 } from '../actions';
+import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
-import { defaultConfig } from '../constants';
+import { defaultConfig, defaultProjectConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
-class ChainerUIContainer extends React.Component {
+class PlotContainer extends React.Component {
   componentDidMount() {
-    const { pollingRate } = this.props.config.global;
-    this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
+    const { projectId, globalConfig } = this.props;
+    const { pollingRate } = globalConfig;
+    this.props.getProject(projectId);
+    this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId);
   }
 
   componentWillReceiveProps(nextProps) {
-    const currentPollingRate = this.props.config.global.pollingRate;
-    const nextPollingRate = nextProps.config.global.pollingRate;
+    const { projectId, globalConfig } = this.props;
+    const currentPollingRate = globalConfig.pollingRate;
+    const nextPollingRate = nextProps.globalConfig.pollingRate;
 
     if (currentPollingRate !== nextPollingRate) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.loadResults, nextPollingRate);
+      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate, projectId);
     }
   }
 
@@ -41,24 +46,37 @@ class ChainerUIContainer extends React.Component {
   }
 
   render() {
-    const { results, fetchState, config, stats } = this.props;
+    const {
+      projectId,
+      project,
+      results,
+      fetchState,
+      projectConfig,
+      globalConfig,
+      stats
+    } = this.props;
 
     return (
       <div className="chainer-ui-container">
         <NavigationBar
           fetchState={fetchState}
-          config={config}
+          globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
         <Container fluid>
           <div className="row">
             <div className="col-md-4 col-lg-3">
+              <BreadcrumbLink
+                length={2}
+                project={project}
+              />
               <SideBar
+                projectId={projectId}
                 results={results}
                 stats={stats}
-                config={config}
-                onConfigReset={this.props.resetConfig}
+                projectConfig={projectConfig}
+                onProjectConfigReset={this.props.resetProjectConfig}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
                 onAxisConfigScaleUpdate={this.props.updateAxisScale}
                 onAxisConfigXKeyUpdate={this.props.updateXAxisKey}
@@ -71,12 +89,14 @@ class ChainerUIContainer extends React.Component {
               <LogVisualizer
                 results={results}
                 stats={stats}
-                config={config}
+                projectConfig={projectConfig}
+                globalConfig={globalConfig}
               />
               <ExperimentsTable
+                projectId={projectId}
                 results={results}
                 stats={stats}
-                config={config}
+                projectConfig={projectConfig}
                 onResultsConfigSelectToggle={this.props.toggleResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
               />
@@ -113,35 +133,59 @@ const mapEntitiesToStats = (entities) => {
   return { axes, argKeys, logKeys };
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  const projectId = Number(ownProps.params.projectId);
   const {
     entities,
     fetchState,
     config = defaultConfig
   } = state;
-  const { results = {} } = entities;
+  const { projects = {}, results = {} } = entities;
+  const project = projects[projectId];
+  const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
+  const globalConfig = config.global;
   const stats = mapEntitiesToStats(entities);
-  return { results, fetchState, config, stats };
+
+  return {
+    projectId,
+    project,
+    results,
+    fetchState,
+    projectConfig,
+    globalConfig,
+    stats
+  };
 };
 
-ChainerUIContainer.propTypes = {
+PlotContainer.propTypes = {
+  projectId: PropTypes.number.isRequired,
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    pathName: PropTypes.string
+  }),
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
     results: PropTypes.string
   }).isRequired,
-  config: PropTypes.shape({
+  projectConfig: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
     resultsConfig: PropTypes.objectOf(PropTypes.any),
     global: PropTypes.objectOf(PropTypes.any)
+  }).isRequired,
+  globalConfig: PropTypes.shape({
+    pollingRate: PropTypes.number,
+    chartSize: PropTypes.objectOf(PropTypes.any)
   }).isRequired,
   stats: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
     argKeys: PropTypes.arrayOf(PropTypes.string),
     logKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  loadResults: PropTypes.func.isRequired,
+  getProject: PropTypes.func.isRequired,
+  getResultList: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
-  resetConfig: PropTypes.func.isRequired,
+  resetProjectConfig: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
   toggleLogKeySelect: PropTypes.func.isRequired,
@@ -153,10 +197,15 @@ ChainerUIContainer.propTypes = {
   updateAxisScaleRangeNumber: PropTypes.func.isRequired
 };
 
+PlotContainer.defaultProps = {
+  project: {}
+};
+
 export default connect(mapStateToProps, {
-  loadResults,
+  getProject,
+  getResultList,
   updateResult,
-  resetConfig,
+  resetProjectConfig,
   updateLineInAxis,
   updateAxisScale,
   toggleLogKeySelect,
@@ -166,5 +215,5 @@ export default connect(mapStateToProps, {
   updateXAxisKey,
   updateAxisScaleRangeType,
   updateAxisScaleRangeNumber
-})(ChainerUIContainer);
+})(PlotContainer);
 

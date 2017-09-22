@@ -6,10 +6,8 @@ import os
 
 
 from chainer_ui import create_app, create_db
-from chainer_ui import (DB_FILE_PATH, ENGINE, SQLALCHEMY_DATABASE_URI,
-                        PACKAGE_DIR, DB_SESSION)
-from chainer_ui.models.result import Result
-from alembic import context
+from chainer_ui import DB_FILE_PATH, ENGINE, PACKAGE_DIR, DB_SESSION
+from chainer_ui.models.project import Project
 from alembic.migration import MigrationContext
 from alembic.command import upgrade, revision
 from alembic.config import Config
@@ -22,35 +20,6 @@ def server_handler(args):
     app.run(host=args.host, port=args.port, threaded=True)
 
 
-def register_handler(args):
-    ''' register_handler '''
-    print('register_handler', args)
-
-    def contain_log_file(result_path):
-        ''' contain_log_file '''
-        log_path = os.path.join(result_path, 'log')
-        return os.path.isfile(log_path)
-
-    result_path = os.path.abspath(args.result_dir)
-
-    if contain_log_file(result_path):
-        result = DB_SESSION.query(Result).\
-            filter_by(path_name=result_path).first()
-
-        if result is None:
-            # register new result
-            result = Result(result_path)
-        else:
-            # update existiong result
-            result.is_unregistered = False
-
-        DB_SESSION.add(result)
-        DB_SESSION.commit()
-
-    else:
-        print('ng')
-
-
 def db_handler(args):
     ''' db_handler '''
     print('db_handler', args)
@@ -58,7 +27,7 @@ def db_handler(args):
     if args.type == 'create':
         create_db()
 
-    if args.type == 'migrate':
+    if args.type == 'status':
         ctx = MigrationContext.configure(ENGINE.connect())
         current_rev = ctx.get_current_revision()
         print('current_rev', current_rev)
@@ -79,43 +48,69 @@ def db_handler(args):
         os.remove(DB_FILE_PATH)
 
 
+def project_create_handler(args):
+    ''' project_create_handler '''
+    print('project_create_handler', args)
+
+    project_path = os.path.abspath(args.project_dir)
+    project_name = args.project_name
+
+    project = DB_SESSION.query(Project).\
+        filter_by(path_name=project_path).first()
+
+    if project is None:
+        project = Project(project_path, project_name)
+    else:
+        print('Pathname already registered.')
+
+    DB_SESSION.add(project)
+    DB_SESSION.commit()
+
+
 def main():
     ''' main '''
     parser = argparse.ArgumentParser(description='chainer-ui command')
     subparsers = parser.add_subparsers()
 
+    # chainer-ui server
     parser_server = subparsers.add_parser(
         'server', help='see `chainer-ui server -h`')
     parser_server.add_argument(
-        '-H', '--host', required=False, help='host', default='localhost'
-    )
+        '-H', '--host', required=False, help='host', default='localhost')
     parser_server.add_argument(
-        '-p', '--port', required=False, type=int, help='port', default=5000
-    )
-    parser_server.add_argument(
-        '-d', '--target-dir', required=False,
-        type=str, help='target-dir', default=''
-    )
-    parser_server.set_defaults(handler=server_handler)
+        '-p', '--port', required=False, type=int, help='port', default=5000)
+    parser_server.set_defaults(
+        handler=server_handler)
 
-    parser_register = subparsers.add_parser(
-        'register', help='see `chainer-ui register -h`')
-    parser_register.add_argument(
-        '-d', '--result-dir', required=True, type=str, help='result-dir')
-    parser_register.set_defaults(handler=register_handler)
+    # chainer-ui db
+    parser_db = subparsers.add_parser(
+        'db', help='see `chainer-ui db -h`')
+    parser_db.add_argument(
+        'type', choices=['create', 'drop', 'status', 'upgrade', 'revision'])
+    parser_db.set_defaults(
+        handler=db_handler)
 
-    parser_db = subparsers.add_parser('db', help='see `chainer-ui db -h`')
-    parser_db.add_argument('type', choices=[
-        'create', 'drop', 'migrate', 'upgrade', 'revision'
-    ])
-    parser_db.set_defaults(handler=db_handler)
+    # chainer-ui project
+    parser_project = subparsers.add_parser(
+        'project', help='see `chainer-ui project -h`')
+    parser_project_sub = parser_project.add_subparsers()
+
+    # chainer-ui project create
+    parser_project_create = parser_project_sub.add_parser(
+        'create', help='see `chainer-ui project create -h`')
+    parser_project_create.add_argument(
+        '-d', '--project-dir', required=True, type=str, help='project-dir')
+    parser_project_create.add_argument(
+        '-n', '--project-name', type=str, help='project-name', default=None)
+    parser_project_create.set_defaults(
+        handler=project_create_handler)
 
     args = parser.parse_args()
 
     if hasattr(args, 'handler'):
         args.handler(args)
     else:
-        print('see `chainer-ui -h`')
+        parser.print_help()
 
 
 if __name__ == '__main__':

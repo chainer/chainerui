@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CommandButton from './CommandButton';
+import SnapshotTakeForm from './SnapshotTakeForm';
 import { responseStatusToIcon } from '../../utils';
 
 
@@ -36,20 +36,18 @@ const createCommandRowElems = (commands) => commands.sort((a, b) =>
 });
 
 const Commands = (props) => {
-  const { resultId, commands, onCommandSubmit } = props;
+  const { projectId, resultId, commands, onCommandSubmit } = props;
   return (
     <div className="card">
       <div className="card-header">Commands</div>
       <div className="card-body">
-        <div className="mb-2 card">
-          <div className="card-body">
-            <CommandButton
-              resultId={resultId}
-              commandName="take_snapshot"
-              label="Take snapshot"
-              onCommandSubmit={onCommandSubmit}
-            />
-          </div>
+        <div className="mb-2">
+          <SnapshotTakeForm
+            projectId={projectId}
+            resultId={resultId}
+            commandName="take_snapshot"
+            onCommandSubmit={onCommandSubmit}
+          />
         </div>
         <hr />
         <table className="table table-sm table-xy-overflow-scroll">
@@ -77,6 +75,7 @@ const Commands = (props) => {
 };
 
 Commands.propTypes = {
+  projectId: PropTypes.number.isRequired,
   resultId: PropTypes.number.isRequired,
   commands: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,

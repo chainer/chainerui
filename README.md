@@ -17,22 +17,8 @@ chainer-ui db upgrade
 ```sh
 cd intern-chainer-ui
 
-# run Chainer UI server
-chainer-ui server -d .
-```
-
-or
-
-
-```sh
-cd intern-chainer-ui
-
-# register sample result directories
-chainer-ui register -d examples/example_results/18003
-chainer-ui register -d examples/example_results/18948
-chainer-ui register -d examples/example_results/19204
-chainer-ui register -d examples/example_results/19205
-chainer-ui register -d examples/example_results/19208
+# create your first project
+chainer-ui project create -d examples -n my-project
 
 # run Chainer UI server
 chainer-ui server
@@ -43,21 +29,23 @@ Then open http://localhost:5000/ .
 
 ## Usage
 
-### Register result directories
+### Create a project
 
 ```sh
-chainer-ui register -d path/to/result
+chainer-ui project create -d PROJECT_DIR [-n PROJECT_NAME]
 ```
 
-The Chainer UI server watches two files under the registerd directories.
+The Chainer UI server watches some files under the project directory recursively.
 
 - `log`: a json file created by `LogReport` extension.
 - `args`: *(optional)* a json file, which includes key-value pairs you want to see on Chainer UI along with logs. See [`args_report.py`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainer_ui/extensions/args_report.py) for a sample extension to dump command line arguments to `args` file.
+- `commands`: *(optional)* a json file, which is automatically created by [`CommandsExtension`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainer_ui/extensions/commands_extension.py) . This is a file for Chainer UI server to communicate with `CommandsExtension` .
 
 ```
 path/to/result
 ├── log
 ├── args
+├── commands
 ```
 
 ### Start Chainer UI server
@@ -74,7 +62,7 @@ When you want to unregister a result, click `X` button at the right end of the r
 
 When you want to unregister all results, drop and create a new database as follows.
 
-```
+```sh
 chainer-ui db drop
 chainer-ui db create
 chainer-ui db upgrade
@@ -83,17 +71,17 @@ chainer-ui db upgrade
 
 ## Upgrade guide
 
-If you want to keep registerd results, move sqlite database file and upgrade the database.
+```sh
+cd intern-chainer-ui
 
-```
-mkdir -p ~/.chainer_ui/db
-mv /tmp/chainer-ui.db ~/.chainer_ui/db
-chainer-ui db upgrade
-```
+# download new version of chainer_ui
+git pull
+# install
+python setup.py install
 
-Or, if it is OK to clear all registrations, create a new database.
-
-```
+# drop the existing database
+chainer-ui db drop
+# create a new database
 chainer-ui db create
 chainer-ui db upgrade
 ```

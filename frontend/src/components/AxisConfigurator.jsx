@@ -18,8 +18,9 @@ class AxisConfigurator extends React.Component {
   }
 
   handleChangeScale(scale) {
-    const { axisName } = this.props.axisConfig;
-    this.props.onChangeScale(axisName, scale);
+    const { projectId, axisConfig } = this.props;
+    const { axisName } = axisConfig;
+    this.props.onChangeScale(projectId, axisName, scale);
   }
 
   toggleRangeConfig() {
@@ -30,6 +31,7 @@ class AxisConfigurator extends React.Component {
 
   render() {
     const {
+      projectId,
       axisConfig,
       onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
     } = this.props;
@@ -46,12 +48,14 @@ class AxisConfigurator extends React.Component {
           <Button size="sm" className="my-2" onClick={this.toggleRangeConfig}>Toggle range setting</Button>
           <Collapse isOpen={this.state.showRangeConfig}>
             <AxisRangeConfigurator
+              projectId={projectId}
               axisConfig={axisConfig}
               isMin={false}
               onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
               onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
             />
             <AxisRangeConfigurator
+              projectId={projectId}
               axisConfig={axisConfig}
               isMin
               onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
@@ -66,6 +70,7 @@ class AxisConfigurator extends React.Component {
 }
 
 AxisConfigurator.propTypes = {
+  projectId: PropTypes.number.isRequired,
   axisConfig: PropTypes.shape({
     axisName: PropTypes.string.isRequired,
     scale: PropTypes.string,

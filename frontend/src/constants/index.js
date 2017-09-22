@@ -1,4 +1,4 @@
-export const CHAINER_UI_VERSION = 'v0.0.7';
+export const CHAINER_UI_VERSION = 'v0.0.8';
 
 export const chartSizeOptions = [
   {
@@ -60,9 +60,24 @@ export const pollingOptions = [
 ];
 
 export const defaultConfig = {
-  axes: {},
-  resultsConfig: {},
-  lines: {},
+  projectsConfig: {},
   global: {}
+};
+
+export const defaultAxisConfig = {
+  yLeftAxis: {
+    axisName: 'yLeftAxis',
+    logKeysConfig: {
+      'main/loss': {
+        selected: true
+      }
+    }
+  }
+};
+
+export const defaultProjectConfig = {
+  axes: defaultAxisConfig,
+  resultsConig: {},
+  lines: {}
 };
 

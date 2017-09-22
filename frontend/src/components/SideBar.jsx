@@ -26,15 +26,17 @@ class SideBar extends React.Component {
   }
 
   handleConfigReset() {
+    const { projectId, onProjectConfigReset } = this.props;
     this.handleModalToggle();
-    this.props.onConfigReset();
+    onProjectConfigReset(projectId);
   }
 
   render() {
     const {
+      projectId,
       results,
       stats,
-      config,
+      projectConfig,
       onAxisConfigLineUpdate,
       onAxisConfigScaleUpdate,
       onAxisConfigXKeyUpdate,
@@ -46,9 +48,10 @@ class SideBar extends React.Component {
         <AxesConfigurator
           {
           ...{
+            projectId,
             results,
             stats,
-            config,
+            projectConfig,
             onAxisConfigLineUpdate,
             onAxisConfigScaleUpdate,
             onAxisConfigXKeyUpdate,
@@ -77,18 +80,19 @@ class SideBar extends React.Component {
 }
 
 SideBar.propTypes = {
+  projectId: PropTypes.number.isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  config: PropTypes.shape({
+  projectConfig: PropTypes.shape({
     axes: PropTypes.shape({
       xAxis: PropTypes.any,
       yLeftAxis: PropTypes.any,
       yRightAxis: PropTypes.any
     })
   }).isRequired,
-  onConfigReset: PropTypes.func.isRequired,
+  onProjectConfigReset: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleUpdate: PropTypes.func.isRequired,
   onAxisConfigXKeyUpdate: PropTypes.func.isRequired,

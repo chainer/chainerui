@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
-  loadResults,
+  getProject,
+  getResult,
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
+import BreadcrumbLink from '../components/BreadcrumbLink';
 import ResultSummary from '../components/result/ResultSummary';
 import Args from '../components/result/Args';
 import Commands from '../components/result/Commands';
@@ -18,17 +20,24 @@ import { startPolling, stopPolling } from '../utils';
 
 class ResultDetail extends React.Component {
   componentDidMount() {
-    const { pollingRate } = this.props.config.global;
-    this.resultsPollingTimer = startPolling(this.props.loadResults, pollingRate);
+    const { projectId, resultId, globalConfig } = this.props;
+    const { pollingRate } = globalConfig;
+    this.props.getProject(projectId);
+    this.resultsPollingTimer = startPolling(
+      this.props.getResult, pollingRate, projectId, resultId
+    );
   }
 
   componentWillReceiveProps(nextProps) {
-    const currentPollingRate = this.props.config.global.pollingRate;
-    const nextPollingRate = nextProps.config.global.pollingRate;
+    const { projectId, resultId, globalConfig } = this.props;
+    const currentPollingRate = globalConfig.pollingRate;
+    const nextPollingRate = nextProps.globalConfig.pollingRate;
 
     if (currentPollingRate !== nextPollingRate) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.loadResults, nextPollingRate);
+      this.resultsPollingTimer = startPolling(
+        this.props.getResult, nextPollingRate, projectId, resultId
+      );
     }
   }
 
@@ -38,18 +47,22 @@ class ResultDetail extends React.Component {
 
   render() {
     const {
-      result, config, fetchState
+      projectId, project, result, globalConfig, fetchState
     } = this.props;
     return (
       <div className="result-detail">
         <NavigationBar
           fetchState={fetchState}
-          config={config}
+          globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
         <Container fluid>
-          <h3>{result.name}</h3>
+          <BreadcrumbLink
+            length={3}
+            project={project}
+            result={result}
+          />
           <div className="row">
             <div className="col-sm-6 p-2">
               <ResultSummary result={result} />
@@ -61,6 +74,7 @@ class ResultDetail extends React.Component {
               {
                 (result.id != null) ? (
                   <Commands
+                    projectId={projectId}
                     resultId={result.id}
                     commands={result.commands || []}
                     onCommandSubmit={this.props.createCommand}
@@ -79,39 +93,54 @@ class ResultDetail extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const projectId = Number(ownProps.params.projectId);
   const resultId = Number(ownProps.params.resultId);
   const {
     entities,
     fetchState,
     config = defaultConfig
   } = state;
-  const { results = {} } = entities;
-  const result = results[resultId] || {};
-  return { result, fetchState, config };
+  const globalConfig = config.global;
+  const { projects = {}, results = {} } = entities;
+  const project = projects[projectId];
+  const result = results[resultId];
+  return { projectId, resultId, project, result, fetchState, globalConfig };
 };
 
 ResultDetail.propTypes = {
+  projectId: PropTypes.number.isRequired,
+  resultId: PropTypes.number.isRequired,
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    pathName: PropTypes.string,
+    name: PropTypes.string
+  }),
   result: PropTypes.shape({
     id: PropTypes.number,
     pathName: PropTypes.string,
     name: PropTypes.string,
     args: PropTypes.arrayOf(PropTypes.any),
     logs: PropTypes.arrayOf(PropTypes.any)
-  }).isRequired,
+  }),
   fetchState: PropTypes.shape({
     results: PropTypes.string
   }).isRequired,
-  config: PropTypes.shape({
-    global: PropTypes.objectOf(PropTypes.any)
-  }).isRequired,
-  loadResults: PropTypes.func.isRequired,
+  globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
+  getProject: PropTypes.func.isRequired,
+  getResult: PropTypes.func.isRequired,
   createCommand: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired
 };
 
+ResultDetail.defaultProps = {
+  project: {},
+  result: {}
+};
+
 export default connect(mapStateToProps, {
-  loadResults,
+  getProject,
+  getResult,
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize

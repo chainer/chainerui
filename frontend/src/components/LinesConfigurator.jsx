@@ -53,24 +53,25 @@ class LinesConfigurator extends React.Component {
 
   handleAxisConfigLineSave() {
     const {
+      projectId,
       axisName,
       onAxisConfigLineUpdate
     } = this.props;
     const { targetLineKey, editingLine } = this.state;
-    onAxisConfigLineUpdate(axisName, targetLineKey, editingLine);
+    onAxisConfigLineUpdate(projectId, axisName, targetLineKey, editingLine);
     this.handleModalClose();
   }
 
   handleLineVisibilityUpdate(targetLineKey, line) {
-    const { axisName, onAxisConfigLineUpdate } = this.props;
-    onAxisConfigLineUpdate(axisName, targetLineKey, line);
+    const { projectId, axisName, onAxisConfigLineUpdate } = this.props;
+    onAxisConfigLineUpdate(projectId, axisName, targetLineKey, line);
   }
 
   render() {
-    const { axisName, results, stats, config } = this.props;
+    const { axisName, results, stats, projectConfig } = this.props;
     const { editingLine } = this.state;
     const { logKeys = [] } = stats;
-    const { axes = {}, resultsConfig = {}, lines = {} } = config;
+    const { axes = {}, resultsConfig = {}, lines = {} } = projectConfig;
     const axisConfig = axes[axisName] || {};
     const { logKeysConfig = {} } = axisConfig;
 
@@ -127,12 +128,13 @@ class LinesConfigurator extends React.Component {
 }
 
 LinesConfigurator.propTypes = {
+  projectId: PropTypes.number.isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   axisName: PropTypes.string.isRequired,
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  config: PropTypes.shape({
+  projectConfig: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.shape({
       axisName: PropTypes.string,
       logKeysConfig: PropTypes.objectOf(PropTypes.shape({
@@ -152,12 +154,11 @@ LinesConfigurator.propTypes = {
         })
       })
     )
-  }),
+  }).isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired
 };
 
 LinesConfigurator.defaultProps = {
-  config: {}
 };
 
 export default LinesConfigurator;

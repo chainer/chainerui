@@ -1,9 +1,9 @@
-export const startPolling = (func, pollingRate) => {
-  func();
+export const startPolling = (func, pollingRate, ...args) => {
+  func(...args);
   if (pollingRate <= 0) {
     return null;
   }
-  return setInterval(func, pollingRate);
+  return setInterval(() => { func(...args); }, pollingRate);
 };
 
 export const stopPolling = (timer) => {

@@ -54,7 +54,7 @@ class NavigationBar extends React.Component {
   render() {
     const pollingOptionElems = createPollingOptionElems(pollingOptions);
     const chartSizeElems = createVisualizerSizeOptionElems(chartSizeOptions);
-    const { chartSize = {} } = this.props.config.global;
+    const { chartSize = {} } = this.props.globalConfig;
 
     return (
       <Navbar className="navbar-light bg-light mb-3">
@@ -62,7 +62,10 @@ class NavigationBar extends React.Component {
           <NavbarBrand href="/">Chainer UI</NavbarBrand>
           <Collapse isOpen>
             <span className="navbar-text mx-3 my-0">
-              <ResultsFetchState fetchState={this.props.fetchState} config={this.props.config} />
+              <ResultsFetchState
+                fetchState={this.props.fetchState}
+                globalConfig={this.props.globalConfig}
+              />
             </span>
             <Button id="navbar-global-setting" onClick={this.toggleSettingPopover}>
               <span className="oi oi-cog" />
@@ -70,7 +73,12 @@ class NavigationBar extends React.Component {
           </Collapse>
         </Container>
 
-        <Popover placement="left bottom" isOpen={this.state.settingPopoverOpen} target="navbar-global-setting" toggle={this.toggleSettingPopover}>
+        <Popover
+          placement="left bottom"
+          isOpen={this.state.settingPopoverOpen}
+          target="navbar-global-setting"
+          toggle={this.toggleSettingPopover}
+        >
           <PopoverTitle className="popover-header">Global Setting</PopoverTitle>
           <PopoverContent className="popover-body">
             <Form>
@@ -82,7 +90,7 @@ class NavigationBar extends React.Component {
                   name="select"
                   id="global-config-polling-rate"
                   onChange={this.handleChangePollingRate}
-                  value={this.props.config.global.pollingRate}
+                  value={this.props.globalConfig.pollingRate}
                 >
                   {pollingOptionElems}
                 </select>
@@ -114,18 +122,15 @@ NavigationBar.propTypes = {
   fetchState: PropTypes.shape({
     results: PropTypes.string
   }).isRequired,
-  config: PropTypes.shape({
-    global: PropTypes.shape({
-      pollingRate: PropTypes.number,
-      chartSize: PropTypes.objectOf(PropTypes.any)
-    })
-  }),
+  globalConfig: PropTypes.shape({
+    pollingRate: PropTypes.number,
+    chartSize: PropTypes.objectOf(PropTypes.any)
+  }).isRequired,
   onGlobalConfigPollingRateUpdate: PropTypes.func.isRequired,
   onGlobalConfigChartSizeUpdate: PropTypes.func.isRequired
 };
 
 NavigationBar.defaultProps = {
-  config: {}
 };
 
 export default NavigationBar;

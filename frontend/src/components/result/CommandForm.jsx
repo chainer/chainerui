@@ -37,7 +37,7 @@ class CommandForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { resultId, onCommandSubmit } = this.props;
+    const { projectId, resultId, onCommandSubmit } = this.props;
     const { commandName, commandBody } = this.state;
     if (!isValidName(commandName) || !isValidBody(commandBody)) {
       this.setState({
@@ -47,7 +47,7 @@ class CommandForm extends React.Component {
       return;
     }
     const commandBodyJson = commandBody === '' ? null : JSON.parse(commandBody);
-    onCommandSubmit(resultId, commandName, commandBodyJson);
+    onCommandSubmit(projectId, resultId, commandName, commandBodyJson);
   }
 
   handleClear() {
@@ -97,6 +97,7 @@ class CommandForm extends React.Component {
 }
 
 CommandForm.propTypes = {
+  projectId: PropTypes.number.isRequired,
   resultId: PropTypes.number.isRequired,
   onCommandSubmit: PropTypes.func.isRequired
 };

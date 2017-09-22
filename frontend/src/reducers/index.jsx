@@ -3,45 +3,37 @@ import { routerReducer } from 'react-router-redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions } from '../constants';
+import { chartSizeOptions, pollingOptions, defaultAxisConfig } from '../constants';
 
 
-const entities = (state = { results: {} }, action) => {
+const projectsReducer = (state = {}, action) => {
   switch (action.type) {
-    case ActionTypes.RESULTS_SUCCESS:
-      if (action.response && action.response.results) {
-        const resultsList = action.response.results;
-        const results = {};
-        resultsList.forEach((result) => {
-          results[result.id] = result;
+    case ActionTypes.PROJECT_LIST_SUCCESS:
+      if (action.response && action.response.projects) {
+        const projectList = action.response.projects;
+        const projects = {};
+        projectList.forEach((project) => {
+          projects[project.id] = project;
         });
-        return { ...state, results };
+        return projects;
       }
       return state;
-    case ActionTypes.RESULT_UPDATE_SUCCESS:
-      if (action.response && action.response.result) {
-        const { result } = action.response;
-        const newResults = { ...state.results };
-        if (result.isUnregistered) {
-          delete newResults[result.id];
-        } else {
-          newResults[result.id] = result;
-        }
+    case ActionTypes.PROJECT_SUCCESS:
+    case ActionTypes.PROJECT_UPDATE_SUCCESS:
+      if (action.response && action.response.project) {
+        const { project } = action.response;
         return {
           ...state,
-          results: newResults
+          [project.id]: project
         };
       }
       return state;
-    case ActionTypes.RESULT_DELETE_SUCCESS:
-      if (action.response && action.response.result) {
-        const { result } = action.response;
-        const newResults = { ...state.results };
-        delete newResults[result.id];
-        return {
-          ...state,
-          results: newResults
-        };
+    case ActionTypes.PROJECT_DELETE_SUCCESS:
+      if (action.response && action.response.project) {
+        const { project } = action.response;
+        const newProjects = { ...state };
+        delete newProjects[project.id];
+        return newProjects;
       }
       return state;
     default:
@@ -50,11 +42,71 @@ const entities = (state = { results: {} }, action) => {
 };
 
 
+const resultsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.RESULT_LIST_SUCCESS:
+      if (action.response && action.response.results) {
+        const resultsList = action.response.results;
+        const results = {};
+        resultsList.forEach((result) => {
+          results[result.id] = result;
+        });
+        return results;
+      }
+      return state;
+    case ActionTypes.RESULT_SUCCESS:
+      if (action.response && action.response.result) {
+        const { result } = action.response;
+        return {
+          ...state,
+          [result.id]: result
+        };
+      }
+      return state;
+    case ActionTypes.RESULT_UPDATE_SUCCESS:
+      if (action.response && action.response.result) {
+        const { result } = action.response;
+        const newResults = { ...state };
+        if (result.isUnregistered) {
+          delete newResults[result.id];
+        } else {
+          newResults[result.id] = result;
+        }
+        return newResults;
+      }
+      return state;
+    case ActionTypes.RESULT_DELETE_SUCCESS:
+      if (action.response && action.response.result) {
+        const { result } = action.response;
+        const newResults = { ...state };
+        delete newResults[result.id];
+        return newResults;
+      }
+      return state;
+    case ActionTypes.COMMAND_CREATE_SUCCESS:
+      if (action.response && action.response.commands) {
+        const newResults = { ...state };
+        newResults[action.body.resultId].commands = action.response.commands;
+
+        return newResults;
+      }
+      return state;
+    default:
+      return state;
+  }
+};
+
+const entities = combineReducers({
+  projects: projectsReducer,
+  results: resultsReducer
+});
+
+
 const fetchState = (state = { results: '' }, action) => {
   switch (action.type) {
-    case ActionTypes.RESULTS_REQUEST:
-    case ActionTypes.RESULTS_SUCCESS:
-    case ActionTypes.RESULTS_FAILUE:
+    case ActionTypes.RESULT_LIST_REQUEST:
+    case ActionTypes.RESULT_LIST_SUCCESS:
+    case ActionTypes.RESULT_LIST_FAILUE:
       return {
         ...state,
         results: action.type
@@ -80,18 +132,7 @@ const fetchState = (state = { results: '' }, action) => {
 };
 
 
-const defaultAxisState = {
-  yLeftAxis: {
-    axisName: 'yLeftAxis',
-    logKeysConfig: {
-      'main/loss': {
-        selected: true
-      }
-    }
-  }
-};
-
-const axes = (state = defaultAxisState, action) => {
+const axes = (state = defaultAxisConfig, action) => {
   const {
     axisName,
     logKey,
@@ -236,6 +277,33 @@ const lines = (state = {}, action) => {
 };
 
 
+const projectsConfig = (state = {}, action) => {
+  const { projectId } = action;
+
+  if (projectId) {
+    let projectConfig;
+    switch (action.type) {
+      case ActionTypes.PROJECT_CONFIG_RESET:
+        projectConfig = {};
+        break;
+      default:
+        projectConfig = state[projectId] || {};
+    }
+
+    return {
+      ...state,
+      [projectId]: {
+        axes: axes(projectConfig.axes, action),
+        resultsConfig: resultsConfig(projectConfig.resultsConfig, action),
+        lines: lines(projectConfig.lines, action)
+      }
+    };
+  }
+
+  return state;
+};
+
+
 const defaultGlobaState = {
   pollingRate: pollingOptions[1].value,
   chartSize: chartSizeOptions[0]
@@ -261,23 +329,13 @@ const global = (state = defaultGlobaState, action) => {
 };
 
 
-const configReducers = combineReducers({
-  axes,
-  resultsConfig,
-  lines,
+const config = combineReducers({
+  projectsConfig,
   global
 });
 
-const config = (state, action) => {
-  switch (action.type) {
-    case ActionTypes.CONFIG_RESET:
-      return configReducers(undefined, action);
-    default:
-      return configReducers(state, action);
-  }
-};
 
-const currentStoreVersion = 20170911.0;
+const currentStoreVersion = 20170920.0;
 
 const persistConfig = {
   key: 'config',

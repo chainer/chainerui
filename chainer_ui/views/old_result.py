@@ -1,48 +1,23 @@
-''' result.py '''
+""" results.py """
 
 
 from flask import jsonify, request
 from flask.views import MethodView
-
-
 from chainer_ui import DB_SESSION
+
+
 from chainer_ui.models.result import Result
 
 
-class ResultAPI(MethodView):
-    ''' ResultAPI '''
+class OldResultAPI(MethodView):
+    """ ResultsAPI """
 
-    def get(self, id=None, project_id=None):
-        ''' get '''
+    def get(self, id=None):
+        """ get """
+        results = DB_SESSION.query(Result).filter_by(is_unregistered=False)
+        return jsonify({'results': [result.serialize for result in results]})
 
-        if id is None:
-            results = DB_SESSION.query(Result).\
-                filter_by(project_id=project_id).\
-                filter_by(is_unregistered=False).\
-                all()
-
-            return jsonify({
-                'results': [result.serialize for result in results]
-            })
-
-        else:
-            result = DB_SESSION.query(Result).\
-                filter_by(id=id).\
-                filter_by(project_id=project_id).\
-                filter_by(is_unregistered=False).\
-                first()
-
-            if result is None:
-                return jsonify({
-                    'result': None,
-                    'message': 'No interface defined for URL.'
-                }), 404
-
-            return jsonify({
-                'result': result.serialize
-            })
-
-    def put(self, id, project_id=None):
+    def put(self, id):
         """ put """
         result = DB_SESSION.query(Result).filter_by(id=id).first()
         if result is None:
@@ -65,7 +40,7 @@ class ResultAPI(MethodView):
 
         return jsonify({'result': result.serialize})
 
-    def delete(self, id, project_id=None):
+    def delete(self, id):
         """ delete """
         result = DB_SESSION.query(Result).filter_by(id=id).first()
         if result is None:

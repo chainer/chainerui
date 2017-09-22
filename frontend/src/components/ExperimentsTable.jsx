@@ -5,11 +5,12 @@ import ResultRow from './ResultRow';
 
 const ExperimentsTable = (props) => {
   const {
-    results = {}, stats, config,
+    projectId,
+    results = {}, stats, projectConfig,
     onResultsConfigSelectToggle, onResultUpdate
   } = props;
   const { argKeys } = stats;
-  const { resultsConfig = {} } = config;
+  const { resultsConfig = {} } = projectConfig;
 
   const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}>{`(${argKey})`}</th>));
 
@@ -18,6 +19,7 @@ const ExperimentsTable = (props) => {
     const key = `result-row-${result.id}`;
     return (
       <ResultRow
+        projectId={projectId}
         result={result}
         stats={stats}
         resultConfig={resultsConfig[resultId]}
@@ -50,6 +52,7 @@ const ExperimentsTable = (props) => {
 };
 
 ExperimentsTable.propTypes = {
+  projectId: PropTypes.number.isRequired,
   results: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.number,
@@ -58,7 +61,7 @@ ExperimentsTable.propTypes = {
       logs: PropTypes.arrayOf(PropTypes.any)
     })
   ),
-  config: PropTypes.shape({
+  projectConfig: PropTypes.shape({
     resultsConfig: PropTypes.objectOf(PropTypes.shape({
       hidden: PropTypes.bool
     }))

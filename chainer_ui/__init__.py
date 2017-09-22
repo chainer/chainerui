@@ -32,10 +32,9 @@ DB_SESSION = scoped_session(
 
 def create_db():
     ''' create_db '''
-    print('DB_FILE_PATH: ', DB_FILE_PATH)
     if not os.path.isdir(DB_FILE_DIR):
         os.makedirs(DB_FILE_DIR, exist_ok=True)
-    DB_BASE.metadata.create_all(ENGINE)
+    print('DB_FILE_PATH: ', DB_FILE_PATH)
 
 
 def create_db_session():
@@ -56,9 +55,7 @@ def create_app(args):
     from chainer_ui.tasks import collect_results, crawl_results
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(
-        collect_results, 'interval', seconds=5, args=[[args.target_dir]]
-    )
+    scheduler.add_job(collect_results, 'interval', seconds=5)
     scheduler.add_job(crawl_results, 'interval', seconds=5)
     scheduler.start()
 
@@ -73,7 +70,7 @@ def create_app(args):
 
     @app.before_first_request
     def app_initialize():
-        collect_results([args.target_dir])
+        collect_results()
         crawl_results()
 
     @app.context_processor
@@ -86,24 +83,54 @@ def create_app(args):
         DB_SESSION.remove()
 
     @app.route('/')
-    @app.route('/results/<int:result_id>')
+    @app.route('/projects/<int:project_id>')
+    @app.route('/projects/<int:project_id>/results/<int:result_id>')
     def index(**kwargs):
         ''' render react app '''
         return render_template('index.html')
 
+    from chainer_ui.views.old_result import OldResultAPI
+
+    from chainer_ui.views.project import ProjectAPI
     from chainer_ui.views.result import ResultAPI
     from chainer_ui.views.result_command import ResultCommandAPI
+
+    oldresult_resource = OldResultAPI.as_view('oldresult_resource')
+
+    project_resource = ProjectAPI.as_view('project_resource')
     result_resource = ResultAPI.as_view('result_resource')
     result_command_resource = ResultCommandAPI.as_view(
-        'result_command_resource'
-    )
+        'result_command_resource')
+
+    # project API
+    app.add_url_rule(
+        '/api/v1/projects',
+        defaults={'id': None}, view_func=project_resource, methods=['GET'])
+    app.add_url_rule(
+        '/api/v1/projects/<int:id>',
+        view_func=project_resource, methods=['GET', 'PUT', 'DELETE'])
+
+    # result API
+    app.add_url_rule(
+        '/api/v1/projects/<int:project_id>/results',
+        defaults={'id': None}, view_func=result_resource, methods=['GET'])
+    app.add_url_rule(
+        '/api/v1/projects/<int:project_id>/results/<int:id>',
+        view_func=result_resource, methods=['GET', 'PUT', 'DELETE'])
+
+    # result command API
+    app.add_url_rule(
+        '/api/v1/projects/<int:project_id>/results/<int:result_id>/commands',
+        view_func=result_command_resource, methods=['POST'])
+
+    # old apis
     app.add_url_rule(
         '/api/v1/results/',
-        defaults={'id': None}, view_func=result_resource, methods=['GET']
+        defaults={'id': None}, view_func=oldresult_resource, methods=['GET']
     )
     app.add_url_rule(
         '/api/v1/results/<int:id>',
-        view_func=result_resource, methods=['PUT', 'DELETE']
+        view_func=oldresult_resource, methods=['PUT', 'DELETE']
     )
     app.add_url_rule(
         '/api/v1/results/<int:id>/commands',

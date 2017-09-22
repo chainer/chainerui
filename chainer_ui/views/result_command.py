@@ -6,15 +6,16 @@ from flask.views import MethodView
 from chainer_ui import DB_SESSION
 from chainer_ui.models.result import Result
 from chainer_ui.utils.command_item import CommandItem
+from chainer_ui.tasks import crawl_results
 
 
 class ResultCommandAPI(MethodView):
     """ ResultCommandAPI """
 
-    def post(self, id):
+    def post(self, result_id, project_id):
         ''' POST /api/v1/results/<int:id>/commands '''
 
-        result = DB_SESSION.query(Result).filter_by(id=id).first()
+        result = DB_SESSION.query(Result).filter_by(id=result_id).first()
 
         if result is None:
             return jsonify({
@@ -55,4 +56,9 @@ class ResultCommandAPI(MethodView):
 
         CommandItem.dump_commands(commands, result.path_name)
 
-        return jsonify(command.to_dict())
+        crawl_results()
+
+        new_result = DB_SESSION.query(Result).filter_by(id=result_id).first()
+        new_result_dict = new_result.serialize
+
+        return jsonify({'commands': new_result_dict['commands']})

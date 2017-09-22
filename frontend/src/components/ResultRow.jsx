@@ -2,7 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { displayName, truncate, getLastLogDict, argValue2string } from '../utils';
+import {
+  displayResultName,
+  truncate,
+  getLastLogDict,
+  argValue2string,
+  urlForResultDetail
+} from '../utils';
 
 
 const emptyStr = '-';
@@ -25,8 +31,8 @@ class ResultRow extends React.Component {
   }
 
   handleSelectToggle() {
-    const { result, onResultsConfigSelectToggle } = this.props;
-    onResultsConfigSelectToggle(result.id);
+    const { projectId, result, onResultsConfigSelectToggle } = this.props;
+    onResultsConfigSelectToggle(projectId, result.id);
   }
 
   handleResultNameChange(e) {
@@ -42,16 +48,16 @@ class ResultRow extends React.Component {
   }
 
   handleResultUpdate() {
-    const { result, onResultUpdate } = this.props;
+    const { projectId, result, onResultUpdate } = this.props;
     const { resultName } = this.state;
     if (resultName !== result.name) {
-      onResultUpdate({ ...result, name: resultName });
+      onResultUpdate(projectId, { ...result, name: resultName });
     }
   }
 
   handleUnregister() {
-    const { result, onResultUpdate } = this.props;
-    onResultUpdate({ ...result, isUnregistered: true });
+    const { projectId, result, onResultUpdate } = this.props;
+    onResultUpdate(projectId, { ...result, isUnregistered: true });
     this.toggleUnregisterModal();
   }
 
@@ -80,7 +86,7 @@ class ResultRow extends React.Component {
           <input type="checkbox" checked={!resultConfig.hidden} onChange={this.handleSelectToggle} />
         </td>
         <td>
-          <Link to={`results/${result.id}`}>{result.id}</Link>
+          <Link to={urlForResultDetail(1, result.id)}>{result.id}</Link>
         </td>
         <td>
           <input
@@ -106,7 +112,7 @@ class ResultRow extends React.Component {
           <Modal isOpen={showUnregisterModal}>
             <ModalHeader>Unregister a result</ModalHeader>
             <ModalBody>
-              Are you sure to unregister {displayName(result)} ?
+              Are you sure to unregister {displayResultName(result)} ?
             </ModalBody>
             <ModalFooter>
               <Button color="secondary" onClick={this.toggleUnregisterModal}>Cancel</Button>
@@ -120,6 +126,7 @@ class ResultRow extends React.Component {
 }
 
 ResultRow.propTypes = {
+  projectId: PropTypes.number.isRequired,
   result: PropTypes.shape({
     id: PropTypes.number,
     pathName: PropTypes.string,
