@@ -3,14 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Row, Col } from 'reactstrap';
 import {
-  getProjectList,
+  getProjectList, updateProject, deleteProject,
   updateGlobalPollingRate,
   updateGlobalChartSize
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import Projects from '../components/projects/Projects';
-import { } from '../constants';
-import { } from '../utils';
 
 
 class ProjectsContainer extends React.Component {
@@ -34,7 +32,11 @@ class ProjectsContainer extends React.Component {
           <Row>
             <Col sm={10} lg={8} className="m-auto">
               <h2>Projects</h2>
-              <Projects projects={projects} />
+              <Projects
+                projects={projects}
+                onProjectUpdate={this.props.updateProject}
+                onProjectDelete={this.props.deleteProject}
+              />
             </Col>
           </Row>
         </Container>
@@ -61,12 +63,16 @@ ProjectsContainer.propTypes = {
   }).isRequired,
   globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
   getProjectList: PropTypes.func.isRequired,
+  updateProject: PropTypes.func.isRequired,
+  deleteProject: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, {
   getProjectList,
+  updateProject,
+  deleteProject,
   updateGlobalPollingRate,
   updateGlobalChartSize
 })(ProjectsContainer);

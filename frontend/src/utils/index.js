@@ -28,8 +28,12 @@ export const displayResultName = (result = {}, options = {}) => (
   truncate(result.name, options) || truncate(result.pathName, { ...options, forward: true })
 );
 
+export const displayProjectNameFull = (project = {}) => (
+  project.name || path.basename(project.pathName)
+);
+
 export const displayProjectName = (project = {}, options = {}) => (
-  truncate(project.name || path.basename(project.pathName), options)
+  truncate(displayProjectNameFull(project), options)
 );
 
 export const line2name = (line, result = {}) => `${displayResultName(result)}/${line.logKey}`;

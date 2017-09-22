@@ -19,12 +19,21 @@ const projectsReducer = (state = {}, action) => {
       }
       return state;
     case ActionTypes.PROJECT_SUCCESS:
+    case ActionTypes.PROJECT_UPDATE_SUCCESS:
       if (action.response && action.response.project) {
         const { project } = action.response;
         return {
           ...state,
           [project.id]: project
         };
+      }
+      return state;
+    case ActionTypes.PROJECT_DELETE_SUCCESS:
+      if (action.response && action.response.project) {
+        const { project } = action.response;
+        const newProjects = { ...state };
+        delete newProjects[project.id];
+        return newProjects;
       }
       return state;
     default:
