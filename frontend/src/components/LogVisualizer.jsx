@@ -16,6 +16,7 @@ import {
   getSelectedResults, getSelectedLogKeys,
   createLine
 } from '../utils';
+import LogVisualizerTooltip from './LogVisualizerTooltip';
 
 
 const getDomain = (axisConfig = {}) => {
@@ -168,7 +169,10 @@ class LogVisualizer extends React.Component {
               allowDataOverflow
             />
             <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip formatter={formatLogValue} />
+            <Tooltip
+              formatter={formatLogValue}
+              content={<LogVisualizerTooltip external={external} />}
+            />
             {lineElems}
           </LineChart>
         </ResponsiveContainer>
