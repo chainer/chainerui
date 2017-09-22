@@ -2,6 +2,7 @@
 
 import os
 import json
+import datetime
 
 from chainer_ui import DB_SESSION
 from chainer_ui.models.result import Result
@@ -85,4 +86,5 @@ def crawl_results():
                     Snapshot(snapshot, int(number_str))
                 )
 
+        current_result.updated_at = datetime.datetime.now()
         DB_SESSION.commit()
