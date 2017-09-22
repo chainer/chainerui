@@ -34,8 +34,28 @@ def upgrade():
             )
         )
 
+    with op.batch_alter_table('project') as batch_op:
+        batch_op.add_column(
+            sa.Column(
+                'created_at',
+                sa.DateTime(),
+                nullable=True
+            )
+        )
+        batch_op.add_column(
+            sa.Column(
+                'updated_at',
+                sa.DateTime(),
+                nullable=True
+            )
+        )
+
 
 def downgrade():
     with op.batch_alter_table('result') as batch_op:
+        batch_op.drop_column('created_at')
+        batch_op.drop_column('updated_at')
+
+    with op.batch_alter_table('project') as batch_op:
         batch_op.drop_column('created_at')
         batch_op.drop_column('updated_at')
