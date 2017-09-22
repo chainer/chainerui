@@ -46,7 +46,9 @@ class ResultAPI(MethodView):
         """ put """
         result = DB_SESSION.query(Result).filter_by(id=id).first()
         if result is None:
-            response = jsonify({'result': None, 'message': 'No interface defined for URL.'})
+            response = jsonify({
+                'result': None, 'message': 'No interface defined for URL.'
+            })
             return response, 404
 
         request_json = request.get_json()
@@ -69,7 +71,9 @@ class ResultAPI(MethodView):
         """ delete """
         result = DB_SESSION.query(Result).filter_by(id=id).first()
         if result is None:
-            response = jsonify({'result': None, 'message': 'No interface defined for URL.'})
+            response = jsonify({
+                'result': None, 'message': 'No interface defined for URL.'
+            })
             return response, 404
 
         DB_SESSION.delete(result)
