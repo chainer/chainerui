@@ -35,13 +35,15 @@ def db_handler(args):
     if args.type == 'upgrade':
         ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
         config = Config(ini_path)
-        config.set_main_option("script_location", os.path.join(PACKAGE_DIR, 'migration'))
+        config.set_main_option(
+            "script_location", os.path.join(PACKAGE_DIR, 'migration'))
         upgrade(config, 'head')
 
     if args.type == 'revision':
         ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
         config = Config(ini_path)
-        config.set_main_option("script_location", os.path.join(PACKAGE_DIR, 'migration'))
+        config.set_main_option(
+            "script_location", os.path.join(PACKAGE_DIR, 'migration'))
         revision(config)
 
     if args.type == 'drop':
