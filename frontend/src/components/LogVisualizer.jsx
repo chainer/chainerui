@@ -7,7 +7,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer
 } from 'recharts';
 import 'rc-slider/assets/index.css';
@@ -167,7 +166,6 @@ class LogVisualizer extends React.Component {
             />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
-            <Legend />
             {lineElems}
           </LineChart>
         </ResponsiveContainer>
