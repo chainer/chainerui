@@ -5,12 +5,14 @@ import argparse
 import os
 
 
+import alembic
+from alembic.command import upgrade, revision
+from alembic.config import Config
+
+
 from chainer_ui import create_app, create_db
 from chainer_ui import DB_FILE_PATH, ENGINE, PACKAGE_DIR, DB_SESSION
 from chainer_ui.models.project import Project
-from alembic.migration import MigrationContext
-from alembic.command import upgrade, revision
-from alembic.config import Config
 
 
 def server_handler(args):
@@ -28,7 +30,7 @@ def db_handler(args):
         create_db()
 
     if args.type == 'status':
-        ctx = MigrationContext.configure(ENGINE.connect())
+        ctx = alembic.migration.MigrationContext.configure(ENGINE.connect())
         current_rev = ctx.get_current_revision()
         print('current_rev', current_rev)
 
