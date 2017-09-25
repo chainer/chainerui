@@ -1,12 +1,17 @@
 ''' result.py '''
 
 
+import datetime
+
+
 from flask import jsonify, request
 from flask.views import MethodView
 
 
 from chainer_ui import DB_SESSION
 from chainer_ui.models.result import Result
+from chainer_ui.tasks import collect_results
+from chainer_ui.tasks import crawl_result
 
 
 class ResultAPI(MethodView):
@@ -16,21 +21,29 @@ class ResultAPI(MethodView):
         ''' get '''
 
         if id is None:
+
+            collect_results(project_id)
+
             results = DB_SESSION.query(Result).\
                 filter_by(project_id=project_id).\
                 filter_by(is_unregistered=False).\
                 all()
+
+            for result in results:
+                result = crawl_result(result.id)
 
             return jsonify({
                 'results': [result.serialize for result in results]
             })
 
         else:
+
             result = DB_SESSION.query(Result).\
                 filter_by(id=id).\
-                filter_by(project_id=project_id).\
                 filter_by(is_unregistered=False).\
                 first()
+
+            result = crawl_result(result.id)
 
             if result is None:
                 return jsonify({

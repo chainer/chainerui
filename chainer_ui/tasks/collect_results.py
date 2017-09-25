@@ -1,6 +1,7 @@
 ''' collect_results.py '''
 
 import os
+import datetime
 
 from chainer_ui import DB_SESSION
 from chainer_ui.models.project import Project
@@ -40,14 +41,24 @@ def _register_result(project_id, result_path):
         DB_SESSION.commit()
 
 
-def collect_results():
+def collect_results(project_id):
     ''' collect_results '''
 
-    for project in DB_SESSION.query(Project).all():
-        result_paths = []
+    project = DB_SESSION.query(Project).filter_by(id=project_id).first()
 
-        if os.path.isdir(project.path_name):
-            result_paths.extend(_list_result_paths(project.path_name))
+    now = datetime.datetime.now()
 
-        for result_path in result_paths:
-            _register_result(project.id, result_path)
+    if (now - project.updated_at).total_seconds() < 4:
+        return project
+
+    result_paths = []
+
+    if os.path.isdir(project.path_name):
+        result_paths.extend(_list_result_paths(project.path_name))
+
+    for result_path in result_paths:
+        _register_result(project.id, result_path)
+
+    project.updated_at = datetime.datetime.now()
+
+    DB_SESSION.commit()

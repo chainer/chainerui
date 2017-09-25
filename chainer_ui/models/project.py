@@ -1,8 +1,13 @@
 ''' project.py '''
 
 
-from sqlalchemy import Column, Integer, String
+import datetime
+
+
+from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
+
+
 from chainer_ui import DB_BASE
 from chainer_ui.models.result import Result
 
@@ -15,6 +20,11 @@ class Project(DB_BASE):
     path_name = Column(String(512), unique=True)
     name = Column(String(512))
     results = relationship('Result', cascade='all, delete-orphan')
+    created_at = Column(DateTime, default=datetime.datetime.now())
+    updated_at = Column(
+        DateTime,
+        default=datetime.datetime.now()
+    )
 
     def __init__(self, path_name=None, name=None):
         self.path_name = path_name
