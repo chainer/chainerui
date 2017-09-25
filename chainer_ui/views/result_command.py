@@ -56,7 +56,7 @@ class ResultCommandAPI(MethodView):
 
         CommandItem.dump_commands(commands, result.path_name)
 
-        crawl_result(result.id)
+        crawl_result(result.id, force=True)
 
         new_result = DB_SESSION.query(Result).filter_by(id=result_id).first()
         new_result_dict = new_result.serialize

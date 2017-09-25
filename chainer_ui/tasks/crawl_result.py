@@ -49,14 +49,14 @@ def crawl_result_path(result_path):
     return result
 
 
-def crawl_result(result_id):
+def crawl_result(result_id, force=None):
     ''' crawl_results '''
 
     current_result = DB_SESSION.query(Result).filter_by(id=result_id).first()
 
     now = datetime.datetime.now()
 
-    if (now - current_result.updated_at).total_seconds() < 4:
+    if force is None and (now - current_result.updated_at).total_seconds() < 4:
         return current_result
 
     crawled_result = crawl_result_path(current_result.path_name)
