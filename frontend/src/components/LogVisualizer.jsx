@@ -7,15 +7,16 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer
 } from 'recharts';
 import 'rc-slider/assets/index.css';
 import {
   line2key, line2name, line2dataKey,
+  formatLogValue,
   getSelectedResults, getSelectedLogKeys,
   createLine
 } from '../utils';
+import LogVisualizerTooltip from './LogVisualizerTooltip';
 
 
 const getDomain = (axisConfig = {}) => {
@@ -156,6 +157,7 @@ class LogVisualizer extends React.Component {
               orientation="left"
               scale={yLeftAxis.scale}
               domain={getDomain(yLeftAxis)}
+              tickFormatter={formatLogValue()}
               allowDataOverflow
             />
             <YAxis
@@ -163,11 +165,19 @@ class LogVisualizer extends React.Component {
               orientation="right"
               scale={yRightAxis.scale}
               domain={getDomain(yRightAxis)}
+              tickFormatter={formatLogValue()}
               allowDataOverflow
             />
             <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip />
-            <Legend />
+            <Tooltip
+              content={
+                <LogVisualizerTooltip
+                  results={results}
+                  lines={lines}
+                  xAxisKey={xAxisKey}
+                />
+              }
+            />
             {lineElems}
           </LineChart>
         </ResponsiveContainer>
