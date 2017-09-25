@@ -5,7 +5,6 @@ import os
 
 
 from flask import Flask, render_template, url_for, jsonify, request
-from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -50,14 +49,6 @@ def create_app(args):
 
     app = Flask(__name__)
     app.config['DEBUG'] = False
-
-    from chainer_ui.models.result import Result
-    # from chainer_ui.tasks import collect_results, crawl_results
-
-    # scheduler = BackgroundScheduler()
-    # scheduler.add_job(collect_results, 'interval', seconds=5)
-    # scheduler.add_job(crawl_results, 'interval', seconds=5)
-    # scheduler.start()
 
     def dated_url_for(endpoint, **values):
         ''' dated_url_for '''
