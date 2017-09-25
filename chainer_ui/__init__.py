@@ -52,12 +52,12 @@ def create_app(args):
     app.config['DEBUG'] = False
 
     from chainer_ui.models.result import Result
-    from chainer_ui.tasks import collect_results, crawl_results
+    # from chainer_ui.tasks import collect_results, crawl_results
 
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(collect_results, 'interval', seconds=5)
-    scheduler.add_job(crawl_results, 'interval', seconds=5)
-    scheduler.start()
+    # scheduler = BackgroundScheduler()
+    # scheduler.add_job(collect_results, 'interval', seconds=5)
+    # scheduler.add_job(crawl_results, 'interval', seconds=5)
+    # scheduler.start()
 
     def dated_url_for(endpoint, **values):
         ''' dated_url_for '''
@@ -68,10 +68,10 @@ def create_app(args):
                 values['_'] = int(os.stat(file_path).st_mtime)
         return url_for(endpoint, **values)
 
-    @app.before_first_request
-    def app_initialize():
-        collect_results()
-        crawl_results()
+    # @app.before_first_request
+    # def app_initialize():
+    #     collect_results()
+    #     crawl_results()
 
     @app.context_processor
     def override_url_for():

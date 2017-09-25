@@ -1,12 +1,17 @@
 ''' result.py '''
 
 
+import datetime
+
+
 from flask import jsonify, request
 from flask.views import MethodView
 
 
 from chainer_ui import DB_SESSION
 from chainer_ui.models.result import Result
+from chainer_ui.tasks import collect_results
+from chainer_ui.tasks import crawl_result
 
 
 class ResultAPI(MethodView):
@@ -16,6 +21,20 @@ class ResultAPI(MethodView):
         ''' get '''
 
         if id is None:
+
+            collect_results(project_id)
+
+            results = DB_SESSION.query(Result).\
+                filter_by(project_id=project_id).\
+                filter_by(is_unregistered=False).\
+                all()
+
+            # print(datetime.datetime.now() - current_result.updated_at
+            # , "---", current_result.updated_at, datetime.datetime.now())
+
+            for result in results:
+                crawl_result(result.id)
+
             results = DB_SESSION.query(Result).\
                 filter_by(project_id=project_id).\
                 filter_by(is_unregistered=False).\
@@ -26,9 +45,16 @@ class ResultAPI(MethodView):
             })
 
         else:
+
             result = DB_SESSION.query(Result).\
                 filter_by(id=id).\
-                filter_by(project_id=project_id).\
+                filter_by(is_unregistered=False).\
+                first()
+
+            crawl_result(result.id)
+
+            result = DB_SESSION.query(Result).\
+                filter_by(id=id).\
                 filter_by(is_unregistered=False).\
                 first()
 
