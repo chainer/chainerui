@@ -6,6 +6,10 @@ Create Date: 2017-09-22 15:14:36.947242
 
 """
 
+
+import datetime
+
+
 from alembic import op
 import sqlalchemy as sa
 
@@ -16,6 +20,7 @@ down_revision = '6cc68bf684ac'
 branch_labels = None
 depends_on = None
 
+now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
 def upgrade():
     with op.batch_alter_table('result') as batch_op:
@@ -23,14 +28,14 @@ def upgrade():
             sa.Column(
                 'created_at',
                 sa.DateTime(),
-                nullable=True
+                nullable=False, server_default=now
             )
         )
         batch_op.add_column(
             sa.Column(
                 'updated_at',
                 sa.DateTime(),
-                nullable=True
+                nullable=False, server_default=now
             )
         )
 
@@ -39,14 +44,14 @@ def upgrade():
             sa.Column(
                 'created_at',
                 sa.DateTime(),
-                nullable=True
+                nullable=False, server_default=now
             )
         )
         batch_op.add_column(
             sa.Column(
                 'updated_at',
                 sa.DateTime(),
-                nullable=True
+                nullable=False, server_default=now
             )
         )
 
