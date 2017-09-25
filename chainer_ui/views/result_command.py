@@ -56,9 +56,8 @@ class ResultCommandAPI(MethodView):
 
         CommandItem.dump_commands(commands, result.path_name)
 
-        crawl_result(result.id, force=True)
-
-        new_result = DB_SESSION.query(Result).filter_by(id=result_id).first()
+        
+        new_result = crawl_result(result.id, force=True)
         new_result_dict = new_result.serialize
 
         return jsonify({'commands': new_result_dict['commands']})
