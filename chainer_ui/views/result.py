@@ -29,16 +29,8 @@ class ResultAPI(MethodView):
                 filter_by(is_unregistered=False).\
                 all()
 
-            # print(datetime.datetime.now() - current_result.updated_at
-            # , "---", current_result.updated_at, datetime.datetime.now())
-
             for result in results:
-                crawl_result(result.id)
-
-            results = DB_SESSION.query(Result).\
-                filter_by(project_id=project_id).\
-                filter_by(is_unregistered=False).\
-                all()
+                result = crawl_result(result.id)
 
             return jsonify({
                 'results': [result.serialize for result in results]
@@ -51,12 +43,7 @@ class ResultAPI(MethodView):
                 filter_by(is_unregistered=False).\
                 first()
 
-            crawl_result(result.id)
-
-            result = DB_SESSION.query(Result).\
-                filter_by(id=id).\
-                filter_by(is_unregistered=False).\
-                first()
+            result = crawl_result(result.id)
 
             if result is None:
                 return jsonify({

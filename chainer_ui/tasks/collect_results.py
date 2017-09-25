@@ -46,6 +46,11 @@ def collect_results(project_id):
 
     project = DB_SESSION.query(Project).filter_by(id=project_id).first()
 
+    now = datetime.datetime.now()
+
+    if (now - project.updated_at).total_seconds() < 4:
+        return project
+
     result_paths = []
 
     if os.path.isdir(project.path_name):

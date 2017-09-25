@@ -53,10 +53,11 @@ def crawl_result(result_id):
     ''' crawl_results '''
 
     current_result = DB_SESSION.query(Result).filter_by(id=result_id).first()
-    # for current_result in DB_SESSION.query(Result).all():
 
-    # print(datetime.datetime.now() - current_result.updated_a
-    # t, "---", current_result.updated_at, datetime.datetime.now())
+    now = datetime.datetime.now()
+
+    if (now - current_result.updated_at).total_seconds() < 4:
+        return current_result
 
     crawled_result = crawl_result_path(current_result.path_name)
 
@@ -92,3 +93,5 @@ def crawl_result(result_id):
 
     current_result.updated_at = datetime.datetime.now()
     DB_SESSION.commit()
+
+    return current_result
