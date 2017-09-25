@@ -1,4 +1,4 @@
-''' crawl_results.py '''
+''' crawl_result.py '''
 
 import os
 import json
