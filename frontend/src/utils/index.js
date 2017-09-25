@@ -10,6 +10,14 @@ export const line2key = (line) => `${line.resultId}_${line.logKey}`;
 
 export const line2dataKey = (line, axisName) => `${axisName}_${line2key(line)}`;
 
+export const decomposeLineDataKey = (dataKey) => {
+  const keys = dataKey.split('_');
+  const axisName = keys[0];
+  const resultId = Number(keys[1]);
+  const logKey = keys.slice(2).join('_');
+  return { axisName, resultId, logKey };
+};
+
 export const truncate = (string, options = {}) => {
   const { length = 20, restStr = '...', forward = false } = options;
   let str = string || '';
@@ -42,8 +50,12 @@ export const isFloat = (value) => (
   isFinite(value) && !Number.isInteger(value)
 );
 
-export const formatLogValue = (value) => (
-  isFloat(value) ? value.toPrecision(4) : value
+export const formatLogValue = (precision = 4) => (value) => (
+  isFloat(value) ? value.toPrecision(precision) : value
+);
+
+export const formatLogTooltipLabel = (xAxisKey, precision) => (value) => (
+  `${formatLogValue(precision)(value)} ${xAxisKey === 'elapsed_time' ? 's' : xAxisKey}`
 );
 
 export const getLastLogDict = (result = {}) => {

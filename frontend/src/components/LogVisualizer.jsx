@@ -157,7 +157,7 @@ class LogVisualizer extends React.Component {
               orientation="left"
               scale={yLeftAxis.scale}
               domain={getDomain(yLeftAxis)}
-              tickFormatter={formatLogValue}
+              tickFormatter={formatLogValue()}
               allowDataOverflow
             />
             <YAxis
@@ -165,13 +165,18 @@ class LogVisualizer extends React.Component {
               orientation="right"
               scale={yRightAxis.scale}
               domain={getDomain(yRightAxis)}
-              tickFormatter={formatLogValue}
+              tickFormatter={formatLogValue()}
               allowDataOverflow
             />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip
-              formatter={formatLogValue}
-              content={<LogVisualizerTooltip external={external} />}
+              content={
+                <LogVisualizerTooltip
+                  results={results}
+                  lines={lines}
+                  xAxisKey={xAxisKey}
+                />
+              }
             />
             {lineElems}
           </LineChart>
