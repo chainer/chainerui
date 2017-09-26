@@ -111,12 +111,20 @@ const fetchState = (state = {}, action) => {
         ...state,
         resultList: action.type
       };
+    case ActionTypes.RESULT_REQUEST:
+    case ActionTypes.RESULT_SUCCESS:
+    case ActionTypes.RESULT_FAILUE:
+      return {
+        ...state,
+        result: action.type
+      };
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
     case LOCATION_CHANGE:
       if (action.pollingRate === 0) {
         return {
           ...state,
-          resultList: undefined
+          resultList: undefined,
+          result: undefined
         };
       }
       return state;

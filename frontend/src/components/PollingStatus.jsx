@@ -1,24 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILUE } from '../actions';
+import {
+  RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILUE,
+  RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILUE
+} from '../actions';
 
 
 const PollingStatus = (props) => {
-  const { fetchState = {}, globalConfig = {} } = props;
-  const resultsFetchState = fetchState.resultList;
+  const { pollingKey, fetchState = {}, globalConfig = {} } = props;
 
   let colorClass;
-  if (globalConfig.pollingRate === 0) {
+  if (globalConfig.pollingRate === 0 || !pollingKey) {
     colorClass = 'text-muted';
   } else {
-    switch (resultsFetchState) {
+    console.log(fetchState);
+    console.log(pollingKey);
+    const targetState = fetchState[pollingKey];
+    switch (targetState) {
       case RESULT_LIST_REQUEST:
+      case RESULT_REQUEST:
         colorClass = 'text-primary';
         break;
       case RESULT_LIST_SUCCESS:
+      case RESULT_SUCCESS:
         colorClass = 'text-success';
         break;
       case RESULT_LIST_FAILUE:
+      case RESULT_FAILUE:
         colorClass = 'text-danger';
         break;
       default:
@@ -32,6 +40,7 @@ const PollingStatus = (props) => {
 };
 
 PollingStatus.propTypes = {
+  pollingKey: PropTypes.oneOf(['resultList', 'result']),
   fetchState: PropTypes.shape({
     resultList: PropTypes.string
   }).isRequired,
@@ -40,6 +49,10 @@ PollingStatus.propTypes = {
       pollingRate: PropTypes.number
     })
   }).isRequired
+};
+
+PollingStatus.defaultProps = {
+  pollingKey: undefined
 };
 
 export default PollingStatus;

@@ -63,6 +63,7 @@ class NavigationBar extends React.Component {
           <Collapse isOpen>
             <span className="navbar-text mx-3 my-0">
               <PollingStatus
+                pollingKey={this.props.pollingKey}
                 fetchState={this.props.fetchState}
                 globalConfig={this.props.globalConfig}
               />
@@ -119,6 +120,7 @@ class NavigationBar extends React.Component {
 }
 
 NavigationBar.propTypes = {
+  pollingKey: PropTypes.string,
   fetchState: PropTypes.shape({
     resultList: PropTypes.string
   }).isRequired,
@@ -131,6 +133,7 @@ NavigationBar.propTypes = {
 };
 
 NavigationBar.defaultProps = {
+  pollingKey: undefined
 };
 
 export default NavigationBar;

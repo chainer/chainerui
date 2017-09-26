@@ -59,6 +59,7 @@ class PlotContainer extends React.Component {
     return (
       <div className="chainer-ui-container">
         <NavigationBar
+          pollingKey="resultList"
           fetchState={fetchState}
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}

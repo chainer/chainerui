@@ -52,6 +52,7 @@ class ResultDetail extends React.Component {
     return (
       <div className="result-detail">
         <NavigationBar
+          pollingKey="result"
           fetchState={fetchState}
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
