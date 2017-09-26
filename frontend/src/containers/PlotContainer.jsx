@@ -166,7 +166,7 @@ PlotContainer.propTypes = {
   }),
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
-    results: PropTypes.string
+    resultList: PropTypes.string
   }).isRequired,
   projectConfig: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),

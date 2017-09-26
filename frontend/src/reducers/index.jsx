@@ -102,14 +102,14 @@ const entities = combineReducers({
 });
 
 
-const fetchState = (state = { results: '' }, action) => {
+const fetchState = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.RESULT_LIST_REQUEST:
     case ActionTypes.RESULT_LIST_SUCCESS:
     case ActionTypes.RESULT_LIST_FAILUE:
       return {
         ...state,
-        results: action.type
+        resultList: action.type
       };
     case ActionTypes.COMMAND_CREATE_REQUEST:
     case ActionTypes.COMMAND_CREATE_SUCCESS:

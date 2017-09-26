@@ -59,7 +59,7 @@ const mapStateToProps = (state) => {
 ProjectsContainer.propTypes = {
   projects: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
-    results: PropTypes.string
+    resultList: PropTypes.string
   }).isRequired,
   globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
   getProjectList: PropTypes.func.isRequired,

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILUE } from '../actions';
 
 
-const ResultsFetchState = (props) => {
+const PollingStatus = (props) => {
   const { fetchState = {}, globalConfig = {} } = props;
-  const resultsFetchState = fetchState.results;
+  const resultsFetchState = fetchState.resultList;
 
   let colorClass;
   if (globalConfig.pollingRate === 0) {
@@ -31,9 +31,9 @@ const ResultsFetchState = (props) => {
   );
 };
 
-ResultsFetchState.propTypes = {
+PollingStatus.propTypes = {
   fetchState: PropTypes.shape({
-    results: PropTypes.string
+    resultList: PropTypes.string
   }).isRequired,
   globalConfig: PropTypes.shape({
     global: PropTypes.shape({
@@ -42,5 +42,5 @@ ResultsFetchState.propTypes = {
   }).isRequired
 };
 
-export default ResultsFetchState;
+export default PollingStatus;
 

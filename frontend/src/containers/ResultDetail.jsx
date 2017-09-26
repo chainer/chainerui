@@ -123,7 +123,7 @@ ResultDetail.propTypes = {
     logs: PropTypes.arrayOf(PropTypes.any)
   }),
   fetchState: PropTypes.shape({
-    results: PropTypes.string
+    resultList: PropTypes.string
   }).isRequired,
   globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
   getProject: PropTypes.func.isRequired,
