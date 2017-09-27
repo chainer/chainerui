@@ -1,0 +1,95 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Tooltip } from 'reactstrap';
+import {
+  RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILUE,
+  RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILUE
+} from '../actions';
+
+
+class PollingStatus extends React.Component {
+  constructor() {
+    super();
+
+    this.toggleTooltip = this.toggleTooltip.bind(this);
+
+    this.state = {
+      isTooltipOpen: false
+    };
+  }
+
+  toggleTooltip() {
+    this.setState({
+      isTooltipOpen: !this.state.isTooltipOpen
+    });
+  }
+
+  render() {
+    const { pollingKey, fetchState = {}, globalConfig = {} } = this.props;
+    const { isTooltipOpen } = this.state;
+
+    let colorClass;
+    let statusMessage;
+    if (globalConfig.pollingRate === 0 || !pollingKey) {
+      colorClass = 'text-muted';
+      statusMessage = '';
+    } else {
+      const targetState = fetchState[pollingKey];
+      switch (targetState) {
+        case RESULT_LIST_REQUEST:
+        case RESULT_REQUEST:
+          colorClass = 'text-primary';
+          statusMessage = 'loading data ...';
+          break;
+        case RESULT_LIST_SUCCESS:
+        case RESULT_SUCCESS:
+          colorClass = 'text-success';
+          statusMessage = 'success fully loaded data';
+          break;
+        case RESULT_LIST_FAILUE:
+        case RESULT_FAILUE:
+          colorClass = 'text-danger';
+          statusMessage = 'failed to load data';
+          break;
+        default:
+          colorClass = 'text-muted';
+          statusMessage = '';
+          break;
+      }
+    }
+    return (
+      <div className={colorClass}>
+        <small>
+          <span id="polling-status-tooltip" className="oi oi-media-record" />
+        </small>
+        <Tooltip
+          placement="bottom"
+          isOpen={!!(isTooltipOpen && statusMessage)}
+          target="polling-status-tooltip"
+          toggle={this.toggleTooltip}
+        >
+          {statusMessage}
+        </Tooltip>
+      </div>
+    );
+  }
+}
+
+PollingStatus.propTypes = {
+  pollingKey: PropTypes.oneOf(['resultList', 'result']),
+  fetchState: PropTypes.shape({
+    resultList: PropTypes.string
+  }).isRequired,
+  globalConfig: PropTypes.shape({
+    global: PropTypes.shape({
+      pollingRate: PropTypes.number
+    })
+  }).isRequired
+};
+
+PollingStatus.defaultProps = {
+  pollingKey: undefined
+};
+
+export default PollingStatus;
+
