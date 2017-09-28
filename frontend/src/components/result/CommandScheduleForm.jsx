@@ -38,7 +38,7 @@ class SnapshotTakeForm extends React.Component {
   render() {
     const { schedule, scheduleType } = this.props;
     return (
-      <FormGroup>
+      <FormGroup className="form-inline">
         <FormGroup check className="form-check-inline ml-3">
           <Label check>
             <Input
