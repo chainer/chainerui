@@ -34,12 +34,13 @@ class CommandFormBase extends React.Component {
       resultId,
       onCommandSubmit,
       commandName,
+      commandBody,
       freezeTime
     } = this.props;
     const { scheduleType } = this.state;
     const schedule = (scheduleType === SCHEDULE_CUSTOM) ? this.state.schedule : null;
 
-    onCommandSubmit(projectId, resultId, commandName, null, schedule);
+    onCommandSubmit(projectId, resultId, commandName, commandBody, schedule);
 
     this.setState({ disabled: true });
     setTimeout(() => {
@@ -88,6 +89,7 @@ CommandFormBase.propTypes = {
   projectId: PropTypes.number.isRequired,
   resultId: PropTypes.number.isRequired,
   commandName: PropTypes.string.isRequired,
+  commandBody: PropTypes.objectOf(PropTypes.any),
   title: PropTypes.string.isRequired,
   buttonLabel: PropTypes.string.isRequired,
   children: React.PropTypes.oneOfType([
@@ -99,6 +101,7 @@ CommandFormBase.propTypes = {
 };
 
 CommandFormBase.defaultProps = {
+  commandBody: null,
   children: null,
   freezeTime: 1000
 };
