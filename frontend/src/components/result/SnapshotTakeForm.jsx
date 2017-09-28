@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Form, FormGroup, Label, Input
+  Button, Form
 } from 'reactstrap';
+import { SCHEDULE_NOW, SCHEDULE_CUSTOM } from '../../constants';
+import CommandScheduleForm from './CommandScheduleForm';
 
-
-const SCHEDULE_NOW = 'scheduleNow';
-const SCHEDULE_CUSTOM = 'scheduleCustom';
 
 const initialState = {
   disabled: false,
@@ -23,8 +22,7 @@ class SnapshotTakeForm extends React.Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleScheduleTypeChange = this.handleScheduleTypeChange.bind(this);
-    this.handleScheduleValueChange = this.handleScheduleValueChange.bind(this);
-    this.handleScheduleKeyChange = this.handleScheduleKeyChange.bind(this);
+    this.handleScheduleChange = this.handleScheduleChange.bind(this);
 
     this.state = initialState;
   }
@@ -49,30 +47,12 @@ class SnapshotTakeForm extends React.Component {
     }, freezeTime);
   }
 
-  handleScheduleTypeChange(e) {
-    this.setState({
-      scheduleType: e.target.name
-    });
+  handleScheduleTypeChange(scheduleType) {
+    this.setState({ scheduleType });
   }
 
-  handleScheduleValueChange(e) {
-    const { schedule } = this.state;
-    this.setState({
-      schedule: {
-        value: Number(e.target.value),
-        key: schedule.key
-      }
-    });
-  }
-
-  handleScheduleKeyChange(e) {
-    const { schedule } = this.state;
-    this.setState({
-      schedule: {
-        value: schedule.value,
-        key: e.target.value
-      }
-    });
+  handleScheduleChange(schedule) {
+    this.setState({ schedule });
   }
 
   render() {
@@ -89,49 +69,12 @@ class SnapshotTakeForm extends React.Component {
             >
               { buttonLabel }
             </Button>
-            <FormGroup>
-              <FormGroup check className="form-check-inline ml-3">
-                <Label check>
-                  <Input
-                    type="radio"
-                    name={SCHEDULE_NOW}
-                    checked={scheduleType === SCHEDULE_NOW}
-                    onChange={this.handleScheduleTypeChange}
-                  />now
-                </Label>
-              </FormGroup>
-              <FormGroup check className="form-check-inline">
-                <Label check>
-                  <Input
-                    type="radio"
-                    name={SCHEDULE_CUSTOM}
-                    checked={scheduleType === SCHEDULE_CUSTOM}
-                    onChange={this.handleScheduleTypeChange}
-                  />schedule
-                  <Input
-                    type="number"
-                    className="ml-3"
-                    size="sm"
-                    min="0"
-                    step="1"
-                    placeholder={`# ${schedule.key}`}
-                    disabled={scheduleType !== SCHEDULE_CUSTOM}
-                    value={schedule.value}
-                    onChange={this.handleScheduleValueChange}
-                  />
-                  <Input
-                    type="select"
-                    size="sm"
-                    disabled={scheduleType !== SCHEDULE_CUSTOM}
-                    value={schedule.key}
-                    onChange={this.handleScheduleKeyChange}
-                  >
-                    <option value="epoch">epoch</option>
-                    <option value="iteration">iteration</option>
-                  </Input>
-                </Label>
-              </FormGroup>
-            </FormGroup>
+            <CommandScheduleForm
+              schedule={schedule}
+              scheduleType={scheduleType}
+              onScheduleTypeChange={this.handleScheduleTypeChange}
+              onScheduleChange={this.handleScheduleChange}
+            />
           </Form>
         </div>
       </div>
