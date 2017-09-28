@@ -32,9 +32,15 @@ def take_snapshot(trainer, body):
 
 
 def adjust_hyperparams(trainer, body):
+    optimizer = trainer.updater.get_optimizer('main')
     for key, value in body.items():
-        optimizer = trainer.updater.get_optimizer('main')
+        if value is None:
+            continue
         setattr(optimizer, key, value)
+    return {
+        'lr': getattr(optimizer, 'lr', None),
+        'momentum': getattr(optimizer, 'momentum', None)
+    }
 
 
 class CommandsExtension(extension.Extension):

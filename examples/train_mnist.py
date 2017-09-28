@@ -72,7 +72,7 @@ def main():
         model.to_gpu()  # Copy the model to the GPU
 
     # Setup an optimizer
-    optimizer = chainer.optimizers.Adam()
+    optimizer = chainer.optimizers.MomentumSGD()
     optimizer.setup(model)
 
     # Load the MNIST dataset

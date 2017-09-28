@@ -6,7 +6,7 @@ import {
 import CommandFormBase from './CommandFormBase';
 
 
-class HyperparamChangeForm extends React.Component {
+class HyperparamsAdjustForm extends React.Component {
   constructor() {
     super();
 
@@ -40,14 +40,14 @@ class HyperparamChangeForm extends React.Component {
       <CommandFormBase
         projectId={projectId}
         resultId={resultId}
-        commandName="change_hyperparam"
+        commandName="adjust_hyperparams"
         commandBody={{ lr, momentum }}
-        title="Change hyperparameters (Only for MomentumSGD)"
-        buttonLabel="Change"
+        title="Adjust hyperparameters (Only for MomentumSGD)"
+        buttonLabel="Adjust"
         onCommandSubmit={onCommandSubmit}
       >
         <FormGroup className="row mb-2">
-          <Label htmlFor="hyperparam-change-form-lr" className="col-sm-6 col-form-label">
+          <Label htmlFor="hyperparams-adjust-form-lr" className="col-sm-6 col-form-label">
           lr
           </Label>
           <div className="col-sm-6">
@@ -55,13 +55,13 @@ class HyperparamChangeForm extends React.Component {
               type="number"
               step="any"
               size="sm"
-              id="hyperparam-change-form-lr"
+              id="hyperparams-adjust-form-lr"
               onChange={this.handleLRChange}
             />
           </div>
         </FormGroup>
         <FormGroup className="row mb-2">
-          <Label htmlFor="hyperparam-change-form-momentum" className="col-sm-6 col-form-label">
+          <Label htmlFor="hyperparams-adjust-form-momentum" className="col-sm-6 col-form-label">
           momentum
           </Label>
           <div className="col-sm-6">
@@ -69,7 +69,7 @@ class HyperparamChangeForm extends React.Component {
               type="number"
               step="any"
               size="sm"
-              id="hyperparam-change-form-momentum"
+              id="hyperparams-adjust-form-momentum"
               onChange={this.handleMomentumChange}
             />
           </div>
@@ -79,14 +79,14 @@ class HyperparamChangeForm extends React.Component {
   }
 }
 
-HyperparamChangeForm.propTypes = {
+HyperparamsAdjustForm.propTypes = {
   projectId: PropTypes.number.isRequired,
   resultId: PropTypes.number.isRequired,
   onCommandSubmit: PropTypes.func.isRequired
 };
 
-HyperparamChangeForm.defaultProps = {
+HyperparamsAdjustForm.defaultProps = {
 };
 
-export default HyperparamChangeForm;
+export default HyperparamsAdjustForm;
 

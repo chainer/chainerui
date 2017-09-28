@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { responseStatusToIcon } from '../../utils';
 import SnapshotTakeForm from './SnapshotTakeForm';
-import HyperparamChangeForm from './HyperparamChangeFrom';
+import HyperparamsAdjustForm from './HyperparamsAdjustFrom';
 
 
 const createCommandRowElems = (commands) => commands.sort((a, b) =>
@@ -46,15 +46,13 @@ const Commands = (props) => {
           <SnapshotTakeForm
             projectId={projectId}
             resultId={resultId}
-            commandName="take_snapshot"
             onCommandSubmit={onCommandSubmit}
           />
         </div>
         <div className="mb-2">
-          <HyperparamChangeForm
+          <HyperparamsAdjustForm
             projectId={projectId}
             resultId={resultId}
-            commandName="change_hyperparam"
             onCommandSubmit={onCommandSubmit}
           />
         </div>
