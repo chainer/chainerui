@@ -69,7 +69,7 @@ class ResultRow extends React.Component {
 
   render() {
     const { resultName, showUnregisterModal } = this.state;
-    const { result, stats, resultConfig } = this.props;
+    const { projectId, result, stats, resultConfig } = this.props;
     const { args } = result;
 
     const lastLogDict = getLastLogDict(result);
@@ -86,7 +86,7 @@ class ResultRow extends React.Component {
           <input type="checkbox" checked={!resultConfig.hidden} onChange={this.handleSelectToggle} />
         </td>
         <td>
-          <Link to={urlForResultDetail(1, result.id)}>{result.id}</Link>
+          <Link to={urlForResultDetail(projectId, result.id)}>{result.id}</Link>
         </td>
         <td>
           <input
