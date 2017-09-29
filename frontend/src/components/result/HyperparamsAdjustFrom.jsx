@@ -36,12 +36,18 @@ class HyperparamsAdjustForm extends React.Component {
   render() {
     const { lr, momentum } = this.state;
     const { projectId, resultId, onCommandSubmit } = this.props;
+
+    const commandBody = {
+      optimizer: 'MomentumSGD',
+      hyperparam: { lr, momentum }
+    };
+
     return (
       <CommandFormBase
         projectId={projectId}
         resultId={resultId}
         commandName="adjust_hyperparams"
-        commandBody={{ lr, momentum }}
+        commandBody={commandBody}
         title="Adjust hyperparameters (Only for MomentumSGD)"
         buttonLabel="Adjust"
         onCommandSubmit={onCommandSubmit}

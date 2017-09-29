@@ -35,15 +35,25 @@ def take_snapshot(trainer, body):
 
 def adjust_hyperparams(trainer, body):
     optimizer = trainer.updater.get_optimizer('main')
+    optimizer_name = optimizer.__class__.__name__
+    if optimizer_name != body.get('optimizer', None):
+        # invalid optimizer was specified
+        return None
+
     hyperparam = getattr(optimizer, 'hyperparam', None)
     if hyperparam is None:
         return None
 
-    for key, value in six.iteritems(body):
-        if (not key in hyperparam) or (value is None):
+    request_hyperparam = body.get('hyperparam', {})
+    hyperparam_dict = hyperparam.get_dict()
+    for key, value in six.iteritems(request_hyperparam):
+        if (not key in hyperparam_dict) or (value is None):
             continue
         setattr(hyperparam, key, value)
-    return hyperparam.get_dict()
+    return {
+        'optimizer': optimizer_name,
+        'hyperparam': hyperparam.get_dict()
+    }
 
 
 class CommandsExtension(extension.Extension):
