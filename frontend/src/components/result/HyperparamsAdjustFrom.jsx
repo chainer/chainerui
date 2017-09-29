@@ -20,12 +20,21 @@ class HyperparamsAdjustForm extends React.Component {
   constructor(props) {
     super(props);
 
+    this.handleOptimizerChange = this.handleOptimizerChange.bind(this);
     this.handleHyperparamChange = this.handleHyperparamChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
     this.state = {
+      optimizer: 'MomentumSGD',
       hyperparam: {}
     };
+  }
+
+  handleOptimizerChange(e) {
+    const { value } = e.target;
+    this.setState({
+      optimizer: value
+    });
   }
 
   handleHyperparamChange(e) {
@@ -40,25 +49,40 @@ class HyperparamsAdjustForm extends React.Component {
   }
 
   handleSubmit(schedule) {
-    const { hyperparam } = this.state;
+    const { optimizer, hyperparam } = this.state;
     const { projectId, resultId, onCommandSubmit } = this.props;
-    const optimizer = 'MomentumSGD';
     const commandBody = { optimizer, hyperparam };
 
     onCommandSubmit(projectId, resultId, 'adjust_hyperparams', commandBody, schedule);
   }
 
   render() {
+    const { optimizer } = this.state;
     const { commands } = this.props;
 
     const lastHyperparam = hyperparamFromLastCommand(commands) || {};
 
     return (
       <CommandFormBase
-        title="Adjust hyperparameters (Only for MomentumSGD)"
+        title="Adjust hyperparameters"
         buttonLabel="Adjust"
         onSubmit={this.handleSubmit}
       >
+        <FormGroup className="row">
+          <Label htmlFor="hyperparams-adjust-form-optimizer" className="col-sm-6 col-form-label">
+            optimizer
+          </Label>
+          <div className="col-sm-6">
+            <Input
+              type="select"
+              id="hyperparams-adjust-from-optimizer"
+              value={optimizer}
+              onChange={this.handleOptimizerChange}
+            >
+              <option value="MomentumSGD">MomentumSGD</option>
+            </Input>
+          </div>
+        </FormGroup>
         <FormGroup className="row mb-2">
           <Label htmlFor="hyperparams-adjust-form-lr" className="col-sm-6 col-form-label">
             lr
