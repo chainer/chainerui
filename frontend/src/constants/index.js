@@ -1,4 +1,4 @@
-export const CHAINER_UI_VERSION = 'v0.0.8';
+export const CHAINER_UI_VERSION = 'v0.0.9';
 
 export const chartSizeOptions = [
   {
