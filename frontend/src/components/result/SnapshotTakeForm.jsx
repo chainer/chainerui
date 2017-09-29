@@ -7,12 +7,9 @@ const SnapshotTakeForm = (props) => {
   const { projectId, resultId, onCommandSubmit } = props;
   return (
     <CommandFormBase
-      projectId={projectId}
-      resultId={resultId}
-      commandName="take_snapshot"
       title="Take snapshot"
       buttonLabel="Take snapshot"
-      onCommandSubmit={onCommandSubmit}
+      onSubmit={(schedule) => onCommandSubmit(projectId, resultId, 'take_snapshot', null, schedule)}
     />
   );
 };

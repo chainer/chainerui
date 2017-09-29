@@ -30,17 +30,13 @@ class CommandFormBase extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const {
-      projectId,
-      resultId,
-      onCommandSubmit,
-      commandName,
-      commandBody,
+      onSubmit,
       freezeTime
     } = this.props;
     const { scheduleType } = this.state;
     const schedule = (scheduleType === SCHEDULE_CUSTOM) ? this.state.schedule : null;
 
-    onCommandSubmit(projectId, resultId, commandName, commandBody, schedule);
+    onSubmit(schedule);
 
     this.setState({ disabled: true });
     setTimeout(() => {
@@ -86,10 +82,6 @@ class CommandFormBase extends React.Component {
 }
 
 CommandFormBase.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  resultId: PropTypes.number.isRequired,
-  commandName: PropTypes.string.isRequired,
-  commandBody: PropTypes.objectOf(PropTypes.any),
   title: PropTypes.string.isRequired,
   buttonLabel: PropTypes.string.isRequired,
   children: React.PropTypes.oneOfType([
@@ -97,11 +89,10 @@ CommandFormBase.propTypes = {
     React.PropTypes.node
   ]),
   freezeTime: PropTypes.number,
-  onCommandSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired
 };
 
 CommandFormBase.defaultProps = {
-  commandBody: null,
   children: null,
   freezeTime: 1000
 };

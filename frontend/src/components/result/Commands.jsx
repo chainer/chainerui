@@ -53,6 +53,7 @@ const Commands = (props) => {
           <HyperparamsAdjustForm
             projectId={projectId}
             resultId={resultId}
+            commands={commands}
             onCommandSubmit={onCommandSubmit}
           />
         </div>
