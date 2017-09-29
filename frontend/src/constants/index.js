@@ -81,3 +81,6 @@ export const defaultProjectConfig = {
   lines: {}
 };
 
+export const SCHEDULE_NOW = 'scheduleNow';
+export const SCHEDULE_CUSTOM = 'scheduleCustom';
+
