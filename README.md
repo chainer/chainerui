@@ -12,6 +12,17 @@ chainer-ui db create
 chainer-ui db upgrade
 ```
 
+### On Ubuntu
+Please install libsqlite3-dev package before build python.
+
+```
+sudo apt-get install libsqlite3-dev
+```
+
+### On Windows
+Please install Visual C++ Build Tools (using the Default Install setting) before `python setup.py install`.
+
+
 ## Quick start
 
 ```sh
