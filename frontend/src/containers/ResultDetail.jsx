@@ -52,6 +52,7 @@ class ResultDetail extends React.Component {
     return (
       <div className="result-detail">
         <NavigationBar
+          pollingKey="result"
           fetchState={fetchState}
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
@@ -123,7 +124,7 @@ ResultDetail.propTypes = {
     logs: PropTypes.arrayOf(PropTypes.any)
   }),
   fetchState: PropTypes.shape({
-    results: PropTypes.string
+    resultList: PropTypes.string
   }).isRequired,
   globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
   getProject: PropTypes.func.isRequired,

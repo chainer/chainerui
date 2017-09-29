@@ -1,3 +1,5 @@
+import six
+
 from chainer.training import extension
 from chainer.training import trigger as trigger_module
 from chainer.serializers import npz
@@ -32,9 +34,26 @@ def take_snapshot(trainer, body):
 
 
 def adjust_hyperparams(trainer, body):
-    for key, value in body.items():
-        optimizer = trainer.updater.get_optimizer('main')
-        setattr(optimizer, key, value)
+    optimizer = trainer.updater.get_optimizer('main')
+    optimizer_name = optimizer.__class__.__name__
+    if optimizer_name != body.get('optimizer', None):
+        # invalid optimizer was specified
+        return None
+
+    hyperparam = getattr(optimizer, 'hyperparam', None)
+    if hyperparam is None:
+        return None
+
+    request_hyperparam = body.get('hyperparam', {})
+    hyperparam_dict = hyperparam.get_dict()
+    for key, value in six.iteritems(request_hyperparam):
+        if (not key in hyperparam_dict) or (value is None):
+            continue
+        setattr(hyperparam, key, value)
+    return {
+        'optimizer': optimizer_name,
+        'hyperparam': hyperparam.get_dict()
+    }
 
 
 class CommandsExtension(extension.Extension):

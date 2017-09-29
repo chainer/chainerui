@@ -11,9 +11,9 @@ const nodeModulePath = path.resolve(__dirname, 'node_modules');
 
 module.exports = {
   entry: {
-    'chainer_ui': ['./src/index.jsx'],
+    'chainer_ui': ['babel-polyfill', 'whatwg-fetch', './src/index.jsx'],
     vendor: Object.keys(require('./package.json').dependencies).concat([
-      'bootstrap/dist/css/bootstrap.css'
+      'bootstrap/dist/css/bootstrap.css', 'babel-polyfill'
     ])
   },
   output: {

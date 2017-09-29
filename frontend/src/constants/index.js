@@ -1,4 +1,4 @@
-export const CHAINER_UI_VERSION = 'v0.0.8';
+export const CHAINER_UI_VERSION = 'v0.0.9';
 
 export const chartSizeOptions = [
   {
@@ -80,4 +80,7 @@ export const defaultProjectConfig = {
   resultsConig: {},
   lines: {}
 };
+
+export const SCHEDULE_NOW = 'scheduleNow';
+export const SCHEDULE_CUSTOM = 'scheduleCustom';
 

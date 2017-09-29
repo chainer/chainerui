@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-''' args report extension for chainer '''
+""" args report extension for chainer """
 
 import json
 import os
@@ -12,14 +12,14 @@ from chainer.training import trigger as trigger_module
 
 
 class ArgsReport(extension.Extension):
-    ''' ArgsReport '''
+    """ ArgsReport """
 
     def __init__(self, args, trigger=(1, 'epoch'), log_name='args'):
         self._log_name = log_name
-        self._trigger = trigger_module.get_trigger(trigger)
+        self.trigger = trigger_module.get_trigger(trigger)
         self._args = vars(args)
 
-    def __call__(self, trainer):
+    def initialize(self, trainer):
         if self._log_name is not None:
             log_name = self._log_name
             _fd, path = tempfile.mkstemp(prefix=log_name, dir=trainer.out)
@@ -28,3 +28,7 @@ class ArgsReport(extension.Extension):
 
             new_path = os.path.join(trainer.out, log_name)
             shutil.move(path, new_path)
+
+    def __call__(self, trainer):
+        # Do nothing
+        pass

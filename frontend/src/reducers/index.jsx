@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
+import { routerReducer, LOCATION_CHANGE } from 'react-router-redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
@@ -85,10 +85,15 @@ const resultsReducer = (state = {}, action) => {
       return state;
     case ActionTypes.COMMAND_CREATE_SUCCESS:
       if (action.response && action.response.commands) {
-        const newResults = { ...state };
-        newResults[action.body.resultId].commands = action.response.commands;
+        const result = state[action.body.resultId];
 
-        return newResults;
+        return {
+          ...state,
+          [action.body.resultId]: {
+            ...result,
+            commands: action.response.commands
+          }
+        };
       }
       return state;
     default:
@@ -102,27 +107,29 @@ const entities = combineReducers({
 });
 
 
-const fetchState = (state = { results: '' }, action) => {
+const fetchState = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.RESULT_LIST_REQUEST:
     case ActionTypes.RESULT_LIST_SUCCESS:
     case ActionTypes.RESULT_LIST_FAILUE:
       return {
         ...state,
-        results: action.type
+        resultList: action.type
       };
-    case ActionTypes.COMMAND_CREATE_REQUEST:
-    case ActionTypes.COMMAND_CREATE_SUCCESS:
-    case ActionTypes.COMMAND_CREATE_FAILUE:
+    case ActionTypes.RESULT_REQUEST:
+    case ActionTypes.RESULT_SUCCESS:
+    case ActionTypes.RESULT_FAILUE:
       return {
         ...state,
-        commandCreate: action.type
+        result: action.type
       };
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
+    case LOCATION_CHANGE:
       if (action.pollingRate === 0) {
         return {
           ...state,
-          results: ''
+          resultList: undefined,
+          result: undefined
         };
       }
       return state;

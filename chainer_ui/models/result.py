@@ -1,7 +1,8 @@
 ''' result.py '''
 
 
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+import datetime
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from chainer_ui import DB_BASE
 from chainer_ui.models.log import Log
@@ -25,6 +26,11 @@ class Result(DB_BASE):
     )
     commands = relationship('Command', cascade='all, delete-orphan')
     snapshots = relationship('Snapshot', cascade='all, delete-orphan')
+    created_at = Column(DateTime, default=datetime.datetime.now())
+    updated_at = Column(
+        DateTime,
+        default=datetime.datetime.now()
+    )
 
     def __init__(self, path_name=None, name=None, project_id=None):
         self.path_name = path_name

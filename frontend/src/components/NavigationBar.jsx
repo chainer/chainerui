@@ -7,7 +7,7 @@ import {
   Form, FormGroup, Label,
   Button
 } from 'reactstrap';
-import ResultsFetchState from './ResultsFetchState';
+import PollingStatus from './PollingStatus';
 import { chartSizeOptions, pollingOptions, CHAINER_UI_VERSION } from '../constants';
 
 
@@ -62,7 +62,8 @@ class NavigationBar extends React.Component {
           <NavbarBrand href="/">Chainer UI</NavbarBrand>
           <Collapse isOpen>
             <span className="navbar-text mx-3 my-0">
-              <ResultsFetchState
+              <PollingStatus
+                pollingKey={this.props.pollingKey}
                 fetchState={this.props.fetchState}
                 globalConfig={this.props.globalConfig}
               />
@@ -119,8 +120,9 @@ class NavigationBar extends React.Component {
 }
 
 NavigationBar.propTypes = {
+  pollingKey: PropTypes.string,
   fetchState: PropTypes.shape({
-    results: PropTypes.string
+    resultList: PropTypes.string
   }).isRequired,
   globalConfig: PropTypes.shape({
     pollingRate: PropTypes.number,
@@ -131,6 +133,7 @@ NavigationBar.propTypes = {
 };
 
 NavigationBar.defaultProps = {
+  pollingKey: undefined
 };
 
 export default NavigationBar;
