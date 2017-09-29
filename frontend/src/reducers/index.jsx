@@ -85,10 +85,15 @@ const resultsReducer = (state = {}, action) => {
       return state;
     case ActionTypes.COMMAND_CREATE_SUCCESS:
       if (action.response && action.response.commands) {
-        const newResults = { ...state };
-        newResults[action.body.resultId].commands = action.response.commands;
+        const result = state[action.body.resultId];
 
-        return newResults;
+        return {
+          ...state,
+          [action.body.resultId]: {
+            ...result,
+            commands: action.response.commands
+          }
+        };
       }
       return state;
     default:
