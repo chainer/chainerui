@@ -49,8 +49,8 @@ chainer-ui project create -d PROJECT_DIR [-n PROJECT_NAME]
 The Chainer UI server watches some files under the project directory recursively.
 
 - `log`: a json file created by `LogReport` extension.
-- `args`: *(optional)* a json file, which includes key-value pairs you want to see on Chainer UI along with logs. See [`args_report.py`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainer_ui/extensions/args_report.py) for a sample extension to dump command line arguments to `args` file.
-- `commands`: *(optional)* a json file, which is automatically created by [`CommandsExtension`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainer_ui/extensions/commands_extension.py) . This is a file for Chainer UI server to communicate with `CommandsExtension` .
+- `args`: *(optional)* a json file, which includes key-value pairs you want to see on Chainer UI along with logs. See [`args_report.py`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainerui/extensions/args_report.py) for a sample extension to dump command line arguments to `args` file.
+- `commands`: *(optional)* a json file, which is automatically created by [`CommandsExtension`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainerui/extensions/commands_extension.py) . This is a file for Chainer UI server to communicate with `CommandsExtension` .
 
 ```
 path/to/result
@@ -85,7 +85,7 @@ chainer-ui db upgrade
 ```sh
 cd intern-chainer-ui
 
-# download new version of chainer_ui
+# download new version of chainerui
 git pull
 # install
 python setup.py install

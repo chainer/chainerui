@@ -9,13 +9,13 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 
 setup(
-    name='chainer_ui',
+    name='chainerui',
     version='0.0.9',
     description='chainer ui',
     long_description=readme,
     install_requires=required,
     package_data={
-        'chainer_ui': [
+        'chainerui': [
             'templates/*',
             'static/**/*'
         ],
@@ -26,7 +26,7 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     entry_points={
         "console_scripts": [
-            "chainer-ui=chainer_ui.app:main",
+            "chainer-ui=chainerui.app:main",
         ]
     }
 )

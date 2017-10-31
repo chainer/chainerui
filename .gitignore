@@ -1,5 +1,5 @@
-chainer_ui/static/dist/*.map
-chainer_ui/chainer_ui.db
+chainerui/static/dist/*.map
+chainerui/chainerui.db
 examples/result
 *.pyc
 build
