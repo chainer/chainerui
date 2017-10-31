@@ -5,7 +5,7 @@ from chainer.training import trigger as trigger_module
 from chainer.serializers import npz
 from chainer.training.extensions._snapshot import _snapshot_object
 
-from chainer_ui.utils.command_item import CommandItem
+from chainerui.utils.command_item import CommandItem
 
 
 def shouldExecute(trainer, command):

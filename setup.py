@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
 setup(
     name='chainerui',
     version='0.0.9',
-    description='chainer ui',
+    description='chainerui',
     long_description=readme,
     install_requires=required,
     package_data={
@@ -26,7 +26,7 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     entry_points={
         "console_scripts": [
-            "chainer-ui=chainerui.app:main",
+            "chainerui=chainerui.app:main",
         ]
     }
 )

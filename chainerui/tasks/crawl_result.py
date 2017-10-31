@@ -4,14 +4,14 @@ import os
 import json
 import datetime
 
-from chainer_ui import DB_SESSION
-from chainer_ui.models.result import Result
-from chainer_ui.models.log import Log
-from chainer_ui.models.argument import Argument
-from chainer_ui.models.command import Command
-from chainer_ui.models.snapshot import Snapshot
-from chainer_ui.utils.command_item import CommandItem
-from chainer_ui.utils import is_numberable
+from chainerui import DB_SESSION
+from chainerui.models.result import Result
+from chainerui.models.log import Log
+from chainerui.models.argument import Argument
+from chainerui.models.command import Command
+from chainerui.models.snapshot import Snapshot
+from chainerui.utils.command_item import CommandItem
+from chainerui.utils import is_numberable
 
 
 def load_result_json(result_path, json_file_name):

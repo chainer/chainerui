@@ -4,11 +4,11 @@
 import datetime
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-from chainer_ui import DB_BASE
-from chainer_ui.models.log import Log
-from chainer_ui.models.argument import Argument
-from chainer_ui.models.command import Command
-from chainer_ui.models.snapshot import Snapshot
+from chainerui import DB_BASE
+from chainerui.models.log import Log
+from chainerui.models.argument import Argument
+from chainerui.models.command import Command
+from chainerui.models.snapshot import Snapshot
 
 
 class Result(DB_BASE):

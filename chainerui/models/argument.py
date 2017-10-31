@@ -5,7 +5,7 @@ import json
 
 
 from sqlalchemy import Column, Integer, String, ForeignKey
-from chainer_ui import DB_BASE
+from chainerui import DB_BASE
 
 
 class Argument(DB_BASE):

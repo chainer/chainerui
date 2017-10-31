@@ -11,13 +11,13 @@ const nodeModulePath = path.resolve(__dirname, 'node_modules');
 
 module.exports = {
   entry: {
-    'chainer_ui': ['babel-polyfill', 'whatwg-fetch', './src/index.jsx'],
+    'chainerui': ['babel-polyfill', 'whatwg-fetch', './src/index.jsx'],
     vendor: Object.keys(require('./package.json').dependencies).concat([
       'bootstrap/dist/css/bootstrap.css', 'babel-polyfill'
     ])
   },
   output: {
-    path: path.resolve(path.dirname(__dirname), 'chainer_ui/static/dist'),
+    path: path.resolve(path.dirname(__dirname), 'chainerui/static/dist'),
     filename: `${filename}.js`
   },
   module: {
@@ -96,7 +96,7 @@ module.exports = {
       Popper: ['popper.js', 'default'],
     }),
     new HtmlWebpackPlugin({
-      title: 'chainer_ui'
+      title: 'chainerui'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',

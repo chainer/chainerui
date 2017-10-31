@@ -5,7 +5,7 @@ import alembic
 from sqlalchemy import engine_from_config, pool
 
 
-from chainer_ui import SQLALCHEMY_DATABASE_URI
+from chainerui import SQLALCHEMY_DATABASE_URI
 
 
 def run_migrations_online(config):

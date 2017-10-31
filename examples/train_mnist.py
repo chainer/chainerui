@@ -18,7 +18,7 @@ import chainer.links as L
 from chainer import training
 from chainer.training import extensions
 
-from chainer_ui.extensions import ArgsReport, CommandsExtension
+from chainerui.extensions import ArgsReport, CommandsExtension
 
 
 # Network definition

@@ -10,9 +10,9 @@ from alembic.command import upgrade, revision
 from alembic.config import Config
 
 
-from chainer_ui import create_app, create_db
-from chainer_ui import DB_FILE_PATH, ENGINE, PACKAGE_DIR, DB_SESSION
-from chainer_ui.models.project import Project
+from chainerui import create_app, create_db
+from chainerui import DB_FILE_PATH, ENGINE, PACKAGE_DIR, DB_SESSION
+from chainerui.models.project import Project
 
 
 def server_handler(args):
@@ -73,12 +73,12 @@ def project_create_handler(args):
 
 def main():
     ''' main '''
-    parser = argparse.ArgumentParser(description='chainer-ui command')
+    parser = argparse.ArgumentParser(description='chainerui command')
     subparsers = parser.add_subparsers()
 
-    # chainer-ui server
+    # chainerui server
     parser_server = subparsers.add_parser(
-        'server', help='see `chainer-ui server -h`')
+        'server', help='see `chainerui server -h`')
     parser_server.add_argument(
         '-H', '--host', required=False, help='host', default='localhost')
     parser_server.add_argument(
@@ -86,22 +86,22 @@ def main():
     parser_server.set_defaults(
         handler=server_handler)
 
-    # chainer-ui db
+    # chainerui db
     parser_db = subparsers.add_parser(
-        'db', help='see `chainer-ui db -h`')
+        'db', help='see `chainerui db -h`')
     parser_db.add_argument(
         'type', choices=['create', 'drop', 'status', 'upgrade', 'revision'])
     parser_db.set_defaults(
         handler=db_handler)
 
-    # chainer-ui project
+    # chainerui project
     parser_project = subparsers.add_parser(
-        'project', help='see `chainer-ui project -h`')
+        'project', help='see `chainerui project -h`')
     parser_project_sub = parser_project.add_subparsers()
 
-    # chainer-ui project create
+    # chainerui project create
     parser_project_create = parser_project_sub.add_parser(
-        'create', help='see `chainer-ui project create -h`')
+        'create', help='see `chainerui project create -h`')
     parser_project_create.add_argument(
         '-d', '--project-dir', required=True, type=str, help='project-dir')
     parser_project_create.add_argument(

@@ -8,8 +8,8 @@ from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 
 
-from chainer_ui import DB_BASE
-from chainer_ui.models.result import Result
+from chainerui import DB_BASE
+from chainerui.models.result import Result
 
 
 class Project(DB_BASE):

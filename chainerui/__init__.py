@@ -10,18 +10,18 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 
-CHAINER_UI_ENV = os.getenv('CHAINER_UI_ENV', 'prouction')
-CHAINER_UI_ROOT = os.path.abspath(
-    os.path.expanduser(os.getenv('CHAINER_UI_ROOT', '~/.chainer_ui')))
+CHAINERUI_ENV = os.getenv('CHAINERUI_ENV', 'prouction')
+CHAINERUI_ROOT = os.path.abspath(
+    os.path.expanduser(os.getenv('CHAINERUI_ROOT', '~/.chainerui')))
 PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_FILE_DIR = os.path.join(CHAINER_UI_ROOT, 'db')
-DB_FILE_PATH = os.path.join(DB_FILE_DIR, 'chainer-ui.db')
+DB_FILE_DIR = os.path.join(CHAINERUI_ROOT, 'db')
+DB_FILE_PATH = os.path.join(DB_FILE_DIR, 'chainerui.db')
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DB_FILE_PATH
 ENGINE = create_engine(
     SQLALCHEMY_DATABASE_URI,
     convert_unicode=True,
     connect_args={'check_same_thread': False},
-    echo=(CHAINER_UI_ENV == 'development')
+    echo=(CHAINERUI_ENV == 'development')
 )
 DB_BASE = declarative_base()
 DB_SESSION = scoped_session(
@@ -75,9 +75,9 @@ def create_app(args):
         ''' render react app '''
         return render_template('index.html')
 
-    from chainer_ui.views.project import ProjectAPI
-    from chainer_ui.views.result import ResultAPI
-    from chainer_ui.views.result_command import ResultCommandAPI
+    from chainerui.views.project import ProjectAPI
+    from chainerui.views.result import ResultAPI
+    from chainerui.views.result_command import ResultCommandAPI
 
     project_resource = ProjectAPI.as_view('project_resource')
     result_resource = ResultAPI.as_view('result_resource')

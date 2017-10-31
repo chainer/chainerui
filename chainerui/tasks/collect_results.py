@@ -3,8 +3,8 @@
 import os
 import datetime
 
-from chainer_ui import DB_SESSION
-from chainer_ui.models.project import Project
+from chainerui import DB_SESSION
+from chainerui.models.project import Project
 
 
 def _list_result_paths(target_path, log_file_name='log'):
@@ -21,8 +21,8 @@ def _list_result_paths(target_path, log_file_name='log'):
 
 
 def _register_result(project_id, result_path):
-    from chainer_ui import DB_SESSION
-    from chainer_ui.models.result import Result
+    from chainerui import DB_SESSION
+    from chainerui.models.result import Result
 
     result_path = os.path.abspath(result_path)
 

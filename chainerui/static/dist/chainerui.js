@@ -1507,7 +1507,7 @@ LineConfigurator.defaultProps = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CHAINER_UI_VERSION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CHAINERUI_VERSION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return chartSizeOptions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return pollingOptions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return defaultConfig; });
@@ -1515,7 +1515,7 @@ LineConfigurator.defaultProps = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return defaultProjectConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return SCHEDULE_NOW; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return SCHEDULE_CUSTOM; });
-var CHAINER_UI_VERSION = 'v0.0.9';
+var CHAINERUI_VERSION = 'v0.0.9';
 
 var chartSizeOptions = [{
   id: 1,
@@ -3358,7 +3358,7 @@ var NavigationBar = function (_React$Component) {
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             __WEBPACK_IMPORTED_MODULE_2_reactstrap__["NavbarBrand"],
             { href: '/' },
-            'Chainer UI'
+            'ChainerUI'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             __WEBPACK_IMPORTED_MODULE_2_reactstrap__["Collapse"],
@@ -3449,8 +3449,8 @@ var NavigationBar = function (_React$Component) {
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'small',
                 null,
-                'Chainer UI ',
-                __WEBPACK_IMPORTED_MODULE_4__constants__["a" /* CHAINER_UI_VERSION */]
+                'ChainerUI ',
+                __WEBPACK_IMPORTED_MODULE_4__constants__["a" /* CHAINERUI_VERSION */]
               )
             )
           )
@@ -4038,7 +4038,7 @@ if (false) {
   });
 } else {
   document.addEventListener('DOMContentLoaded', function () {
-    var appNode = document.getElementById('chainer_ui-root');
+    var appNode = document.getElementById('chainerui-root');
     if (appNode) {
       render(__WEBPACK_IMPORTED_MODULE_3__components_Root__["a" /* default */], appNode);
     }
@@ -4901,7 +4901,7 @@ var createProjectsNotFoundElem = function createProjectsNotFoundElem() {
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'code',
       null,
-      'chainer-ui project create -d PROJECT_DIR [-n PROJECT_NAME]'
+      'chainerui project create -d PROJECT_DIR [-n PROJECT_NAME]'
     )
   );
 };
@@ -5679,7 +5679,7 @@ var PlotContainer = function (_React$Component) {
 
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
-        { className: 'chainer-ui-container' },
+        { className: 'chainerui-container' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_8__components_NavigationBar__["a" /* default */], {
           pollingKey: 'resultList',
           fetchState: fetchState,

@@ -6,8 +6,8 @@ import shutil
 import tempfile
 from datetime import datetime
 
-from chainer_ui.models.command import Command
-from chainer_ui.utils.is_jsonable import is_jsonable
+from chainerui.models.command import Command
+from chainerui.utils.is_jsonable import is_jsonable
 
 
 class CommandItem:

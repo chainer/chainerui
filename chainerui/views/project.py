@@ -5,8 +5,8 @@ from flask import jsonify, request
 from flask.views import MethodView
 
 
-from chainer_ui import DB_SESSION
-from chainer_ui.models.project import Project
+from chainerui import DB_SESSION
+from chainerui.models.project import Project
 
 
 class ProjectAPI(MethodView):

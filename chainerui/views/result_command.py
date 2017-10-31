@@ -3,10 +3,10 @@
 from flask import jsonify, request
 from flask.views import MethodView
 
-from chainer_ui import DB_SESSION
-from chainer_ui.models.result import Result
-from chainer_ui.utils.command_item import CommandItem
-from chainer_ui.tasks import crawl_result
+from chainerui import DB_SESSION
+from chainerui.models.result import Result
+from chainerui.utils.command_item import CommandItem
+from chainerui.tasks import crawl_result
 
 
 class ResultCommandAPI(MethodView):
