@@ -8,7 +8,7 @@ import {
   Button
 } from 'reactstrap';
 import PollingStatus from './PollingStatus';
-import { chartSizeOptions, pollingOptions, CHAINER_UI_VERSION } from '../constants';
+import { chartSizeOptions, pollingOptions, CHAINERUI_VERSION } from '../constants';
 
 
 const createPollingOptionElems = (options) => [
@@ -59,7 +59,7 @@ class NavigationBar extends React.Component {
     return (
       <Navbar className="navbar-light bg-light mb-3">
         <Container fluid>
-          <NavbarBrand href="/">Chainer UI</NavbarBrand>
+          <NavbarBrand href="/">ChainerUI</NavbarBrand>
           <Collapse isOpen>
             <span className="navbar-text mx-3 my-0">
               <PollingStatus
@@ -111,7 +111,7 @@ class NavigationBar extends React.Component {
                 </select>
               </FormGroup>
             </Form>
-            <p className="my-0"><small>Chainer UI {CHAINER_UI_VERSION}</small></p>
+            <p className="my-0"><small>ChainerUI {CHAINERUI_VERSION}</small></p>
           </PopoverContent>
         </Popover>
       </Navbar>

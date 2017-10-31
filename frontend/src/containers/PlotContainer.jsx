@@ -57,7 +57,7 @@ class PlotContainer extends React.Component {
     } = this.props;
 
     return (
-      <div className="chainer-ui-container">
+      <div className="chainerui-container">
         <NavigationBar
           pollingKey="resultList"
           fetchState={fetchState}

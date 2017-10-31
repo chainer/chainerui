@@ -1,2 +1,2 @@
-include chainer_ui/templates/*
-include chainer_ui/static/**/*
+include chainerui/templates/*
+include chainerui/static/**/*

@@ -1,6 +1,6 @@
-# Chainer UI
+# ChainerUI
 
-Chainer UI is a visualization and management tool for chainer.
+ChainerUI is a visualization and management tool for chainer.
 
 ## Installation
 
@@ -8,8 +8,8 @@ Chainer UI is a visualization and management tool for chainer.
 git clone git@github.com:pfn-intern/intern-chainer-ui.git
 cd intern-chainer-ui
 python setup.py install
-chainer-ui db create
-chainer-ui db upgrade
+chainerui db create
+chainerui db upgrade
 ```
 
 ### On Ubuntu
@@ -29,10 +29,10 @@ Please install Visual C++ Build Tools (using the Default Install setting) before
 cd intern-chainer-ui
 
 # create your first project
-chainer-ui project create -d examples -n my-project
+chainerui project create -d examples -n my-project
 
-# run Chainer UI server
-chainer-ui server
+# run ChainerUI server
+chainerui server
 ```
 
 Then open http://localhost:5000/ .
@@ -43,14 +43,14 @@ Then open http://localhost:5000/ .
 ### Create a project
 
 ```sh
-chainer-ui project create -d PROJECT_DIR [-n PROJECT_NAME]
+chainerui project create -d PROJECT_DIR [-n PROJECT_NAME]
 ```
 
-The Chainer UI server watches some files under the project directory recursively.
+The ChainerUI server watches some files under the project directory recursively.
 
 - `log`: a json file created by `LogReport` extension.
-- `args`: *(optional)* a json file, which includes key-value pairs you want to see on Chainer UI along with logs. See [`args_report.py`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainer_ui/extensions/args_report.py) for a sample extension to dump command line arguments to `args` file.
-- `commands`: *(optional)* a json file, which is automatically created by [`CommandsExtension`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainer_ui/extensions/commands_extension.py) . This is a file for Chainer UI server to communicate with `CommandsExtension` .
+- `args`: *(optional)* a json file, which includes key-value pairs you want to see on ChainerUI along with logs. See [`args_report.py`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainerui/extensions/args_report.py) for a sample extension to dump command line arguments to `args` file.
+- `commands`: *(optional)* a json file, which is automatically created by [`CommandsExtension`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainerui/extensions/commands_extension.py) . This is a file for ChainerUI server to communicate with `CommandsExtension` .
 
 ```
 path/to/result
@@ -59,10 +59,10 @@ path/to/result
 ├── commands
 ```
 
-### Start Chainer UI server
+### Start ChainerUI server
 
 ```sh
-chainer-ui server
+chainerui server
 ```
 
 Then open http://localhost:5000/ .
@@ -74,9 +74,9 @@ When you want to unregister a result, click `X` button at the right end of the r
 When you want to unregister all results, drop and create a new database as follows.
 
 ```sh
-chainer-ui db drop
-chainer-ui db create
-chainer-ui db upgrade
+chainerui db drop
+chainerui db create
+chainerui db upgrade
 ```
 
 
@@ -85,16 +85,16 @@ chainer-ui db upgrade
 ```sh
 cd intern-chainer-ui
 
-# download new version of chainer_ui
+# download new version of chainerui
 git pull
 # install
 python setup.py install
 
 # drop the existing database
-chainer-ui db drop
+chainerui db drop
 # create a new database
-chainer-ui db create
-chainer-ui db upgrade
+chainerui db create
+chainerui db upgrade
 ```
 
 
@@ -110,6 +110,6 @@ npm run build:watch
 
 ## For users
 
-- Clone and try using Chainer UI.
+- Clone and try using ChainerUI.
 - Any bug reports are welcome. Issue page: https://github.com/pfn-intern/intern-chainer-ui/issues
 - Any feature requests are welcome. Slack channel: [#ext-chainer-ui](https://preferred.slack.com/messages/ext-chainer-ui/)

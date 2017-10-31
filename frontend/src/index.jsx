@@ -20,7 +20,7 @@ if (module.hot) {
   module.hot.accept('./containers/Root', () => { render(Root, appNode); });
 } else {
   document.addEventListener('DOMContentLoaded', () => {
-    const appNode = document.getElementById('chainer_ui-root');
+    const appNode = document.getElementById('chainerui-root');
     if (appNode) {
       render(Root, appNode);
     }

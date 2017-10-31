@@ -7,7 +7,7 @@ const createProjectsNotFoundElem = () => (
   <div className="my-5 text-center">
     <h4>There is no project yet.</h4>
     <p>You need to create a project first.</p>
-    <code>chainer-ui project create -d PROJECT_DIR [-n PROJECT_NAME]</code>
+    <code>chainerui project create -d PROJECT_DIR [-n PROJECT_NAME]</code>
   </div>
 );
 

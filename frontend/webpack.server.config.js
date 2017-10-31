@@ -17,7 +17,7 @@ const publicPath = `http://${devServer.host}:${devServer.port}/`;
 
 config.devServer = devServer;
 config.output.publicPath = publicPath;
-config.entry['chainer_ui'].unshift(
+config.entry['chainerui'].unshift(
   'react-hot-loader/patch',
   `webpack-dev-server/client?${publicPath}`,
   'webpack/hot/dev-server'
