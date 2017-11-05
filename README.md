@@ -98,8 +98,15 @@ chainerui db upgrade
 ```
 
 
+## Contribution
 
-## Client side (only for development)
+### Run tests
+
+```sh
+CHAINERUI_ENV=test python tests/test_api.py
+```
+
+### Build client side js
 
 ```sh
 cd frontend
