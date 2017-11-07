@@ -28,5 +28,6 @@ setup(
         "console_scripts": [
             "chainerui=chainerui.app:main",
         ]
-    }
+    },
+    tests_require=['pytest'],
 )

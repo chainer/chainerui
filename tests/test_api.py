@@ -2,7 +2,6 @@ import unittest
 
 import json
 import os
-import sys
 
 
 from chainerui import create_app, create_db, upgrade_db
@@ -12,6 +11,10 @@ from chainerui.models.project import Project
 
 TEST_PROJECT_PATH = os.path.abspath(os.path.join(__file__, '../examples'))
 TEST_PROJECT_NAME = 'my-project'
+
+
+class NotInTestEnvironmentException(Exception):
+    pass
 
 
 def setup_test_db():
@@ -34,6 +37,14 @@ def is_valid_json_str(json_str):
 
 class TestAPI(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        if not CHAINERUI_ENV == 'test':
+            raise NotInTestEnvironmentException(
+                'set environment variable CHAINERUI_ENV=test '
+                'when you run this test'
+            )
+
     def setUp(self):
         setup_test_db()
         app = create_app()
@@ -53,12 +64,3 @@ class TestAPI(unittest.TestCase):
     def test_get_project_list(self):
         resp = self.app.get('/api/v1/projects')
         self.assert_successful(resp)
-
-
-if __name__ == '__main__':
-    if not CHAINERUI_ENV == 'test':
-        print('set environment variable CHAINERUI_ENV=test '
-              'when you run this test')
-        sys.exit(1)
-
-    unittest.main()

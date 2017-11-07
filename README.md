@@ -100,10 +100,16 @@ chainerui db upgrade
 
 ## Contribution
 
+Note that we are using pytest package for testing, so install them before writing your code:
+
+```sh
+pip install pytest
+```
+
 ### Run tests
 
 ```sh
-CHAINERUI_ENV=test python tests/test_api.py
+CHAINERUI_ENV=test pytest
 ```
 
 ### Build client side js
