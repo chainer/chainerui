@@ -57,8 +57,8 @@ class TestAPI(unittest.TestCase):
             os.remove(DB_FILE_PATH)
 
     def assert_successful(self, resp):
-        self.assertEqual(resp.status_code, 200)
-        self.assertTrue(is_valid_json_str(resp.data.decode()))
+        assert resp.status_code == 200
+        assert is_valid_json_str(resp.data.decode())
 
     # GET /api/v1/projects
     def test_get_project_list(self):
