@@ -6,11 +6,11 @@ import os
 
 
 import alembic
-from alembic.command import upgrade, revision
+from alembic.command import revision
 from alembic.config import Config
 
 
-from chainerui import create_app, create_db
+from chainerui import create_app, create_db, upgrade_db
 from chainerui import DB_FILE_PATH, ENGINE, PACKAGE_DIR, DB_SESSION
 from chainerui.models.project import Project
 
@@ -18,7 +18,7 @@ from chainerui.models.project import Project
 def server_handler(args):
     ''' server_handler '''
     print('server_handler', args)
-    app = create_app(args)
+    app = create_app()
     app.run(host=args.host, port=args.port, threaded=True)
 
 
@@ -35,11 +35,7 @@ def db_handler(args):
         print('current_rev', current_rev)
 
     if args.type == 'upgrade':
-        ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
-        config = Config(ini_path)
-        config.set_main_option(
-            "script_location", os.path.join(PACKAGE_DIR, 'migration'))
-        upgrade(config, 'head')
+        upgrade_db()
 
     if args.type == 'revision':
         ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')

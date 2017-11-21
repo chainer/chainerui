@@ -4,7 +4,9 @@
 import os
 
 
-from flask import Flask, render_template, url_for, jsonify, request
+from alembic.command import upgrade
+from alembic.config import Config
+from flask import Flask, render_template, url_for
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -15,7 +17,9 @@ CHAINERUI_ROOT = os.path.abspath(
     os.path.expanduser(os.getenv('CHAINERUI_ROOT', '~/.chainerui')))
 PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
 DB_FILE_DIR = os.path.join(CHAINERUI_ROOT, 'db')
-DB_FILE_PATH = os.path.join(DB_FILE_DIR, 'chainerui.db')
+DB_FILE_NAME = 'chainerui_test.db' if CHAINERUI_ENV == 'test' \
+        else 'chainerui.db'
+DB_FILE_PATH = os.path.join(DB_FILE_DIR, DB_FILE_NAME)
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DB_FILE_PATH
 ENGINE = create_engine(
     SQLALCHEMY_DATABASE_URI,
@@ -36,6 +40,15 @@ def create_db():
     print('DB_FILE_PATH: ', DB_FILE_PATH)
 
 
+def upgrade_db():
+    """ upgrade_db """
+    ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
+    config = Config(ini_path)
+    config.set_main_option(
+        "script_location", os.path.join(PACKAGE_DIR, 'migration'))
+    upgrade(config, 'head')
+
+
 def create_db_session():
     ''' create_db_session '''
     session = scoped_session(
@@ -44,7 +57,7 @@ def create_db_session():
     return session()
 
 
-def create_app(args):
+def create_app():
     ''' create_app '''
 
     app = Flask(__name__)

@@ -98,8 +98,21 @@ chainerui db upgrade
 ```
 
 
+## Contribution
 
-## Client side (only for development)
+Note that we are using pytest package for testing, so install them before writing your code:
+
+```sh
+pip install pytest
+```
+
+### Run tests
+
+```sh
+CHAINERUI_ENV=test pytest
+```
+
+### Build client side js
 
 ```sh
 cd frontend
