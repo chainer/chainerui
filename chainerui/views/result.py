@@ -1,14 +1,11 @@
 ''' result.py '''
 
-
-import datetime
-
-
 from flask import jsonify, request
 from flask.views import MethodView
 
 
 from chainerui import DB_SESSION
+from chainerui.models.project import Project
 from chainerui.models.result import Result
 from chainerui.tasks import collect_results
 from chainerui.tasks import crawl_result
@@ -22,7 +19,10 @@ class ResultAPI(MethodView):
 
         if id is None:
 
-            collect_results(project_id)
+            project = DB_SESSION.query(Project).\
+                filter_by(id=project_id).\
+                first()
+            collect_results(project)
 
             results = DB_SESSION.query(Result).\
                 filter_by(project_id=project_id).\

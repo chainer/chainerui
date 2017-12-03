@@ -59,12 +59,9 @@ def project_create_handler(args):
         filter_by(path_name=project_path).first()
 
     if project is None:
-        project = Project(project_path, project_name)
+        project = Project.create(project_path, project_name)
     else:
         print('Pathname already registered.')
-
-    DB_SESSION.add(project)
-    DB_SESSION.commit()
 
 
 def main():
