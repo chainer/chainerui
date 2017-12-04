@@ -17,14 +17,12 @@ from chainerui.models.project import Project
 
 def server_handler(args):
     ''' server_handler '''
-    print('server_handler', args)
     app = create_app()
     app.run(host=args.host, port=args.port, threaded=True)
 
 
 def db_handler(args):
     ''' db_handler '''
-    print('db_handler', args)
 
     if args.type == 'create':
         create_db()
@@ -50,7 +48,6 @@ def db_handler(args):
 
 def project_create_handler(args):
     ''' project_create_handler '''
-    print('project_create_handler', args)
 
     project_path = os.path.abspath(args.project_dir)
     project_name = args.project_name
