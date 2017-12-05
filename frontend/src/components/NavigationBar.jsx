@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Container,
   Collapse, Navbar, NavbarBrand,
-  Popover, PopoverTitle, PopoverContent,
+  Popover, PopoverHeader, PopoverBody,
   Form, FormGroup, Label,
   Button
 } from 'reactstrap';
@@ -75,13 +75,13 @@ class NavigationBar extends React.Component {
         </Container>
 
         <Popover
-          placement="left bottom"
+          placement="left-end"
           isOpen={this.state.settingPopoverOpen}
           target="navbar-global-setting"
           toggle={this.toggleSettingPopover}
         >
-          <PopoverTitle className="popover-header">Global Setting</PopoverTitle>
-          <PopoverContent className="popover-body">
+          <PopoverHeader className="popover-header">Global Setting</PopoverHeader>
+          <PopoverBody className="popover-body">
             <Form>
               <FormGroup>
                 <Label for="global-config-polling-rate">Results polling rate</Label><br />
@@ -112,7 +112,7 @@ class NavigationBar extends React.Component {
               </FormGroup>
             </Form>
             <p className="my-0"><small>ChainerUI {CHAINERUI_VERSION}</small></p>
-          </PopoverContent>
+          </PopoverBody>
         </Popover>
       </Navbar>
     );
