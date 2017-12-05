@@ -70,7 +70,7 @@ class TestAPI(unittest.TestCase):
 
     # PUT /api/v1/projects/<int:id>
     def test_put_project(self):
-        request_body = {
+        request_json = {
             'project': {
                 'id': 1,
                 'name': 'new-name',
@@ -79,7 +79,7 @@ class TestAPI(unittest.TestCase):
 
         resp = self.app.put(
             '/api/v1/projects/1',
-            data=json.dumps(request_body),
+            data=json.dumps(request_json),
             content_type='application/json')
         self.assert_successful(resp)
 
@@ -101,7 +101,7 @@ class TestAPI(unittest.TestCase):
 
     # PUT /api/v1/projects/<int:project_id>/results/<int:id>
     def test_put_result(self):
-        request_bodies = [
+        request_jsons = [
             {
                 'result': {
                     'id': 1,
@@ -127,7 +127,7 @@ class TestAPI(unittest.TestCase):
         for i in range(3):
             resp = self.app.put(
                 '/api/v1/projects/1/results/' + str(i + 1),
-                data=json.dumps(request_bodies[i]),
+                data=json.dumps(request_jsons[i]),
                 content_type='application/json')
 
             self.assert_successful(resp)
@@ -140,12 +140,39 @@ class TestAPI(unittest.TestCase):
 
     # POST /api/v1/projects/<int:project_id>/results/<int:result_id>/commands,
     def test_post_result_command(self):
-        request_bodies = [
+        request_jsons = [
+            {
+                'name': 'adjust_hyperparams',
+                'body': {
+                    'alpha': 0.0007,
+                    'beta1': 0.8,
+                    'beat2': 1.0,
+                },
+                'schedule': {
+                    'value': 4,
+                    'key': 'epoch',
+                },
+                'resultId': 1,
+            },
+            {
+                'name': 'adjust_hyperparams',
+                'body': None,
+                'schedule': None,
+                'resultId': 2,
+            },
+            {
+                'name': 'take_snapshot',
+                'schedule': {
+                    'value': 4800,
+                    'key': 'iteration',
+                },
+                'resultId': 3,
+            },
         ]
 
         for i in range(3):
             resp = self.app.post(
                 '/api/v1/projects/1/results/' + str(i + 1) + '/commands',
-                data=json.dumps(request_bodies[i]),
+                data=json.dumps(request_jsons[i]),
                 content_type='application/json')
             self.assert_successful(resp)
