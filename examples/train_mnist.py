@@ -18,7 +18,8 @@ import chainer.links as L
 from chainer import training
 from chainer.training import extensions
 
-from chainerui.extensions import ArgsReport, CommandsExtension
+from chainerui.extensions import CommandsExtension
+from chainerui.utils import save_args
 
 
 # Network definition
@@ -55,6 +56,9 @@ def main():
     parser.add_argument('--unit', '-u', type=int, default=1000,
                         help='Number of units')
     args = parser.parse_args()
+
+    # [ChainerUI] save 'args' to show experimental conditions
+    save_args(args, args.out)
 
     print('GPU: {}'.format(args.gpu))
     print('# unit: {}'.format(args.unit))
@@ -100,15 +104,11 @@ def main():
     # Ovserve learning rate
     trainer.extend(extensions.observe_lr())
 
-
     # Write a log of evaluation statistics for each epoch
+    # [ChainerUI] read 'log' file for plotting values
     trainer.extend(extensions.LogReport())
-
-    # <--- my extension -----
-    trainer.extend(ArgsReport(args))
-
+    # [ChainerUI] enable to send commands from ChainerUI
     trainer.extend(CommandsExtension())
-    # ---- my extension ---->
 
     # Save two plot images to the result dir
     if extensions.PlotReport.available():
