@@ -49,8 +49,10 @@ chainerui project create -d PROJECT_DIR [-n PROJECT_NAME]
 The ChainerUI server watches some files under the project directory recursively.
 
 - `log`: a json file created by `LogReport` extension.
-- `args`: *(optional)* a json file, which includes key-value pairs you want to see on ChainerUI along with logs. See [`args_report.py`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainerui/extensions/args_report.py) for a sample extension to dump command line arguments to `args` file.
+- `args`: *(optional)* a json file, which includes key-value pairs you want to see on ChainerUI along with logs. See [`save_args`](https://github.com/pfnet/intern-chainer-ui/blob/master/chainerui/utils/save_args.py), util function to dump command line arguments or dictionary to `args` file.
 - `commands`: *(optional)* a json file, which is automatically created by [`CommandsExtension`](https://github.com/pfn-intern/intern-chainer-ui/blob/master/chainerui/extensions/commands_extension.py) . This is a file for ChainerUI server to communicate with `CommandsExtension` .
+
+[`examples/train_mnist.py`](https://github.com/pfnet/intern-chainer-ui/blob/master/examples/train_mnist.py), based on [`chainer/examples/mnist/train_mnist.py`](https://github.com/chainer/chainer/blob/4de98cf90e747940f1dd7f7f4cdf1fcc0b4b4786/examples/mnist/train_mnist.py), is a useful example to see how to set `save_args` and `CommandsExtension`.
 
 ```
 path/to/result
