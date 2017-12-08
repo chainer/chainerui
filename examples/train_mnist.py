@@ -1,14 +1,7 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#!/usr/bin/env python
-
 from __future__ import print_function
-
-try:
-    import matplotlib
-    matplotlib.use('Agg')
-except ImportError:
-    pass
 
 import argparse
 
@@ -57,9 +50,6 @@ def main():
                         help='Number of units')
     args = parser.parse_args()
 
-    # [ChainerUI] save 'args' to show experimental conditions
-    save_args(args, args.out)
-
     print('GPU: {}'.format(args.gpu))
     print('# unit: {}'.format(args.unit))
     print('# Minibatch-size: {}'.format(args.batchsize))
@@ -76,6 +66,7 @@ def main():
         model.to_gpu()  # Copy the model to the GPU
 
     # Setup an optimizer
+    # [ChainerUI] change optimizer from Adam to observe leanring rate
     optimizer = chainer.optimizers.MomentumSGD()
     optimizer.setup(model)
 
@@ -101,14 +92,9 @@ def main():
     frequency = args.epoch if args.frequency == -1 else max(1, args.frequency)
     trainer.extend(extensions.snapshot(), trigger=(frequency, 'epoch'))
 
-    # Ovserve learning rate
-    trainer.extend(extensions.observe_lr())
-
     # Write a log of evaluation statistics for each epoch
     # [ChainerUI] read 'log' file for plotting values
     trainer.extend(extensions.LogReport())
-    # [ChainerUI] enable to send commands from ChainerUI
-    trainer.extend(CommandsExtension())
 
     # Save two plot images to the result dir
     if extensions.PlotReport.available():
@@ -135,6 +121,13 @@ def main():
     if args.resume:
         # Resume from a snapshot
         chainer.serializers.load_npz(args.resume, trainer)
+
+    # [ChainerUI] Observe learning rate
+    trainer.extend(extensions.observe_lr())
+    # [ChainerUI] enable to send commands from ChainerUI
+    trainer.extend(CommandsExtension())
+    # [ChainerUI] save 'args' to show experimental conditions
+    save_args(args, args.out)
 
     # Run the training
     trainer.run()
