@@ -1,6 +1,7 @@
 chainerui/static/dist/*.map
 chainerui/chainerui.db
 examples/result
+examples/**/commands
 *.pyc
 build
 *.egg-info

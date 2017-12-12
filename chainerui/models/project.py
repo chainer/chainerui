@@ -8,8 +8,8 @@ from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 
 
-from chainerui import DB_BASE
-from chainerui.models.result import Result
+from chainerui import DB_BASE, DB_SESSION
+from chainerui.tasks import collect_results
 
 
 class Project(DB_BASE):
@@ -32,6 +32,17 @@ class Project(DB_BASE):
 
     def __repr__(self):
         return '<Project id: %r, path_name: %r />' % (self.id, self.path_name)
+
+    @classmethod
+    def create(cls, path_name=None, name=None):
+        """ initialize an instance and save it to db """
+
+        project = cls(path_name, name)
+
+        DB_SESSION.add(project)
+        DB_SESSION.commit()
+
+        collect_results(project, force=True)
 
     @property
     def serialize(self):
