@@ -1,11 +1,13 @@
 import datetime
 
-
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
+from sqlalchemy import String
 
-
-from chainerui import DB_BASE, DB_SESSION
+from chainerui import DB_BASE
+from chainerui import DB_SESSION
 from chainerui.tasks import collect_results
 
 

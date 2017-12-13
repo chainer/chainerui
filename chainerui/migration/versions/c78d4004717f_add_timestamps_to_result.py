@@ -9,7 +9,6 @@ Create Date: 2017-09-22 15:14:36.947242
 
 import datetime
 
-
 from alembic import op
 import sqlalchemy as sa
 

@@ -1,5 +1,5 @@
-import os
 import datetime
+import os
 
 from chainerui import DB_SESSION
 

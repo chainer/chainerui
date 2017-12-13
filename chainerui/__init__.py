@@ -3,10 +3,13 @@ import os
 
 from alembic.command import upgrade
 from alembic.config import Config
-from flask import Flask, render_template, url_for
+from flask import Flask
+from flask import render_template
+from flask import url_for
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import sessionmaker
 
 
 CHAINERUI_ENV = os.getenv('CHAINERUI_ENV', 'prouction')

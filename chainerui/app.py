@@ -1,15 +1,18 @@
 import argparse
 import os
 
-
 import alembic
 from alembic.command import revision
 from alembic.config import Config
 
-
-from chainerui import create_app, create_db, upgrade_db
-from chainerui import DB_FILE_PATH, ENGINE, PACKAGE_DIR, DB_SESSION
+from chainerui import create_app
+from chainerui import create_db
+from chainerui import DB_FILE_PATH
+from chainerui import DB_SESSION
+from chainerui import ENGINE
 from chainerui.models.project import Project
+from chainerui import PACKAGE_DIR
+from chainerui import upgrade_db
 
 
 def server_handler(args):

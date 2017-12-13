@@ -1,7 +1,10 @@
 import json
 
+from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
 
-from sqlalchemy import Column, Integer, String, ForeignKey
 from chainerui import DB_BASE
 
 

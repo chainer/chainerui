@@ -1,9 +1,8 @@
-import six
-
-from chainer.training import extension
-from chainer.training import trigger as trigger_module
 from chainer.serializers import npz
+from chainer.training import extension
 from chainer.training.extensions._snapshot import _snapshot_object
+from chainer.training import trigger as trigger_module
+import six
 
 from chainerui.utils.command_item import CommandItem
 

@@ -1,6 +1,13 @@
 import datetime
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
+
+from sqlalchemy import Boolean
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
+from sqlalchemy import String
+
 from chainerui import DB_BASE
 
 
