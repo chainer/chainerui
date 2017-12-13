@@ -2,10 +2,6 @@ import datetime
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from chainerui import DB_BASE
-from chainerui.models.log import Log
-from chainerui.models.argument import Argument
-from chainerui.models.command import Command
-from chainerui.models.snapshot import Snapshot
 
 
 class Result(DB_BASE):

@@ -6,7 +6,6 @@ from chainerui import DB_SESSION
 from chainerui.models.result import Result
 from chainerui.models.log import Log
 from chainerui.models.argument import Argument
-from chainerui.models.command import Command
 from chainerui.models.snapshot import Snapshot
 from chainerui.utils.command_item import CommandItem
 from chainerui.utils import is_numberable
