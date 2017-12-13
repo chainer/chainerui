@@ -1,6 +1,3 @@
-"""log.py."""
-
-
 import json
 
 

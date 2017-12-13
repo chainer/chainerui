@@ -1,6 +1,3 @@
-"""snapshot.py."""
-
-
 from sqlalchemy import Column, Integer, String, ForeignKey
 from chainerui import DB_BASE
 

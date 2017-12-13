@@ -1,6 +1,3 @@
-"""project.py."""
-
-
 import datetime
 
 

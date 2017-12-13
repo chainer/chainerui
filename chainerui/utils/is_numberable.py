@@ -1,6 +1,3 @@
-"""is_numberable.py."""
-
-
 def is_numberable(number_str):
     """is_numberable."""
     try:

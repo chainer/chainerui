@@ -1,5 +1,3 @@
-"""crawl_result.py."""
-
 import os
 import json
 import datetime

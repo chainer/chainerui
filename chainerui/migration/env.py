@@ -1,6 +1,3 @@
-"""env.py."""
-
-
 import alembic
 from sqlalchemy import engine_from_config, pool
 

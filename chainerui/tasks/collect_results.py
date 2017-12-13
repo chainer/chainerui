@@ -1,5 +1,3 @@
-"""collect_results.py."""
-
 import os
 import datetime
 

@@ -1,5 +1,3 @@
-"""command_item.py."""
-
 import json
 import os
 import shutil

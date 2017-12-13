@@ -1,6 +1,3 @@
-"""app.py."""
-
-
 import argparse
 import os
 
