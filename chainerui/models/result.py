@@ -1,4 +1,4 @@
-''' result.py '''
+"""result.py."""
 
 
 import datetime
@@ -12,7 +12,7 @@ from chainerui.models.snapshot import Snapshot
 
 
 class Result(DB_BASE):
-    ''' Result Model '''
+    """Result Model."""
     __tablename__ = 'result'
 
     id = Column(Integer, primary_key=True)
@@ -42,7 +42,7 @@ class Result(DB_BASE):
 
     @property
     def serialize(self):
-        ''' serialize '''
+        """serialize."""
         return {
             'id': self.id,
             'pathName': self.path_name,

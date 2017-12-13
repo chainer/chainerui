@@ -1,4 +1,4 @@
-''' result.py '''
+"""result.py."""
 
 from flask import jsonify, request
 from flask.views import MethodView
@@ -12,10 +12,10 @@ from chainerui.tasks import crawl_result
 
 
 class ResultAPI(MethodView):
-    ''' ResultAPI '''
+    """ResultAPI."""
 
     def get(self, id=None, project_id=None):
-        ''' get '''
+        """get."""
 
         if id is None:
 
@@ -56,7 +56,7 @@ class ResultAPI(MethodView):
             })
 
     def put(self, id, project_id=None):
-        """ put """
+        """put."""
         result = DB_SESSION.query(Result).filter_by(id=id).first()
         if result is None:
             response = jsonify({
@@ -81,7 +81,7 @@ class ResultAPI(MethodView):
         return jsonify({'result': result.serialize})
 
     def delete(self, id, project_id=None):
-        """ delete """
+        """delete."""
         result = DB_SESSION.query(Result).filter_by(id=id).first()
         if result is None:
             response = jsonify({

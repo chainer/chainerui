@@ -1,4 +1,4 @@
-''' log.py '''
+"""log.py."""
 
 
 import json
@@ -9,7 +9,7 @@ from chainerui import DB_BASE
 
 
 class Log(DB_BASE):
-    ''' Log Model '''
+    """Log Model."""
     __tablename__ = 'log'
 
     id = Column(Integer, primary_key=True)
@@ -24,7 +24,7 @@ class Log(DB_BASE):
 
     @property
     def serialize(self):
-        ''' serialize '''
+        """serialize."""
 
         log_items = []
 

@@ -1,4 +1,4 @@
-''' collect_results.py '''
+"""collect_results.py."""
 
 import os
 import datetime
@@ -7,7 +7,7 @@ from chainerui import DB_SESSION
 
 
 def _list_result_paths(target_path, log_file_name='log'):
-    ''' list_result_paths '''
+    """list_result_paths."""
 
     result_list = []
 
@@ -41,7 +41,7 @@ def _register_result(project_id, result_path):
 
 
 def collect_results(project, force=False):
-    ''' collect_results '''
+    """collect_results."""
 
     now = datetime.datetime.now()
 

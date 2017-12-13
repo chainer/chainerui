@@ -1,3 +1,3 @@
-''' __init__.py '''
+"""__init__.py."""
 
 from chainerui.extensions.commands_extension import CommandsExtension  # NOQA

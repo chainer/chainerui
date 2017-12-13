@@ -1,4 +1,4 @@
-""" results.py """
+"""results.py."""
 
 from flask import jsonify, request
 from flask.views import MethodView
@@ -10,10 +10,10 @@ from chainerui.tasks import crawl_result
 
 
 class ResultCommandAPI(MethodView):
-    """ ResultCommandAPI """
+    """ResultCommandAPI."""
 
     def post(self, result_id, project_id):
-        ''' POST /api/v1/results/<int:id>/commands '''
+        """POST /api/v1/results/<int:id>/commands."""
 
         result = DB_SESSION.query(Result).filter_by(id=result_id).first()
 

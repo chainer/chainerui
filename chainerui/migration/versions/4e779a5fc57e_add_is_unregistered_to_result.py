@@ -1,4 +1,4 @@
-"""add_is_unregistered_to_result
+"""add_is_unregistered_to_result.
 
 Revision ID: 4e779a5fc57e
 Revises: 7fcaf5b6e9e8

@@ -1,4 +1,4 @@
-''' crawl_result.py '''
+"""crawl_result.py."""
 
 import os
 import json
@@ -15,7 +15,7 @@ from chainerui.utils import is_numberable
 
 
 def load_result_json(result_path, json_file_name):
-    ''' load_result_json '''
+    """load_result_json."""
     json_path = os.path.join(result_path, json_file_name)
 
     _list = []
@@ -27,7 +27,7 @@ def load_result_json(result_path, json_file_name):
 
 
 def crawl_result_path(result_path):
-    ''' crawl_result_path '''
+    """crawl_result_path."""
     result = {
         'logs': [],
         'args': [],
@@ -50,7 +50,7 @@ def crawl_result_path(result_path):
 
 
 def crawl_result(result_id, force=None):
-    ''' crawl_results '''
+    """crawl_results."""
 
     current_result = DB_SESSION.query(Result).filter_by(id=result_id).first()
 

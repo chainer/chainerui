@@ -1,4 +1,4 @@
-''' app.py '''
+"""app.py."""
 
 
 import argparse
@@ -16,13 +16,13 @@ from chainerui.models.project import Project
 
 
 def server_handler(args):
-    ''' server_handler '''
+    """server_handler."""
     app = create_app()
     app.run(host=args.host, port=args.port, threaded=True)
 
 
 def db_handler(args):
-    ''' db_handler '''
+    """db_handler."""
 
     if args.type == 'create':
         create_db()
@@ -47,7 +47,7 @@ def db_handler(args):
 
 
 def project_create_handler(args):
-    ''' project_create_handler '''
+    """project_create_handler."""
 
     project_path = os.path.abspath(args.project_dir)
     project_name = args.project_name
@@ -62,7 +62,7 @@ def project_create_handler(args):
 
 
 def main():
-    ''' main '''
+    """main."""
     parser = argparse.ArgumentParser(description='chainerui command')
     subparsers = parser.add_subparsers()
 

@@ -1,4 +1,4 @@
-''' project.py '''
+"""project.py."""
 
 
 import datetime
@@ -13,7 +13,7 @@ from chainerui.tasks import collect_results
 
 
 class Project(DB_BASE):
-    ''' Project Model '''
+    """Project Model."""
     __tablename__ = 'project'
 
     id = Column(Integer, primary_key=True)
@@ -35,7 +35,7 @@ class Project(DB_BASE):
 
     @classmethod
     def create(cls, path_name=None, name=None):
-        """ initialize an instance and save it to db """
+        """initialize an instance and save it to db."""
 
         project = cls(path_name, name)
 
@@ -46,7 +46,7 @@ class Project(DB_BASE):
 
     @property
     def serialize(self):
-        ''' serialize '''
+        """serialize."""
         return {
             'id': self.id,
             'pathName': self.path_name,

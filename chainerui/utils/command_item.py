@@ -1,4 +1,4 @@
-''' command_item.py '''
+"""command_item.py."""
 
 import json
 import os

@@ -1,4 +1,4 @@
-''' env.py '''
+"""env.py."""
 
 
 import alembic
@@ -11,8 +11,8 @@ from chainerui import SQLALCHEMY_DATABASE_URI
 def run_migrations_online(config):
     """Run migrations in 'online' mode.
 
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
+    In this scenario we need to create an Engine and associate a
+    connection with the context.
 
     """
     connectable = engine_from_config(
@@ -28,7 +28,7 @@ def run_migrations_online(config):
 
 
 def main():
-    ''' main '''
+    """main."""
     config = alembic.config.Config()
     config.set_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URI)
     run_migrations_online(config)

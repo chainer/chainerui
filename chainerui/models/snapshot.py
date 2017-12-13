@@ -1,4 +1,4 @@
-''' snapshot.py '''
+"""snapshot.py."""
 
 
 from sqlalchemy import Column, Integer, String, ForeignKey
@@ -6,7 +6,7 @@ from chainerui import DB_BASE
 
 
 class Snapshot(DB_BASE):
-    ''' Snapshot Model '''
+    """Snapshot Model."""
     __tablename__ = 'snapshot'
 
     id = Column(Integer, primary_key=True)
@@ -23,7 +23,7 @@ class Snapshot(DB_BASE):
 
     @property
     def serialize(self):
-        ''' serialize '''
+        """serialize."""
 
         return {
             "id": self.id,

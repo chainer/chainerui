@@ -1,4 +1,4 @@
-''' argument.py '''
+"""argument.py."""
 
 
 import json
@@ -9,7 +9,7 @@ from chainerui import DB_BASE
 
 
 class Argument(DB_BASE):
-    ''' Argument Model '''
+    """Argument Model."""
     __tablename__ = 'argument'
 
     id = Column(Integer, primary_key=True)
@@ -24,7 +24,7 @@ class Argument(DB_BASE):
 
     @property
     def serialize(self):
-        ''' serialize '''
+        """serialize."""
 
         arguments = []
 
