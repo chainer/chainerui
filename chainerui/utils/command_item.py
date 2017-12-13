@@ -8,7 +8,7 @@ from chainerui.models.command import Command
 from chainerui.utils.is_jsonable import is_jsonable
 
 
-class CommandItem:
+class CommandItem(object):
 
     REQUEST_OPEN = 'OPEN'
     RESPONSE_SUCCESS = 'SUCCESS'
