@@ -2,8 +2,8 @@
 import argparse
 import json
 import os
-import tempfile
 import shutil
+import tempfile
 
 
 def save_args(conditions, out_path):
@@ -24,9 +24,9 @@ def save_args(conditions, out_path):
         os.makedirs(out_path)
     except OSError:
         pass
-    _fd, path = tempfile.mkstemp(prefix='args', dir=out_path)
-    with os.fdopen(_fd, 'w') as _f:
-        json.dump(args_dict, _f, indent=4)
+    fd, path = tempfile.mkstemp(prefix='args', dir=out_path)
+    with os.fdopen(fd, 'w') as f:
+        json.dump(args_dict, f, indent=4)
 
     new_path = os.path.join(out_path, 'args')
     shutil.move(path, new_path)
