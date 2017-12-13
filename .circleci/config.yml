@@ -1,0 +1,43 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.1
+    working_directory: ~/chainerui-circleci
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v0.1-dependencies-{{ checksum "setup.py" }}
+          - v0.1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install werkzeug==0.12.2
+            pip install numpy==1.13.1
+            pip install chainer==v3.1.0
+            pip install autopep8 hacking
+            pip install pytest
+      - save_cache:
+          paths:
+            - ./venv
+          key: v0.1-dependencies-{{ checksum "setup.py" }}
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            flake8
+            autopep8 -r . --global-config .pep8 --diff | tee check_autopep8
+            python setup.py install
+            CHAINERUI_ENV=test pytest
+      - run:
+          name: run server
+          command: |
+            . venv/bin/activate
+            chainerui db create
+            chainerui db upgrade
+            chainerui server -p 5051 &
+            sleep 3
+            curl http://127.0.0.1:5051/
