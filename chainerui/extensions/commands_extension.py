@@ -47,7 +47,7 @@ def adjust_hyperparams(trainer, body):
     request_hyperparam = body.get('hyperparam', {})
     hyperparam_dict = hyperparam.get_dict()
     for key, value in six.iteritems(request_hyperparam):
-        if (not key in hyperparam_dict) or (value is None):
+        if (key not in hyperparam_dict) or (value is None):
             continue
         setattr(hyperparam, key, value)
     return {

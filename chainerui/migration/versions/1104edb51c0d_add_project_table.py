@@ -24,7 +24,8 @@ def upgrade():
                     sa.Column('name', sa.String(length=512), nullable=True),
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('path_name')
-                   )
+                    )
+
 
 def downgrade():
     op.drop_table('project')

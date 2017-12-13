@@ -18,7 +18,7 @@ CHAINERUI_ROOT = os.path.abspath(
 PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
 DB_FILE_DIR = os.path.join(CHAINERUI_ROOT, 'db')
 DB_FILE_NAME = 'chainerui_test.db' if CHAINERUI_ENV == 'test' \
-        else 'chainerui.db'
+    else 'chainerui.db'
 DB_FILE_PATH = os.path.join(DB_FILE_DIR, DB_FILE_NAME)
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DB_FILE_PATH
 ENGINE = create_engine(

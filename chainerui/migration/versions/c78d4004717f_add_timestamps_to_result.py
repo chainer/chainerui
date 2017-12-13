@@ -22,6 +22,7 @@ depends_on = None
 
 now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
+
 def upgrade():
     with op.batch_alter_table('result') as batch_op:
         batch_op.add_column(
