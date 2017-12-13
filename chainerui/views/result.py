@@ -31,7 +31,7 @@ class ResultAPI(MethodView):
                 result = crawl_result(result.id)
 
             return jsonify({
-                'results': [result.serialize for result in results]
+                'results': [r.serialize for r in results]
             })
 
         else:

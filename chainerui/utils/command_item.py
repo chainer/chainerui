@@ -131,7 +131,7 @@ class CommandItem(object):
             with open(commands_path, 'r') as f:
                 try:
                     commands = json.load(f)
-                except json.decoder.JSONDecodeError as e:
+                except json.decoder.JSONDecodeError:
                     pass
 
         return list(map(lambda cmd: cls(**cmd), commands))
