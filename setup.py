@@ -10,7 +10,7 @@ with open('requirements.txt') as f:
 
 class chainerui_sdist(sdist):
     def run(self):
-        subprocess.call('cd frontend && npm run build', shell=True)
+        subprocess.check_call('cd frontend && npm run build', shell=True)
         sdist.run(self)
 
 
