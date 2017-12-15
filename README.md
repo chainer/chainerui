@@ -21,7 +21,8 @@ To install ChainerUI from source
 
 ```sh
 $ git clone git@github.com:chainer/chainerui.git
-$ cd chainerui
+$ cd chainerui/frontend
+$ npm install && npm run build && cd ..
 $ python setup.py install
 ```
 
