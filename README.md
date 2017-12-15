@@ -79,7 +79,7 @@ Open http://localhost:5000/ .
 
 ### Unregister results
 
-To unregister a result, click `X` button at the right end of the result table. If unregister a result once, cannot restore the same name result on the result table (known problem, #226 ).
+To unregister a result, click `X` button at the right end of the result table. If unregister a result once, cannot restore the same name result on the result table (known problem).
 
 To unregister all results, drop and create a new database as follows.
 
@@ -93,6 +93,7 @@ $ chainerui db upgrade
 
 ChainerUI is supported by the latest stable version of the following browser.
 
+- Firefox
 - Chrome
 
 ## License
