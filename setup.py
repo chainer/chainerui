@@ -16,7 +16,7 @@ class chainerui_sdist(sdist):
 
 setup(
     name='chainerui',
-    version='0.0.9',
+    version='0.1.0',
     description='ChainerUI: User Interface for Chainer',
     install_requires=required,
     package_data={
