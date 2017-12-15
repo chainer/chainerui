@@ -1,9 +1,11 @@
-chainerui/static/dist/*.map
+chainerui/static/dist
 chainerui/chainerui.db
 examples/result
+examples/**/commands
 *.pyc
 build
 *.egg-info
 *.egg
 .idea/
 .cache/
+dist/

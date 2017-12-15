@@ -1,14 +1,11 @@
-''' collect_results.py '''
-
-import os
 import datetime
+import os
 
 from chainerui import DB_SESSION
-from chainerui.models.project import Project
 
 
 def _list_result_paths(target_path, log_file_name='log'):
-    ''' list_result_paths '''
+    """list_result_paths."""
 
     result_list = []
 
@@ -41,14 +38,12 @@ def _register_result(project_id, result_path):
         DB_SESSION.commit()
 
 
-def collect_results(project_id):
-    ''' collect_results '''
-
-    project = DB_SESSION.query(Project).filter_by(id=project_id).first()
+def collect_results(project, force=False):
+    """collect_results."""
 
     now = datetime.datetime.now()
 
-    if (now - project.updated_at).total_seconds() < 4:
+    if (now - project.updated_at).total_seconds() < 4 and (not force):
         return project
 
     result_paths = []

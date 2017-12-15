@@ -1,13 +1,15 @@
-''' command.py '''
-
 import json
 
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
+
 from chainerui import DB_BASE
 
 
 class Command(DB_BASE):
-    ''' Command Model '''
+    """Command Model."""
     __tablename__ = 'command'
 
     id = Column(Integer, primary_key=True)
@@ -26,7 +28,7 @@ class Command(DB_BASE):
 
     @property
     def serialize(self):
-        ''' serialize '''
+        """serialize."""
 
         if self.request is None:
             request = None

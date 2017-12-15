@@ -1,4 +1,4 @@
-"""empty message
+"""empty message.
 
 Revision ID: 1104edb51c0d
 Revises: 4e779a5fc57e
@@ -24,7 +24,8 @@ def upgrade():
                     sa.Column('name', sa.String(length=512), nullable=True),
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('path_name')
-                   )
+                    )
+
 
 def downgrade():
     op.drop_table('project')

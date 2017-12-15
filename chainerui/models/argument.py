@@ -1,15 +1,15 @@
-''' argument.py '''
-
-
 import json
 
+from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
 
-from sqlalchemy import Column, Integer, String, ForeignKey
 from chainerui import DB_BASE
 
 
 class Argument(DB_BASE):
-    ''' Argument Model '''
+    """Argument Model."""
     __tablename__ = 'argument'
 
     id = Column(Integer, primary_key=True)
@@ -24,7 +24,7 @@ class Argument(DB_BASE):
 
     @property
     def serialize(self):
-        ''' serialize '''
+        """serialize."""
 
         arguments = []
 

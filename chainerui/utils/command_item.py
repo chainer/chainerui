@@ -1,16 +1,14 @@
-''' command_item.py '''
-
+from datetime import datetime
 import json
 import os
 import shutil
 import tempfile
-from datetime import datetime
 
 from chainerui.models.command import Command
 from chainerui.utils.is_jsonable import is_jsonable
 
 
-class CommandItem:
+class CommandItem(object):
 
     REQUEST_OPEN = 'OPEN'
     RESPONSE_SUCCESS = 'SUCCESS'
@@ -133,7 +131,7 @@ class CommandItem:
             with open(commands_path, 'r') as f:
                 try:
                     commands = json.load(f)
-                except json.decoder.JSONDecodeError as e:
+                except json.decoder.JSONDecodeError:
                     pass
 
         return list(map(lambda cmd: cls(**cmd), commands))

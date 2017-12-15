@@ -1,19 +1,16 @@
-""" project.py """
-
-
-from flask import jsonify, request
+from flask import jsonify
+from flask import request
 from flask.views import MethodView
-
 
 from chainerui import DB_SESSION
 from chainerui.models.project import Project
 
 
 class ProjectAPI(MethodView):
-    """ ProjectAPI """
+    """ProjectAPI."""
 
     def get(self, id=None):
-        """ get """
+        """get."""
 
         if id is None:
             projects = DB_SESSION.query(Project).all()
@@ -33,7 +30,7 @@ class ProjectAPI(MethodView):
             })
 
     def put(self, id):
-        """ put """
+        """put."""
 
         project = DB_SESSION.query(Project).filter_by(id=id).first()
 
@@ -57,7 +54,7 @@ class ProjectAPI(MethodView):
         })
 
     def delete(self, id):
-        """ delete """
+        """delete."""
         project = DB_SESSION.query(Project).filter_by(id=id).first()
 
         if project is None:

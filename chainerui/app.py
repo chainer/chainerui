@@ -1,28 +1,28 @@
-''' app.py '''
-
-
 import argparse
 import os
-
 
 import alembic
 from alembic.command import revision
 from alembic.config import Config
 
-
-from chainerui import create_app, create_db, upgrade_db
-from chainerui import DB_FILE_PATH, ENGINE, PACKAGE_DIR, DB_SESSION
+from chainerui import create_app
+from chainerui import create_db
+from chainerui import DB_FILE_PATH
+from chainerui import DB_SESSION
+from chainerui import ENGINE
 from chainerui.models.project import Project
+from chainerui import PACKAGE_DIR
+from chainerui import upgrade_db
 
 
 def server_handler(args):
-    ''' server_handler '''
+    """server_handler."""
     app = create_app()
     app.run(host=args.host, port=args.port, threaded=True)
 
 
 def db_handler(args):
-    ''' db_handler '''
+    """db_handler."""
 
     if args.type == 'create':
         create_db()
@@ -47,7 +47,7 @@ def db_handler(args):
 
 
 def project_create_handler(args):
-    ''' project_create_handler '''
+    """project_create_handler."""
 
     project_path = os.path.abspath(args.project_dir)
     project_name = args.project_name
@@ -56,16 +56,13 @@ def project_create_handler(args):
         filter_by(path_name=project_path).first()
 
     if project is None:
-        project = Project(project_path, project_name)
+        project = Project.create(project_path, project_name)
     else:
         print('Pathname already registered.')
 
-    DB_SESSION.add(project)
-    DB_SESSION.commit()
-
 
 def main():
-    ''' main '''
+    """main."""
     parser = argparse.ArgumentParser(description='chainerui command')
     subparsers = parser.add_subparsers()
 
