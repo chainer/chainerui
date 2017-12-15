@@ -1,9 +1,8 @@
-import six
-
-from chainer.training import extension
-from chainer.training import trigger as trigger_module
 from chainer.serializers import npz
+from chainer.training import extension
 from chainer.training.extensions._snapshot import _snapshot_object
+from chainer.training import trigger as trigger_module
+import six
 
 from chainerui.utils.command_item import CommandItem
 
@@ -47,7 +46,7 @@ def adjust_hyperparams(trainer, body):
     request_hyperparam = body.get('hyperparam', {})
     hyperparam_dict = hyperparam.get_dict()
     for key, value in six.iteritems(request_hyperparam):
-        if (not key in hyperparam_dict) or (value is None):
+        if (key not in hyperparam_dict) or (value is None):
             continue
         setattr(hyperparam, key, value)
     return {

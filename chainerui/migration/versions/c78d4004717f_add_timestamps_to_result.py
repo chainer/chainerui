@@ -1,4 +1,4 @@
-"""empty message
+"""empty message.
 
 Revision ID: c78d4004717f
 Revises: 6cc68bf684ac
@@ -8,7 +8,6 @@ Create Date: 2017-09-22 15:14:36.947242
 
 
 import datetime
-
 
 from alembic import op
 import sqlalchemy as sa
@@ -21,6 +20,7 @@ branch_labels = None
 depends_on = None
 
 now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+
 
 def upgrade():
     with op.batch_alter_table('result') as batch_op:

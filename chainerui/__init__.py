@@ -1,15 +1,15 @@
-''' init.py '''
-
-
 import os
 
 
 from alembic.command import upgrade
 from alembic.config import Config
-from flask import Flask, render_template, url_for
+from flask import Flask
+from flask import render_template
+from flask import url_for
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import sessionmaker
 
 
 CHAINERUI_ENV = os.getenv('CHAINERUI_ENV', 'prouction')
@@ -18,7 +18,7 @@ CHAINERUI_ROOT = os.path.abspath(
 PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
 DB_FILE_DIR = os.path.join(CHAINERUI_ROOT, 'db')
 DB_FILE_NAME = 'chainerui_test.db' if CHAINERUI_ENV == 'test' \
-        else 'chainerui.db'
+    else 'chainerui.db'
 DB_FILE_PATH = os.path.join(DB_FILE_DIR, DB_FILE_NAME)
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DB_FILE_PATH
 ENGINE = create_engine(
@@ -34,14 +34,14 @@ DB_SESSION = scoped_session(
 
 
 def create_db():
-    ''' create_db '''
+    """create_db."""
     if not os.path.isdir(DB_FILE_DIR):
         os.makedirs(DB_FILE_DIR, exist_ok=True)
     print('DB_FILE_PATH: ', DB_FILE_PATH)
 
 
 def upgrade_db():
-    """ upgrade_db """
+    """upgrade_db."""
     ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
     config = Config(ini_path)
     config.set_main_option(
@@ -50,7 +50,7 @@ def upgrade_db():
 
 
 def create_db_session():
-    ''' create_db_session '''
+    """create_db_session."""
     session = scoped_session(
         sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
     )
@@ -58,13 +58,13 @@ def create_db_session():
 
 
 def create_app():
-    ''' create_app '''
+    """create_app."""
 
     app = Flask(__name__)
     app.config['DEBUG'] = False
 
     def dated_url_for(endpoint, **values):
-        ''' dated_url_for '''
+        """dated_url_for."""
         if endpoint == 'static':
             filename = values.get('filename', None)
             if filename:
@@ -74,7 +74,7 @@ def create_app():
 
     @app.context_processor
     def override_url_for():
-        ''' override_url_for '''
+        """override_url_for."""
         return dict(url_for=dated_url_for)
 
     @app.teardown_appcontext
@@ -85,7 +85,7 @@ def create_app():
     @app.route('/projects/<int:project_id>')
     @app.route('/projects/<int:project_id>/results/<int:result_id>')
     def index(**kwargs):
-        ''' render react app '''
+        """render react app."""
         return render_template('index.html')
 
     from chainerui.views.project import ProjectAPI

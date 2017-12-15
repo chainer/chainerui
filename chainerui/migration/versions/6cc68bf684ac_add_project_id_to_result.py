@@ -1,4 +1,4 @@
-"""empty message
+"""empty message.
 
 Revision ID: 6cc68bf684ac
 Revises: 1104edb51c0d
@@ -18,7 +18,8 @@ depends_on = None
 
 def upgrade():
     with op.batch_alter_table('result') as batch_op:
-        batch_op.add_column(sa.Column('project_id', sa.Integer(), nullable=True))
+        batch_op.add_column(
+            sa.Column('project_id', sa.Integer(), nullable=True))
         sa.ForeignKeyConstraint(['project_id'], ['project.id'])
 
 

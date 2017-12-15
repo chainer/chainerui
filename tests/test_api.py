@@ -1,13 +1,13 @@
-import unittest
-
 import json
 import os
+import unittest
 
-
-from chainerui import create_app, create_db, upgrade_db
-from chainerui import CHAINERUI_ENV, DB_FILE_PATH
+from chainerui import CHAINERUI_ENV
+from chainerui import create_app
+from chainerui import create_db
+from chainerui import DB_FILE_PATH
 from chainerui.models.project import Project
-
+from chainerui import upgrade_db
 
 TEST_PROJECT_PATH = os.path.abspath(os.path.join(__file__, '../../examples'))
 TEST_PROJECT_NAME = 'my-project'

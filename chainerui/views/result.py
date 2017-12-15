@@ -1,8 +1,6 @@
-''' result.py '''
-
-from flask import jsonify, request
+from flask import jsonify
+from flask import request
 from flask.views import MethodView
-
 
 from chainerui import DB_SESSION
 from chainerui.models.project import Project
@@ -12,10 +10,10 @@ from chainerui.tasks import crawl_result
 
 
 class ResultAPI(MethodView):
-    ''' ResultAPI '''
+    """ResultAPI."""
 
     def get(self, id=None, project_id=None):
-        ''' get '''
+        """get."""
 
         if id is None:
 
@@ -33,7 +31,7 @@ class ResultAPI(MethodView):
                 result = crawl_result(result.id)
 
             return jsonify({
-                'results': [result.serialize for result in results]
+                'results': [r.serialize for r in results]
             })
 
         else:
@@ -56,7 +54,7 @@ class ResultAPI(MethodView):
             })
 
     def put(self, id, project_id=None):
-        """ put """
+        """put."""
         result = DB_SESSION.query(Result).filter_by(id=id).first()
         if result is None:
             response = jsonify({
@@ -81,7 +79,7 @@ class ResultAPI(MethodView):
         return jsonify({'result': result.serialize})
 
     def delete(self, id, project_id=None):
-        """ delete """
+        """delete."""
         result = DB_SESSION.query(Result).filter_by(id=id).first()
         if result is None:
             response = jsonify({

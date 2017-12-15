@@ -1,15 +1,15 @@
-''' log.py '''
-
-
 import json
 
+from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
 
-from sqlalchemy import Column, Integer, String, ForeignKey
 from chainerui import DB_BASE
 
 
 class Log(DB_BASE):
-    ''' Log Model '''
+    """Log Model."""
     __tablename__ = 'log'
 
     id = Column(Integer, primary_key=True)
@@ -24,7 +24,7 @@ class Log(DB_BASE):
 
     @property
     def serialize(self):
-        ''' serialize '''
+        """serialize."""
 
         log_items = []
 

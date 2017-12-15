@@ -1,18 +1,18 @@
-''' result.py '''
-
-
 import datetime
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
+
+from sqlalchemy import Boolean
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
+from sqlalchemy import String
+
 from chainerui import DB_BASE
-from chainerui.models.log import Log
-from chainerui.models.argument import Argument
-from chainerui.models.command import Command
-from chainerui.models.snapshot import Snapshot
 
 
 class Result(DB_BASE):
-    ''' Result Model '''
+    """Result Model."""
     __tablename__ = 'result'
 
     id = Column(Integer, primary_key=True)
@@ -42,7 +42,7 @@ class Result(DB_BASE):
 
     @property
     def serialize(self):
-        ''' serialize '''
+        """serialize."""
         return {
             'id': self.id,
             'pathName': self.path_name,

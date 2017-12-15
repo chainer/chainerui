@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import argparse
 import json
 import os
@@ -14,6 +13,7 @@ def save_args(conditions, out_path):
             to show on a job table. Keys are show as table header and values
             are show at a job row.
         out_path (str): Output directory name to save conditions.
+
     """
 
     if isinstance(conditions, argparse.Namespace):
