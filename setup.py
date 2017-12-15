@@ -1,12 +1,21 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
+from setuptools.command.sdist import sdist
+import subprocess
 
 with open('README.md', 'r', encoding='utf-8') as f:
     readme = f.read()
 
 with open('requirements.txt') as f:
     required = f.read().splitlines()
+
+
+class chainerui_sdist(sdist):
+    def run(self):
+        subprocess.call('cd frontend && npm run build', shell=True)
+        sdist.run(self)
+
 
 setup(
     name='chainerui',
@@ -30,4 +39,7 @@ setup(
         ]
     },
     tests_require=['pytest'],
+    cmdclass={
+        'sdist': chainerui_sdist
+    },
 )

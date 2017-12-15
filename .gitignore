@@ -1,4 +1,4 @@
-chainerui/static/dist/*.map
+chainerui/static/dist
 chainerui/chainerui.db
 examples/result
 examples/**/commands
@@ -8,3 +8,4 @@ build
 *.egg
 .idea/
 .cache/
+dist/
