@@ -1,5 +1,5 @@
 [pep8]
-exclude=caffe_pb*,.eggs,*.egg,build,venv
+exclude=caffe_pb*,.eggs,*.egg,build,venv,node_modules
 
 [flake8]
-exclude=caffe_pb*,.eggs,*.egg,build,venv
+exclude=caffe_pb*,.eggs,*.egg,build,venv,node_modules
