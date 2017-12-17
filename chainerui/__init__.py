@@ -1,5 +1,5 @@
 import os
-
+import errno
 
 from alembic.command import upgrade
 from alembic.config import Config
@@ -35,8 +35,13 @@ DB_SESSION = scoped_session(
 
 def create_db():
     """create_db."""
-    if not os.path.isdir(DB_FILE_DIR):
-        os.makedirs(DB_FILE_DIR, exist_ok=True)
+    try:
+        os.makedirs(DB_FILE_DIR)
+    except OSError as exception:
+        if exception.errno == errno.EEXIST and os.path.isdir(DB_FILE_DIR):
+            pass
+        else:
+            raise
     print('DB_FILE_PATH: ', DB_FILE_PATH)
 
 
