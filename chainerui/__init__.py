@@ -1,5 +1,5 @@
-import os
 import errno
+import os
 
 from alembic.command import upgrade
 from alembic.config import Config
