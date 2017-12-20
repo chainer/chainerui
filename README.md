@@ -20,7 +20,7 @@ $ chainerui db upgrade
 To install ChainerUI from source
 
 ```sh
-$ git clone git@github.com:chainer/chainerui.git
+$ git clone https://github.com/chainer/chainerui.git
 $ cd chainerui/frontend
 $ npm install && npm run build && cd ..
 $ python setup.py install
@@ -35,7 +35,7 @@ $ python setup.py install
 Try examples.
 
 ```sh
-$ git clone git@github.com:chainer/chainerui.git
+$ git clone https://github.com/chainer/chainerui.git
 $ cd chainerui
 
 $ # create your first project
