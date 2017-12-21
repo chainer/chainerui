@@ -4,6 +4,8 @@
 
 ChainerUI is a visualization and management tool for [Chainer](https://github.com/chainer/chainer).
 
+[![CircleCI](https://circleci.com/gh/chainer/chainerui.svg?style=svg)](https://circleci.com/gh/chainer/chainerui)
+
 ## Installation
 
 To install ChainerUI, use `pip`
