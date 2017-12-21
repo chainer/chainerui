@@ -37,7 +37,7 @@ version: 2
 jobs:
   build_py3.6:
     docker:
-      - image: disktnk/circleci-py3.6-node8:0.1
+      - image: chainerui/circleci-py3.6-node8:0.1
     working_directory: ~/chainerui-circleci
     steps:
       - checkout
@@ -57,7 +57,7 @@ jobs:
       - <<: *chainerui_server_run
   build_py2.7:
     docker:
-      - image: disktnk/circleci-py2.7-node8:0.1
+      - image: chainerui/circleci-py2.7-node8:0.1
     working_directory: ~/chainerui-circleci
     steps:
       - checkout
