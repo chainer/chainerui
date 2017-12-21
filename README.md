@@ -1,5 +1,7 @@
 # ChainerUI
 
+![training_captures](https://user-images.githubusercontent.com/414255/34244148-637e6630-e667-11e7-8a6b-9a857fa806bc.gif)
+
 ChainerUI is a visualization and management tool for [Chainer](https://github.com/chainer/chainer).
 
 ## Installation
