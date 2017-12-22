@@ -55,12 +55,31 @@ def adjust_hyperparams(trainer, body):
     }
 
 
+class _CommandTrigger(object):
+
+    loop_stop = False
+
+    def __init__(self, trigger):
+        self._trigger = trigger
+
+    def __call__(self, trainer):
+        if self._trigger(trainer):
+            return True
+        return self.loop_stop
+
+
+def _stop_training(trainer, body):
+    trainer.stop_trigger.loop_stop = True
+    return {}
+
+
 class CommandsExtension(extension.Extension):
 
     priority = extension.PRIORITY_READER
     default_receivers = {
         'take_snapshot': take_snapshot,
-        'adjust_hyperparams': adjust_hyperparams
+        'adjust_hyperparams': adjust_hyperparams,
+        'stop': _stop_training,
     }
 
     def __init__(self, trigger=(1, 'iteration'), receivers={},
@@ -73,6 +92,7 @@ class CommandsExtension(extension.Extension):
 
     def initialize(self, trainer):
         CommandItem.remove_commands_file(trainer.out)
+        trainer.stop_trigger = _CommandTrigger(trainer.stop_trigger)
 
     def __call__(self, trainer):
         if not self._trigger(trainer):
