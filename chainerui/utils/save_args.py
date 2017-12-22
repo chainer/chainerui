@@ -18,6 +18,8 @@ def save_args(conditions, out_path):
 
     if isinstance(conditions, argparse.Namespace):
         args = vars(conditions)
+    else:
+        args = conditions
     args_dict = {k: str(v) for k, v in args.items()}
 
     try:
