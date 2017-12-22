@@ -1,8 +1,8 @@
 from chainer.serializers import npz
 from chainer.training import extension
 from chainer.training.extensions._snapshot import _snapshot_object
-from chainer.training.triggers import IntervalTrigger
 from chainer.training import trigger as trigger_module
+from chainer.training.triggers import IntervalTrigger
 import six
 
 from chainerui.utils.command_item import CommandItem
@@ -60,13 +60,18 @@ class _CommandIntervalTrigger(IntervalTrigger):
 
     loop_stop = False
 
-    def __init__(self, period, unit):
-        super(_CommandIntervalTrigger, self).__init__(period, unit)
+    def __init__(self, trigger):
+        self._trigger = trigger
+        self.period = trigger.period
+        self.unit = trigger.unit
 
     def __call__(self, trainer):
-        if super(_CommandIntervalTrigger, self).__call__(trainer):
+        if self._trigger(trainer):
             return True
         return self.loop_stop
+
+    def serialize(self, serializer):
+        self._trigger.serialize(serializer)
 
 
 class _CommandTrigger(object):
@@ -91,6 +96,13 @@ def _stop_training(trainer, body):
 
 class CommandsExtension(extension.Extension):
 
+    """Trainer extension to enable command operation by output file
+
+    This extension monitors a file for command created on `trainer.out` path,
+    and execute each command.
+
+    """
+
     priority = extension.PRIORITY_READER
     default_receivers = {
         'take_snapshot': take_snapshot,
@@ -109,8 +121,8 @@ class CommandsExtension(extension.Extension):
     def initialize(self, trainer):
         CommandItem.remove_commands_file(trainer.out)
         if isinstance(trainer.stop_trigger, IntervalTrigger):
-            t = trainer.stop_trigger
-            trainer.stop_trigger = _CommandIntervalTrigger(t.period, t.unit)
+            trainer.stop_trigger = _CommandIntervalTrigger(
+                trainer.stop_trigger)
         else:
             trainer.stop_trigger = _CommandTrigger(trainer.stop_trigger)
 
