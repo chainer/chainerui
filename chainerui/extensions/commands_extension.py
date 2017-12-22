@@ -1,6 +1,7 @@
 from chainer.serializers import npz
 from chainer.training import extension
 from chainer.training.extensions._snapshot import _snapshot_object
+from chainer.training.triggers import IntervalTrigger
 from chainer.training import trigger as trigger_module
 import six
 
@@ -55,6 +56,19 @@ def adjust_hyperparams(trainer, body):
     }
 
 
+class _CommandIntervalTrigger(IntervalTrigger):
+
+    loop_stop = False
+
+    def __init__(self, period, unit):
+        super(_CommandIntervalTrigger, self).__init__(period, unit)
+
+    def __call__(self, trainer):
+        if super(_CommandIntervalTrigger, self).__call__(trainer):
+            return True
+        return self.loop_stop
+
+
 class _CommandTrigger(object):
 
     loop_stop = False
@@ -69,6 +83,8 @@ class _CommandTrigger(object):
 
 
 def _stop_training(trainer, body):
+    assert isinstance(trainer.stop_trigger, _CommandTrigger) or \
+        isinstance(trainer.stop_trigger, _CommandIntervalTrigger)
     trainer.stop_trigger.loop_stop = True
     return {}
 
@@ -92,7 +108,11 @@ class CommandsExtension(extension.Extension):
 
     def initialize(self, trainer):
         CommandItem.remove_commands_file(trainer.out)
-        trainer.stop_trigger = _CommandTrigger(trainer.stop_trigger)
+        if isinstance(trainer.stop_trigger, IntervalTrigger):
+            t = trainer.stop_trigger
+            trainer.stop_trigger = _CommandIntervalTrigger(t.period, t.unit)
+        else:
+            trainer.stop_trigger = _CommandTrigger(trainer.stop_trigger)
 
     def __call__(self, trainer):
         if not self._trigger(trainer):
@@ -125,12 +145,17 @@ class CommandsExtension(extension.Extension):
 
     def _execute_command(self, trainer, command_name, request):
         receiver = self._receivers.get(command_name, None)
-        try:
-            response_body = receiver(trainer, request.get('body', None))
-            response_status = CommandItem.RESPONSE_SUCCESS
-        except Exception as e:
-            print('catched execption from receiver:', e.args)
-            response_body = None
+        if receiver is None:
+            message = '%s command is not available or supported' % command_name
+            response_body = {'message': message}
             response_status = CommandItem.RESPONSE_FAILUE
+        else:
+            try:
+                response_body = receiver(trainer, request.get('body', None))
+                response_status = CommandItem.RESPONSE_SUCCESS
+            except Exception as e:
+                print('catched execption from receiver:', e.args)
+                response_body = None
+                response_status = CommandItem.RESPONSE_FAILUE
 
         return response_body, response_status

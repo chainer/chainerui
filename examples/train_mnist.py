@@ -116,10 +116,7 @@ def main():
          'validation/main/accuracy', 'lr', 'elapsed_time']))
 
     # Print a progress bar to stdout
-    # [ChainerUI] CommandExtension repalece 'trainer.stop_trigger' internally
-    #             so ProgressBar need to be set 'training_length'.
-    trainer.extend(extensions.ProgressBar(
-        training_length=(args.epoch, 'epoch')))
+    trainer.extend(extensions.ProgressBar())
 
     if args.resume:
         # Resume from a snapshot
