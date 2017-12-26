@@ -19,7 +19,7 @@ from chainerui import upgrade_db
 def server_handler(args):
     """server_handler."""
     app = create_app()
-    app.run(host=args.host, port=args.port, threaded=True)
+    app.run(host=args.host, port=args.port, debug=args.debug, threaded=True)
 
 
 def db_handler(args):
@@ -76,6 +76,8 @@ def main():
         '-H', '--host', required=False, help='host', default='localhost')
     parser_server.add_argument(
         '-p', '--port', required=False, type=int, help='port', default=5000)
+    parser_server.add_argument(
+        '-d', '--debug', action='store_true', help='debug')
     parser_server.set_defaults(
         handler=server_handler)
 
