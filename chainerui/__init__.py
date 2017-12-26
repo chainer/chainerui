@@ -4,9 +4,11 @@ import os
 from alembic.command import upgrade
 from alembic.config import Config
 from flask import Flask
+from flask import jsonify
 from flask import render_template
 from flask import url_for
 from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
@@ -97,6 +99,21 @@ def create_app():
     def index(**kwargs):
         """render react app."""
         return render_template('index.html')
+
+    # error handling
+    @app.errorhandler(OperationalError)
+    def handle_invalid_usage(error):
+        """handle errors caused by db query."""
+        print('caught exception from db:', error.args)
+        response = jsonify({
+            'error': {
+                'type': 'DBOperationalError',
+                'message': 'Failed to send request to the database.'
+            }
+        })
+        response.status_code = 400  # Bad Request
+
+        return response
 
     from chainerui.views.project import ProjectAPI
     from chainerui.views.result import ResultAPI
