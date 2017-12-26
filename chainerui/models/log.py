@@ -1,6 +1,7 @@
 import json
 
-from math import isinf, isnan
+from math import isinf
+from math import isnan
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
