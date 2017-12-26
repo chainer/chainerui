@@ -60,7 +60,7 @@ class SnapshotTakeForm extends React.Component {
             <Input
               type="number"
               className="ml-3"
-              size="sm"
+              bsSize="sm"
               min="0"
               step="1"
               placeholder={`# ${schedule.key}`}
@@ -70,7 +70,7 @@ class SnapshotTakeForm extends React.Component {
             />
             <Input
               type="select"
-              size="sm"
+              bsSize="sm"
               disabled={scheduleType !== SCHEDULE_CUSTOM}
               value={schedule.key}
               onChange={this.handleScheduleKeyChange}

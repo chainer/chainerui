@@ -50,7 +50,7 @@ class AxisRangeConfigurator extends React.Component {
                   type="radio"
                   name="range-auto"
                   value="auto"
-                  size="sm"
+                  bsSize="sm"
                   checked={rangeType === 'auto'}
                   onChange={this.handleRangeTypeChange}
                 /> auto
@@ -62,7 +62,7 @@ class AxisRangeConfigurator extends React.Component {
                   type="radio"
                   name="range-data-min-or-max"
                   value={isMin ? 'dataMin' : 'dataMax'}
-                  size="sm"
+                  bsSize="sm"
                   checked={rangeType === (isMin ? 'dataMin' : 'dataMax')}
                   onChange={this.handleRangeTypeChange}
                 /> data {isMin ? 'min' : 'max'}
@@ -74,7 +74,7 @@ class AxisRangeConfigurator extends React.Component {
                   type="radio"
                   name="range-number"
                   value="number"
-                  size="sm"
+                  bsSize="sm"
                   checked={rangeType === 'number'}
                   onChange={this.handleRangeTypeChange}
                 />
@@ -83,7 +83,7 @@ class AxisRangeConfigurator extends React.Component {
                   type="number"
                   step="any"
                   name="range-number-value"
-                  size="sm"
+                  bsSize="sm"
                   value={(rangeNumber == null || rangeNumber === '') ? '' : rangeNumber}
                   disabled={rangeType !== 'number'}
                   onChange={this.handleNumberChange}

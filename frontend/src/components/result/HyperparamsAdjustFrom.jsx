@@ -93,7 +93,7 @@ class HyperparamsAdjustForm extends React.Component {
               type="number"
               name="lr"
               step="any"
-              size="sm"
+              bsSize="sm"
               id="hyperparams-adjust-form-lr"
               onChange={this.handleHyperparamChange}
             />
@@ -109,7 +109,7 @@ class HyperparamsAdjustForm extends React.Component {
               type="number"
               name="momentum"
               step="any"
-              size="sm"
+              bsSize="sm"
               id="hyperparams-adjust-form-momentum"
               onChange={this.handleHyperparamChange}
             />
