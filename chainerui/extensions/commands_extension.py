@@ -55,43 +55,64 @@ def adjust_hyperparams(trainer, body):
         'hyperparam': hyperparam.get_dict()
     }
 
+# NOTE: Chainer has a plan to add that trigger can detect training
+#       length (PR#4079). After merge it, the below two trigger class
+#       can be merge to one trigger class.
+
 
 class _CommandIntervalTrigger(IntervalTrigger):
 
-    loop_stop = False
-
     def __init__(self, trigger):
-        self._trigger = trigger
-        self.period = trigger.period
-        self.unit = trigger.unit
+        super(_CommandIntervalTrigger, self).__setattr__(
+            '_trigger', trigger)
+        super(_CommandIntervalTrigger, self).__setattr__(
+            '_loop_stop', False)
 
     def __call__(self, trainer):
         if self._trigger(trainer):
             return True
-        return self.loop_stop
+        return self._loop_stop
 
-    def serialize(self, serializer):
-        self._trigger.serialize(serializer)
+    def stop(self):
+        super(_CommandIntervalTrigger, self).__setattr__(
+            '_loop_stop', True)
+
+    def __getattr__(self, attr_name):
+        return getattr(self._trigger, attr_name)
+
+    def __setattr__(self, attr_name, value):
+        setattr(self._trigger, attr_name, value)
 
 
 class _CommandTrigger(object):
 
-    loop_stop = False
-
     def __init__(self, trigger):
-        self._trigger = trigger
+        super(_CommandTrigger, self).__setattr__(
+            '_trigger', trigger)
+        super(_CommandTrigger, self).__setattr__(
+            '_loop_stop', False)
 
     def __call__(self, trainer):
         if self._trigger(trainer):
             return True
-        return self.loop_stop
+        return self._loop_stop
+
+    def stop(self):
+        super(_CommandTrigger, self).__setattr__(
+            '_loop_stop', True)
+
+    def __getattr__(self, attr_name):
+        return getattr(self._trigger, attr_name)
+
+    def __setattr__(self, attr_name, value):
+        setattr(self._trigger, attr_name, value)
 
 
 def _stop_training(trainer, body):
     assert isinstance(trainer.stop_trigger, _CommandTrigger) or \
         isinstance(trainer.stop_trigger, _CommandIntervalTrigger)
-    trainer.stop_trigger.loop_stop = True
-    return {}
+    trainer.stop_trigger.stop()
+    return None
 
 
 class CommandsExtension(extension.Extension):
@@ -99,7 +120,7 @@ class CommandsExtension(extension.Extension):
     """Trainer extension to enable command operation by output file
 
     This extension monitors a file for command created on `trainer.out` path,
-    and execute each command.
+    and execute each command when append the file.
 
     """
 
