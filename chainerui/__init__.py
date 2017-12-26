@@ -11,6 +11,11 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
+from chainerui import _version
+
+
+__version__ = _version.__version__
+
 
 CHAINERUI_ENV = os.getenv('CHAINERUI_ENV', 'prouction')
 CHAINERUI_ROOT = os.path.abspath(

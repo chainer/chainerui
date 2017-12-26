@@ -5,6 +5,7 @@ import alembic
 from alembic.command import revision
 from alembic.config import Config
 
+from chainerui import _version
 from chainerui import create_app
 from chainerui import create_db
 from chainerui import DB_FILE_PATH
@@ -64,6 +65,8 @@ def project_create_handler(args):
 def main():
     """main."""
     parser = argparse.ArgumentParser(description='chainerui command')
+    parser.add_argument(
+        '--version', '-v', action='version', version=_version.__version__)
     subparsers = parser.add_subparsers()
 
     # chainerui server

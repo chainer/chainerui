@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import imp
+import os
 from setuptools.command.sdist import sdist
 from setuptools import find_packages
 from setuptools import setup
@@ -6,6 +8,11 @@ import subprocess
 
 with open('requirements.txt') as f:
     required = f.read().splitlines()
+
+
+here = os.path.abspath(os.path.dirname(__file__))
+__version__ = imp.load_source(
+    '_version', os.path.join(here, 'chainerui', '_version.py')).__version__
 
 
 class chainerui_sdist(sdist):
@@ -16,7 +23,7 @@ class chainerui_sdist(sdist):
 
 setup(
     name='chainerui',
-    version='0.1.0',
+    version=__version__,
     description='ChainerUI: User Interface for Chainer',
     install_requires=required,
     package_data={
