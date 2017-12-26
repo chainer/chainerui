@@ -1,5 +1,6 @@
 import json
 
+from math import isfinite
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
@@ -32,7 +33,7 @@ class Log(DB_BASE):
             log_items.append({
                 'logId': self.id,
                 'key': item[0],
-                'value': item[1]
+                'value': item[1] if isfinite(item[1]) else None
             })
 
         return {
