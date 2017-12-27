@@ -2,6 +2,7 @@ from chainer.serializers import npz
 from chainer.training import extension
 from chainer.training.extensions._snapshot import _snapshot_object
 from chainer.training import trigger as trigger_module
+from chainer.training.triggers import IntervalTrigger
 import six
 
 from chainerui.utils.command_item import CommandItem
@@ -54,13 +55,80 @@ def adjust_hyperparams(trainer, body):
         'hyperparam': hyperparam.get_dict()
     }
 
+# NOTE: Chainer has a plan to add that trigger can detect training
+#       length (PR#4079). After merge it, the below two trigger class
+#       can be merge to one trigger class.
+
+
+class _CommandIntervalTrigger(IntervalTrigger):
+
+    def __init__(self, trigger):
+        super(_CommandIntervalTrigger, self).__setattr__(
+            '_trigger', trigger)
+        super(_CommandIntervalTrigger, self).__setattr__(
+            '_loop_stop', False)
+
+    def __call__(self, trainer):
+        if self._trigger(trainer):
+            return True
+        return self._loop_stop
+
+    def stop(self):
+        super(_CommandIntervalTrigger, self).__setattr__(
+            '_loop_stop', True)
+
+    def __getattr__(self, attr_name):
+        return getattr(self._trigger, attr_name)
+
+    def __setattr__(self, attr_name, value):
+        setattr(self._trigger, attr_name, value)
+
+
+class _CommandTrigger(object):
+
+    def __init__(self, trigger):
+        super(_CommandTrigger, self).__setattr__(
+            '_trigger', trigger)
+        super(_CommandTrigger, self).__setattr__(
+            '_loop_stop', False)
+
+    def __call__(self, trainer):
+        if self._trigger(trainer):
+            return True
+        return self._loop_stop
+
+    def stop(self):
+        super(_CommandTrigger, self).__setattr__(
+            '_loop_stop', True)
+
+    def __getattr__(self, attr_name):
+        return getattr(self._trigger, attr_name)
+
+    def __setattr__(self, attr_name, value):
+        setattr(self._trigger, attr_name, value)
+
+
+def _stop_training(trainer, body):
+    assert isinstance(trainer.stop_trigger, _CommandTrigger) or \
+        isinstance(trainer.stop_trigger, _CommandIntervalTrigger)
+    trainer.stop_trigger.stop()
+    return None
+
 
 class CommandsExtension(extension.Extension):
+
+    """Trainer extension to enable command operation by output file
+
+    This extension monitors a file for command created on `trainer.out` path,
+    and execute each command when append the file.
+
+    """
 
     priority = extension.PRIORITY_READER
     default_receivers = {
         'take_snapshot': take_snapshot,
-        'adjust_hyperparams': adjust_hyperparams
+        'adjust_hyperparams': adjust_hyperparams,
+        'stop': _stop_training,
     }
 
     def __init__(self, trigger=(1, 'iteration'), receivers={},
@@ -73,6 +141,11 @@ class CommandsExtension(extension.Extension):
 
     def initialize(self, trainer):
         CommandItem.remove_commands_file(trainer.out)
+        if isinstance(trainer.stop_trigger, IntervalTrigger):
+            trainer.stop_trigger = _CommandIntervalTrigger(
+                trainer.stop_trigger)
+        else:
+            trainer.stop_trigger = _CommandTrigger(trainer.stop_trigger)
 
     def __call__(self, trainer):
         if not self._trigger(trainer):
@@ -105,12 +178,17 @@ class CommandsExtension(extension.Extension):
 
     def _execute_command(self, trainer, command_name, request):
         receiver = self._receivers.get(command_name, None)
-        try:
-            response_body = receiver(trainer, request.get('body', None))
-            response_status = CommandItem.RESPONSE_SUCCESS
-        except Exception as e:
-            print('catched execption from receiver:', e.args)
-            response_body = None
+        if receiver is None:
+            message = '%s command is not available or supported' % command_name
+            response_body = {'message': message}
             response_status = CommandItem.RESPONSE_FAILUE
+        else:
+            try:
+                response_body = receiver(trainer, request.get('body', None))
+                response_status = CommandItem.RESPONSE_SUCCESS
+            except Exception as e:
+                print('catched execption from receiver:', e.args)
+                response_body = None
+                response_status = CommandItem.RESPONSE_FAILUE
 
         return response_body, response_status
