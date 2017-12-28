@@ -1,6 +1,6 @@
 {
   "name": "chainerui",
-  "version": "0.1.1",
+  "private": true,
   "description": "",
   "main": "index.js",
   "scripts": {
