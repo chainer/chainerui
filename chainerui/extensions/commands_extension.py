@@ -181,7 +181,7 @@ class CommandsExtension(extension.Extension):
         if receiver is None:
             message = '%s command is not available or supported' % command_name
             response_body = {'message': message}
-            response_status = CommandItem.RESPONSE_FAILUE
+            response_status = CommandItem.RESPONSE_FAILURE
         else:
             try:
                 response_body = receiver(trainer, request.get('body', None))
@@ -189,6 +189,6 @@ class CommandsExtension(extension.Extension):
             except Exception as e:
                 print('catched execption from receiver:', e.args)
                 response_body = None
-                response_status = CommandItem.RESPONSE_FAILUE
+                response_status = CommandItem.RESPONSE_FAILURE
 
         return response_body, response_status

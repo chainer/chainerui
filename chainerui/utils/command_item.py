@@ -12,7 +12,7 @@ class CommandItem(object):
 
     REQUEST_OPEN = 'OPEN'
     RESPONSE_SUCCESS = 'SUCCESS'
-    RESPONSE_FAILUE = 'FAILUE'
+    RESPONSE_FAILURE = 'FAILURE'
     DEFAULT_FILE_NAME = 'commands'
 
     def __init__(self, **kwargs):
