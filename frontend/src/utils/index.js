@@ -32,6 +32,10 @@ export const truncate = (string, options = {}) => {
   return str;
 };
 
+export const displayResultNameFull = (result = {}) => (
+  result.name || result.pathName
+);
+
 export const displayResultName = (result = {}, options = {}) => (
   truncate(result.name, options) || truncate(result.pathName, { ...options, forward: true })
 );

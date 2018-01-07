@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import {
+  displayResultNameFull,
   displayResultName,
   truncate,
   getLastLogDict,
@@ -99,6 +100,7 @@ class ResultRow extends React.Component {
           <input
             className="form-control result-name"
             type="text"
+            title={displayResultNameFull(result)}
             placeholder={truncate(result.pathName, { length: 22, forward: true })}
             value={resultName || ''}
             onChange={this.handleResultNameChange}
