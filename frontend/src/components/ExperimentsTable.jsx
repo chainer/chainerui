@@ -56,7 +56,15 @@ const ExperimentsTable = (props) => {
             />
           </th>
           <th>id</th>
-          <th>name</th>
+          <th>
+            <div className="d-flex">
+              <div>name</div>
+              <div className="ml-auto align-self-baseline">
+                <span className="text-dark mx-1 small oi oi-align-left" />
+                <span className="text-muted mx-1 small oi oi-align-right" />
+              </div>
+            </div>
+          </th>
           {logHeaderElems}
           {argHeaderElems}
           <th />
