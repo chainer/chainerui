@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { routerReducer, LOCATION_CHANGE } from 'react-router-redux';
 import { persistReducer } from 'redux-persist';
+import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
 import { chartSizeOptions, pollingOptions, defaultAxisConfig } from '../constants';
@@ -362,6 +363,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   entities,
+  requests: requestsReducer,
   fetchState,
   config: persistReducer(persistConfig, config),
   routing: routerReducer
