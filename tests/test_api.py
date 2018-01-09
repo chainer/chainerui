@@ -9,12 +9,11 @@ from chainerui import DB_FILE_PATH
 from chainerui.models.project import Project
 from chainerui import upgrade_db
 
+from tests.helpers import is_valid_json_str
+from tests.helpers import NotInTestEnvironmentException
+
 TEST_PROJECT_PATH = os.path.abspath(os.path.join(__file__, '../../examples'))
 TEST_PROJECT_NAME = 'my-project'
-
-
-class NotInTestEnvironmentException(Exception):
-    pass
 
 
 def setup_test_db():
@@ -23,14 +22,6 @@ def setup_test_db():
 
     # insert test data
     Project.create(TEST_PROJECT_PATH, TEST_PROJECT_NAME)
-
-
-def is_valid_json_str(json_str):
-    try:
-        json.loads(json_str)
-    except json.decoder.JSONDecodeError:
-        return False
-    return True
 
 
 class TestAPI(unittest.TestCase):
