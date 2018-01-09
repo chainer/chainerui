@@ -67,7 +67,7 @@ def main():
     sum_loss = 0
 
     # [ChainerUI] setup log reporter to show on ChainerUI
-    ui_report = LogReport(args.out, args)
+    ui_report = LogReport(args.out, conditions=args)
     while train_iter.epoch < args.epoch:
         batch = train_iter.next()
         x_array, t_array = convert.concat_examples(batch, args.gpu)
@@ -79,13 +79,10 @@ def main():
 
         if train_iter.is_new_epoch:
             print('epoch: ', train_iter.epoch)
+            train_loss = sum_loss / train_count
+            train_accuracy = sum_accuracy / train_count
             print('train mean loss: {}, accuracy: {}'.format(
-                sum_loss / train_count, sum_accuracy / train_count))
-            # [ChainerUI] collect log information
-            stats = {}
-            stats['epoch'] = train_iter.epoch
-            stats['train/loss'] = sum_loss / train_count
-            stats['train/accuracy'] = sum_accuracy / train_count
+                train_loss, train_accuracy))
 
             # evaluation
             sum_accuracy = 0
@@ -99,11 +96,17 @@ def main():
                 sum_accuracy += float(model.accuracy.data) * len(t.data)
 
             test_iter.reset()
+            test_loss = sum_loss / test_count
+            test_accuracy = sum_accuracy / test_count
             print('test mean  loss: {}, accuracy: {}'.format(
-                sum_loss / test_count, sum_accuracy / test_count))
-            stats['test/loss'] = sum_loss / test_count
-            stats['test/accuracy'] = sum_accuracy / test_count
-            # [ChainerUI] write to 'log' file
+                test_loss, test_accuracy))
+            # [ChainerUI] write values to 'log' file
+            stats = {
+                'epoch': train_iter.epoch,
+                'iteration': train_iter.epoch * args.batchsize,
+                'train/loss': train_loss, 'train/accuracy': train_accuracy,
+                'test/loss': test_loss, 'test/accuracy': test_accuracy
+                }
             ui_report(stats)
             sum_accuracy = 0
             sum_loss = 0
