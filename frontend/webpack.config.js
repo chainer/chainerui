@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const fs = require('fs');
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
@@ -8,6 +9,15 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const NODE_PROD = (NODE_ENV === 'production');
 const filename = '[name]';
 const nodeModulePath = path.resolve(__dirname, 'node_modules');
+const versionPyPath = path.resolve(path.dirname(__dirname), 'chainerui', '_version.py');
+const versionPy = fs.readFileSync(versionPyPath, 'utf8');
+const versionMatches = /^__version__\s*=\s*'([^']*)'$/m.exec(versionPy);
+
+if (!versionMatches) {
+  throw new Error('version number was not found');
+}
+
+const version = versionMatches[1];
 
 module.exports = {
   entry: {
@@ -87,7 +97,8 @@ module.exports = {
   plugins: [
     new WebpackCleanupPlugin(),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+      'process.env.VERSION': JSON.stringify(version)
     }),
     new webpack.ProvidePlugin({
       $: 'jquery',
