@@ -67,7 +67,7 @@ const Commands = (props) => {
               <th>schedule</th>
               <th>executed at</th>
               <th>epoch</th>
-              <th>iteraion</th>
+              <th>iteration</th>
               <th>elapsed time</th>
               <th>request body</th>
               <th>response body</th>
