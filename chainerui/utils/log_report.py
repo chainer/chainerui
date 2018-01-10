@@ -21,27 +21,34 @@ class LogReport(object):
         conditions (:class:`argparse.Namespace` or dict): Experiment conditions
             to show on a job table. Keys are show as table header and values
             are show at a job row.
-        elapsed_time_flag (bool): This class calculates elapsed time
-            automatically. The measurement starts when call as new instance.
-            If a target train loop has original elapsed time, then set the
-            flag as `False` and set the time manually.
 
     """
 
-    def __init__(self, out_path, conditions=None, elapsed_time_flag=True):
+    def __init__(self, out_path, conditions=None):
         self._out_path = out_path
         self._log_name = 'log'
         self._log = []
-        self._start_at = None
+        self._start_at = _get_time()
 
         if conditions is not None:
             # if not exist the path, `save_args` makes it
             save_args(conditions, out_path)
-        if elapsed_time_flag:
-            self._start_at = _get_time()
+        else:
+            try:
+                os.makedirs(out_path)
+            except OSError:
+                pass
 
     def __call__(self, stats):
-        if self._start_at is not None:
+        """Add training log.
+
+        Args:
+            stats (dict): Training log values. The object must be key-value
+                style and values type must be `float` or `int`. When the object
+                does not have 'elapsed_time' key, the function set the time
+                automatically. The measurement starts when create new instance.
+        """
+        if 'elapsed_time' not in stats:
             stats['elapsed_time'] = _get_time() - self._start_at
         self._log.append(stats)
 
