@@ -36,12 +36,12 @@ The ChainerUI server watches the below files under the project directory recursi
 * args: (optional) a JSON file, which includes key-value pairs you want to see on ChainerUI along with logs. See `save_args <https://github.com/chainer/chainerui/blob/master/chainerui/utils/save_args.py>`__, util function to dump command line arguments or dictionary to ``args`` file.
 * commands: (optional) a JSON file, which is automatically created by `CommandsExtension <https://github.com/chainer/chainerui/blob/master/chainerui/extensions/commands_extension.py>`__. This is a file for ChainerUI server to communicate to operate the target training loop.
 
-For example, file and directory structure is the below and when create a project with ``-d path/to/result``, the results of the two directories, ``result1`` and ``result2`` are registered under the ``PROJECT_NAME`` then ChainerUI gathers the two automatically and continuously.::
+For example, file and directory structure is the below. When create a project with ``-d path/to/result``, the results of the two directories, ``result1`` and ``result2`` are registered under the ``PROJECT_NAME`` automatically, then ChainerUI gathers the two logs continuously.::
 
   path/to/result/result1
     |--- log       # show values on chart
     |--- args      # show parameters on result table as experimental conditions
-    |--- commands
+    |--- commands  # created by CommandsExtension to operate the training loop
     |--- ...
   path/to/result/result2
     |--- log
@@ -63,8 +63,17 @@ Open http://localhost:5000/ . To stop, press ``Ctrl+C`` on the console.
 Customize training loop
 -----------------------
 
-TODO: log, args, commands
+ChainerUI basically supports Trainer module included in Chainer, some function can use without Trainer.
 
 .. note::
 
-   `examples/train_mnist.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__, based on `chainer/examples/mnist/train_mnist.py <https://github.com/chainer/chainer/blob/4de98cf90e747940f1dd7f7f4cdf1fcc0b4b4786/examples/mnist/train_mnist.py>`__, is a useful example to see how to set save_args and CommandsExtension on training script.
+   `examples/train_mnist.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__, based on `chainer/examples/mnist/train_mnist.py <https://github.com/chainer/chainer/blob/4de98cf90e747940f1dd7f7f4cdf1fcc0b4b4786/examples/mnist/train_mnist.py>`__, is a useful example to see how to set training loop with ChainerUI.
+
+Training log
+~~~~~~~~~~~~
+
+Experimental conditions
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Operate training loop
+~~~~~~~~~~~~~~~~~~~~~
