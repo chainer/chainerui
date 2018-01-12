@@ -6,12 +6,11 @@ Getting started
 Create database
 ---------------
 
-::
+Please setup database at first::
 
   $ chainerui db create
   $ chainerui db upgrade
 
-On default, ``~/.chainerui/db/chainerui.db`` is created.
 
 Drop database
 ~~~~~~~~~~~~~
@@ -36,7 +35,7 @@ The ChainerUI server watches the below files under the project directory recursi
 * args: (optional) a JSON file, which includes key-value pairs you want to see on ChainerUI along with logs. See :ref:`save_args <module_save_args>`, util function to dump command line arguments or dictionary to ``args`` file.
 * commands: (optional) a JSON file, which is automatically created by :ref:`CommandsExtension <module_command_extension>`. This is a file for ChainerUI server to communicate to operate the target training loop.
 
-For example, file and directory structure is the below. When create a project with ``-d path/to/result``, the results of the two directories, ``result1`` and ``result2`` are registered under the ``PROJECT_NAME`` automatically, then ChainerUI gathers the two logs continuously.::
+For example, file and directory structure is the below. When create a project with ``-d path/to/result``, the results of the two directories, ``result1`` and ``result2`` are registered under the ``PROJECT_NAME`` automatically, then ChainerUI gathers the two logs continuously::
 
   path/to/result/result1
     |--- log       # show values on chart
