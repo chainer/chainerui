@@ -253,7 +253,7 @@ class TestAPI(unittest.TestCase):
                 command['request']['body'], dict)
             assert isinstance(command['request']['created_at'], str)
             assert isinstance(command['request']['status'], str)
-            assert command['response'] is None
+            assert 'response' in command
 
         request_jsons = [
             {
