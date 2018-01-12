@@ -20,6 +20,8 @@
 import os
 import pkg_resources
 import sys
+
+
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 __version__ = pkg_resources.get_distribution('chainerui').version
