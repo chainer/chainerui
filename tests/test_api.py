@@ -9,6 +9,8 @@ from chainerui import DB_FILE_PATH
 from chainerui.models.project import Project
 from chainerui import upgrade_db
 
+from six import string_types
+
 from tests.helpers import assert_json_api
 from tests.helpers import NotInTestEnvironmentException
 
@@ -80,7 +82,7 @@ class TestAPI(unittest.TestCase):
         resp = self.app.get('/api/v1/projects/12345')
         data = assert_json_api(resp, 404)
         assert len(data) == 2
-        assert isinstance(data['message'], str)
+        assert isinstance(data['message'], string_types)
         assert data['project'] is None
 
     # PUT /api/v1/projects/<int:id>
@@ -104,7 +106,7 @@ class TestAPI(unittest.TestCase):
         resp = self.app.put('/api/v1/projects/12345')
         data = assert_json_api(resp, 404)
         assert len(data) == 2
-        assert isinstance(data['message'], str)
+        assert isinstance(data['message'], string_types)
         assert data['project'] is None
 
     # DELETE /api/v1/projects/<int:id>
@@ -117,7 +119,7 @@ class TestAPI(unittest.TestCase):
         resp = self.app.delete('/api/v1/projects/12345')
         data = assert_json_api(resp, 404)
         assert len(data) == 2
-        assert isinstance(data['message'], str)
+        assert isinstance(data['message'], string_types)
         assert data['projects'] is None  # TODO(ofk): Is projects key correct?
 
     # GET /api/v1/projects/<int:project_id>/results
@@ -182,7 +184,7 @@ class TestAPI(unittest.TestCase):
         resp = self.app.put('/api/v1/projects/1/results/12345')
         data = assert_json_api(resp, 404)
         assert len(data) == 2
-        assert isinstance(data['message'], str)
+        assert isinstance(data['message'], string_types)
         assert data['result'] is None
 
         # not raise an exception when PUT /api/v1/projects/12345/results/1
@@ -198,7 +200,7 @@ class TestAPI(unittest.TestCase):
         resp = self.app.delete('/api/v1/projects/1/results/12345')
         data = assert_json_api(resp, 404)
         assert len(data) == 2
-        assert isinstance(data['message'], str)
+        assert isinstance(data['message'], string_types)
         assert data['result'] is None
 
         # not raise an exception when DELETE /api/v1/projects/12345/results/1
@@ -245,14 +247,14 @@ class TestAPI(unittest.TestCase):
             assert len(data['commands']) > 0
             command = data['commands'][0]
             assert isinstance(command['id'], int)
-            assert isinstance(command['name'], str)
+            assert isinstance(command['name'], string_types)
             assert len(command['request']) == 4
             assert command['request']['schedule'] is None or isinstance(
                 command['request']['schedule'], dict)
             assert command['request']['body'] is None or isinstance(
                 command['request']['body'], dict)
-            assert isinstance(command['request']['created_at'], str)
-            assert isinstance(command['request']['status'], str)
+            assert isinstance(command['request']['created_at'], string_types)
+            assert isinstance(command['request']['status'], string_types)
             assert 'response' in command
 
         request_jsons = [
@@ -277,16 +279,16 @@ class TestAPI(unittest.TestCase):
                 content_type='application/json')
             data = assert_json_api(resp, 400)
             assert len(data) == 1
-            assert isinstance(data['message'], str)
+            assert isinstance(data['message'], string_types)
 
         resp = self.app.post('/api/v1/projects/1/results/3/commands')
         data = assert_json_api(resp, 400)
         assert len(data) == 1
-        assert isinstance(data['message'], str)
+        assert isinstance(data['message'], string_types)
 
         resp = self.app.post('/api/v1/projects/1/results/12345/commands')
         data = assert_json_api(resp, 404)
-        assert isinstance(data['message'], str)
+        assert isinstance(data['message'], string_types)
         assert data['result'] is None
 
         # not raise an exception

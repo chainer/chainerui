@@ -3,6 +3,8 @@ import unittest
 from chainerui import CHAINERUI_ENV
 from chainerui import create_app
 
+from six import string_types
+
 from tests.helpers import assert_json_api
 from tests.helpers import NotInTestEnvironmentException
 
@@ -35,5 +37,5 @@ class TestInit(unittest.TestCase):
         data = assert_json_api(resp, 400)
         assert len(data) == 1
         assert len(data['error']) == 2
-        assert isinstance(data['error']['message'], str)
+        assert isinstance(data['error']['message'], string_types)
         assert 'DBOperationalError' == data['error']['type']
