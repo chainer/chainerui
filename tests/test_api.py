@@ -98,7 +98,8 @@ class TestAPI(unittest.TestCase):
             content_type='application/json')
         data = assert_json_api(resp)
         assert len(data) == 1
-        self.assert_test_project(data['project'], name=request_json['project']['name'])
+        self.assert_test_project(
+            data['project'], name=request_json['project']['name'])
 
         resp = self.app.put('/api/v1/projects/12345')
         data = assert_json_api(resp, 404)
@@ -117,7 +118,7 @@ class TestAPI(unittest.TestCase):
         data = assert_json_api(resp, 404)
         assert len(data) == 2
         assert isinstance(data['message'], str)
-        assert data['projects'] is None  # TODO: project"s"?
+        assert data['projects'] is None  # TODO(ofk): Is projects key correct?
 
     # GET /api/v1/projects/<int:project_id>/results
     def test_get_result_list(self):
@@ -175,7 +176,8 @@ class TestAPI(unittest.TestCase):
                 content_type='application/json')
             data = assert_json_api(resp)
             assert len(data) == 1
-            self.assert_test_project_result(data['result'], request_jsons[i]['result']['name'])
+            self.assert_test_project_result(
+                data['result'], request_jsons[i]['result']['name'])
 
         resp = self.app.put('/api/v1/projects/1/results/12345')
         data = assert_json_api(resp, 404)
@@ -245,8 +247,10 @@ class TestAPI(unittest.TestCase):
             assert isinstance(command['id'], int)
             assert isinstance(command['name'], str)
             assert len(command['request']) == 4
-            assert command['request']['schedule'] is None or isinstance(command['request']['schedule'], dict)
-            assert command['request']['body'] is None or isinstance(command['request']['body'], dict)
+            assert command['request']['schedule'] is None or isinstance(
+                command['request']['schedule'], dict)
+            assert command['request']['body'] is None or isinstance(
+                command['request']['body'], dict)
             assert isinstance(command['request']['created_at'], str)
             assert isinstance(command['request']['status'], str)
             assert command['response'] is None
