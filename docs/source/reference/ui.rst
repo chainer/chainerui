@@ -1,7 +1,7 @@
-.. _usage:
+.. _ui:
 
-Usage
-=====
+User interface manual
+=====================
 
 TODO: put screen captures.
 

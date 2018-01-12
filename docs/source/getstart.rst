@@ -33,8 +33,8 @@ Create a project
 The ChainerUI server watches the below files under the project directory recursively.
 
 * log: a JSON file created by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension.
-* args: (optional) a JSON file, which includes key-value pairs you want to see on ChainerUI along with logs. See `save_args <https://github.com/chainer/chainerui/blob/master/chainerui/utils/save_args.py>`__, util function to dump command line arguments or dictionary to ``args`` file.
-* commands: (optional) a JSON file, which is automatically created by `CommandsExtension <https://github.com/chainer/chainerui/blob/master/chainerui/extensions/commands_extension.py>`__. This is a file for ChainerUI server to communicate to operate the target training loop.
+* args: (optional) a JSON file, which includes key-value pairs you want to see on ChainerUI along with logs. See :ref:`save_args <module_save_args>`, util function to dump command line arguments or dictionary to ``args`` file.
+* commands: (optional) a JSON file, which is automatically created by :ref:`CommandsExtension <module_command_extension>`. This is a file for ChainerUI server to communicate to operate the target training loop.
 
 For example, file and directory structure is the below. When create a project with ``-d path/to/result``, the results of the two directories, ``result1`` and ``result2`` are registered under the ``PROJECT_NAME`` automatically, then ChainerUI gathers the two logs continuously.::
 
@@ -57,7 +57,7 @@ Start ChainerUI server
 
   $ chainerui server
 
-Open http://localhost:5000/ . To stop, press ``Ctrl+C`` on the console.
+Open http://localhost:5000/ . To stop, press ``Ctrl+C`` on the console. When use original host or port, see :ref:`command option <cmd_server>`:
 
 
 Customize training loop
