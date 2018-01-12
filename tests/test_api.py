@@ -45,18 +45,43 @@ class TestAPI(unittest.TestCase):
         if os.path.exists(DB_FILE_PATH):
             os.remove(DB_FILE_PATH)
 
+    def assert_test_project(self, project, name=TEST_PROJECT_NAME):
+        assert len(project) == 3
+        assert project['pathName'] == TEST_PROJECT_PATH
+        assert project['name'] == name
+        assert isinstance(project['id'], int)
+
+    def assert_test_project_result(self, result, name=None):
+        assert len(result) == 8
+        assert isinstance(result['commands'], list)
+        assert isinstance(result['logs'], list)
+        assert isinstance(result['args'], list)
+        assert isinstance(result['snapshots'], list)
+        assert isinstance(result['isUnregistered'], bool)
+        assert isinstance(result['id'], int)
+        assert result['pathName'].startswith(TEST_PROJECT_PATH)
+        assert result['name'] == name
+
     # GET /api/v1/projects
     def test_get_project_list(self):
         resp = self.app.get('/api/v1/projects')
-        assert_json_api(resp)
+        data = assert_json_api(resp)
+        assert len(data) == 1
+        assert isinstance(data['projects'], list)
+        self.assert_test_project(data['projects'][0])
 
     # GET /api/v1/projects/<int:id>
     def test_get_project(self):
         resp = self.app.get('/api/v1/projects/1')
-        assert_json_api(resp)
+        data = assert_json_api(resp)
+        assert len(data) == 1
+        self.assert_test_project(data['project'])
 
         resp = self.app.get('/api/v1/projects/12345')
-        assert_json_api(resp, 404)
+        data = assert_json_api(resp, 404)
+        assert len(data) == 2
+        assert isinstance(data['message'], str)
+        assert data['project'] is None
 
     # PUT /api/v1/projects/<int:id>
     def test_put_project(self):
@@ -72,29 +97,36 @@ class TestAPI(unittest.TestCase):
             data=json.dumps(request_json),
             content_type='application/json')
         data = assert_json_api(resp)
-        assert 'project' in data
-        assert 'name' in data['project']
-        assert request_json['project']['name'] == data['project']['name']
+        assert len(data) == 1
+        self.assert_test_project(data['project'], name=request_json['project']['name'])
 
         resp = self.app.put('/api/v1/projects/12345')
-        assert_json_api(resp, 404)
+        data = assert_json_api(resp, 404)
+        assert len(data) == 2
+        assert isinstance(data['message'], str)
+        assert data['project'] is None
 
     # DELETE /api/v1/projects/<int:id>
     def test_delete_project(self):
         resp = self.app.delete('/api/v1/projects/1')
         data = assert_json_api(resp)
-        assert 'project' in data
-        assert 'name' in data['project']
+        assert len(data) == 1
+        self.assert_test_project(data['project'])
 
         resp = self.app.delete('/api/v1/projects/12345')
-        assert_json_api(resp, 404)
+        data = assert_json_api(resp, 404)
+        assert len(data) == 2
+        assert isinstance(data['message'], str)
+        assert data['projects'] is None  # TODO: project"s"?
 
     # GET /api/v1/projects/<int:project_id>/results
     def test_get_result_list(self):
         resp = self.app.get('/api/v1/projects/1/results')
         data = assert_json_api(resp)
-        assert 'results' in data
-        assert 5 == len(data['results'])
+        assert len(data) == 1
+        assert len(data['results']) >= 3
+        for i in range(3):
+            self.assert_test_project_result(data['results'][i])
 
         # raise an unexpected exception when GET /api/v1/projects/12345/results
 
@@ -103,9 +135,9 @@ class TestAPI(unittest.TestCase):
         for i in range(3):
             resp = self.app.get('/api/v1/projects/1/results/' + str(i + 1))
             data = assert_json_api(resp)
-            assert 'result' in data
-            assert 'id' in data['result']
-            assert i + 1 == data['result']['id']
+            assert len(data) == 1
+            self.assert_test_project_result(data['result'])
+            assert data['result']['id'] == i + 1
 
         # raise an unexpected exception
         #   when GET /api/v1/projects/1/results/12345
@@ -142,13 +174,13 @@ class TestAPI(unittest.TestCase):
                 data=json.dumps(request_jsons[i]),
                 content_type='application/json')
             data = assert_json_api(resp)
-            assert 'result' in data
-            assert 'name' in data['result']
-            assert request_jsons[i]['result']['name'] == data['result']['name']
+            assert len(data) == 1
+            self.assert_test_project_result(data['result'], request_jsons[i]['result']['name'])
 
         resp = self.app.put('/api/v1/projects/1/results/12345')
         data = assert_json_api(resp, 404)
-        assert 'result' in data
+        assert len(data) == 2
+        assert isinstance(data['message'], str)
         assert data['result'] is None
 
         # not raise an exception when PUT /api/v1/projects/12345/results/1
@@ -158,12 +190,13 @@ class TestAPI(unittest.TestCase):
         for i in range(3):
             resp = self.app.delete('/api/v1/projects/1/results/' + str(i + 1))
             data = assert_json_api(resp)
-            assert 'result' in data
-            assert 'name' in data['result']
+            assert len(data) == 1
+            self.assert_test_project_result(data['result'])
 
         resp = self.app.delete('/api/v1/projects/1/results/12345')
         data = assert_json_api(resp, 404)
-        assert 'result' in data
+        assert len(data) == 2
+        assert isinstance(data['message'], str)
         assert data['result'] is None
 
         # not raise an exception when DELETE /api/v1/projects/12345/results/1
@@ -206,8 +239,17 @@ class TestAPI(unittest.TestCase):
                 data=json.dumps(request_jsons[i]),
                 content_type='application/json')
             data = assert_json_api(resp)
-            assert 'commands' in data
+            assert len(data) == 1
             assert len(data['commands']) > 0
+            command = data['commands'][0]
+            assert isinstance(command['id'], int)
+            assert isinstance(command['name'], str)
+            assert len(command['request']) == 4
+            assert command['request']['schedule'] is None or isinstance(command['request']['schedule'], dict)
+            assert command['request']['body'] is None or isinstance(command['request']['body'], dict)
+            assert isinstance(command['request']['created_at'], str)
+            assert isinstance(command['request']['status'], str)
+            assert command['response'] is None
 
         request_jsons = [
             {
@@ -230,15 +272,17 @@ class TestAPI(unittest.TestCase):
                 data=json.dumps(request_jsons[i]),
                 content_type='application/json')
             data = assert_json_api(resp, 400)
-            assert 'message' in data
+            assert len(data) == 1
+            assert isinstance(data['message'], str)
 
         resp = self.app.post('/api/v1/projects/1/results/3/commands')
         data = assert_json_api(resp, 400)
-        assert 'message' in data
+        assert len(data) == 1
+        assert isinstance(data['message'], str)
 
         resp = self.app.post('/api/v1/projects/1/results/12345/commands')
         data = assert_json_api(resp, 404)
-        assert 'result' in data
+        assert isinstance(data['message'], str)
         assert data['result'] is None
 
         # not raise an exception

@@ -27,11 +27,13 @@ class TestInit(unittest.TestCase):
     def test_get_index(self):
         resp = self.app.get('/')
         assert resp.status_code == 200
+        assert '<title>ChainerUI</title>' in resp.data.decode()
 
     # raise an exception when GET /api/v1/projects
     def test_handle_invalid_usage(self):
         resp = self.app.get('/api/v1/projects')
         data = assert_json_api(resp, 400)
-        assert 'error' in data
-        assert 'type' in data['error']
+        assert len(data) == 1
+        assert len(data['error']) == 2
+        assert isinstance(data['error']['message'], str)
         assert 'DBOperationalError' == data['error']['type']
