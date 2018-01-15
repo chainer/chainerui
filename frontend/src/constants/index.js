@@ -1,4 +1,4 @@
-export const CHAINERUI_VERSION = 'v0.1.1';
+export const CHAINERUI_VERSION = `v${process.env.VERSION}`;
 
 export const chartSizeOptions = [
   {

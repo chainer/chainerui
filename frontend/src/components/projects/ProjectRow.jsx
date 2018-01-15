@@ -131,7 +131,7 @@ class ProjectRow extends React.Component {
           </p>
         </div>
         <Modal isOpen={isDeleteModalOpen}>
-          <ModalHeader>Delete a proect</ModalHeader>
+          <ModalHeader>Delete a project</ModalHeader>
           <ModalBody>
               Are you sure to delete {displayProjectName(project)} ?
           </ModalBody>

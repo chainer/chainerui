@@ -3,7 +3,6 @@ chainerui_dependencies: &chainerui_dependencies
     name: install dependencies
     command: |
       . venv/bin/activate
-      pip install werkzeug==0.12.2
       pip install numpy==1.13.1
       pip install chainer==v3.1.0
       pip install autopep8 hacking
