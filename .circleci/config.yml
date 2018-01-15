@@ -16,9 +16,9 @@ chainerui_install: &chainerui_install
       flake8
       autopep8 -r . --global-config .pep8 --diff | tee check_autopep8
       pushd frontend
-      npm install && npm run build
+      npm install && npm run build -- --progress=false --profile=false
       popd
-      python setup.py install
+      python setup.py --quiet install
       CHAINERUI_ENV=test pytest
 
 chainerui_server_run: &chainerui_server_run
