@@ -12,13 +12,14 @@ const createCommandRowElems = (commands) => commands.sort((a, b) =>
   const request = command.request || {};
   const response = command.response || {};
   const { schedule } = request;
+  const { executed_at: executedAt } = response;
   return (
     <tr className="command-row" key={command.id}>
       <td>{command.name}</td>
       <td>{responseStatusToIcon(response.status)}</td>
       <td>{(new Date(request.created_at)).toLocaleString()}</td>
       <td>{schedule ? `${schedule.value} ${schedule.key}` : ''}</td>
-      <td>{(new Date(response.executed_at)).toLocaleString()}</td>
+      <td>{executedAt ? (new Date(executedAt)).toLocaleString() : ''}</td>
       <td>{response.epoch}</td>
       <td>{response.iteration}</td>
       <td>{response.elapsed_time != null ? response.elapsed_time.toFixed(2) : ''}</td>
