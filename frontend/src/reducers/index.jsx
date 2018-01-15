@@ -111,14 +111,14 @@ const fetchState = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.RESULT_LIST_REQUEST:
     case ActionTypes.RESULT_LIST_SUCCESS:
-    case ActionTypes.RESULT_LIST_FAILUE:
+    case ActionTypes.RESULT_LIST_FAILURE:
       return {
         ...state,
         resultList: action.type
       };
     case ActionTypes.RESULT_REQUEST:
     case ActionTypes.RESULT_SUCCESS:
-    case ActionTypes.RESULT_FAILUE:
+    case ActionTypes.RESULT_FAILURE:
       return {
         ...state,
         result: action.type

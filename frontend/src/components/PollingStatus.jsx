@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'reactstrap';
 import {
-  RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILUE,
-  RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILUE
+  RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILURE,
+  RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILURE
 } from '../actions';
 
 
@@ -46,8 +46,8 @@ class PollingStatus extends React.Component {
           colorClass = 'text-success';
           statusMessage = 'success fully loaded data';
           break;
-        case RESULT_LIST_FAILUE:
-        case RESULT_FAILUE:
+        case RESULT_LIST_FAILURE:
+        case RESULT_FAILURE:
           colorClass = 'text-danger';
           statusMessage = 'failed to load data';
           break;

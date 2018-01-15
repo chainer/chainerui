@@ -5,27 +5,27 @@ import { CALL_API } from '../middleware/api';
 
 export const PROJECT_LIST_REQUEST = 'PROJECT_LIST_REQUEST';
 export const PROJECT_LIST_SUCCESS = 'PROJECT_LIST_SUCCESS';
-export const PROJECT_LIST_FAILUE = 'PROJECT_LIST_FAILUE';
+export const PROJECT_LIST_FAILURE = 'PROJECT_LIST_FAILURE';
 export const PROJECT_REQUEST = 'PROJECT_REQUEST';
 export const PROJECT_SUCCESS = 'PROJECT_SUCCESS';
-export const PROJECT_FAILUE = 'PROJECT_FAILUE';
+export const PROJECT_FAILURE = 'PROJECT_FAILURE';
 export const PROJECT_UPDATE_REQUEST = 'PROJECT_UPDATE_REQUEST';
 export const PROJECT_UPDATE_SUCCESS = 'PROJECT_UPDATE_SUCCESS';
-export const PROJECT_UPDATE_FAILUE = 'PROJECT_UPDATE_FAILUE';
+export const PROJECT_UPDATE_FAILURE = 'PROJECT_UPDATE_FAILURE';
 export const PROJECT_DELETE_REQUEST = 'PROJECT_DELETE_REQUEST';
 export const PROJECT_DELETE_SUCCESS = 'PROJECT_DELETE_SUCCESS';
-export const PROJECT_DELETE_FAILUE = 'PROJECT_DELETE_FAILUE';
+export const PROJECT_DELETE_FAILURE = 'PROJECT_DELETE_FAILURE';
 
 export const getProjectList = () => ({
   [CALL_API]: {
-    types: [PROJECT_LIST_REQUEST, PROJECT_LIST_SUCCESS, PROJECT_LIST_FAILUE],
+    types: [PROJECT_LIST_REQUEST, PROJECT_LIST_SUCCESS, PROJECT_LIST_FAILURE],
     endpoint: 'projects'
   }
 });
 
 export const getProject = (projectId) => ({
   [CALL_API]: {
-    types: [PROJECT_REQUEST, PROJECT_SUCCESS, PROJECT_FAILUE],
+    types: [PROJECT_REQUEST, PROJECT_SUCCESS, PROJECT_FAILURE],
     endpoint: `projects/${projectId}`
   }
 });
@@ -37,7 +37,7 @@ export const updateProject = (project = {}) => {
   }
   return {
     [CALL_API]: {
-      types: [PROJECT_UPDATE_REQUEST, PROJECT_UPDATE_SUCCESS, PROJECT_UPDATE_FAILUE],
+      types: [PROJECT_UPDATE_REQUEST, PROJECT_UPDATE_SUCCESS, PROJECT_UPDATE_FAILURE],
       endpoint: `projects/${id}`,
       method: 'PUT',
       body: { project: { id, name } }
@@ -51,7 +51,7 @@ export const deleteProject = (projectId) => {
   }
   return {
     [CALL_API]: {
-      types: [PROJECT_DELETE_REQUEST, PROJECT_DELETE_SUCCESS, PROJECT_DELETE_FAILUE],
+      types: [PROJECT_DELETE_REQUEST, PROJECT_DELETE_SUCCESS, PROJECT_DELETE_FAILURE],
       endpoint: `projects/${projectId}`,
       method: 'DELETE'
     }
@@ -63,27 +63,27 @@ export const deleteProject = (projectId) => {
 
 export const RESULT_LIST_REQUEST = 'RESULT_LIST_REQUEST';
 export const RESULT_LIST_SUCCESS = 'RESULT_LIST_SUCCESS';
-export const RESULT_LIST_FAILUE = 'RESULT_LIST_FAILUE';
+export const RESULT_LIST_FAILURE = 'RESULT_LIST_FAILURE';
 export const RESULT_REQUEST = 'RESULT_REQUEST';
 export const RESULT_SUCCESS = 'RESULT_SUCCESS';
-export const RESULT_FAILUE = 'RESULT_FAILUE';
+export const RESULT_FAILURE = 'RESULT_FAILURE';
 export const RESULT_UPDATE_REQUEST = 'RESULT_UPDATE_REQUEST';
 export const RESULT_UPDATE_SUCCESS = 'RESULT_UPDATE_SUCCESS';
-export const RESULT_UPDATE_FAILUE = 'RESULT_UPDATE_FAILUE';
+export const RESULT_UPDATE_FAILURE = 'RESULT_UPDATE_FAILURE';
 export const RESULT_DELETE_REQUEST = 'RESULT_DELETE_REQUEST';
 export const RESULT_DELETE_SUCCESS = 'RESULT_DELETE_SUCCESS';
-export const RESULT_DELETE_FAILUE = 'RESULT_DELETE_FAILUE';
+export const RESULT_DELETE_FAILURE = 'RESULT_DELETE_FAILURE';
 
 export const getResultList = (projectId) => ({
   [CALL_API]: {
-    types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILUE],
+    types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILURE],
     endpoint: `projects/${projectId}/results`
   }
 });
 
 export const getResult = (projectId, resultId) => ({
   [CALL_API]: {
-    types: [RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILUE],
+    types: [RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILURE],
     endpoint: `projects/${projectId}/results/${resultId}`
   }
 });
@@ -95,7 +95,7 @@ export const updateResult = (projectId, result = {}) => {
   }
   return {
     [CALL_API]: {
-      types: [RESULT_UPDATE_REQUEST, RESULT_UPDATE_SUCCESS, RESULT_UPDATE_FAILUE],
+      types: [RESULT_UPDATE_REQUEST, RESULT_UPDATE_SUCCESS, RESULT_UPDATE_FAILURE],
       endpoint: `projects/${projectId}/results/${id}`,
       method: 'PUT',
       body: { result: { id, name, isUnregistered } }
@@ -109,7 +109,7 @@ export const deleteResult = (projectId, resultId) => {
   }
   return {
     [CALL_API]: {
-      types: [RESULT_DELETE_REQUEST, RESULT_DELETE_SUCCESS, RESULT_DELETE_FAILUE],
+      types: [RESULT_DELETE_REQUEST, RESULT_DELETE_SUCCESS, RESULT_DELETE_FAILURE],
       endpoint: `projects/${projectId}/results/${resultId}`,
       method: 'DELETE'
     }
@@ -121,7 +121,7 @@ export const deleteResult = (projectId, resultId) => {
 
 export const COMMAND_CREATE_REQUEST = 'COMMAND_CREATE_REQUEST';
 export const COMMAND_CREATE_SUCCESS = 'COMMAND_CREATE_SUCCESS';
-export const COMMAND_CREATE_FAILUE = 'COMMAND_CREATE_FAILUE';
+export const COMMAND_CREATE_FAILURE = 'COMMAND_CREATE_FAILURE';
 
 export const createCommand = (
   projectId, resultId, commandName, requestBody = null, schedule = null
@@ -131,7 +131,7 @@ export const createCommand = (
   }
   return {
     [CALL_API]: {
-      types: [COMMAND_CREATE_REQUEST, COMMAND_CREATE_SUCCESS, COMMAND_CREATE_FAILUE],
+      types: [COMMAND_CREATE_REQUEST, COMMAND_CREATE_SUCCESS, COMMAND_CREATE_FAILURE],
       endpoint: `projects/${projectId}/results/${resultId}/commands`,
       method: 'POST',
       body: {
