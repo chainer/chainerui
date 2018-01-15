@@ -74,9 +74,33 @@ ChainerUI basically supports `Trainer module <https://docs.chainer.org/en/stable
 Training log
 ~~~~~~~~~~~~
 
-A JSON file created by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension. ``epoch``, ``iteration`` or ``elapsed_time`` is used as X-axis, and other key-value items are used as Y-axis. ChainerUI monitors ``log`` files continuously and update a chart if the ``log`` file is updated.
+.. image:: ../images/chart_with_y_sample.png
 
-``log`` file and chart example::
+ChainerUI plots training log values read from ``log`` files and shows ``log`` as a training job. ``log`` file is a JSON file created by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension, registered automatically created under the project path. If ``log`` files once registered are updated, the chart and results table are also updated continuously.
+
+* ``epoch``, ``iteration`` or ``elapsed_time`` is used as X-axis, selected on ``xAxis`` pane. These parameters are set 
+* The other key-value items are plotted.
+
+Setup example, a brief extract taken from `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
+
+.. code-block:: python
+
+  import chainer.links as L
+  from chainer import training
+  from chainer.training import extensions
+
+  def main():
+      # Classifier reports softmax cross entropy loss and accuracy at every
+      # iteration
+      # [ChainerUI] plot loss and accuracy reported by this link
+      model = L.Classifier(MLP(args.unit, 10))
+
+      trainer = training.Trainer(updater, (args.epoch, 'epoch'), out=args.out)
+
+      # [ChainerUI] read 'log' file for plotting values
+      trainer.extend(extensions.LogReport())
+
+created ``log`` file example::
 
   [
       {
@@ -100,14 +124,14 @@ A JSON file created by `LogReport <https://docs.chainer.org/en/v3/reference/gene
       ...
   ]
 
-.. image:: ../images/chart_with_y_sample.png
-
 Experimental conditions
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-A JSON file, which includes key-value pairs you want to see on ChainerUI along with logs. See :ref:`save_args <module_save_args>`, util function to dump command line arguments or dictionary to ``args`` file.
+.. image:: ../images/result_table_condition_sample.png
 
-Setup example:
+ChainerUI shows training job with experimental conditions read from ``args`` file. ``args`` file is a JSON file, which includes key-value pairs. See :ref:`save_args <module_save_args>`, util function to dump command line arguments or dictionary to ``args`` file.
+
+Setup example, a brief extract taken from `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
 
 .. code-block:: python
 
@@ -122,7 +146,7 @@ Setup example:
       # [ChainerUI] save 'args' to show experimental conditions
       save_args(args, args.out)
 
-``args`` file and table example::
+``args`` file example, values are showed as experimental conditions on a results table::
 
   {
       "resume": "",
@@ -134,16 +158,24 @@ Setup example:
       "out": "results"
   }
 
-.. image:: ../images/result_table_condition_sample.png
-
 Operate training loop
 ~~~~~~~~~~~~~~~~~~~~~
 
-A JSON file, which is automatically created by :ref:`CommandsExtension <module_command_extension>`, used for ChainerUI server to communicate to operate the target training loop.
+.. image:: ../images/detail_page_operation_block.png
 
-Setup example:
+ChainerUI support to operate a training loop with :ref:`CommandsExtension <module_command_extension>`, the latest version supports:
+
+* take a snapshot
+* adjust hyperparameters of an optimizer
+
+Operation buttons are in :ref:`detail page <ui_detail_page>`.
+
+Setup example, a brief extract taken from `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
 
 .. code-block:: python
+
+  from chainer import training
+  from chainer.training import extensions
 
   # [ChainerUI] import CommandsExtension
   from chainerui.extensions import CommandsExtension
@@ -151,10 +183,7 @@ Setup example:
   def main():
       trainer = training.Trainer(updater, (args.epoch, 'epoch'), out=args.out)
 
+      # [ChainerUI] Observe learning rate
+      trainer.extend(extensions.observe_lr())
       # [ChainerUI] enable to send commands from ChainerUI
       trainer.extend(CommandsExtension())
-
-
-Operation buttons are in :ref:`detail page <ui_detail_page>`, command view example:
-
-.. image:: ../images/detail_page_operation_block.png
