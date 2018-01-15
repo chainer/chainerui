@@ -71,14 +71,19 @@ ChainerUI basically supports `Trainer module <https://docs.chainer.org/en/stable
 
    `examples/train_mnist.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__, based on `chainer/examples/mnist/train_mnist.py <https://github.com/chainer/chainer/blob/4de98cf90e747940f1dd7f7f4cdf1fcc0b4b4786/examples/mnist/train_mnist.py>`__, is a useful example to see how to set training loop with ChainerUI.
 
+.. note::
+
+   `examples/train_mnist_custom_loop.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__ is a example, basaed on `chainer/examples/mnist/train_mnist_custom_loop <https://github.com/chainer/chainer/blob/e2fe6f8023e635f8c1fc9c89e85d075ebd50c529/examples/mnist/train_mnist_custom_loop.py>`__, which train loop does not use ``Trainer``. The example, however, cannot operate training loop from :ref:`detail page <ui_detail_page>`.
+
 Training log
 ~~~~~~~~~~~~
 
 .. image:: ../images/chart_with_y_sample.png
 
-ChainerUI plots training log values read from ``log`` files and shows ``log`` as a training job. ``log`` file is a JSON file created by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension, registered automatically created under the project path. If ``log`` files once registered are updated, the chart and results table are also updated continuously.
+ChainerUI plots training log values read from ``log`` files and shows ``log`` as a training job. ``log`` file is a JSON file created by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension or :ref:`chainerui's LogReport <module_log_report>`, registered automatically created under the project path. If ``log`` files once registered are updated, the chart and results table are also updated continuously.
 
 * ``epoch``, ``iteration`` or ``elapsed_time`` is used as X-axis, selected on ``xAxis`` pane. These parameters are set automatically by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__
+    * if use :ref:`chainerui's LogReport <module_log_report>`, only ``elapsed_time`` is set.
 * The other key-value items are plotted.
 
 Setup example, a brief extract taken from `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
@@ -123,6 +128,35 @@ created ``log`` file example::
       },
       ...
   ]
+
+without ``Trainer`` code example, a  brief extract take from `MNIST custom loop example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__:
+
+.. code-block:: python
+
+  from chainerui.utils import LogReport
+
+  def main():
+
+      # [ChainerUI] setup log reporter to show on ChainerUI along with 'args'
+      ui_report = LogReport(args.out, conditions=args)
+      while train_iter.epoch < args.epoch:
+
+          # ...train calculation
+
+          if train_iter.is_new_epoch:
+
+              # [ChainerUI] write values to 'log' file
+              stats = {
+                  'epoch': train_iter.epoch,
+                  'iteration': train_iter.epoch * args.batchsize,
+                  'train/loss': train_loss, 'train/accuracy': train_accuracy,
+                  'test/loss': test_loss, 'test/accuracy': test_accuracy
+                  }
+              ui_report(stats)
+
+.. note::
+
+   :ref:`chainerui's LogReport <module_log_report>` only sets ``exampled_time``, so train loop has to set ``epoch`` and ``iteration`` manually.
 
 Experimental conditions
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -187,3 +221,7 @@ Setup example, a brief extract taken from `MNIST example <https://github.com/cha
       trainer.extend(extensions.observe_lr())
       # [ChainerUI] enable to send commands from ChainerUI
       trainer.extend(CommandsExtension())
+
+.. note::
+
+   This operation to training loop is given by :ref:`CommandsExtension <module_command_extension>` which is on the premise of ``Trainer``. A training loop without ``Trainer`` cannot use this function.

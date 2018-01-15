@@ -26,7 +26,7 @@ Create ChainerUI database. ChainerUI creates ``~/.chainerui/db/chainerui.db`` on
 
   $ chainerui db create
 
-Setup schema for ChainerUI. ``upgrade`` operation is always necessary when create database::
+Setup schema for ChainerUI. ``upgrade`` operation is always necessary when create new database or change the schema on version up::
 
   $ chainerui db upgrade
 
