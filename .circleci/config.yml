@@ -18,7 +18,7 @@ chainerui_install: &chainerui_install
       pushd frontend
       npm install && npm run build -- --progress=false --profile=false
       popd
-      python setup.py install
+      python setup.py --quiet install
       CHAINERUI_ENV=test pytest
 
 chainerui_server_run: &chainerui_server_run
