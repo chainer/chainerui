@@ -169,6 +169,3 @@ texinfo_documents = [
      author, 'chainerui', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
