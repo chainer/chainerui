@@ -39,6 +39,8 @@ DB_SESSION = scoped_session(
     sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
 )
 
+from chainerui.constants import CONSTANTS
+
 
 def create_db():
     """create_db."""
@@ -99,7 +101,7 @@ def create_app():
     @app.route('/projects/<int:project_id>/results/<int:result_id>')
     def index(**kwargs):
         """render react app."""
-        return render_template('index.html')
+        return render_template('index.html', constants=CONSTANTS)
 
     # error handling
     @app.errorhandler(OperationalError)
