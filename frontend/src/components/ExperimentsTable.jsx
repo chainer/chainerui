@@ -7,7 +7,7 @@ const ExperimentsTable = (props) => {
   const {
     projectId,
     results = {}, stats, projectConfig,
-    onResultsConfigSelectToggle, onResultUpdate
+    onResultsConfigSelectUpdate, onResultUpdate
   } = props;
   const { argKeys } = stats;
   const { resultsConfig = {} } = projectConfig;
@@ -24,7 +24,7 @@ const ExperimentsTable = (props) => {
         stats={stats}
         resultConfig={resultsConfig[resultId]}
         key={key}
-        onResultsConfigSelectToggle={onResultsConfigSelectToggle}
+        onResultsConfigSelectUpdate={onResultsConfigSelectUpdate}
         onResultUpdate={onResultUpdate}
       />
     );
@@ -69,7 +69,7 @@ ExperimentsTable.propTypes = {
   stats: PropTypes.shape({
     argKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  onResultsConfigSelectToggle: PropTypes.func.isRequired,
+  onResultsConfigSelectUpdate: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired
 };
 ExperimentsTable.defaultProps = {

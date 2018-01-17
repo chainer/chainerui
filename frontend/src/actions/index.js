@@ -205,12 +205,13 @@ export const toggleLogKeySelect = (projectId, axisName, logKey) => ({
 
 // results config
 
-export const RESULTS_CONFIG_SELECT_TOGGLE = 'RESULTS_CONFIG_SELECT_TOGGLE';
+export const RESULTS_CONFIG_SELECT_UPDATE = 'RESULTS_CONFIG_SELECT_UPDATE';
 
-export const toggleResultsConfigSelect = (projectId, resultId) => ({
-  type: RESULTS_CONFIG_SELECT_TOGGLE,
+export const updateResultsConfigSelect = (projectId, resultId, hidden) => ({
+  type: RESULTS_CONFIG_SELECT_UPDATE,
   projectId,
-  resultId
+  resultId,
+  hidden
 });
 
 
