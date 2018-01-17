@@ -1,6 +1,7 @@
 # ChainerUI
 
 [![CircleCI](https://circleci.com/gh/chainer/chainerui.svg?style=shield&circle-token=6d21bf61d102538b7be005884676f7305320be1b)](https://circleci.com/gh/chainer/chainerui)
+[![Coverage Status](https://coveralls.io/repos/github/chainer/chainerui/badge.svg?branch=master)](https://coveralls.io/github/chainer/chainerui?branch=master)
 
 ![training_captures](https://user-images.githubusercontent.com/414255/34244148-637e6630-e667-11e7-8a6b-9a857fa806bc.gif)
 
