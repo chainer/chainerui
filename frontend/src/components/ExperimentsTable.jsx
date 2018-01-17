@@ -14,7 +14,19 @@ const ExperimentsTable = (props) => {
 
   const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}>{`(${argKey})`}</th>));
 
-  const resultRowElems = Object.keys(results).map((resultId) => {
+  const resultKeys = Object.keys(results);
+  const resultCount = resultKeys.length;
+  const visibleResultCount = resultKeys
+    .filter((resultId) => !(resultsConfig[resultId] || {}).hidden).length;
+  const isPartialSelect = visibleResultCount > 0 && visibleResultCount < resultCount;
+
+  const handleResultsConfigSelectChange = (evt) => {
+    resultKeys.forEach((resultId) => {
+      onResultsConfigSelectUpdate(projectId, resultId, !evt.target.checked);
+    });
+  };
+
+  const resultRowElems = resultKeys.map((resultId) => {
     const result = results[resultId];
     const key = `result-row-${result.id}`;
     return (
@@ -34,7 +46,14 @@ const ExperimentsTable = (props) => {
     <table className="table">
       <thead>
         <tr>
-          <th />
+          <th>
+            <input
+              type="checkbox"
+              checked={visibleResultCount > 0}
+              style={{ opacity: isPartialSelect ? 0.5 : 1 }}
+              onChange={handleResultsConfigSelectChange}
+            />
+          </th>
           <th>id</th>
           <th>name</th>
           <th>epoch</th>
