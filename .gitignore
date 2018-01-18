@@ -9,3 +9,5 @@ build
 .idea/
 .cache/
 dist/
+.coverage
+htmlcov/
