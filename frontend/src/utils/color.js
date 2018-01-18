@@ -28,7 +28,7 @@ export const hexFromRGB = ({ r, g, b }) => (
 );
 
 export const lineColorGenerator = (resultId, logKey, results = {}, logKeys = []) => {
-  const resultIds = Object.keys(results).sort().map(Number);
+  const resultIds = Object.keys(results).sort((a, b) => a - b).map(Number);
   const resultIdx = resultIds.indexOf(resultId);
   const logKeyIdx = logKeys.indexOf(logKey);
   const hsv = {
