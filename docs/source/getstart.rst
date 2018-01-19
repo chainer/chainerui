@@ -50,6 +50,7 @@ Start ChainerUI server
 
 Open http://localhost:5000/ . To stop, press ``Ctrl+C`` on the console. When use original host or port, see :ref:`command option <cmd_server>`:
 
+
 .. _getstart_customize_training_loop:
 
 Customize training loop
@@ -184,6 +185,7 @@ Here is an ``args`` file examples, with values shown as experimental conditions 
       "out": "results"
   }
 
+
 .. _getstart_operate_training_loop:
 
 Operate training loop
@@ -195,6 +197,7 @@ ChainerUI supports operating a training loop with :ref:`CommandsExtension <modul
 
 * Taking snapshot
 * Adjusting the hyperparameters of an optimizer
+* Stopping the training loop
 
 Operation buttons are in :ref:`detail page <ui_detail_page>`.
 
