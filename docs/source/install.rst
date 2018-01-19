@@ -6,15 +6,15 @@ Installation Guide
 Dependencies
 ------------
 
-ChainerUI is developed under Python 2.7+, 3.5+, 3.6+. For other requirement, see ``requirements.txt``.
+ChainerUI is developed under Python 2.7+, 3.5+, 3.6+. For other requirements, see ``requirements.txt``.
 
 .. literalinclude:: ../../requirements.txt
   :caption: requirements.txt
 
-ChainerUI uses ``sqlite3`` module which is included in the standard Python library. If Python is built from source, need to enable ``sqlite3`` module before building Python.
+ChainerUI uses ``sqlite3`` module which is included in the standard Python library. If Python is built from source, ``sqlite3`` must be installed before building Python.
 
-* On Ubuntu, need to install ``libsqlite3-dev`` (``$ apt-get install libsqlite3-dev``) before building Python.
-* On Windows, install Visual C++ Build Tools with the Default Install setting, before building Python.
+* On Ubuntu, ``libsqlite3-dev`` must be installed before building Python (``$ apt-get install libsqlite3-dev``).
+* On Windows, install Visual C++ Build Tools with the Default Install setting before building Python.
 
 Install ChainerUI
 -----------------
@@ -63,7 +63,7 @@ Open http://localhost:5000/ and select "example-project", then show a chart of t
 Browser compatibility
 ---------------------
 
-ChainerUI is supported by the latest stable version of the following browser.
+ChainerUI is supported by the latest stable version of the following browsers.
 
 * Firefox
 * Chrome

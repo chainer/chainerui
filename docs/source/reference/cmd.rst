@@ -8,7 +8,7 @@ ChainerUI command manual
 Server
 ------
 
-Run ChainerUI server. To stop, press ``Ctrl+C`` on the console::
+Run the ChainerUI server. To stop, press ``Ctrl+C`` on the console::
 
   $ chainerui server
 
@@ -22,11 +22,11 @@ Run ChainerUI server. To stop, press ``Ctrl+C`` on the console::
 Database
 --------
 
-Create ChainerUI database. ChainerUI creates ``~/.chainerui/db/chainerui.db`` on default and database references the file::
+Create a ChainerUI database. ChainerUI creates ``~/.chainerui/db/chainerui.db`` by default and the database references the file::
 
   $ chainerui db create
 
-Setup schema for ChainerUI. ``upgrade`` operation is always necessary when create new database or change the schema on version up::
+Setup the schema for ChainerUI. The ``upgrade`` operation is always necessary when creating a new database or changing the schema on version up::
 
   $ chainerui db upgrade
 
@@ -40,7 +40,7 @@ Drop all records from database::
 Project
 -------
 
-ChainerUI manages multiple projects and each project manages multiple train logs. Once creating a project with a directory, ChainerUI starts to monitor the directory and register log files under the directory. The searching process is run recursively and nested directories are available::
+ChainerUI manages multiple projects and each project manages multiple training logs. Once a project directory is created, ChainerUI starts to monitor the directory and register log files under the directory. The searching process is run recursively and nested directories are available::
 
   $ chainerui project create -d PROJECT_DIR
 

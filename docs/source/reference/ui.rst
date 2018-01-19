@@ -37,7 +37,7 @@ Home: Project list
 
 .. image:: ../../images/home_project_list.png
 
-List of registered projects, select a project, transition to the project page. When register a project within running server, refresh the page and will show the project on the list. See :ref:`getstart_customize_training_loop`.
+From the list of registered projects, select a project to transition to the project page. When registering a project within running server, refresh the page and it will show the project on the list. See :ref:`getstart_customize_training_loop`.
 
 * ``Edit``: edit the project name.
 * ``Delete``: delete the project from list.
@@ -61,18 +61,18 @@ Training job table
 
 .. image:: ../../images/result_table_condition_sample.png
 
-Training job table shows brief log information and experimental conditions. Job name are set directory name on default, enabled to edit the name on table directly. To unregister a result, click X button at the right end of the training job table.
+The training job table shows brief log information and experimental conditions. Job names are set to the directory name by default The name can be edit directory on the table. To unregister a result, click X button at the right end of the training job table.
 
 .. note::
 
-   [Known problem] If unregister a result once, cannot restore the same name result on the result table. It will be fixed in future.
+   [Known problem] Once a result is unregistered, a result with the same name cannot be restored on the result table. This will be fixed in future.
 
 
 .. _ui_detail_page:
 
-Result: Show detail information of result
------------------------------------------
+Result: Show detailed information of the results
+------------------------------------------------
 
 .. image:: ../../images/result_detail.png
 
-Show detail information of the training job, and support to operate the training loop.
+Show detailed information of the training job and support operation of the training loop.

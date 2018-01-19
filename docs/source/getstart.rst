@@ -3,23 +3,13 @@
 Getting started
 ===============
 
-Create database
----------------
+Create a database
+-----------------
 
 Please setup database at first::
 
   $ chainerui db create
   $ chainerui db upgrade
-
-
-Drop database
-~~~~~~~~~~~~~
-
-::
-
-  $ chainerui db drop
-
-All cached results will be removed.
 
 
 Create a project
@@ -29,15 +19,15 @@ Create a project
 
   $ chainerui project create -d PROJECT_DIR [-n PROJECT_NAME]
 
-The ChainerUI server watches the below files under the project directory recursively.
+The ChainerUI server watches the files below the project directory recursively.
 
 * ``log``: Used for chart.
 * ``args``: (optional) Used for :ref:`result table <ui_training_job_table>`, show as experimental conditions.
 * ``commands``: (optional) Created by :ref:`CommandsExtension <module_command_extension>` internally, used for operating training job.
 
-More detail of the files and how to setup training loop, see :ref:`getstart_customize_training_loop`
+For more detail of the files and how to setup training loop, see :ref:`getstart_customize_training_loop`
 
-For example, file and directory structure is the below. When create a project with ``-d path/to/result``, the results of the two directories, ``result1`` and ``result2`` are registered under the ``PROJECT_DIR`` (or ``PROJECT_NAME``) automatically, then ChainerUI gathers the two logs continuously::
+For example, look at the file and directory structure below. When create a project with ``-d path/to/result``, the results of the two directories, ``result1`` and ``result2`` are registered under the ``PROJECT_DIR`` (or ``PROJECT_NAME``) automatically, then ChainerUI continuously gathers the both logs.::
 
   path/to/result/result1
     |--- log       # show values on chart
@@ -65,28 +55,30 @@ Open http://localhost:5000/ . To stop, press ``Ctrl+C`` on the console. When use
 Customize training loop
 -----------------------
 
-ChainerUI basically supports `Trainer module <https://docs.chainer.org/en/stable/tutorial/trainer.html>`__ included in Chainer, and some functions support without Trainer.
+ChainerUI basically supports the `Trainer module <https://docs.chainer.org/en/stable/tutorial/trainer.html>`__ included in Chainer, and some functions without ``Trainer``.
 
 .. note::
 
-   `examples/train_mnist.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__, based on `chainer/examples/mnist/train_mnist.py <https://github.com/chainer/chainer/blob/4de98cf90e747940f1dd7f7f4cdf1fcc0b4b4786/examples/mnist/train_mnist.py>`__, is a useful example to see how to set training loop with ChainerUI.
+   `examples/train_mnist.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__, based on `chainer/examples/mnist/train_mnist.py <https://github.com/chainer/chainer/blob/4de98cf90e747940f1dd7f7f4cdf1fcc0b4b4786/examples/mnist/train_mnist.py>`__, is a useful example to see how to set training loops with ChainerUI.
 
 .. note::
 
-   `examples/train_mnist_custom_loop.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__ is a example, basaed on `chainer/examples/mnist/train_mnist_custom_loop <https://github.com/chainer/chainer/blob/e2fe6f8023e635f8c1fc9c89e85d075ebd50c529/examples/mnist/train_mnist_custom_loop.py>`__, which train loop does not use ``Trainer``. The example, however, cannot operate training loop from :ref:`detail page <ui_detail_page>`.
+   `examples/train_mnist_custom_loop.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__ is an example, basaed on `chainer/examples/mnist/train_mnist_custom_loop <https://github.com/chainer/chainer/blob/e2fe6f8023e635f8c1fc9c89e85d075ebd50c529/examples/mnist/train_mnist_custom_loop.py>`__, which does not use the training loop from ``Trainer``. However, this example will not use the training loop from :ref:`detail page <ui_detail_page>`.
 
 Training log
 ~~~~~~~~~~~~
 
 .. image:: ../images/chart_with_y_sample.png
 
-ChainerUI plots training log values read from ``log`` files and shows ``log`` as a training job. ``log`` file is a JSON file created by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension or :ref:`chainerui's LogReport <module_log_report>`, registered automatically created under the project path. If ``log`` files once registered are updated, the chart and results table are also updated continuously.
+ChainerUI plots training log values read from  the ``log`` files and shows the training job. The ``log`` file is a JSON file created by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension or :ref:`chainerui's LogReport <module_log_report>`, which is registered automatically and created under the project path. If ``log`` files are updated, the chart and results table are also updated continuously.
 
 * ``epoch``, ``iteration`` or ``elapsed_time`` is used as X-axis, selected on ``xAxis`` pane. These parameters are set automatically by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__
-    * if use :ref:`chainerui's LogReport <module_log_report>`, only ``elapsed_time`` is set.
+    
+    * if using :ref:`chainerui's LogReport <module_log_report>`, only the ``elapsed_time`` is set.
+
 * The other key-value items are plotted.
 
-Setup example, a brief extract taken from `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
+Setup example from a brief  `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
 
 .. code-block:: python
 
@@ -105,7 +97,7 @@ Setup example, a brief extract taken from `MNIST example <https://github.com/cha
       # [ChainerUI] read 'log' file for plotting values
       trainer.extend(extensions.LogReport())
 
-created ``log`` file example::
+Created ``log`` file example::
 
   [
       {
@@ -129,7 +121,7 @@ created ``log`` file example::
       ...
   ]
 
-without ``Trainer`` code example, a  brief extract take from `MNIST custom loop example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__:
+A example without ``Trainer`` code, from a short extract of the `MNIST custom loop example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__:
 
 .. code-block:: python
 
@@ -163,9 +155,9 @@ Experimental conditions
 
 .. image:: ../images/result_table_condition_sample.png
 
-ChainerUI shows training job with experimental conditions read from ``args`` file. ``args`` file is a JSON file, which includes key-value pairs. See :ref:`save_args <module_save_args>`, util function to dump command line arguments or dictionary to ``args`` file.
+ChainerUI shows the training job with experimental conditions read from the ``args`` file. ``args`` file is a JSON file, which includes key-value pairs. See :ref:`save_args <module_save_args>`, util function to dump command line arguments or dictionaries to ``args`` file.
 
-Setup example, a brief extract taken from `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
+Setup example of a brief `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
 
 .. code-block:: python
 
@@ -180,7 +172,7 @@ Setup example, a brief extract taken from `MNIST example <https://github.com/cha
       # [ChainerUI] save 'args' to show experimental conditions
       save_args(args, args.out)
 
-``args`` file example, values are showed as experimental conditions on a results table::
+Here is an ``args`` file examples, with values shown as experimental conditions on a results table::
 
   {
       "resume": "",
@@ -197,14 +189,14 @@ Operate training loop
 
 .. image:: ../images/detail_page_operation_block.png
 
-ChainerUI support to operate a training loop with :ref:`CommandsExtension <module_command_extension>`, the latest version supports:
+ChainerUI supports operating a training loop with :ref:`CommandsExtension <module_command_extension>`. The latest version supports:
 
-* take a snapshot
-* adjust hyperparameters of an optimizer
+* Taking snapshot
+* Adjusting the hyperparameters of an optimizer
 
 Operation buttons are in :ref:`detail page <ui_detail_page>`.
 
-Setup example, a brief extract taken from `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
+Setup example of a brief extract `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
 
 .. code-block:: python
 
@@ -224,4 +216,4 @@ Setup example, a brief extract taken from `MNIST example <https://github.com/cha
 
 .. note::
 
-   This operation to training loop is given by :ref:`CommandsExtension <module_command_extension>` which is on the premise of ``Trainer``. A training loop without ``Trainer`` cannot use this function.
+   This operation of a training loop is from the :ref:`CommandsExtension <module_command_extension>` which requires ``Trainer``. A training loop without ``Trainer`` cannot use this function.
