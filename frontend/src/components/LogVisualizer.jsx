@@ -46,6 +46,7 @@ const buildLineElem = (line, axisName, result) => {
       stroke={config.color}
       connectNulls
       isAnimationActive={false}
+      dot={false}
       key={line2dataKey(line, axisName)}
     />
   );
