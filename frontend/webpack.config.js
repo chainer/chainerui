@@ -1,3 +1,5 @@
+/* eslint-disable global-require  */
+
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
@@ -21,7 +23,7 @@ const version = versionMatches[1];
 
 module.exports = {
   entry: {
-    'chainerui': ['babel-polyfill', 'whatwg-fetch', './src/index.jsx'],
+    chainerui: ['babel-polyfill', 'whatwg-fetch', './src/index.jsx'],
     vendor: Object.keys(require('./package.json').dependencies).concat([
       'bootstrap/dist/css/bootstrap.css', 'babel-polyfill'
     ])
@@ -50,7 +52,7 @@ module.exports = {
             ['es2015', { modules: false }],
             'react'
           ],
-          plugins: ["transform-object-rest-spread", "babel-plugin-lodash"],
+          plugins: ['transform-object-rest-spread', 'babel-plugin-lodash']
         }
       },
       {
@@ -71,7 +73,7 @@ module.exports = {
                 plugins: [
                   require('autoprefixer')({
                     browsers: ['last 2 versions']
-                  }),
+                  })
                   // ...(NODE_PROD ? require('./postcss.plugins.production') : [])
                 ]
               }
@@ -103,7 +105,7 @@ module.exports = {
       $: 'jquery',
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
-      Popper: ['popper.js', 'default'],
+      Popper: ['popper.js', 'default']
     }),
     new HtmlWebpackPlugin({
       title: 'chainerui'
@@ -111,11 +113,11 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       filename: `${filename}.js`,
-      minChunks: Infinity,
+      minChunks: Infinity
     }),
     new ExtractTextWebpackPlugin(`${filename}.css`, {
       allChunks: true
-    }),
+    })
     // ...(NODE_PROD ? require('./plugins.production') : [])
   ],
   node: {
