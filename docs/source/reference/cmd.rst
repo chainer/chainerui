@@ -30,9 +30,13 @@ Setup the schema for ChainerUI. The ``upgrade`` operation is always necessary wh
 
   $ chainerui db upgrade
 
-Drop all records from database::
+Drop **all** records from database. If continuing to use ChainerUI after executing ``drop``, the ``create`` and ``upgrade`` operations must be executed.::
 
   $ chainerui db drop
+
+.. warning::
+
+   When removing selected projects, don't use the ``drop`` commands. Use ``Delete`` button on :ref:`project list page <ui_home_project_list>`.
 
 
 .. _cmd_project:

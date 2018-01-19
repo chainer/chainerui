@@ -32,6 +32,9 @@ Header
     * red: fail to connect
     * gray: disable polling
 
+
+.. _ui_home_project_list:
+
 Home: Project list
 ------------------
 
@@ -75,4 +78,4 @@ Result: Show detailed information of the results
 
 .. image:: ../../images/result_detail.png
 
-Show detailed information of the training job and support operation of the training loop.
+Show detailed information of the training job and support operation of the training loop. For more detail of ``Commands`` pane, see :ref:`getstart_operate_training_loop`.

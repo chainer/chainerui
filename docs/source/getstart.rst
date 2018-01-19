@@ -184,6 +184,8 @@ Here is an ``args`` file examples, with values shown as experimental conditions 
       "out": "results"
   }
 
+.. _getstart_operate_training_loop:
+
 Operate training loop
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -217,3 +219,7 @@ Setup example of a brief extract `MNIST example <https://github.com/chainer/chai
 .. note::
 
    This operation of a training loop is from the :ref:`CommandsExtension <module_command_extension>` which requires ``Trainer``. A training loop without ``Trainer`` cannot use this function.
+
+.. note::
+
+   Adjusting the pyperparameters supports only `MomentumSGD <https://docs.chainer.org/en/stable/reference/generated/chainer.optimizers.MomentumSGD.html#chainer.optimizers.MomentumSGD>`__.
