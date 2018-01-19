@@ -48,7 +48,6 @@ module.exports = {
         options: {
           presets: [
             ['es2015', { modules: false }],
-            'stage-0',
             'react'
           ],
           plugins: ["transform-object-rest-spread", "babel-plugin-lodash"],
