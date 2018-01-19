@@ -32,8 +32,6 @@ config.plugins.unshift(
   new webpack.NamedModulesPlugin(),
   new webpack.NoEmitOnErrorsPlugin()
 );
-
-// config.plugins[0].definitions['process.env.LOAD_URL'] = JSON.stringify(publicPath);
 config.plugins.push(
   new WriteFileWebpackPlugin({
     exitOnErrors: false,
