@@ -76,12 +76,6 @@ const buildLineElems = (
 };
 
 class LogVisualizer extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-  }
-
   render() {
     const {
       results = {},
