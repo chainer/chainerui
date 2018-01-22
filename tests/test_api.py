@@ -1,5 +1,7 @@
 import json
 import os
+import shutil
+import tempfile
 import unittest
 
 from chainerui import CHAINERUI_ENV
@@ -14,16 +16,91 @@ from six import string_types
 from tests.helpers import assert_json_api
 from tests.helpers import NotInTestEnvironmentException
 
-TEST_PROJECT_PATH = os.path.abspath(os.path.join(__file__, '../../examples'))
-TEST_PROJECT_NAME = 'my-project'
+
+def setup_test_project(root_path):
+    # log only
+    path = os.path.join(root_path, '10000')
+    os.makedirs(path)
+    log = [
+        {
+            "main/loss": 0.1933198869228363,
+            "validation/main/loss": 0.09147150814533234,
+            "iteration": 600,
+            "elapsed_time": 16.052587032318115,
+            "epoch": 1,
+            "main/accuracy": 0.9421835541725159,
+            "validation/main/accuracy": 0.9703000783920288
+        },
+        {
+            "main/loss": 0.07222291827201843,
+            "validation/main/loss": 0.08141259849071503,
+            "iteration": 1200,
+            "elapsed_time": 19.54666304588318,
+            "epoch": 2,
+            "main/accuracy": 0.9771820902824402,
+            "validation/main/accuracy": 0.975399911403656
+        }
+    ]
+    with open(os.path.join(path, 'log'), 'w') as f:
+        json.dump(log, f)
+
+    # log, args
+    path = os.path.join(root_path, '10001')
+    os.makedirs(path)
+    args = {
+        "resume": "",
+        "batchsize": 100,
+        "epoch": 20,
+        "frequency": -1,
+        "gpu": 0,
+        "unit": 1000,
+        "out": "results"
+    }
+    with open(os.path.join(path, 'log'), 'w') as f:
+        json.dump(log, f)
+    with open(os.path.join(path, 'args'), 'w') as f:
+        json.dump(args, f)
+
+    # log, args, commands
+    path = os.path.join(root_path, '10002')
+    os.makedirs(path)
+    commands = [
+        {
+            "name": "take_snapshot",
+            "request": {
+                "created_at": "2017-09-26T16:44:33.410023",
+                "status": "OPEN",
+                "body": None,
+                "schedule": {
+                    "value": 4,
+                    "key": "epoch"
+                }
+            },
+            "response": {
+                "executed_at": "2017-09-26T16:44:35.730431",
+                "epoch": 4,
+                "iteration": 2400,
+                "elapsed_time": 76.96686792373657,
+                "status": "SUCCESS",
+                "body": None
+            }
+        }
+    ]
+    with open(os.path.join(path, 'log'), 'w') as f:
+        json.dump(log, f)
+    with open(os.path.join(path, 'args'), 'w') as f:
+        json.dump(args, f)
+    with open(os.path.join(path, 'commands'), 'w') as f:
+        json.dump(commands, f)
+    open(os.path.join(path, 'snapshot_iter_2400'), 'w').close()
 
 
-def setup_test_db():
+def setup_test_db(project_path, project_name):
     create_db()
     upgrade_db()
 
     # insert test data
-    Project.create(TEST_PROJECT_PATH, TEST_PROJECT_NAME)
+    Project.create(project_path, project_name)
 
 
 class TestAPI(unittest.TestCase):
@@ -37,7 +114,16 @@ class TestAPI(unittest.TestCase):
             )
 
     def setUp(self):
-        setup_test_db()
+        test_dir = tempfile.mkdtemp(prefix='chainerui_test_api')
+        self._dir = test_dir
+        project_path = os.path.join(test_dir, 'test_project')
+        setup_test_project(project_path)
+        self._project_path = project_path
+        project_name = 'my-project'
+        setup_test_db(project_path, project_name)
+        self._project_name = project_name
+        print(project_path)
+
         app = create_app()
         app.testing = True
         self.app = app.test_client()
@@ -46,11 +132,13 @@ class TestAPI(unittest.TestCase):
         # remove test db if exists
         if os.path.exists(DB_FILE_PATH):
             os.remove(DB_FILE_PATH)
+        if os.path.exists(self._dir):
+            shutil.rmtree(self._dir)
 
-    def assert_test_project(self, project, name=TEST_PROJECT_NAME):
+    def assert_test_project(self, project, name=None):
         assert len(project) == 3
-        assert project['pathName'] == TEST_PROJECT_PATH
-        assert project['name'] == name
+        assert project['pathName'] == self._project_path
+        assert project['name'] == self._project_name if name is None else name
         assert isinstance(project['id'], int)
 
     def assert_test_project_result(self, result, name=None):
@@ -61,7 +149,7 @@ class TestAPI(unittest.TestCase):
         assert isinstance(result['snapshots'], list)
         assert isinstance(result['isUnregistered'], bool)
         assert isinstance(result['id'], int)
-        assert result['pathName'].startswith(TEST_PROJECT_PATH)
+        assert result['pathName'].startswith(self._project_path)
         assert result['name'] == name
 
     # GET /api/v1/projects
