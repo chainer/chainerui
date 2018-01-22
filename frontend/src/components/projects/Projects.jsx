@@ -22,7 +22,7 @@ const createProjectsNotFoundElem = () => (
 );
 
 const createProjectRowElems = (projects, onProjectUpdate, onProjectDelete) => (
-  Object.keys(projects).sort().map((projectId) => (
+  Object.keys(projects).sort((a, b) => a - b).map((projectId) => (
     <ProjectRow
       project={projects[projectId]}
       onProjectUpdate={onProjectUpdate}
