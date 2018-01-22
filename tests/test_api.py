@@ -23,21 +23,21 @@ def setup_test_project(root_path):
     os.makedirs(path)
     log = [
         {
-            "main/loss": 0.1933198869228363, 
-            "validation/main/loss": 0.09147150814533234, 
-            "iteration": 600, 
-            "elapsed_time": 16.052587032318115, 
-            "epoch": 1, 
-            "main/accuracy": 0.9421835541725159, 
+            "main/loss": 0.1933198869228363,
+            "validation/main/loss": 0.09147150814533234,
+            "iteration": 600,
+            "elapsed_time": 16.052587032318115,
+            "epoch": 1,
+            "main/accuracy": 0.9421835541725159,
             "validation/main/accuracy": 0.9703000783920288
-        }, 
+        },
         {
-            "main/loss": 0.07222291827201843, 
-            "validation/main/loss": 0.08141259849071503, 
-            "iteration": 1200, 
-            "elapsed_time": 19.54666304588318, 
-            "epoch": 2, 
-            "main/accuracy": 0.9771820902824402, 
+            "main/loss": 0.07222291827201843,
+            "validation/main/loss": 0.08141259849071503,
+            "iteration": 1200,
+            "elapsed_time": 19.54666304588318,
+            "epoch": 2,
+            "main/accuracy": 0.9771820902824402,
             "validation/main/accuracy": 0.975399911403656
         }
     ]
@@ -48,12 +48,12 @@ def setup_test_project(root_path):
     path = os.path.join(root_path, '10001')
     os.makedirs(path)
     args = {
-        "resume": "", 
-        "batchsize": 100, 
-        "epoch": 20, 
-        "frequency": -1, 
-        "gpu": 0, 
-        "unit": 1000, 
+        "resume": "",
+        "batchsize": 100,
+        "epoch": 20,
+        "frequency": -1,
+        "gpu": 0,
+        "unit": 1000,
         "out": "results"
     }
     with open(os.path.join(path, 'log'), 'w') as f:
@@ -92,6 +92,7 @@ def setup_test_project(root_path):
         json.dump(args, f)
     with open(os.path.join(path, 'commands'), 'w') as f:
         json.dump(commands, f)
+    open(os.path.join(path, 'snapshot_iter_2400'), 'w').close()
 
 
 def setup_test_db(project_path, project_name):
