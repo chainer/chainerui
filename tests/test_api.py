@@ -10,6 +10,7 @@ from chainerui import create_db
 from chainerui import DB_FILE_PATH
 from chainerui.models.project import Project
 from chainerui import upgrade_db
+from chainerui.utils.commands_state import CommandsState
 
 from six import string_types
 
@@ -93,6 +94,28 @@ def setup_test_project(root_path):
     with open(os.path.join(path, 'commands'), 'w') as f:
         json.dump(commands, f)
     open(os.path.join(path, 'snapshot_iter_2400'), 'w').close()
+
+    # log, args, commands, status(run)
+    path = os.path.join(root_path, '10003')
+    os.makedirs(path)
+    with open(os.path.join(path, 'log'), 'w') as f:
+        json.dump(log, f)
+    with open(os.path.join(path, 'args'), 'w') as f:
+        json.dump(args, f)
+    with open(os.path.join(path, 'commands'), 'w') as f:
+        json.dump(commands, f)
+    CommandsState.run(path)
+
+    # log, args, commands, status(stop)
+    path = os.path.join(root_path, '10004')
+    os.makedirs(path)
+    with open(os.path.join(path, 'log'), 'w') as f:
+        json.dump(log, f)
+    with open(os.path.join(path, 'args'), 'w') as f:
+        json.dump(args, f)
+    with open(os.path.join(path, 'commands'), 'w') as f:
+        json.dump(commands, f)
+    CommandsState.stop(path)
 
 
 def setup_test_db(project_path, project_name):
@@ -325,9 +348,10 @@ class TestAPI(unittest.TestCase):
             },
         ]
 
+        # job has already started
         for i in range(3):
             resp = self.app.post(
-                '/api/v1/projects/1/results/' + str(i + 1) + '/commands',
+                '/api/v1/projects/1/results/4/commands',
                 data=json.dumps(request_jsons[i]),
                 content_type='application/json')
             data = assert_json_api(resp)
@@ -344,6 +368,26 @@ class TestAPI(unittest.TestCase):
             assert isinstance(command['request']['created_at'], string_types)
             assert isinstance(command['request']['status'], string_types)
             assert 'response' in command
+
+        # jos is not started
+        resp = self.app.post(
+            '/api/v1/projects/1/results/3/commands',
+            data=json.dumps(request_jsons[0]),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 1
+        assert isinstance(data['message'], string_types)
+        assert 'not run' in data['message']
+
+        # jos has stopped
+        resp = self.app.post(
+            '/api/v1/projects/1/results/5/commands',
+            data=json.dumps(request_jsons[0]),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 1
+        assert isinstance(data['message'], string_types)
+        assert 'stopped' in data['message']
 
         request_jsons = [
             {
@@ -362,7 +406,7 @@ class TestAPI(unittest.TestCase):
 
         for i in range(2):
             resp = self.app.post(
-                '/api/v1/projects/1/results/' + str(i + 1) + '/commands',
+                '/api/v1/projects/1/results/4/commands',
                 data=json.dumps(request_jsons[i]),
                 content_type='application/json')
             data = assert_json_api(resp, 400)
