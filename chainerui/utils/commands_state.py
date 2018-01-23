@@ -17,6 +17,12 @@ class JobStatus(Enum):
         return self.name.lower()
 
 
+def _job_status_converter(o):
+    if isinstance(o, JobStatus):
+        return str(o)
+    # pass other types to raise default exception
+
+
 class CommandsState(object):
 
     _default_filename = '.chainerui_commands'
@@ -68,11 +74,6 @@ class CommandsState(object):
         fd, path = tempfile.mkstemp(
             prefix=cls._default_filename, dir=out_path)
         with os.fdopen(fd, 'w') as f:
-            json.dump(state, f, indent=4, default=cls._converter)
+            json.dump(state, f, indent=4, default=_job_status_converter)
 
         shutil.move(path, os.path.join(out_path, cls._default_filename))
-
-    def _converter(o):
-        if isinstance(o, JobStatus):
-            return str(o)
-        # pass other types to raise default exception
