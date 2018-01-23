@@ -117,6 +117,17 @@ def setup_test_project(root_path):
         json.dump(commands, f)
     CommandsState.stop(path)
 
+    # log, args, commands, status(not run)
+    path = os.path.join(root_path, '10005')
+    os.makedirs(path)
+    with open(os.path.join(path, 'log'), 'w') as f:
+        json.dump(log, f)
+    with open(os.path.join(path, 'args'), 'w') as f:
+        json.dump(args, f)
+    with open(os.path.join(path, 'commands'), 'w') as f:
+        json.dump(commands, f)
+    CommandsState._dump(path, CommandsState._load(path, initialize=True))
+
 
 def setup_test_db(project_path, project_name):
     create_db()
@@ -372,7 +383,7 @@ class TestAPI(unittest.TestCase):
             assert isinstance(command['request']['status'], string_types)
             assert 'response' in command
 
-        # jos is not started
+        # not set extension
         resp = self.app.post(
             '/api/v1/projects/1/results/3/commands',
             data=json.dumps(request_jsons[0]),
@@ -380,7 +391,7 @@ class TestAPI(unittest.TestCase):
         data = assert_json_api(resp, 400)
         assert len(data) == 1
         assert isinstance(data['message'], string_types)
-        assert 'not run' in data['message']
+        assert 'not set' in data['message']
 
         # jos has stopped
         resp = self.app.post(
@@ -391,6 +402,16 @@ class TestAPI(unittest.TestCase):
         assert len(data) == 1
         assert isinstance(data['message'], string_types)
         assert 'stopped' in data['message']
+
+        # not set extension
+        resp = self.app.post(
+            '/api/v1/projects/1/results/6/commands',
+            data=json.dumps(request_jsons[0]),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 1
+        assert isinstance(data['message'], string_types)
+        assert 'not run' in data['message']
 
         request_jsons = [
             {

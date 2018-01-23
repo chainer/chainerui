@@ -11,7 +11,7 @@ class JobStatus(Enum):
     INITIALIZED = 0
     RUNNING = 1
     STOPPED = 2
-    # 'ERROR' status should be added but not necessary now
+    NO_EXTENSION_ERROR = 3
 
     def __str__(self):
         return self.name.lower()
@@ -35,13 +35,13 @@ class CommandsState(object):
             out_path = trainer.out
         else:
             out_path = trainer
-        state = cls._load(out_path)
+        state = cls._load(out_path, initialize=True)
         state['job_status'] = JobStatus.RUNNING
         cls._dump(out_path, state)
 
     @classmethod
     def stop(cls, out_path):
-        state = cls._load(out_path)
+        state = cls._load(out_path, initialize=True)
         if state['job_status'] != JobStatus.STOPPED:
             state['job_status'] = JobStatus.STOPPED
             cls._dump(out_path, state)
@@ -49,10 +49,12 @@ class CommandsState(object):
     @classmethod
     def job_status(cls, out_path):
         state = cls._load(out_path)
+        if state is None:
+            return JobStatus.NO_EXTENSION_ERROR
         return state['job_status']
 
     @classmethod
-    def _load(cls, out_path):
+    def _load(cls, out_path, initialize=False):
         file_path = os.path.join(out_path, cls._default_filename)
 
         if os.path.isfile(file_path):
@@ -60,13 +62,16 @@ class CommandsState(object):
                 state = json.load(f)
             state['job_status'] = JobStatus[state['job_status'].upper()]
         else:
-            state = {
-                'job_status': JobStatus.INITIALIZED
-            }
-            try:
-                os.makedirs(out_path)
-            except OSError:
-                pass
+            if initialize:
+                state = {
+                    'job_status': JobStatus.INITIALIZED
+                }
+                try:
+                    os.makedirs(out_path)
+                except OSError:
+                    pass
+            else:
+                state = None
         return state
 
     @classmethod

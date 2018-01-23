@@ -26,7 +26,11 @@ class ResultCommandAPI(MethodView):
 
         job_status = CommandsState.job_status(result.path_name)
         if job_status != JobStatus.RUNNING:
-            if job_status == JobStatus.INITIALIZED:
+            if job_status == JobStatus.NO_EXTENSION_ERROR:
+                return jsonify({
+                    'message': '\'CommandsExtension\' is not set or disabled.'
+                }), 400
+            elif job_status == JobStatus.INITIALIZED:
                 return jsonify({
                     'message': 'The target training job has not run, yet'
                 }), 400
