@@ -136,16 +136,21 @@ class TestAPI(unittest.TestCase):
                 'when you run this test'
             )
 
-    def setUp(self):
         test_dir = tempfile.mkdtemp(prefix='chainerui_test_api')
-        self._dir = test_dir
+        cls._dir = test_dir
         project_path = os.path.join(test_dir, 'test_project')
         setup_test_project(project_path)
-        self._project_path = project_path
+        cls._project_path = project_path
+
+    @classmethod
+    def tearDownClass(cls):
+        if os.path.exists(cls._dir):
+            shutil.rmtree(cls._dir)
+
+    def setUp(self):
         project_name = 'my-project'
-        setup_test_db(project_path, project_name)
+        setup_test_db(self._project_path, project_name)
         self._project_name = project_name
-        print(project_path)
 
         app = create_app()
         app.testing = True
@@ -155,8 +160,6 @@ class TestAPI(unittest.TestCase):
         # remove test db if exists
         if os.path.exists(DB_FILE_PATH):
             os.remove(DB_FILE_PATH)
-        if os.path.exists(self._dir):
-            shutil.rmtree(self._dir)
 
     def assert_test_project(self, project, name=None):
         assert len(project) == 3
