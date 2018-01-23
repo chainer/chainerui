@@ -385,13 +385,23 @@ class TestAPI(unittest.TestCase):
 
         # not set extension
         resp = self.app.post(
-            '/api/v1/projects/1/results/3/commands',
+            '/api/v1/projects/1/results/2/commands',
             data=json.dumps(request_jsons[0]),
             content_type='application/json')
         data = assert_json_api(resp, 400)
         assert len(data) == 1
         assert isinstance(data['message'], string_types)
         assert 'not set' in data['message']
+
+        # job run on v0.1.0 so .chainerui_commands is not created
+        resp = self.app.post(
+            '/api/v1/projects/1/results/3/commands',
+            data=json.dumps(request_jsons[0]),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 1
+        assert isinstance(data['message'], string_types)
+        assert 'stopped' in data['message']
 
         # jos has stopped
         resp = self.app.post(

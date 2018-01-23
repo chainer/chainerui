@@ -6,6 +6,8 @@ import tempfile
 
 from chainer import training
 
+from chainerui.utils.command_item import CommandItem
+
 
 class JobStatus(Enum):
     INITIALIZED = 0
@@ -50,6 +52,13 @@ class CommandsState(object):
     def job_status(cls, out_path):
         state = cls._load(out_path)
         if state is None:
+            if os.path.isfile(CommandItem.commands_path(out_path)):
+                # NOTE: this constraint is for back compatibility <= v0.1.1
+                #       it is possible that set CommandsExtension but
+                #       '.chainerui_commands' is not found. If '.commands'
+                #       is found, judge as 'STOPPED'
+                cls.stop(out_path)
+                return cls.job_status(out_path)
             return JobStatus.NO_EXTENSION_ERROR
         return state['job_status']
 
