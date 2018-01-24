@@ -10,6 +10,8 @@ const StopForm = (props) => {
       title="Stop"
       buttonLabel="Stop"
       onSubmit={(schedule) => onCommandSubmit(projectId, resultId, 'stop', null, schedule)}
+      needConfirmation
+      confirmationMessage="Are you sure to stop the training?"
     />
   );
 };
