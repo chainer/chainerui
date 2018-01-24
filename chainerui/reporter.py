@@ -1,6 +1,6 @@
 import chainer
-from chainer import reporter
 from chainer import cuda
+from chainer import reporter
 
 
 CHAINERUI_IMAGE_PREFIX = 'image'

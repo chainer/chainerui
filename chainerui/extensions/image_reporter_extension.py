@@ -10,11 +10,12 @@ import numpy as np
 from chainerui import reporter
 
 
-class ImageReporterExtension(extension.Extension):
+class ImageReport(extension.Extension):
     """Reports images for visualizing
 
     This extension supports visualizing image data on ChainerUI.
     """
+
     def __init__(self, trigger=(1, 'epoch')):
         self._trigger = trigger_module.get_trigger(trigger)
         self._info_name = '.chainerui_images'
@@ -25,12 +26,12 @@ class ImageReporterExtension(extension.Extension):
             return
 
         image_prefix = reporter.CHAINERUI_IMAGE_PREFIX
-        # TODO: should use copy, but trade-off
+        # TODO(tanakad) should use copy, but trade-off
         observations = reporter._chainerui_global_observation
         pooled_images = {}
         for k, v in observations.items():
             if k.startswith(image_prefix):
-                pooled_images[k[len(image_prefix)+1:]] = v
+                pooled_images[k[len(image_prefix) + 1:]] = v
         if len(pooled_images) == 0:
             return
 
@@ -39,7 +40,7 @@ class ImageReporterExtension(extension.Extension):
             names = key.split('/')
             if len(names) > 1:
                 name = names[0]
-                tag = key[len(name)+1:]
+                tag = key[len(name) + 1:]
             else:
                 name = key
                 tag = None
@@ -47,7 +48,8 @@ class ImageReporterExtension(extension.Extension):
             updater = trainer.updater
             file_name = 'iter_%d.npy' % updater.iteration
             path = os.path.join(out_path, file_name)
-            np.save(path, images)  # TODO: should execute as queue worker
+            # TODO(tanakad) should execute as queue worker
+            np.save(path, images)
             info = {
                 'epoch': updater.epoch,
                 'iteration': updater.iteration,
