@@ -41,10 +41,8 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
     "jquery": "^3.2.1",
-    "js-cookie": "^2.2.0",
     "popper.js": "^1.12.3",
     "prop-types": "^15.5.10",
-    "rc-slider": "^8.6.0",
     "react": "^16.2.0",
     "react-color": "^2.13.8",
     "react-dom": "^16.2.0",
