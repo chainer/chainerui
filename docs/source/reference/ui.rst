@@ -78,4 +78,25 @@ Result: Show detailed information of the results
 
 .. image:: ../../images/result_detail.png
 
-Show detailed information of the training job and support operation of the training loop. For more detail of ``Commands`` pane, see :ref:`getstart_operate_training_loop`.
+Show detailed information of the training job and support operation of the training loop.
+
+Commands pane
+~~~~~~~~~~~~~
+
+Operation buttons in ``Commands`` pane allow users to operate the training job. To enable these buttons, the trining job is required to set :ref:`CommandsExtension <module_command_extension>` and click them within running the job. For more detail of how to set the extension, see :ref:`getstart_operate_training_loop`.
+
+**Take snapshot**
+
+Save a training model to the file in NPZ format with using `save_napz <https://docs.chainer.org/en/stable/reference/generated/chainer.serializers.save_npz.html>`__ By default, ``snapshot_iter_{.updater.iteration}`` file is saved to the result path.
+
+**Adjust**
+
+Adjust the hyperparameters of an optimizer. This function supports only `MomentumSGD <https://docs.chainer.org/en/stable/reference/generated/chainer.optimizers.MomentumSGD.html#chainer.optimizers.MomentumSGD>`__ optimizer.
+
+**Stop**
+
+Stop the trining loop.
+
+**Command history**
+
+The command history is shown on the down of the pane.
