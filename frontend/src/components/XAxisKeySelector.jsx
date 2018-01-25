@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-const keyOptions = ['epoch', 'iteration', 'elapsed_time'];
+const keyOptions = ['epoch', 'iteration', 'episode', 'step', 'elapsed_time'];
 
 const XAxisKeySelector = (props) => {
   const { projectId, value, onChange } = props;
@@ -32,4 +32,3 @@ XAxisKeySelector.defaultProps = {
 };
 
 export default XAxisKeySelector;
-
