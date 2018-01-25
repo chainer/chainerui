@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { responseStatusToIcon } from '../../utils';
 import SnapshotTakeForm from './SnapshotTakeForm';
+import StopForm from './StopForm';
 import HyperparamsAdjustForm from './HyperparamsAdjustFrom';
 
 
@@ -45,6 +46,13 @@ const Commands = (props) => {
       <div className="card-body">
         <div className="mb-2">
           <SnapshotTakeForm
+            projectId={projectId}
+            resultId={resultId}
+            onCommandSubmit={onCommandSubmit}
+          />
+        </div>
+        <div className="mb-2">
+          <StopForm
             projectId={projectId}
             resultId={resultId}
             onCommandSubmit={onCommandSubmit}
