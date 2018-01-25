@@ -81,6 +81,7 @@ const AxesConfigurator = (props) => {
           <li className="list-group-item">
             <XAxisKeySelector
               projectId={projectId}
+              stats={stats}
               value={xAxis.xAxisKey}
               onChange={onAxisConfigXKeyUpdate}
             />

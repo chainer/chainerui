@@ -5,12 +5,13 @@ import PropTypes from 'prop-types';
 const keyOptions = ['epoch', 'iteration', 'episode', 'step', 'elapsed_time'];
 
 const XAxisKeySelector = (props) => {
-  const { projectId, value, onChange } = props;
+  const { projectId, stats, value, onChange } = props;
+  const { logKeys } = stats;
   const handleChangeXAxisKey = (e) => {
     onChange(projectId, e.target.value);
   };
 
-  const options = keyOptions.map((key) => (
+  const options = keyOptions.filter((key) => logKeys.indexOf(key) > -1).map((key) => (
     <option value={key} key={key}>{key}</option>
   ));
   return (
@@ -22,6 +23,9 @@ const XAxisKeySelector = (props) => {
 
 XAxisKeySelector.propTypes = {
   projectId: PropTypes.number.isRequired,
+  stats: PropTypes.shape({
+    logKeys: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
   value: PropTypes.string,
   onChange: PropTypes.func
 };
