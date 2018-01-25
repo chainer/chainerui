@@ -1,3 +1,6 @@
+import { attemptRequest } from 'redux-requests';
+
+
 const API_ROOT = '/api/v1/';
 
 const callApi = (endpoint, method = 'GET', body) => {
@@ -51,17 +54,18 @@ export default (store) => (next) => (action) => {
   const [requestType, successType, failureType] = types;
   next(actionWith({ type: requestType }));
 
-  return callApi(endpoint, method, body).then(
-    (response) => next(actionWith({
+  return attemptRequest(endpoint, {
+    begin: () => (actionWith({ type: requestType })),
+    success: (response) => (actionWith({
       response,
       type: successType,
       endpoint,
       body
     })),
-    (error) => next(actionWith({
+    failure: (error) => (actionWith({
       type: failureType,
       error: error.message || 'Something bad happened'
     }))
-  );
+  }, () => (callApi(endpoint, method, body)), next);
 };
 

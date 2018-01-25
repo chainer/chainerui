@@ -19,7 +19,7 @@ from chainerui import _version
 __version__ = _version.__version__
 
 
-CHAINERUI_ENV = os.getenv('CHAINERUI_ENV', 'prouction')
+CHAINERUI_ENV = os.getenv('CHAINERUI_ENV', 'production')
 CHAINERUI_ROOT = os.path.abspath(
     os.path.expanduser(os.getenv('CHAINERUI_ROOT', '~/.chainerui')))
 PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -74,6 +74,7 @@ def create_app():
 
     app = Flask(__name__)
     app.config['DEBUG'] = False
+    app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
     def dated_url_for(endpoint, **values):
         """dated_url_for."""

@@ -1,0 +1,35 @@
+language: python
+python:
+  - "2.7"
+  - "3.5"
+  - "3.6"
+
+notifications:
+  email: false
+
+sudo: false
+
+before_install:
+  - pip install numpy==1.13.1
+  - pip install chainer==v3.1.0
+  - pip install autopep8 hacking
+  - pip install pytest-cov coveralls
+
+install:
+  - pushd frontend
+  - npm install && npm run build -- --progress=false --profile=false
+  - popd
+  - python setup.py --quiet install
+
+script:
+  - flake8
+  - autopep8 -r . --global-config .pep8 --diff | tee check_autopep8
+  - chainerui db create
+  - chainerui db upgrade
+  - chainerui server -p 5051 &
+  - sleep 3
+  - curl -f http://127.0.0.1:5051/
+  - CHAINERUI_ENV=test pytest --cov=chainerui
+
+after_success:
+  - if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then COVERALLS_TOKEN=$COVERALLS_TOKEN coveralls; fi
