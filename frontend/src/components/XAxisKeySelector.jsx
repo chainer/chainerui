@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { keyOptions } from '../constants';
 
-
-const keyOptions = ['epoch', 'iteration', 'episode', 'step', 'elapsed_time'];
 
 const XAxisKeySelector = (props) => {
   const { projectId, stats, value, onChange } = props;
