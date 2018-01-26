@@ -1,9 +1,10 @@
-from chainerui.utils import json
+from json import dumps
 
 
 def is_jsonable(obj):
+    # Try to dump invalid object with default json library
     try:
-        json.dumps(obj)
+        dumps(obj)
     except TypeError:
         return False
     return True
