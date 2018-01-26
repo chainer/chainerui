@@ -1,5 +1,4 @@
 import datetime
-import json
 import os
 
 from chainerui import DB_SESSION
@@ -9,6 +8,7 @@ from chainerui.models.result import Result
 from chainerui.models.snapshot import Snapshot
 from chainerui.utils.command_item import CommandItem
 from chainerui.utils import is_numberable
+from chainerui.utils import json
 
 
 def load_result_json(result_path, json_file_name):

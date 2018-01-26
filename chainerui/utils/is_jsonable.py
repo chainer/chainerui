@@ -1,4 +1,4 @@
-import json
+from chainerui.utils import json
 
 
 def is_jsonable(obj):

@@ -1,5 +1,3 @@
-import json
-
 from math import isinf
 from math import isnan
 from sqlalchemy import Column
@@ -8,6 +6,7 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 
 from chainerui import DB_BASE
+from chainerui.utils import json
 
 
 class Log(DB_BASE):
