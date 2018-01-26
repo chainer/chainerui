@@ -9,7 +9,6 @@ import {
   argValue2string,
   urlForResultDetail
 } from '../utils';
-import { keyOptions } from '../constants';
 
 
 const emptyStr = '-';
@@ -80,7 +79,7 @@ class ResultRow extends React.Component {
       argDict[arg.key] = arg.value;
     });
 
-    const logElems = keyOptions.filter((key) => stats.logKeys.indexOf(key) > -1).map((logKey) => {
+    const logElems = stats.xAxisKeys.map((logKey) => {
       if (logKey === 'elapsed_time') {
         return <td key={`logs-${logKey}`} className="text-right">{lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2)}</td>;
       }
@@ -140,7 +139,7 @@ ResultRow.propTypes = {
   }).isRequired,
   stats: PropTypes.shape({
     argKeys: PropTypes.arrayOf(PropTypes.string),
-    logKeys: PropTypes.arrayOf(PropTypes.string)
+    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
   }),
   resultConfig: PropTypes.shape({
     hidden: PropTypes.bool

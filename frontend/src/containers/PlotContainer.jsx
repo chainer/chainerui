@@ -18,7 +18,7 @@ import ExperimentsTable from '../components/ExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
-import { defaultConfig, defaultProjectConfig } from '../constants';
+import { defaultConfig, defaultProjectConfig, keyOptions } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
@@ -130,8 +130,9 @@ const mapEntitiesToStats = (entities) => {
   });
   const argKeys = Object.keys(argKeySet);
   const logKeys = Object.keys(logKeySet).sort();
+  const xAxisKeys = keyOptions.filter((key) => logKeys.indexOf(key) > -1);
 
-  return { axes, argKeys, logKeys };
+  return { axes, argKeys, logKeys, xAxisKeys };
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -181,7 +182,8 @@ PlotContainer.propTypes = {
   stats: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
     argKeys: PropTypes.arrayOf(PropTypes.string),
-    logKeys: PropTypes.arrayOf(PropTypes.string)
+    logKeys: PropTypes.arrayOf(PropTypes.string),
+    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   getProject: PropTypes.func.isRequired,
   getResultList: PropTypes.func.isRequired,
