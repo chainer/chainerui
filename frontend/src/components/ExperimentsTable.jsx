@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ResultRow from './ResultRow';
+import { keyOptions } from '../constants';
 
 
 const ExperimentsTable = (props) => {
@@ -9,9 +10,10 @@ const ExperimentsTable = (props) => {
     results = {}, stats, projectConfig,
     onResultsConfigSelectToggle, onResultUpdate
   } = props;
-  const { argKeys } = stats;
+  const { argKeys, logKeys } = stats;
   const { resultsConfig = {} } = projectConfig;
 
+  const logHeaderElems = keyOptions.filter((key) => logKeys.indexOf(key) > -1).map((logKey) => (<th key={`logs-${logKey}`}>{logKey}</th>));
   const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}>{`(${argKey})`}</th>));
 
   const resultRowElems = Object.keys(results).map((resultId) => {
@@ -37,9 +39,7 @@ const ExperimentsTable = (props) => {
           <th />
           <th>id</th>
           <th>name</th>
-          <th>epoch</th>
-          <th>iteration</th>
-          <th>elapsed_time</th>
+          {logHeaderElems}
           {argHeaderElems}
           <th />
         </tr>
@@ -67,7 +67,8 @@ ExperimentsTable.propTypes = {
     }))
   }).isRequired,
   stats: PropTypes.shape({
-    argKeys: PropTypes.arrayOf(PropTypes.string)
+    argKeys: PropTypes.arrayOf(PropTypes.string),
+    logKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   onResultsConfigSelectToggle: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired
@@ -80,4 +81,3 @@ ExperimentsTable.defaultProps = {
 };
 
 export default ExperimentsTable;
-
