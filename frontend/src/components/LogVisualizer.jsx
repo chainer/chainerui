@@ -17,6 +17,7 @@ import {
   createLine
 } from '../utils';
 import LogVisualizerTooltip from './LogVisualizerTooltip';
+import { keyOptions } from '../constants';
 
 
 const getDomain = (axisConfig = {}) => {
@@ -88,7 +89,7 @@ const LogVisualizer = (props) => {
     yLeftAxis = { axisName: 'yLeftAxis' },
     yRightAxis = { axisName: 'yRightAxis' }
   } = axes || {};
-  const { xAxisKey = 'epoch' } = xAxis;
+  const { xAxisKey = keyOptions.filter((key) => logKeys.indexOf(key) > -1)[0] } = xAxis;
   const selectedResults = getSelectedResults(results, resultsConfig);
   const selectedLogKeys = {
     yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
