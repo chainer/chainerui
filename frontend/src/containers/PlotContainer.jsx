@@ -8,7 +8,7 @@ import {
   resetProjectConfig,
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
-  toggleResultsConfigSelect,
+  updateResultsConfigSelect,
   updateGlobalPollingRate, updateGlobalChartSize,
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber
@@ -98,7 +98,7 @@ class PlotContainer extends React.Component {
                 results={results}
                 stats={stats}
                 projectConfig={projectConfig}
-                onResultsConfigSelectToggle={this.props.toggleResultsConfigSelect}
+                onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
               />
             </div>
@@ -190,7 +190,7 @@ PlotContainer.propTypes = {
   updateLineInAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
   toggleLogKeySelect: PropTypes.func.isRequired,
-  toggleResultsConfigSelect: PropTypes.func.isRequired,
+  updateResultsConfigSelect: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
@@ -210,7 +210,7 @@ export default connect(mapStateToProps, {
   updateLineInAxis,
   updateAxisScale,
   toggleLogKeySelect,
-  toggleResultsConfigSelect,
+  updateResultsConfigSelect,
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateXAxisKey,

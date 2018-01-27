@@ -241,7 +241,7 @@ const resultsConfig = (state = {}, action) => {
   const { resultId } = action;
   const resultConfig = state[resultId] || {};
   switch (action.type) {
-    case ActionTypes.RESULTS_CONFIG_SELECT_TOGGLE:
+    case ActionTypes.RESULTS_CONFIG_SELECT_UPDATE:
       if (resultId == null) {
         return state;
       }
@@ -249,7 +249,7 @@ const resultsConfig = (state = {}, action) => {
         ...state,
         [Number(resultId)]: {
           ...resultConfig,
-          hidden: !resultConfig.hidden
+          hidden: action.hidden
         }
       };
     case ActionTypes.RESULT_UPDATE_SUCCESS:
