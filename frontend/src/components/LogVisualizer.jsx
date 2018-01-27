@@ -9,7 +9,6 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts';
-import 'rc-slider/assets/index.css';
 import {
   line2key, line2name, line2dataKey,
   formatLogValue,
