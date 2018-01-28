@@ -81,13 +81,13 @@ const LogVisualizer = (props) => {
     stats
   } = props;
   const { axes, resultsConfig = {}, lines = {} } = projectConfig;
-  const { logKeys = [] } = stats;
+  const { logKeys = [], xAxisKeys } = stats;
   const {
     xAxis = { axisName: 'xAxis' },
     yLeftAxis = { axisName: 'yLeftAxis' },
     yRightAxis = { axisName: 'yRightAxis' }
   } = axes || {};
-  const { xAxisKey = 'epoch' } = xAxis;
+  const { xAxisKey = xAxisKeys[0] } = xAxis;
   const selectedResults = getSelectedResults(results, resultsConfig);
   const selectedLogKeys = {
     yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
@@ -181,7 +181,8 @@ const LogVisualizer = (props) => {
 LogVisualizer.propTypes = {
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   stats: PropTypes.shape({
-    logKeys: PropTypes.arrayOf(PropTypes.string)
+    logKeys: PropTypes.arrayOf(PropTypes.string),
+    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   projectConfig: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.shape({

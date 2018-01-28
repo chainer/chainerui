@@ -9,9 +9,10 @@ const ExperimentsTable = (props) => {
     results = {}, stats, projectConfig,
     onResultsConfigSelectUpdate, onResultUpdate
   } = props;
-  const { argKeys } = stats;
+  const { argKeys, xAxisKeys } = stats;
   const { resultsConfig = {} } = projectConfig;
 
+  const logHeaderElems = xAxisKeys.map((logKey) => (<th key={`logs-${logKey}`}>{logKey}</th>));
   const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}>{`(${argKey})`}</th>));
 
   const resultKeys = Object.keys(results);
@@ -56,9 +57,7 @@ const ExperimentsTable = (props) => {
           </th>
           <th>id</th>
           <th>name</th>
-          <th>epoch</th>
-          <th>iteration</th>
-          <th>elapsed_time</th>
+          {logHeaderElems}
           {argHeaderElems}
           <th />
         </tr>
@@ -86,7 +85,8 @@ ExperimentsTable.propTypes = {
     }))
   }).isRequired,
   stats: PropTypes.shape({
-    argKeys: PropTypes.arrayOf(PropTypes.string)
+    argKeys: PropTypes.arrayOf(PropTypes.string),
+    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired
@@ -99,4 +99,3 @@ ExperimentsTable.defaultProps = {
 };
 
 export default ExperimentsTable;
-

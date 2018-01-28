@@ -81,6 +81,7 @@ export const defaultProjectConfig = {
   lines: {}
 };
 
+export const keyOptions = ['epoch', 'iteration', 'episode', 'step', 'elapsed_time'];
+
 export const SCHEDULE_NOW = 'scheduleNow';
 export const SCHEDULE_CUSTOM = 'scheduleCustom';
-
