@@ -10,6 +10,7 @@ from chainerui import create_db
 from chainerui import DB_FILE_PATH
 from chainerui.models.project import Project
 from chainerui import upgrade_db
+from chainerui.utils.commands_state import CommandsState
 
 from six import string_types
 
@@ -94,6 +95,39 @@ def setup_test_project(root_path):
         json.dump(commands, f)
     open(os.path.join(path, 'snapshot_iter_2400'), 'w').close()
 
+    # log, args, commands, status(run)
+    path = os.path.join(root_path, '10003')
+    os.makedirs(path)
+    with open(os.path.join(path, 'log'), 'w') as f:
+        json.dump(log, f)
+    with open(os.path.join(path, 'args'), 'w') as f:
+        json.dump(args, f)
+    with open(os.path.join(path, 'commands'), 'w') as f:
+        json.dump(commands, f)
+    CommandsState.run(path)
+
+    # log, args, commands, status(stop)
+    path = os.path.join(root_path, '10004')
+    os.makedirs(path)
+    with open(os.path.join(path, 'log'), 'w') as f:
+        json.dump(log, f)
+    with open(os.path.join(path, 'args'), 'w') as f:
+        json.dump(args, f)
+    with open(os.path.join(path, 'commands'), 'w') as f:
+        json.dump(commands, f)
+    CommandsState.stop(path)
+
+    # log, args, commands, status(not run)
+    path = os.path.join(root_path, '10005')
+    os.makedirs(path)
+    with open(os.path.join(path, 'log'), 'w') as f:
+        json.dump(log, f)
+    with open(os.path.join(path, 'args'), 'w') as f:
+        json.dump(args, f)
+    with open(os.path.join(path, 'commands'), 'w') as f:
+        json.dump(commands, f)
+    CommandsState._dump(path, CommandsState._load(path, initialize=True))
+
 
 def setup_test_db(project_path, project_name):
     create_db()
@@ -113,16 +147,21 @@ class TestAPI(unittest.TestCase):
                 'when you run this test'
             )
 
-    def setUp(self):
         test_dir = tempfile.mkdtemp(prefix='chainerui_test_api')
-        self._dir = test_dir
+        cls._dir = test_dir
         project_path = os.path.join(test_dir, 'test_project')
         setup_test_project(project_path)
-        self._project_path = project_path
+        cls._project_path = project_path
+
+    @classmethod
+    def tearDownClass(cls):
+        if os.path.exists(cls._dir):
+            shutil.rmtree(cls._dir)
+
+    def setUp(self):
         project_name = 'my-project'
-        setup_test_db(project_path, project_name)
+        setup_test_db(self._project_path, project_name)
         self._project_name = project_name
-        print(project_path)
 
         app = create_app()
         app.testing = True
@@ -132,8 +171,6 @@ class TestAPI(unittest.TestCase):
         # remove test db if exists
         if os.path.exists(DB_FILE_PATH):
             os.remove(DB_FILE_PATH)
-        if os.path.exists(self._dir):
-            shutil.rmtree(self._dir)
 
     def assert_test_project(self, project, name=None):
         assert len(project) == 3
@@ -325,9 +362,10 @@ class TestAPI(unittest.TestCase):
             },
         ]
 
+        # job has already started
         for i in range(3):
             resp = self.app.post(
-                '/api/v1/projects/1/results/' + str(i + 1) + '/commands',
+                '/api/v1/projects/1/results/4/commands',
                 data=json.dumps(request_jsons[i]),
                 content_type='application/json')
             data = assert_json_api(resp)
@@ -344,6 +382,46 @@ class TestAPI(unittest.TestCase):
             assert isinstance(command['request']['created_at'], string_types)
             assert isinstance(command['request']['status'], string_types)
             assert 'response' in command
+
+        # not set extension
+        resp = self.app.post(
+            '/api/v1/projects/1/results/2/commands',
+            data=json.dumps(request_jsons[0]),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 1
+        assert isinstance(data['message'], string_types)
+        assert 'not set' in data['message']
+
+        # job run on v0.1.0 so .chainerui_commands is not created
+        resp = self.app.post(
+            '/api/v1/projects/1/results/3/commands',
+            data=json.dumps(request_jsons[0]),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 1
+        assert isinstance(data['message'], string_types)
+        assert 'stopped' in data['message']
+
+        # jos has stopped
+        resp = self.app.post(
+            '/api/v1/projects/1/results/5/commands',
+            data=json.dumps(request_jsons[0]),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 1
+        assert isinstance(data['message'], string_types)
+        assert 'stopped' in data['message']
+
+        # not set extension
+        resp = self.app.post(
+            '/api/v1/projects/1/results/6/commands',
+            data=json.dumps(request_jsons[0]),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 1
+        assert isinstance(data['message'], string_types)
+        assert 'not run' in data['message']
 
         request_jsons = [
             {
@@ -362,7 +440,7 @@ class TestAPI(unittest.TestCase):
 
         for i in range(2):
             resp = self.app.post(
-                '/api/v1/projects/1/results/' + str(i + 1) + '/commands',
+                '/api/v1/projects/1/results/4/commands',
                 data=json.dumps(request_jsons[i]),
                 content_type='application/json')
             data = assert_json_api(resp, 400)

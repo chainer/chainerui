@@ -6,6 +6,7 @@ from chainer.training.triggers import IntervalTrigger
 import six
 
 from chainerui.utils.command_item import CommandItem
+from chainerui.utils.commands_state import CommandsState
 
 
 def shouldExecute(trainer, command):
@@ -139,8 +140,12 @@ class CommandsExtension(extension.Extension):
         self._receivers = self.default_receivers.copy()
         self._receivers.update(receivers)
 
+        self._out = ''
+
     def initialize(self, trainer):
+        self._out = trainer.out
         CommandItem.remove_commands_file(trainer.out)
+        CommandsState.run(trainer)
         if isinstance(trainer.stop_trigger, IntervalTrigger):
             trainer.stop_trigger = _CommandIntervalTrigger(
                 trainer.stop_trigger)
@@ -167,7 +172,8 @@ class CommandsExtension(extension.Extension):
             CommandItem.dump_commands(commands, trainer.out)
 
     def finalize(self):
-        pass
+        if self._out != '':
+            CommandsState.stop(self._out)
 
     def add_receiver(self, command_name, function):
         if command_name is None:

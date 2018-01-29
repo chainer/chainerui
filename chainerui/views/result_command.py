@@ -6,6 +6,8 @@ from chainerui import DB_SESSION
 from chainerui.models.result import Result
 from chainerui.tasks import crawl_result
 from chainerui.utils.command_item import CommandItem
+from chainerui.utils.commands_state import CommandsState
+from chainerui.utils.commands_state import JobStatus
 
 
 class ResultCommandAPI(MethodView):
@@ -21,6 +23,25 @@ class ResultCommandAPI(MethodView):
                 'result': None,
                 'message': 'No interface defined for URL.'
             }), 404
+
+        job_status = CommandsState.job_status(result.path_name)
+        if job_status != JobStatus.RUNNING:
+            if job_status == JobStatus.NO_EXTENSION_ERROR:
+                return jsonify({
+                    'message': '\'CommandsExtension\' is not set or disabled.'
+                }), 400
+            elif job_status == JobStatus.INITIALIZED:
+                return jsonify({
+                    'message': 'The target training job has not run, yet'
+                }), 400
+            elif job_status == JobStatus.STOPPED:
+                return jsonify({
+                    'message': 'The target training job has already stopped'
+                }), 400
+            else:
+                return jsonify({
+                    'message': 'Cannot get the target training job status'
+                }), 400
 
         request_json = request.get_json()
         if request_json is None:
