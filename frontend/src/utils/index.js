@@ -72,7 +72,7 @@ export const argValue2string = (argValue) => {
   if (argValue == null) {
     return emptyStr;
   }
-  return (typeof argValue === 'boolean') ? String(argValue) : argValue;
+  return (typeof argValue === 'boolean') ? String(argValue) : JSON.stringify(argValue);
 };
 
 export const isJsonString = (str) => {
