@@ -41,6 +41,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
     "jquery": "^3.2.1",
+    "open-iconic": "^1.1.1",
     "popper.js": "^1.12.3",
     "prop-types": "^15.5.10",
     "react": "^16.2.0",
