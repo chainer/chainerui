@@ -90,7 +90,7 @@ module.exports = {
         })
       },
       {
-        test: /\.(png|jpe?g|gif|svg|eot|otf|ttf|woff|woff2)$/,
+        test: /\.(png|jpe?g|gif|svg|eot|otf|ttf|woff2?)$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]'
