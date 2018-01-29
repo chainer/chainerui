@@ -267,9 +267,22 @@ class TestAPI(unittest.TestCase):
             self.assert_test_project_result(data['result'])
             assert data['result']['id'] == i + 1
 
-        # raise an unexpected exception
-        #   when GET /api/v1/projects/1/results/12345
-        # not raise an exception when GET /api/v1/projects/12345/results/1
+        # invalid project ID
+        resp = self.app.get('/api/v1/projects/12345/results/1')
+        json_str = resp.data.decode()
+        print('aaa')
+        print(json_str)
+        data = assert_json_api(resp, 404)
+        assert len(data) == 2
+        assert isinstance(data['message'], string_types)
+        assert data['project'] is None
+
+        # invalid result ID
+        resp = self.app.get('/api/v1/projects/1/results/12345')
+        data = assert_json_api(resp, 404)
+        assert len(data) == 2
+        assert isinstance(data['message'], string_types)
+        assert data['result'] is None
 
     # PUT /api/v1/projects/<int:project_id>/results/<int:id>
     def test_put_result(self):
