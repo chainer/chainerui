@@ -1,11 +1,11 @@
 from datetime import datetime
-import json
 import os
 import shutil
 import tempfile
 
 from chainerui.models.command import Command
 from chainerui.utils.is_jsonable import is_jsonable
+from chainerui.utils import json
 
 
 class CommandItem(object):

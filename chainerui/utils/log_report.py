@@ -1,10 +1,10 @@
-import json
 import os
 import shutil
 import tempfile
 
 from chainer.training.trainer import _get_time
 
+from chainerui.utils import json
 from chainerui.utils.save_args import save_args
 
 

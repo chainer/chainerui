@@ -1,8 +1,9 @@
 import argparse
-import json
 import os
 import shutil
 import tempfile
+
+from chainerui.utils import json
 
 
 def save_args(conditions, out_path):
