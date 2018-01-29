@@ -64,7 +64,7 @@ ChainerUI basically supports the `Trainer module <https://docs.chainer.org/en/st
 
 .. note::
 
-   `examples/train_mnist_custom_loop.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__ is an example, basaed on `chainer/examples/mnist/train_mnist_custom_loop <https://github.com/chainer/chainer/blob/e2fe6f8023e635f8c1fc9c89e85d075ebd50c529/examples/mnist/train_mnist_custom_loop.py>`__, which does not use the training loop from ``Trainer``. However, this example will not use the training loop from :ref:`result page <ui_result_page>`.
+   `examples/train_mnist_custom_loop.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__ is an example, basaed on `chainer/examples/mnist/train_mnist_custom_loop <https://github.com/chainer/chainer/blob/e2fe6f8023e635f8c1fc9c89e85d075ebd50c529/examples/mnist/train_mnist_custom_loop.py>`__, which does not use the training loop from ``Trainer``. However, this example will not use the training loop from :ref:`getstart_operate_training_loop`.
 
 Training log
 ~~~~~~~~~~~~
@@ -73,11 +73,12 @@ Training log
 
 ChainerUI plots training log values read from  the ``log`` files and shows the training job. The ``log`` file is a JSON file created by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension or :ref:`chainerui's LogReport <module_log_report>`, which is registered automatically and created under the project path. If ``log`` files are updated, the chart and results table are also updated continuously.
 
-* ``epoch``, ``iteration`` or ``elapsed_time`` is used as X-axis, selected on ``xAxis`` pane. These parameters are set automatically by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__
-    
-    * if using :ref:`chainerui's LogReport <module_log_report>`, only the ``elapsed_time`` is set.
+.. note::
 
-* The other key-value items are plotted.
+   ``epoch``, ``iteration``, ``episode``, ``step`` and ``elapsed_time`` are assumed as x-axis. X-axis of a chart is selected by ``xAxis`` pane.
+
+   * `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension sets ``epoch``, ``iteration`` and ``elapsed_time`` automatically.
+   * :ref:`chainerui's LogReport <module_log_report>` sets ``elapsed_time`` automatically. Other x-axis keys have to be set manually if necessary.
 
 Setup example from a brief  `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
 
@@ -147,9 +148,6 @@ A example without ``Trainer`` code, from a short extract of the `MNIST custom lo
                   }
               ui_report(stats)
 
-.. note::
-
-   :ref:`chainerui's LogReport <module_log_report>` only sets ``exampled_time``, so train loop has to set ``epoch`` and ``iteration`` manually.
 
 Experimental conditions
 ~~~~~~~~~~~~~~~~~~~~~~~

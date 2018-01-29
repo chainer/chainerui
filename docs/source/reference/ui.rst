@@ -50,6 +50,10 @@ Project: Show training chart and jobs
 Show training logs and experimental conditions.
 
 * Select X-axis value by ``xAxis`` pane.
+
+    * ``epoch``, ``iteration``, ``episode``, ``step`` and ``elapsed_time`` are assumed as x-axis.
+    * Drop-down list shows only keys existed in ``log`` files.
+
 * Select values by ``yLeftAxis`` and ``yRightAxis`` panes.
 * Select training job to show on a chart.
 * Reset setting button
@@ -79,6 +83,8 @@ Result: Show detailed information of the results
 .. image:: ../../images/result_detail.png
 
 Show detailed information of the training job and support operation of the training loop.
+
+.. _ui_result_page_commands:
 
 Commands pane
 ~~~~~~~~~~~~~
