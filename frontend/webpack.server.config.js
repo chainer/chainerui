@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies  */
+
 const webpack = require('webpack');
 const WriteFileWebpackPlugin = require('write-file-webpack-plugin');
 
@@ -17,7 +19,7 @@ const publicPath = `http://${devServer.host}:${devServer.port}/`;
 
 config.devServer = devServer;
 config.output.publicPath = publicPath;
-config.entry['chainerui'].unshift(
+config.entry.chainerui.unshift(
   'react-hot-loader/patch',
   `webpack-dev-server/client?${publicPath}`,
   'webpack/hot/dev-server'
@@ -30,8 +32,6 @@ config.plugins.unshift(
   new webpack.NamedModulesPlugin(),
   new webpack.NoEmitOnErrorsPlugin()
 );
-
-// config.plugins[0].definitions['process.env.LOAD_URL'] = JSON.stringify(publicPath);
 config.plugins.push(
   new WriteFileWebpackPlugin({
     exitOnErrors: false,

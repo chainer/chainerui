@@ -1,14 +1,17 @@
+/* eslint-disable global-require  */
+
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
+
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const NODE_PROD = (NODE_ENV === 'production');
-const filename = '[name]';
 const nodeModulePath = path.resolve(__dirname, 'node_modules');
+
 const versionPyPath = path.resolve(path.dirname(__dirname), 'chainerui', '_version.py');
 const versionPy = fs.readFileSync(versionPyPath, 'utf8');
 const versionMatches = /^__version__\s*=\s*'([^']*)'$/m.exec(versionPy);
@@ -21,14 +24,19 @@ const version = versionMatches[1];
 
 module.exports = {
   entry: {
-    'chainerui': ['babel-polyfill', 'whatwg-fetch', './src/index.jsx'],
+    chainerui: [
+      'babel-polyfill',
+      'whatwg-fetch',
+      './src/index.jsx'
+    ],
     vendor: Object.keys(require('./package.json').dependencies).concat([
-      'bootstrap/dist/css/bootstrap.css', 'babel-polyfill'
+      'bootstrap/dist/css/bootstrap.css',
+      'babel-polyfill'
     ])
   },
   output: {
-    path: path.resolve(path.dirname(__dirname), 'chainerui/static/dist'),
-    filename: `${filename}.js`
+    path: path.resolve(path.dirname(__dirname), 'chainerui', 'static', 'dist'),
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -36,10 +44,7 @@ module.exports = {
         enforce: 'pre',
         test: /\.jsx?$/,
         exclude: nodeModulePath,
-        loader: 'eslint-loader',
-        options: {
-          fix: true
-        }
+        loader: 'eslint-loader'
       },
       {
         test: /\.jsx?$/,
@@ -48,10 +53,12 @@ module.exports = {
         options: {
           presets: [
             ['es2015', { modules: false }],
-            'stage-0',
             'react'
           ],
-          plugins: ["transform-object-rest-spread", "babel-plugin-lodash"],
+          plugins: [
+            'transform-object-rest-spread',
+            'babel-plugin-lodash'
+          ]
         }
       },
       {
@@ -72,8 +79,7 @@ module.exports = {
                 plugins: [
                   require('autoprefixer')({
                     browsers: ['last 2 versions']
-                  }),
-                  // ...(NODE_PROD ? require('./postcss.plugins.production') : [])
+                  })
                 ]
               }
             }
@@ -90,7 +96,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.es6']
+    extensions: ['.js', '.jsx']
   },
   devtool: NODE_PROD ? false : 'inline-source-map',
   target: 'web',
@@ -104,20 +110,19 @@ module.exports = {
       $: 'jquery',
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
-      Popper: ['popper.js', 'default'],
+      Popper: ['popper.js', 'default']
     }),
     new HtmlWebpackPlugin({
       title: 'chainerui'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      filename: `${filename}.js`,
-      minChunks: Infinity,
+      filename: '[name].js',
+      minChunks: Infinity
     }),
-    new ExtractTextWebpackPlugin(`${filename}.css`, {
+    new ExtractTextWebpackPlugin('[name].css', {
       allChunks: true
-    }),
-    // ...(NODE_PROD ? require('./plugins.production') : [])
+    })
   ],
   node: {
     __dirname: false,

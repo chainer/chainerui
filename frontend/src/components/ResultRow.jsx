@@ -31,8 +31,8 @@ class ResultRow extends React.Component {
   }
 
   handleSelectToggle() {
-    const { projectId, result, onResultsConfigSelectToggle } = this.props;
-    onResultsConfigSelectToggle(projectId, result.id);
+    const { projectId, result, resultConfig, onResultsConfigSelectUpdate } = this.props;
+    onResultsConfigSelectUpdate(projectId, result.id, !resultConfig.hidden);
   }
 
   handleResultNameChange(e) {
@@ -78,6 +78,13 @@ class ResultRow extends React.Component {
     args.forEach((arg) => {
       argDict[arg.key] = arg.value;
     });
+
+    const logElems = stats.xAxisKeys.map((logKey) => {
+      if (logKey === 'elapsed_time') {
+        return <td key={`logs-${logKey}`} className="text-right">{lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2)}</td>;
+      }
+      return <td key={`logs-${logKey}`} className="text-right">{lastLogDict[logKey]}</td>;
+    });
     const argElems = stats.argKeys.map((argKey) => (<td key={`args-${argKey}`}>{argValue2string(argDict[argKey])}</td>));
 
     return (
@@ -99,11 +106,7 @@ class ResultRow extends React.Component {
             onBlur={this.handleResultUpdate}
           />
         </td>
-        <td className="text-right">{lastLogDict.epoch}</td>
-        <td className="text-right">{lastLogDict.iteration}</td>
-        <td className="text-right">
-          {lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2)}
-        </td>
+        {logElems}
         {argElems}
         <td>
           <Button className="close" aria-label="Close" onClick={this.toggleUnregisterModal}>
@@ -135,12 +138,13 @@ ResultRow.propTypes = {
     logs: PropTypes.arrayOf(PropTypes.any)
   }).isRequired,
   stats: PropTypes.shape({
-    argKeys: PropTypes.arrayOf(PropTypes.string)
+    argKeys: PropTypes.arrayOf(PropTypes.string),
+    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
   }),
   resultConfig: PropTypes.shape({
     hidden: PropTypes.bool
   }),
-  onResultsConfigSelectToggle: PropTypes.func.isRequired,
+  onResultsConfigSelectUpdate: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired
 };
 

@@ -14,12 +14,17 @@ class ResultAPI(MethodView):
 
     def get(self, id=None, project_id=None):
         """get."""
+        project = DB_SESSION.query(Project).\
+            filter_by(id=project_id).\
+            first()
+        if project is None:
+            return jsonify({
+                'project': None,
+                'message': 'No interface defined for URL.'
+            }), 404
 
         if id is None:
 
-            project = DB_SESSION.query(Project).\
-                filter_by(id=project_id).\
-                first()
             collect_results(project)
 
             results = DB_SESSION.query(Result).\
@@ -41,13 +46,13 @@ class ResultAPI(MethodView):
                 filter_by(is_unregistered=False).\
                 first()
 
-            result = crawl_result(result.id)
-
             if result is None:
                 return jsonify({
                     'result': None,
                     'message': 'No interface defined for URL.'
                 }), 404
+
+            result = crawl_result(result.id)
 
             return jsonify({
                 'result': result.serialize
