@@ -64,7 +64,7 @@ ChainerUI basically supports the `Trainer module <https://docs.chainer.org/en/st
 
 .. note::
 
-   `examples/train_mnist_custom_loop.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__ is an example, basaed on `chainer/examples/mnist/train_mnist_custom_loop <https://github.com/chainer/chainer/blob/e2fe6f8023e635f8c1fc9c89e85d075ebd50c529/examples/mnist/train_mnist_custom_loop.py>`__, which does not use the training loop from ``Trainer``. However, this example will not use the training loop from :ref:`detail page <ui_detail_page>`.
+   `examples/train_mnist_custom_loop.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__ is an example, basaed on `chainer/examples/mnist/train_mnist_custom_loop <https://github.com/chainer/chainer/blob/e2fe6f8023e635f8c1fc9c89e85d075ebd50c529/examples/mnist/train_mnist_custom_loop.py>`__, which does not use the training loop from ``Trainer``. However, this example will not use the training loop from :ref:`result page <ui_result_page>`.
 
 Training log
 ~~~~~~~~~~~~
@@ -191,7 +191,7 @@ Here is an ``args`` file examples, with values shown as experimental conditions 
 Operate training loop
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: ../images/detail_page_operation_block.png
+.. image:: ../images/result_page_operation_block.png
 
 ChainerUI supports operating a training loop with :ref:`CommandsExtension <module_command_extension>`. The latest version supports:
 
@@ -199,7 +199,7 @@ ChainerUI supports operating a training loop with :ref:`CommandsExtension <modul
 * Adjusting the hyperparameters of an optimizer
 * Stopping the training loop
 
-Operation buttons are in :ref:`detail page <ui_detail_page>`.
+Operation buttons are in :ref:`result page <ui_result_page>`.
 
 Setup example of a brief extract `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
 

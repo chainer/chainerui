@@ -3,13 +3,10 @@
 User interface manual
 =====================
 
-Page transition flow::
+Page transition flow:
 
-  [Home: Project list]
-    -- (select project) ->
-      [Project: Show training chart and jobs]
-        -- (select result ID) ->
-          [Result: Show detail information of result]
+.. image:: ../../images/page_flow.png
+
 
 Header
 ------
@@ -55,6 +52,9 @@ Show training logs and experimental conditions.
 * Select X-axis value by ``xAxis`` pane.
 * Select values by ``yLeftAxis`` and ``yRightAxis`` panes.
 * Select training job to show on a chart.
+* Reset setting button
+
+    * Along with axis settings and selected checkboxes, log keys like ``main/loss`` are also cached on browser storage. The reset button restores cached key, too.
 
 
 .. _ui_training_job_table:
@@ -71,7 +71,7 @@ The training job table shows brief log information and experimental conditions. 
    [Known problem] Once a result is unregistered, a result with the same name cannot be restored on the result table. This will be fixed in future.
 
 
-.. _ui_detail_page:
+.. _ui_result_page:
 
 Result: Show detailed information of the results
 ------------------------------------------------
@@ -83,19 +83,19 @@ Show detailed information of the training job and support operation of the train
 Commands pane
 ~~~~~~~~~~~~~
 
-Operation buttons in ``Commands`` pane allow users to operate the training job. To enable these buttons, the trining job is required to set :ref:`CommandsExtension <module_command_extension>` and click them within running the job. For more detail of how to set the extension, see :ref:`getstart_operate_training_loop`.
+Operation buttons in ``Commands`` pane allow users to operate the training job. To enable these buttons, the trining job is required to set :ref:`CommandsExtension <module_command_extension>` and click them **within running the job**. For more detail of how to set the extension, see :ref:`getstart_operate_training_loop`.
 
 **Take snapshot**
 
 Save a training model to the file in NPZ format with using `save_napz <https://docs.chainer.org/en/stable/reference/generated/chainer.serializers.save_npz.html>`__ By default, ``snapshot_iter_{.updater.iteration}`` file is saved to the result path.
 
-**Adjust**
-
-Adjust the hyperparameters of an optimizer. This function supports only `MomentumSGD <https://docs.chainer.org/en/stable/reference/generated/chainer.optimizers.MomentumSGD.html#chainer.optimizers.MomentumSGD>`__ optimizer.
-
 **Stop**
 
 Stop the trining loop.
+
+**Adjust**
+
+Adjust the hyperparameters of an optimizer. This function supports only `MomentumSGD <https://docs.chainer.org/en/stable/reference/generated/chainer.optimizers.MomentumSGD.html#chainer.optimizers.MomentumSGD>`__ optimizer.
 
 **Command history**
 
