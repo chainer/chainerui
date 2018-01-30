@@ -27,7 +27,7 @@ $ python setup.py install
 ```
 
 - ChainerUI uses `sqlite3` module which is included in the standard Python library. If Python is built from source, `sqlite3` must be installed before building Python.
-    - on Ubuntu, "libsqlite3-dev" must be installed before building Python (`$ apt-get install libsqlite3-dev`).
+    - On Ubuntu, "libsqlite3-dev" must be installed before building Python (`$ apt-get install libsqlite3-dev`).
     - On Windows, install Visual C++ Build Tools with the Default Install setting before building Python.
 
 ## Quick start
