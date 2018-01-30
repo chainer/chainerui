@@ -223,4 +223,20 @@ Setup example of a brief extract `MNIST example <https://github.com/chainer/chai
 
 .. note::
 
-   Adjusting the pyperparameters supports only `MomentumSGD <https://docs.chainer.org/en/stable/reference/generated/chainer.optimizers.MomentumSGD.html#chainer.optimizers.MomentumSGD>`__.
+   Adjusting the pyperparameters supports only `MomentumSGD <https://docs.chainer.org/en/stable/reference/generated/chainer.optimizers.MomentumSGD.html#chainer.optimizers.MomentumSGD>`__ and learning rate (``lr``). The optimizer is required to be registered by the name ``'main'``.
+
+   *Support*
+
+   .. code-block:: python
+
+     updater = training.StandardUpdater(train_iter, optimizer, device=args.gpu)
+
+   .. code-block:: python
+
+     updater = training.StandardUpdater(train_iter, {'main': optimizer}, device=args.gpu)
+
+   *Not support*
+
+   .. code-block:: python
+
+     updater = training.StandardUpdater(train_iter, {'sub': optimizer}, device=args.gpu)
