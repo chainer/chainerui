@@ -1,7 +1,9 @@
 # ChainerUI
 
+[![PyPI](https://img.shields.io/pypi/v/chainerui.svg)](https://pypi.python.org/pypi/chainerui)
 [![Build Status](https://travis-ci.org/chainer/chainerui.svg?branch=master)](https://travis-ci.org/chainer/chainerui)
 [![Coverage Status](https://coveralls.io/repos/github/chainer/chainerui/badge.svg)](https://coveralls.io/github/chainer/chainerui)
+[![Documentation Status](https://readthedocs.org/projects/chainerui/badge/?version=latest)](http://chainerui.readthedocs.io/en/latest/?badge=latest)
 
 ![training_captures](https://user-images.githubusercontent.com/414255/34244148-637e6630-e667-11e7-8a6b-9a857fa806bc.gif)
 
@@ -9,20 +11,13 @@ ChainerUI is a visualization and management tool for [Chainer](https://github.co
 
 ## Installation
 
-To install ChainerUI, use `pip`
+To install ChainerUI, use `pip`.
 
 ```sh
 $ pip install chainerui
 ```
 
-Then initialize ChainerUI database.
-
-```sh
-$ chainerui db create
-$ chainerui db upgrade
-```
-
-To install ChainerUI from source
+To install ChainerUI from source.
 
 ```sh
 $ git clone https://github.com/chainer/chainerui.git
@@ -31,13 +26,20 @@ $ npm install && npm run build && cd ..
 $ python setup.py install
 ```
 
-- ChainerUI uses `sqlite3` module which is included in the Python standard library. To enable `sqlite3` module, need to install SQLite library before building Python.
-    - on Ubuntu, install "libsqlite3-dev" (`apt-get install libsqlite3-dev`) before building Python
-- On Windows, install Visual C++ Build Tools with the Default Install setting, before ChainerUI install.
+- ChainerUI uses `sqlite3` module which is included in the standard Python library. If Python is built from source, `sqlite3` must be installed before building Python.
+    - on Ubuntu, "libsqlite3-dev" must be installed before building Python (`$ apt-get install libsqlite3-dev`).
+    - On Windows, install Visual C++ Build Tools with the Default Install setting before building Python.
 
 ## Quick start
 
-Try examples.
+Initialize ChainerUI database.
+
+```sh
+$ chainerui db create
+$ chainerui db upgrade
+```
+
+Clone examples of train log and create a project.
 
 ```sh
 $ git clone https://github.com/chainer/chainerui.git
@@ -50,54 +52,13 @@ $ # run ChainerUI server
 $ chainerui server
 ```
 
-Open http://localhost:5000/ and select "example-project". 
+Open http://localhost:5000/ and select "example-project".
 
-## Usage
-
-### Create a project
-
-```sh
-$ chainerui project create -d PROJECT_DIR [-n PROJECT_NAME]
-```
-
-The ChainerUI server watches the below files under the project directory recursively.
-
-- `log`: a JSON file created by [`LogReport`](https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html) extension.
-- `args`: *(optional)* a JSON file, which includes key-value pairs you want to see on ChainerUI along with logs. See [`save_args`](chainerui/utils/save_args.py), util function to dump command line arguments or dictionary to `args` file.
-- `commands`: *(optional)* a JSON file, which is automatically created by [`CommandsExtension`](chainerui/extensions/commands_extension.py) . This is a file for ChainerUI server to communicate with `CommandsExtension` .
-
-```
-path/to/result
-  |--- log
-  |--- args
-  |--- commands
-```
-
-[`examples/train_mnist.py`](examples/train_mnist.py), based on [`chainer/examples/mnist/train_mnist.py`](https://github.com/chainer/chainer/blob/4de98cf90e747940f1dd7f7f4cdf1fcc0b4b4786/examples/mnist/train_mnist.py), is a useful example to see how to set `save_args` and `CommandsExtension` on training script.
-
-### Start ChainerUI server
-
-```sh
-$ chainerui server
-```
-
-Open http://localhost:5000/ .
-
-### Unregister results
-
-To unregister a result, click `X` button at the right end of the result table. If unregister a result once, cannot restore the same name result on the result table (known problem).
-
-To unregister all results, drop and create a new database as follows.
-
-```sh
-$ chainerui db drop
-$ chainerui db create
-$ chainerui db upgrade
-```
+For more detailed usage, see [getting started](http://chainerui.readthedocs.io/en/latest/getstart.html)
 
 ## Browser compatibility
 
-ChainerUI is supported by the latest stable version of the following browser.
+ChainerUI is supported by the latest stable version of the following browsers.
 
 - Firefox
 - Chrome
