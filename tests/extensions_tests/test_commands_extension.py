@@ -1,8 +1,8 @@
+from mock import MagicMock
 import os
 import shutil
 import tempfile
 import unittest
-from unittest.mock import MagicMock
 
 from chainer.training import Trainer
 from chainer.training.triggers import IntervalTrigger
