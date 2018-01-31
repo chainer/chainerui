@@ -53,24 +53,25 @@ def _check_log_updated(result):
         return False
 
     current_modified_at = result.log_modified_at
-    modified_at = os.path.getmtime(log_json_path)
+    modified_at = datetime.datetime.fromtimestamp(
+        os.path.getmtime(log_json_path))
     if current_modified_at is None or current_modified_at != modified_at:
-        result.log_modified_at = datetime.datetime.fromtimestamp(modified_at)
+        result.log_modified_at = modified_at
         return True
 
     return False
 
 
-def crawl_result(result_id, force=None):
+def crawl_result(result_id, force=False):
     """crawl_results."""
 
     current_result = DB_SESSION.query(Result).filter_by(id=result_id).first()
 
     now = datetime.datetime.now()
 
-    if force is None and (now - current_result.updated_at).total_seconds() < 4:
+    if (not force) and (now - current_result.updated_at).total_seconds() < 4:
         return current_result
-    if force is None and not _check_log_updated(current_result):
+    if (not force) and not _check_log_updated(current_result):
         return current_result
 
     crawled_result = crawl_result_path(current_result.path_name)
