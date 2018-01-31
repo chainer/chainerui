@@ -46,6 +46,21 @@ def crawl_result_path(result_path):
     return result
 
 
+def _check_log_updated(result):
+    log_json_path = os.path.join(result.path_name, 'log')
+    if not os.path.isfile(log_json_path):
+        # log file is removed, so don't have to update
+        return False
+
+    current_modified_at = result.log_modified_at
+    modified_at = os.path.getmtime(log_json_path)
+    if current_modified_at is None or current_modified_at != modified_at:
+        result.log_modified_at = datetime.datetime.fromtimestamp(modified_at)
+        return True
+
+    return False
+
+
 def crawl_result(result_id, force=None):
     """crawl_results."""
 
@@ -54,6 +69,8 @@ def crawl_result(result_id, force=None):
     now = datetime.datetime.now()
 
     if force is None and (now - current_result.updated_at).total_seconds() < 4:
+        return current_result
+    if force is None and not _check_log_updated(current_result):
         return current_result
 
     crawled_result = crawl_result_path(current_result.path_name)
