@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import shutil
@@ -48,7 +49,10 @@ class TestCrawlResult(unittest.TestCase):
         result = Result(path_name=self._result_path)
         assert _check_log_updated(result)
         assert result.log_modified_at is not None
-        modified_at = result.log_modified_at
+        # NOTE: getmtime precision is rough, so back 0.1s on purpose
+        modified_at = result.log_modified_at - datetime.timedelta(
+            milliseconds=100)
+        result.log_modified_at = modified_at
 
         with open(os.path.join(self._result_path, 'log'), 'r') as f:
             logs = json.load(f)
