@@ -67,6 +67,21 @@ class TestCommandsExtension(unittest.TestCase):
         _stop_training(trainer, None)
         assert trainer.stop_trigger._loop_stop
 
+    def test_add_receiver(self):
+        target = CommandsExtension()
+
+        def f():
+            pass
+        target.add_receiver('f', f)
+        assert 'f' in target._receivers
+
+        with self.assertRaises(ValueError) as e:
+            target.add_receiver(None, None)
+        assert 'not given' in str(e.exception)
+        with self.assertRaises(ValueError) as e:
+            target.add_receiver('f', 0)
+        assert 'not callable' in str(e.exception)
+
     def test_call(self):
         out_path = os.path.join(self._dir, 'results')
         os.makedirs(out_path)
