@@ -1,12 +1,9 @@
-import os
-
 from alembic.command import revision
-from alembic.config import Config
 from alembic.migration import MigrationContext
+from alembic.script import ScriptDirectory
 
-from chainerui import _version
 from chainerui import ENGINE
-from chainerui import PACKAGE_DIR
+from chainerui import setup_db_revision_config
 
 
 def current_db_revision():
@@ -19,7 +16,9 @@ def check_current_db_revision():
     if current_rev is None:
         return False
 
-    module_rev = _version._db_revision
+    config = setup_db_revision_config()
+    script = ScriptDirectory.from_config(config)
+    module_rev = script.get_current_head()
     if current_rev != module_rev:
         return False
 
@@ -27,8 +26,5 @@ def check_current_db_revision():
 
 
 def new_revision():
-    ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
-    config = Config(ini_path)
-    config.set_main_option(
-        "script_location", os.path.join(PACKAGE_DIR, 'migration'))
+    config = setup_db_revision_config()
     revision(config)
