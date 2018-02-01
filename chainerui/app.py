@@ -1,23 +1,33 @@
 import argparse
 import os
 
-import alembic
-from alembic.command import revision
-from alembic.config import Config
-
 from chainerui import _version
 from chainerui import create_app
 from chainerui import create_db
 from chainerui import DB_FILE_PATH
 from chainerui import DB_SESSION
-from chainerui import ENGINE
 from chainerui.models.project import Project
-from chainerui import PACKAGE_DIR
 from chainerui import upgrade_db
+from chainerui.utils import db_revision
+
+
+def _check_db_revision():
+    if not db_revision.check_current_db_revision():
+        command = 'upgrade'
+        if db_revision.current_db_revision() is None:
+            command = 'setup'
+        msg = 'The current DB schema version is not supported, ' +\
+            'please %s DB' % command
+        print(msg)
+        return False
+    return True
 
 
 def server_handler(args):
     """server_handler."""
+    if not _check_db_revision():
+        return
+
     app = create_app()
     app.run(host=args.host, port=args.port, debug=args.debug, threaded=True)
 
@@ -29,26 +39,24 @@ def db_handler(args):
         create_db()
 
     if args.type == 'status':
-        ctx = alembic.migration.MigrationContext.configure(ENGINE.connect())
-        current_rev = ctx.get_current_revision()
+        current_rev = db_revision.current_db_revision()
         print('current_rev', current_rev)
 
     if args.type == 'upgrade':
         upgrade_db()
 
     if args.type == 'revision':
-        ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
-        config = Config(ini_path)
-        config.set_main_option(
-            "script_location", os.path.join(PACKAGE_DIR, 'migration'))
-        revision(config)
+        db_revision.new_revision()
 
     if args.type == 'drop':
-        os.remove(DB_FILE_PATH)
+        if os.path.exists(DB_FILE_PATH):
+            os.remove(DB_FILE_PATH)
 
 
 def project_create_handler(args):
     """project_create_handler."""
+    if not _check_db_revision():
+        return
 
     project_path = os.path.abspath(args.project_dir)
     project_name = args.project_name

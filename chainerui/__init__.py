@@ -54,6 +54,9 @@ def create_db():
 
 def upgrade_db():
     """upgrade_db."""
+    if not os.path.isdir(DB_FILE_DIR):
+        print('DB is not initialized, please run \'create\' command before')
+        return
     ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
     config = Config(ini_path)
     config.set_main_option(
