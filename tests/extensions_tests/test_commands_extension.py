@@ -4,6 +4,7 @@ import shutil
 import tempfile
 import unittest
 
+from chainer.optimizer import Hyperparameter
 from chainer.training import Trainer
 from chainer.training.triggers import IntervalTrigger
 
@@ -20,16 +21,16 @@ class _MockTrainer(Trainer):
         self.out = out_path
         self.stop_trigger = stop_trigger
 
-        hyperparam = MagicMock()
-        hyperparam.get_dict.return_value = {'lr': 0.005}
+        hyperparam = Hyperparameter()
+        hyperparam.lr = 0.005
         optimizer = MagicMock()
         optimizer.__class__.__name__ = 'MomentumSGD'
         optimizer.hyperparam = hyperparam
 
         if updater is None:
             updater = MagicMock()
-            updater.epoch = 1
-            updater.iteration = 1
+            updater.epoch = 0
+            updater.iteration = 0
             updater.get_optimizer.return_value = optimizer
         self.updater = updater
 
@@ -74,7 +75,7 @@ class TestCommandsExtension(unittest.TestCase):
         assert os.path.isfile(commands_path)
 
         # initialize
-        target = CommandsExtension()
+        target = CommandsExtension(trigger=(1, 'iteration'))
         trainer = _MockTrainer(out_path)
         target.initialize(trainer)
         assert not trainer.stop_trigger._loop_stop
@@ -96,18 +97,30 @@ class TestCommandsExtension(unittest.TestCase):
         command3 = CommandItem(name='adjust_hyperparams')
         command3.set_request(
             CommandItem.REQUEST_OPEN,
-            {'optimizer': 'MomentumSGD', 'hyperparam': {'lr': 0.01}},
+            {
+                'optimizer': 'MomentumSGD',
+                'hyperparam': {'lr': 0.01, 'beta': None, 'gamma': 1.0}
+            },
             {'key': 'iteration', 'value': 10}
         )
         commands.append(command3)
         CommandItem.dump_commands(commands, out_path)
 
+        # call but skip by interval trigger
+        target(trainer)
+        commands = CommandItem.load_commands(out_path)
+        assert len(commands) == 3
+        assert commands[0].response is None
+        assert commands[1].response is None
+        assert commands[2].response is None
+
         # call 'take_sanpshot'
+        trainer.updater.iteration = 1
         target(trainer)
         commands = CommandItem.load_commands(out_path)
         assert len(commands) == 3
         res = commands[0].response
-        assert res['epoch'] == 1
+        assert res['epoch'] == 0
         assert res['iteration'] == 1
         assert res['status'] == CommandItem.RESPONSE_SUCCESS
         assert commands[1].response is None
@@ -119,12 +132,12 @@ class TestCommandsExtension(unittest.TestCase):
         commands = CommandItem.load_commands(out_path)
         assert len(commands) == 3
         res = commands[2].response
-        assert res['epoch'] == 1
+        assert res['epoch'] == 0
         assert res['iteration'] == 10
         assert res['status'] == CommandItem.RESPONSE_SUCCESS
         assert res['body'] is not None
         assert res['body']['optimizer'] == 'MomentumSGD'
-        assert res['body']['hyperparam'] == {'lr': 0.005}
+        assert res['body']['hyperparam'] == {'lr': 0.01}
         assert commands[1].response is None
 
         # call 'stop'
@@ -154,6 +167,7 @@ class TestCommandsExtension(unittest.TestCase):
         target = CommandsExtension()
         optimizer = MagicMock()
         optimizer.__class__.__name__ = 'MomentumSGD'
+        optimizer.hyperparam = None
         updater = MagicMock()
         updater.epoch = 1
         updater.iteration = 1

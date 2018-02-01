@@ -30,7 +30,7 @@ def adjust_hyperparams(trainer, body):
     hyperparam_dict = hyperparam.get_dict()
     for key, value in six.iteritems(request_hyperparam):
         if (key not in hyperparam_dict) or (value is None):
-            continue
+            continue  # pragma: no cover
         setattr(hyperparam, key, value)
     return {
         'optimizer': optimizer_name,
