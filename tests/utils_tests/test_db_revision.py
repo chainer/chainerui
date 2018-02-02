@@ -6,7 +6,7 @@ from alembic.command import upgrade
 from chainerui import CHAINERUI_ENV
 from chainerui import create_db
 from chainerui import DB_FILE_PATH
-from chainerui import setup_db_revision_config
+from chainerui import get_db_migration_config
 from chainerui import upgrade_db
 from chainerui.utils.db_revision import check_current_db_revision
 
@@ -29,7 +29,7 @@ class DBRevision(unittest.TestCase):
             os.remove(DB_FILE_PATH)
 
     def _upgrade(self):
-        config = setup_db_revision_config()
+        config = get_db_migration_config()
         upgrade(config, '213e2a3392f2')  # = init revision
 
     def test_check_current_db_revision(self):

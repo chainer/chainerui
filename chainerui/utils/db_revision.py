@@ -3,7 +3,7 @@ from alembic.migration import MigrationContext
 from alembic.script import ScriptDirectory
 
 from chainerui import ENGINE
-from chainerui import setup_db_revision_config
+from chainerui import get_db_migration_config
 
 
 def current_db_revision():
@@ -16,7 +16,7 @@ def check_current_db_revision():
     if current_rev is None:
         return False
 
-    config = setup_db_revision_config()
+    config = get_db_migration_config()
     script = ScriptDirectory.from_config(config)
     module_rev = script.get_current_head()
     if current_rev != module_rev:
@@ -26,5 +26,5 @@ def check_current_db_revision():
 
 
 def new_revision():
-    config = setup_db_revision_config()
+    config = get_db_migration_config()
     revision(config)

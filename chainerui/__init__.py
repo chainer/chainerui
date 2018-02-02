@@ -40,7 +40,7 @@ DB_SESSION = scoped_session(
 )
 
 
-def setup_db_revision_config():
+def get_db_migration_config():
     ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
     config = Config(ini_path)
     config.set_main_option(
@@ -65,7 +65,7 @@ def upgrade_db():
     if not os.path.isdir(DB_FILE_DIR):
         print('DB is not initialized, please run \'create\' command before')
         return
-    config = setup_db_revision_config()
+    config = get_db_migration_config()
     upgrade(config, 'head')
 
 
