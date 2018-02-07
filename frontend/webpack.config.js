@@ -116,7 +116,8 @@ module.exports = {
       Popper: ['popper.js', 'default']
     }),
     new HtmlWebpackPlugin({
-      title: 'chainerui'
+      title: 'chainerui',
+      favicon: 'src/favicon.ico'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
