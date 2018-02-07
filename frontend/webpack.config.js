@@ -24,6 +24,8 @@ const version = versionMatches[1];
 const targets = {
   browsers: ['last 2 versions']
 };
+const dependencies = require('./package.json').dependencies;
+delete dependencies['open-iconic'];
 
 module.exports = {
   entry: {
@@ -32,8 +34,9 @@ module.exports = {
       'whatwg-fetch',
       './src/index.jsx'
     ],
-    vendor: Object.keys(require('./package.json').dependencies).concat([
+    vendor: Object.keys(dependencies).concat([
       'bootstrap/dist/css/bootstrap.css',
+      'open-iconic/font/css/open-iconic-bootstrap.css',
       'babel-polyfill'
     ])
   },
@@ -94,7 +97,7 @@ module.exports = {
         })
       },
       {
-        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/,
+        test: /\.(png|jpe?g|gif|svg|eot|otf|ttf|woff2?)$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]'
