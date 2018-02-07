@@ -21,6 +21,9 @@ if (!versionMatches) {
 }
 
 const version = versionMatches[1];
+const targets = {
+  browsers: ['last 2 versions']
+};
 const dependencies = require('./package.json').dependencies;
 delete dependencies['open-iconic'];
 
@@ -55,7 +58,13 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           presets: [
-            ['es2015', { modules: false }],
+            [
+              'env',
+              {
+                modules: false,
+                targets
+              }
+            ],
             'react'
           ],
           plugins: [
@@ -80,9 +89,7 @@ module.exports = {
               options: {
                 parser: 'postcss-scss',
                 plugins: [
-                  require('autoprefixer')({
-                    browsers: ['last 2 versions']
-                  })
+                  require('autoprefixer')(targets)
                 ]
               }
             }
