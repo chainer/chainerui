@@ -86,7 +86,7 @@ def crawl_result(result_id, force=False):
     current_result.snapshots = []
 
     for log in crawled_result['logs'][len(current_result.logs):]:
-        current_result.logs.append(Log(json.dumps(log)))
+        current_result.logs.append(Log(log))
 
     if current_result.args is None:
         current_result.args = Argument(json.dumps(crawled_result['args']))
