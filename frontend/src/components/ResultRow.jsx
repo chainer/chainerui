@@ -5,7 +5,6 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import {
   getRelativeResultPathName,
   displayResultNameFull,
-  // displayResultName,
   truncate,
   getLastLogDict,
   argValue2string,
