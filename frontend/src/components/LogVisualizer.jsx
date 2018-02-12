@@ -75,8 +75,10 @@ const buildLineElems = (
 
 const LogVisualizer = (props) => {
   const {
+    project = {},
     results = {},
     projectConfig = {},
+    globalConfig = {},
     stats
   } = props;
   const { axes, resultsConfig = {}, lines = {} } = projectConfig;
@@ -127,7 +129,7 @@ const LogVisualizer = (props) => {
     ...buildLineElems(selectedResults, selectedLogKeys.yRightAxis, 'yRightAxis', results, projectConfig, logKeys)
   ];
 
-  const { chartSize } = props.globalConfig;
+  const { chartSize, isResultNameAlignRight } = globalConfig;
 
   return (
     <div className="log-visualizer-root">
@@ -164,9 +166,10 @@ const LogVisualizer = (props) => {
           <Tooltip
             content={
               <LogVisualizerTooltip
+                project={project}
                 results={results}
-                lines={lines}
                 xAxisKey={xAxisKey}
+                isResultNameAlignRight={isResultNameAlignRight}
               />
             }
           />
@@ -178,6 +181,11 @@ const LogVisualizer = (props) => {
 };
 
 LogVisualizer.propTypes = {
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    pathName: PropTypes.string
+  }).isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string),
@@ -209,7 +217,8 @@ LogVisualizer.propTypes = {
       width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       aspect: PropTypes.number.isRequired
-    })
+    }),
+    isResultNameAlignRight: PropTypes.bool
   }).isRequired
 };
 

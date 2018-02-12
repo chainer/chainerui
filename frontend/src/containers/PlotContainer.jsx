@@ -91,6 +91,7 @@ class PlotContainer extends React.Component {
             </div>
             <div className="col-md-8 col-lg-9">
               <LogVisualizer
+                project={project}
                 results={results}
                 stats={stats}
                 projectConfig={projectConfig}
@@ -169,7 +170,7 @@ PlotContainer.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     pathName: PropTypes.string
-  }),
+  }).isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
     resultList: PropTypes.string
@@ -206,7 +207,6 @@ PlotContainer.propTypes = {
 };
 
 PlotContainer.defaultProps = {
-  project: {}
 };
 
 export default connect(mapStateToProps, {
