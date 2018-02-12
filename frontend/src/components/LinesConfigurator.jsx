@@ -53,27 +53,28 @@ class LinesConfigurator extends React.Component {
 
   handleAxisConfigLineSave() {
     const {
-      projectId,
+      project,
       axisName,
       onAxisConfigLineUpdate
     } = this.props;
     const { targetLineKey, editingLine } = this.state;
-    onAxisConfigLineUpdate(projectId, axisName, targetLineKey, editingLine);
+    onAxisConfigLineUpdate(project.id, axisName, targetLineKey, editingLine);
     this.handleModalClose();
   }
 
   handleLineVisibilityUpdate(targetLineKey, line) {
-    const { projectId, axisName, onAxisConfigLineUpdate } = this.props;
-    onAxisConfigLineUpdate(projectId, axisName, targetLineKey, line);
+    const { project, axisName, onAxisConfigLineUpdate } = this.props;
+    onAxisConfigLineUpdate(project.id, axisName, targetLineKey, line);
   }
 
   render() {
-    const { axisName, results, stats, projectConfig } = this.props;
+    const { axisName, project, results, stats, projectConfig, globalConfig } = this.props;
     const { editingLine } = this.state;
     const { logKeys = [] } = stats;
     const { axes = {}, resultsConfig = {}, lines = {} } = projectConfig;
     const axisConfig = axes[axisName] || {};
     const { logKeysConfig = {} } = axisConfig;
+    const { isResultNameAlignRight } = globalConfig;
 
     const selectedResults = getSelectedResults(results, resultsConfig);
     const selectedLogKeys = getSelectedLogKeys(logKeysConfig);
@@ -89,6 +90,7 @@ class LinesConfigurator extends React.Component {
         lineConfiguratorElems.push(
           <LinesConfiguratorRow
             line={line}
+            project={project}
             result={result}
             onEditClick={this.handleModalOpen}
             onVisibilityUpdate={this.handleLineVisibilityUpdate}
@@ -106,9 +108,11 @@ class LinesConfigurator extends React.Component {
             <ModalHeader toggle={this.handleModalToggle}>Edit a line</ModalHeader>
             <ModalBody>
               <LineConfigurator
+                project={project}
                 results={results}
                 line={editingLine}
                 stats={stats}
+                isResultNameAlignRight={isResultNameAlignRight}
                 onChange={this.handleEditingLineChange}
               />
             </ModalBody>
@@ -128,7 +132,10 @@ class LinesConfigurator extends React.Component {
 }
 
 LinesConfigurator.propTypes = {
-  projectId: PropTypes.number.isRequired,
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    pathName: PropTypes.string
+  }).isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   axisName: PropTypes.string.isRequired,
   stats: PropTypes.shape({
@@ -154,6 +161,9 @@ LinesConfigurator.propTypes = {
         })
       })
     )
+  }).isRequired,
+  globalConfig: PropTypes.shape({
+    isResultNameAlignRight: PropTypes.bool
   }).isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired
 };

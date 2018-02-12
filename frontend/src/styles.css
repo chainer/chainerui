@@ -2,6 +2,10 @@
   width: 240px;
 }
 
+.text-truncate-right {
+  direction: rtl;
+}
+
 .table-xy-overflow-scroll {
   display: block;
   width: 100%;

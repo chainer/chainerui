@@ -4,7 +4,7 @@ import {
   Row, Col,
   Form, FormGroup, Label, Input
 } from 'reactstrap';
-import { line2key, displayResultName } from '../utils';
+import { line2key, displayResultNameFull } from '../utils';
 
 
 class LinesConfiguratorRow extends React.Component {
@@ -38,9 +38,10 @@ class LinesConfiguratorRow extends React.Component {
   }
 
   render() {
-    const { line, result } = this.props;
+    const { line, project, result } = this.props;
     const { config = {} } = line;
     const { color, isVisible } = config;
+    const resultNameFull = displayResultNameFull(project, result);
 
     return (
       <div
@@ -62,8 +63,8 @@ class LinesConfiguratorRow extends React.Component {
               </FormGroup>
             </Form>
           </Col>
-          <Col xs="9" lg="5" className="text-truncate" title={result.name || result.pathName}>
-            <a href="" className="text-dark" onClick={this.handleEditClick}>{displayResultName(result, { length: 10 })}</a>
+          <Col xs="9" lg="5" className="text-truncate" title={resultNameFull}>
+            <a href="" className="text-dark" onClick={this.handleEditClick}>{resultNameFull}</a>
           </Col>
           <Col xs="12" lg="5" className="text-truncate" title={line.logKey}>
             <a href="" className="text-dark" onClick={this.handleEditClick}>{line.logKey}</a>
@@ -81,6 +82,10 @@ LinesConfiguratorRow.propTypes = {
     config: PropTypes.shape({
       isVisible: PropTypes.bool
     })
+  }).isRequired,
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    pathName: PropTypes.string
   }).isRequired,
   result: PropTypes.shape({
     id: PropTypes.number,

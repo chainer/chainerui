@@ -49,7 +49,6 @@ class PlotContainer extends React.Component {
 
   render() {
     const {
-      projectId,
       project,
       results,
       fetchState,
@@ -76,10 +75,11 @@ class PlotContainer extends React.Component {
                 project={project}
               />
               <SideBar
-                projectId={projectId}
+                project={project}
                 results={results}
                 stats={stats}
                 projectConfig={projectConfig}
+                globalConfig={globalConfig}
                 onProjectConfigReset={this.props.resetProjectConfig}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
                 onAxisConfigScaleUpdate={this.props.updateAxisScale}
@@ -147,7 +147,7 @@ const mapStateToProps = (state, ownProps) => {
     config = defaultConfig
   } = state;
   const { projects = {}, results = {} } = entities;
-  const project = projects[projectId];
+  const project = projects[projectId] || { id: projectId };
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
   const globalConfig = config.global;
   const stats = mapEntitiesToStats(entities);

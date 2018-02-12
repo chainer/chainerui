@@ -8,10 +8,11 @@ import AxisLogKeySelector from './AxisLogKeySelector';
 
 const AxesConfigurator = (props) => {
   const {
-    projectId,
+    project,
     results,
     stats,
     projectConfig,
+    globalConfig,
     onAxisConfigLineUpdate,
     onAxisConfigScaleUpdate,
     onAxisConfigXKeyUpdate,
@@ -27,51 +28,53 @@ const AxesConfigurator = (props) => {
   return (
     <div className="axes-configurator">
       <AxisConfigurator
-        projectId={projectId}
+        projectId={project.id}
         axisConfig={yLeftAxis}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
         onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
       >
         <AxisLogKeySelector
-          projectId={projectId}
+          projectId={project.id}
           axisConfig={yLeftAxis}
           stats={stats}
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
         />
         <LinesConfigurator
-          projectId={projectId}
+          project={project}
           results={results}
           stats={stats}
           projectConfig={projectConfig}
+          globalConfig={globalConfig}
           axisName="yLeftAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
       </AxisConfigurator>
       <AxisConfigurator
-        projectId={projectId}
+        projectId={project.id}
         axisConfig={yRightAxis}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
         onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
       >
         <AxisLogKeySelector
-          projectId={projectId}
+          projectId={project.id}
           axisConfig={yRightAxis}
           stats={stats}
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
         />
         <LinesConfigurator
-          projectId={projectId}
+          project={project}
           results={results}
           stats={stats}
           projectConfig={projectConfig}
+          globalConfig={globalConfig}
           axisName="yRightAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
       </AxisConfigurator>
       <AxisConfigurator
-        projectId={projectId}
+        projectId={project.id}
         axisConfig={xAxis}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
@@ -80,7 +83,7 @@ const AxesConfigurator = (props) => {
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
             <XAxisKeySelector
-              projectId={projectId}
+              projectId={project.id}
               stats={stats}
               value={xAxis.xAxisKey}
               onChange={onAxisConfigXKeyUpdate}
@@ -93,7 +96,10 @@ const AxesConfigurator = (props) => {
 };
 
 AxesConfigurator.propTypes = {
-  projectId: PropTypes.number.isRequired,
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    pathName: PropTypes.string
+  }).isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string)
@@ -104,6 +110,9 @@ AxesConfigurator.propTypes = {
       yLeftAxis: PropTypes.any,
       yRightAxis: PropTypes.any
     })
+  }).isRequired,
+  globalConfig: PropTypes.shape({
+    isResultNameAlignRight: PropTypes.bool
   }).isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleUpdate: PropTypes.func.isRequired,
