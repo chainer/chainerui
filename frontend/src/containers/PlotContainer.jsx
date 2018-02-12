@@ -9,7 +9,9 @@ import {
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
   updateResultsConfigSelect,
-  updateGlobalPollingRate, updateGlobalChartSize,
+  updateGlobalPollingRate,
+  updateGlobalChartSize,
+  updateGlobalResultNameAlignment,
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber
 } from '../actions';
@@ -64,6 +66,7 @@ class PlotContainer extends React.Component {
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
+          onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container fluid>
           <div className="row">
@@ -195,6 +198,7 @@ PlotContainer.propTypes = {
   updateResultsConfigSelect: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
+  updateGlobalResultNameAlignment: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
   updateAxisScaleRangeNumber: PropTypes.func.isRequired
@@ -215,6 +219,7 @@ export default connect(mapStateToProps, {
   updateResultsConfigSelect,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalResultNameAlignment,
   updateXAxisKey,
   updateAxisScaleRangeType,
   updateAxisScaleRangeNumber

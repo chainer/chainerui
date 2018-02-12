@@ -232,6 +232,7 @@ export const updateLineInAxis = (projectId, axisName, lineKey, line) => ({
 
 export const GLOBAL_CONFIG_POLLING_RATE_UPDATE = 'GLOBAL_CONFIG_POLLING_RATE_UPDATE';
 export const GLOBAL_CONFIG_CHART_SIZE_UPDATE = 'GLOBAL_CONFIG_CHART_SIZE_UPDATE';
+export const GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE = 'GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE';
 
 export const updateGlobalPollingRate = (pollingRate) => ({
   type: GLOBAL_CONFIG_POLLING_RATE_UPDATE,
@@ -242,3 +243,9 @@ export const updateGlobalChartSize = (chartSize) => ({
   type: GLOBAL_CONFIG_CHART_SIZE_UPDATE,
   chartSize
 });
+
+export const updateGlobalResultNameAlignment = (isResultNameAlignRight) => ({
+  type: GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE,
+  isResultNameAlignRight
+});
+

@@ -7,7 +7,8 @@ import {
   getResult,
   createCommand,
   updateGlobalPollingRate,
-  updateGlobalChartSize
+  updateGlobalChartSize,
+  updateGlobalResultNameAlignment
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
@@ -57,6 +58,7 @@ class ResultDetail extends React.Component {
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
+          onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container fluid>
           <BreadcrumbLink
@@ -131,7 +133,8 @@ ResultDetail.propTypes = {
   getResult: PropTypes.func.isRequired,
   createCommand: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
-  updateGlobalChartSize: PropTypes.func.isRequired
+  updateGlobalChartSize: PropTypes.func.isRequired,
+  updateGlobalResultNameAlignment: PropTypes.func.isRequired
 };
 
 ResultDetail.defaultProps = {
@@ -144,6 +147,7 @@ export default connect(mapStateToProps, {
   getResult,
   createCommand,
   updateGlobalPollingRate,
-  updateGlobalChartSize
+  updateGlobalChartSize,
+  updateGlobalResultNameAlignment
 })(ResultDetail);
 
