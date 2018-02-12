@@ -4,9 +4,14 @@ import { displayResultNameFull } from '../utils';
 
 const TruncatedResultName = (props) => {
   const { project, result, isResultNameAlignRight } = props;
+  const resultNameFull = displayResultNameFull(project, result);
+
   return (
-    <div className={`text-truncate ${isResultNameAlignRight ? 'text-truncate-right' : ''}`}>
-      {displayResultNameFull(project, result)}
+    <div
+      className={`text-truncate ${isResultNameAlignRight ? 'text-truncate-right' : ''}`}
+      title={resultNameFull}
+    >
+      {resultNameFull}
     </div>
   );
 };
