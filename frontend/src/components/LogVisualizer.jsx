@@ -10,7 +10,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import {
-  line2key, line2name, line2dataKey,
+  line2key, line2dataKey,
   formatLogValue,
   getSelectedResults, getSelectedLogKeys,
   createLine
@@ -33,13 +33,12 @@ const getDomain = (axisConfig = {}) => {
   return domain;
 };
 
-const buildLineElem = (line, axisName, result) => {
+const buildLineElem = (line, axisName) => {
   const { config = {} } = line;
 
   return (
     <Line
       type="linear"
-      name={line2name(line, result)}
       dataKey={line2dataKey(line, axisName)}
       yAxisId={axisName}
       stroke={config.color}
@@ -66,7 +65,7 @@ const buildLineElems = (
       const line = lines[line2key({ resultId, logKey })] ||
         createLine(resultId, logKey, results, logKeys);
       if (line.config.isVisible) {
-        lineElems.push(buildLineElem(line, axisName, result));
+        lineElems.push(buildLineElem(line, axisName));
       }
     });
   });

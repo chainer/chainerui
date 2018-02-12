@@ -52,8 +52,6 @@ export const displayProjectName = (project = {}, options = {}) => (
   truncate(displayProjectNameFull(project), options)
 );
 
-export const line2name = (line, result = {}) => `${displayResultName(result)}/${line.logKey}`;
-
 export const isFloat = (value) => (
   isFinite(value) && !Number.isInteger(value)
 );
