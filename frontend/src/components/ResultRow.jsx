@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {
+  Button, Modal, ModalHeader, ModalBody, ModalFooter,
+  Form, FormGroup, Input
+} from 'reactstrap';
 import {
   getRelativeResultPathName,
   displayResultNameFull,
@@ -99,16 +102,20 @@ class ResultRow extends React.Component {
           <Link to={urlForResultDetail(project.id, result.id)}>{result.id}</Link>
         </td>
         <td>
-          <input
-            className="form-control result-name"
-            type="text"
-            title={displayResultNameFull(project, result)}
-            placeholder={truncate(getRelativeResultPathName(project, result), truncateConfig)}
-            value={resultName || ''}
-            onChange={this.handleResultNameChange}
-            onKeyPress={this.handleResultNameKeyPress}
-            onBlur={this.handleResultUpdate}
-          />
+          <Form inline>
+            <FormGroup>
+              <Input
+                className={`result-name ${isResultNameAlignRight ? 'text-right' : ''}`}
+                type="text"
+                title={displayResultNameFull(project, result)}
+                placeholder={truncate(getRelativeResultPathName(project, result), truncateConfig)}
+                value={resultName || ''}
+                onChange={this.handleResultNameChange}
+                onKeyPress={this.handleResultNameKeyPress}
+                onBlur={this.handleResultUpdate}
+              />
+            </FormGroup>
+          </Form>
         </td>
         {logElems}
         {argElems}
