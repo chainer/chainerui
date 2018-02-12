@@ -32,8 +32,12 @@ export const truncate = (string, options = {}) => {
   return str;
 };
 
-export const displayResultNameFull = (result = {}) => (
-  result.name || result.pathName
+export const getRelativeResultPathName = (project = {}, result = {}) => (
+  path.relative(project.pathName, result.pathName)
+);
+
+export const displayResultNameFull = (project = {}, result = {}) => (
+  result.name || getRelativeResultPathName(project, result)
 );
 
 export const displayResultName = (result = {}, options = {}) => (

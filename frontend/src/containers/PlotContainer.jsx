@@ -97,10 +97,11 @@ class PlotContainer extends React.Component {
                 globalConfig={globalConfig}
               />
               <ExperimentsTable
-                projectId={projectId}
+                project={project}
                 results={results}
                 stats={stats}
                 projectConfig={projectConfig}
+                globalConfig={globalConfig}
                 onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
               />
