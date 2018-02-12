@@ -72,6 +72,7 @@ class PlotContainer extends React.Component {
             <div className="col-md-4 col-lg-3">
               <BreadcrumbLink
                 length={2}
+                globalConfig={globalConfig}
                 project={project}
               />
               <SideBar
@@ -182,7 +183,8 @@ PlotContainer.propTypes = {
   }).isRequired,
   globalConfig: PropTypes.shape({
     pollingRate: PropTypes.number,
-    chartSize: PropTypes.objectOf(PropTypes.any)
+    chartSize: PropTypes.objectOf(PropTypes.any),
+    isResultNameAlignRight: PropTypes.bool
   }).isRequired,
   stats: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),

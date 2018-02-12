@@ -63,6 +63,7 @@ class ResultDetail extends React.Component {
         <Container fluid>
           <BreadcrumbLink
             length={3}
+            globalConfig={globalConfig}
             project={project}
             result={result}
           />

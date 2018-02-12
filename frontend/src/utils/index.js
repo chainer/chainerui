@@ -33,16 +33,16 @@ export const truncate = (string, options = {}) => {
 };
 
 export const getRelativeResultPathName = (project = {}, result = {}) => (
-  path.relative(project.pathName, result.pathName)
+  path.relative(project.pathName || '', result.pathName || '')
 );
 
 export const displayResultNameFull = (project = {}, result = {}) => (
   result.name || getRelativeResultPathName(project, result)
 );
 
-export const displayResultName = (result = {}, options = {}) => (
-  truncate(result.name, options) || truncate(result.pathName, { ...options, forward: true })
-);
+// export const displayResultName = (result = {}, options = {}) => (
+//   truncate(result.name, options) || truncate(result.pathName, { ...options, forward: true })
+// );
 
 export const displayProjectNameFull = (project = {}) => (
   project.name || path.basename(project.pathName)
