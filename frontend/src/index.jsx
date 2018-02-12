@@ -22,6 +22,7 @@ if (module.hot) {
 } else {
   document.addEventListener('DOMContentLoaded', () => {
     const appNode = document.getElementById('chainerui-root');
+    console.log(JSON.parse(appNode.dataset.constants));
     if (appNode) {
       render(Root, appNode);
     }
