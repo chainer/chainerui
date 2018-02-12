@@ -92,6 +92,7 @@ class LinesConfigurator extends React.Component {
             line={line}
             project={project}
             result={result}
+            isResultNameAlignRight={isResultNameAlignRight}
             onEditClick={this.handleModalOpen}
             onVisibilityUpdate={this.handleLineVisibilityUpdate}
             key={line2key(line)}

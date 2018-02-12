@@ -4,7 +4,8 @@ import {
   Row, Col,
   Form, FormGroup, Label, Input
 } from 'reactstrap';
-import { line2key, displayResultNameFull } from '../utils';
+import TruncatedResultName from './TruncatedResultName';
+import { line2key } from '../utils';
 
 
 class LinesConfiguratorRow extends React.Component {
@@ -38,10 +39,9 @@ class LinesConfiguratorRow extends React.Component {
   }
 
   render() {
-    const { line, project, result } = this.props;
+    const { line, project, result, isResultNameAlignRight } = this.props;
     const { config = {} } = line;
     const { color, isVisible } = config;
-    const resultNameFull = displayResultNameFull(project, result);
 
     return (
       <div
@@ -63,8 +63,14 @@ class LinesConfiguratorRow extends React.Component {
               </FormGroup>
             </Form>
           </Col>
-          <Col xs="9" lg="5" className="text-truncate" title={resultNameFull}>
-            <a href="" className="text-dark" onClick={this.handleEditClick}>{resultNameFull}</a>
+          <Col xs="9" lg="5" className="text-truncate">
+            <a href="" className="text-dark d-block" onClick={this.handleEditClick}>
+              <TruncatedResultName
+                project={project}
+                result={result}
+                isResultNameAlignRight={isResultNameAlignRight}
+              />
+            </a>
           </Col>
           <Col xs="12" lg="5" className="text-truncate" title={line.logKey}>
             <a href="" className="text-dark" onClick={this.handleEditClick}>{line.logKey}</a>
@@ -85,6 +91,7 @@ LinesConfiguratorRow.propTypes = {
   }).isRequired,
   project: PropTypes.shape({
     id: PropTypes.number,
+    name: PropTypes.string,
     pathName: PropTypes.string
   }).isRequired,
   result: PropTypes.shape({
@@ -93,11 +100,13 @@ LinesConfiguratorRow.propTypes = {
     args: PropTypes.arrayOf(PropTypes.any),
     logs: PropTypes.arrayOf(PropTypes.any)
   }).isRequired,
+  isResultNameAlignRight: PropTypes.bool,
   onEditClick: PropTypes.func,
   onVisibilityUpdate: PropTypes.func
 };
 
 LinesConfiguratorRow.defaultProps = {
+  isResultNameAlignRight: false,
   onEditClick: () => {},
   onVisibilityUpdate: () => {}
 };
