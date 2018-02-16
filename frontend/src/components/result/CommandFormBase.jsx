@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Form
+  Button, Form,
+  Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap';
 import { SCHEDULE_NOW, SCHEDULE_CUSTOM } from '../../constants';
 import CommandScheduleForm from './CommandScheduleForm';
@@ -13,22 +14,37 @@ const initialState = {
   schedule: {
     value: 0,
     key: 'epoch'
-  }
+  },
+  showConfirmationModal: false
 };
 
 class CommandFormBase extends React.Component {
   constructor() {
     super();
 
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.openConfirmationModal = this.openConfirmationModal.bind(this);
+    this.closeConfirmationModal = this.closeConfirmationModal.bind(this);
+    this.submitCommand = this.submitCommand.bind(this);
     this.handleScheduleTypeChange = this.handleScheduleTypeChange.bind(this);
     this.handleScheduleChange = this.handleScheduleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
 
     this.state = initialState;
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
+  openConfirmationModal() {
+    this.setState({
+      showConfirmationModal: true
+    });
+  }
+
+  closeConfirmationModal() {
+    this.setState({
+      showConfirmationModal: false
+    });
+  }
+
+  submitCommand() {
     const {
       onSubmit,
       freezeTime
@@ -37,6 +53,7 @@ class CommandFormBase extends React.Component {
     const schedule = (scheduleType === SCHEDULE_CUSTOM) ? this.state.schedule : null;
 
     onSubmit(schedule);
+    this.closeConfirmationModal();
 
     this.setState({ disabled: true });
     setTimeout(() => {
@@ -52,9 +69,21 @@ class CommandFormBase extends React.Component {
     this.setState({ schedule });
   }
 
+  handleSubmit(e) {
+    const { needConfirmation } = this.props;
+
+    e.preventDefault();
+    if (needConfirmation) {
+      this.openConfirmationModal();
+    } else {
+      this.submitCommand();
+    }
+  }
+
   render() {
-    const { disabled, schedule, scheduleType } = this.state;
-    const { title, buttonLabel, children } = this.props;
+    const { disabled, schedule, scheduleType, showConfirmationModal } = this.state;
+    const { title, buttonLabel, children, confirmationMessage } = this.props;
+    const confirmationTitle = this.props.confirmationTitle || title;
     return (
       <div className="card">
         <div className="card-body">
@@ -74,6 +103,18 @@ class CommandFormBase extends React.Component {
               onScheduleChange={this.handleScheduleChange}
             />
             {children}
+
+            <Modal isOpen={showConfirmationModal}>
+              <ModalHeader>{confirmationTitle}</ModalHeader>
+              <ModalBody>
+                {confirmationMessage}
+              </ModalBody>
+              <ModalFooter>
+                <Button color="secondary" onClick={this.closeConfirmationModal}>Cancel</Button>
+                <Button color="primary" onClick={this.submitCommand}>Submit</Button>
+              </ModalFooter>
+            </Modal>
+
           </Form>
         </div>
       </div>
@@ -88,12 +129,18 @@ CommandFormBase.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]),
+  needConfirmation: PropTypes.bool,
+  confirmationTitle: PropTypes.string,
+  confirmationMessage: PropTypes.node,
   freezeTime: PropTypes.number,
   onSubmit: PropTypes.func.isRequired
 };
 
 CommandFormBase.defaultProps = {
   children: null,
+  needConfirmation: false,
+  confirmationTitle: '',
+  confirmationMessage: 'Are you sure to submit this command?',
   freezeTime: 1000
 };
 

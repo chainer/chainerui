@@ -106,7 +106,7 @@ def main():
                 'iteration': train_iter.epoch * args.batchsize,
                 'train/loss': train_loss, 'train/accuracy': train_accuracy,
                 'test/loss': test_loss, 'test/accuracy': test_accuracy
-                }
+            }
             ui_report(stats)
             sum_accuracy = 0
             sum_loss = 0
