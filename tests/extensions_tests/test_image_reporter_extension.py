@@ -18,6 +18,7 @@ class TestImageReport(unittest.TestCase):
         self._dir = test_dir
 
     def tearDown(self):
+        summary._chainerui_global_observation = {}
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
 
