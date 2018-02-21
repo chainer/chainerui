@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import shutil
@@ -26,12 +27,12 @@ class ImageReport(extension.Extension):
             return
 
         image_prefix = reporter.CHAINERUI_IMAGE_PREFIX
-        # TODO(tanakad) should use copy, but trade-off
         observations = reporter._chainerui_global_observation
         pooled_images = {}
-        for k, v in observations.items():
+        keys = observations.keys()
+        for k in list(keys):
             if k.startswith(image_prefix):
-                pooled_images[k[len(image_prefix) + 1:]] = v
+                pooled_images[k[len(image_prefix) + 1:]] = observations.pop(k)
         if len(pooled_images) == 0:
             return
 
@@ -46,17 +47,20 @@ class ImageReport(extension.Extension):
                 tag = None
 
             updater = trainer.updater
-            file_name = 'iter_%d.npy' % updater.iteration
+            file_name = 'iter_%d_%s.npy' % (
+                updater.iteration, self._get_hash(key))
             path = os.path.join(out_path, file_name)
-            # TODO(tanakad) should execute as queue worker
-            np.save(path, images)
+            if not os.path.exists(path):
+                # TODO(tanakad) should execute as queue worker
+                np.save(path, images)
             info = {
                 'epoch': updater.epoch,
                 'iteration': updater.iteration,
                 'name': name,
-                'tag': tag,
                 'path': file_name,
             }
+            if tag is not None:
+                info['tag'] = tag
             self._infos.append(info)
 
         fd, path = tempfile.mkstemp(prefix=self._info_name, dir=out_path)
@@ -65,3 +69,6 @@ class ImageReport(extension.Extension):
 
         new_path = os.path.join(out_path, self._info_name)
         shutil.move(path, new_path)
+
+    def _get_hash(self, key):
+        return hashlib.md5(key.encode('utf-8')).hexdigest()[:8]
