@@ -8,7 +8,7 @@ from chainer.training import extension
 from chainer.training import trigger as trigger_module
 import numpy as np
 
-from chainerui import reporter
+from chainerui import summary
 
 
 class ImageReport(extension.Extension):
@@ -26,8 +26,8 @@ class ImageReport(extension.Extension):
         if not self._trigger(trainer):
             return
 
-        image_prefix = reporter.CHAINERUI_IMAGE_PREFIX
-        observations = reporter._chainerui_global_observation
+        image_prefix = summary.CHAINERUI_IMAGE_PREFIX
+        observations = summary._chainerui_global_observation
         pooled_images = {}
         keys = observations.keys()
         for k in list(keys):

@@ -8,7 +8,7 @@ import unittest
 import numpy as np
 
 from chainerui.extensions.image_reporter_extension import ImageReport
-from chainerui import reporter as uireporter
+from chainerui import summary
 
 
 class TestImageReport(unittest.TestCase):
@@ -40,14 +40,14 @@ class TestImageReport(unittest.TestCase):
         target(trainer)
         assert len(target._infos) == 0
 
-        image_prefix = uireporter.CHAINERUI_IMAGE_PREFIX
+        image_prefix = summary.CHAINERUI_IMAGE_PREFIX
         img1 = np.zeros(3000).reshape((10, 10, 10, 3))
         img1[0, 0, 0, 0] = 1
-        uireporter._chainerui_global_observation[
+        summary._chainerui_global_observation[
             image_prefix+'/test/tag1'] = img1
         img2 = np.zeros(3000).reshape((10, 10, 10, 3))
         img2[0, 0, 0, 1] = 1
-        uireporter._chainerui_global_observation[
+        summary._chainerui_global_observation[
             image_prefix+'/test/tag2'] = img1
 
         # add image as batch
@@ -92,11 +92,11 @@ class TestImageReport(unittest.TestCase):
         # add 2nd. batch image, and get latest image
         img3 = np.zeros(3000).reshape((10, 10, 10, 3))
         img3[0, 0, 0, 2] = 1
-        uireporter._chainerui_global_observation[
+        summary._chainerui_global_observation[
             image_prefix+'/test/tag1'] = img3
         img4 = np.zeros(3000).reshape((10, 10, 10, 3))
         img4[0, 0, 1, 0] = 1
-        uireporter._chainerui_global_observation[
+        summary._chainerui_global_observation[
             image_prefix+'/test'] = img4
         updater.epoch = 4
         updater.epoch_detail = 4
