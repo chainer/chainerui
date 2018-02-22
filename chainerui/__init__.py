@@ -127,11 +127,13 @@ def create_app():
     from chainerui.views.project import ProjectAPI
     from chainerui.views.result import ResultAPI
     from chainerui.views.result_command import ResultCommandAPI
+    from chainerui.views.result_image import ResultImageAPI
 
     project_resource = ProjectAPI.as_view('project_resource')
     result_resource = ResultAPI.as_view('result_resource')
     result_command_resource = ResultCommandAPI.as_view(
         'result_command_resource')
+    result_image_resource = ResultImageAPI.as_view('result_image_resource')
 
     # project API
     app.add_url_rule(
@@ -153,5 +155,10 @@ def create_app():
     app.add_url_rule(
         '/api/v1/projects/<int:project_id>/results/<int:result_id>/commands',
         view_func=result_command_resource, methods=['POST'])
+
+    # result image API
+    app.add_url_rule(
+        '/api/v1/projects/<int:project_id>/results/<int:result_id>/images',
+        view_func=result_image_resource, methods=['GET'])
 
     return app
