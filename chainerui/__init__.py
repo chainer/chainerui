@@ -105,6 +105,7 @@ def create_app():
     @app.route('/')
     @app.route('/projects/<int:project_id>')
     @app.route('/projects/<int:project_id>/results/<int:result_id>')
+    @app.route('/projects/<int:project_id>/results/<int:result_id>/images')
     def index(**kwargs):
         """render react app."""
         return render_template('index.html')
