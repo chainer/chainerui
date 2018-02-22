@@ -22,7 +22,7 @@ class TestImageReport(unittest.TestCase):
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
 
-    def test_report_and_call(self):
+    def test_call(self):
         updater = MagicMock()
         updater.epoch = 0
         updater.epoch_detail = 0
@@ -127,3 +127,27 @@ class TestImageReport(unittest.TestCase):
                 assert info['path'] == npy4_name
         check_second_info(info[2])
         check_second_info(info[3])
+
+    def test_with_makefn(self):
+        updater = MagicMock()
+        updater.epoch = 1
+        updater.epoch_detail = 1
+        updater.iteration = 10
+        trainer = MagicMock()
+        trainer.out = self._dir
+        trainer.updater = updater
+
+        def create_image_fn(name):
+            image_prefix = summary.CHAINERUI_IMAGE_PREFIX
+            name = image_prefix + '/' + name
+
+            def maker(trainer):
+                img = np.ones(750).reshape((10, 5, 5, 3))
+                summary._chainerui_global_observation[name] = img
+            return maker
+        target = ImageReport(image_fn=create_image_fn('test'))
+        target(trainer)
+        assert len(target._infos) == 1
+        npy_name = 'iter_10_%s.npy' % target._get_hash('test')
+        npy_path = os.path.join(self._dir, npy_name)
+        assert os.path.exists(npy_path)

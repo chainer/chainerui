@@ -10,11 +10,6 @@ from chainerui import DB_SESSION
 from chainerui.models.result import Result
 
 
-def _serialize(img):
-    buf = io.BytesIO()
-    buf(img)
-
-
 def collect_images(result_id):
     current_result = DB_SESSION.query(Result).filter_by(id=result_id).first()
 
