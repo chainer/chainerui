@@ -73,6 +73,9 @@ export const RESULT_UPDATE_FAILURE = 'RESULT_UPDATE_FAILURE';
 export const RESULT_DELETE_REQUEST = 'RESULT_DELETE_REQUEST';
 export const RESULT_DELETE_SUCCESS = 'RESULT_DELETE_SUCCESS';
 export const RESULT_DELETE_FAILURE = 'RESULT_DELETE_FAILURE';
+export const RESULT_IMAGE_REQUEST = 'RESULT_IMAGE_REQUEST';
+export const RESULT_IMAGE_SUCCESS = 'RESULT_IMAGE_SUCCESS';
+export const RESULT_IMAGE_FAILURE = 'RESULT_IMAGE_FAILURE';
 
 export const getResultList = (projectId) => ({
   [CALL_API]: {
@@ -116,6 +119,12 @@ export const deleteResult = (projectId, resultId) => {
   };
 };
 
+export const getResultImage = (projectId, resultId) => ({
+  [CALL_API]: {
+    types: [RESULT_IMAGE_REQUEST, RESULT_IMAGE_SUCCESS, RESULT_IMAGE_FAILURE],
+    endpoint: `projects/${projectId}/results/${resultId}/images`
+  }
+});
 
 // commands API
 

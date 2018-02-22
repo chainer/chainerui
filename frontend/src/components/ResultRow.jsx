@@ -7,7 +7,8 @@ import {
   truncate,
   getLastLogDict,
   argValue2string,
-  urlForResultDetail
+  urlForResultDetail,
+  urlForResultImage
 } from '../utils';
 
 
@@ -94,6 +95,9 @@ class ResultRow extends React.Component {
         </td>
         <td>
           <Link to={urlForResultDetail(projectId, result.id)}>{result.id}</Link>
+        </td>
+        <td>
+          <Link to={urlForResultImage(projectId, result.id)}>IMG</Link>
         </td>
         <td>
           <input

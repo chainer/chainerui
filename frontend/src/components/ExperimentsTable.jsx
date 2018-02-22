@@ -57,6 +57,7 @@ const ExperimentsTable = (props) => {
           </th>
           <th>id</th>
           <th>name</th>
+          <th>img</th>
           {logHeaderElems}
           {argHeaderElems}
           <th />

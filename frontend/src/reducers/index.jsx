@@ -102,9 +102,25 @@ const resultsReducer = (state = {}, action) => {
   }
 };
 
+
+const imagesReducer = (state = [], action) => {
+  switch (action.type) {
+    case ActionTypes.RESULT_IMAGE_SUCCESS:
+      if (action.response && action.response.images) {
+        const imageList = action.response.images;
+        return imageList;
+      }
+      return state;
+    default:
+      return state;
+  }
+};
+
+
 const entities = combineReducers({
   projects: projectsReducer,
-  results: resultsReducer
+  results: resultsReducer,
+  images: imagesReducer
 });
 
 
