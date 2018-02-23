@@ -1,13 +1,14 @@
 import chainer
 from chainer import cuda
 from chainer import reporter
+import numpy as np
 
 
 CHAINERUI_IMAGE_PREFIX = 'image'
 _chainerui_global_observation = {}
 
 
-def image(images, name, tag=None,
+def image(images, name, tag=None, ch_axis=-1,
           observation=_chainerui_global_observation):
     """summary images to visualize.
 
@@ -33,4 +34,8 @@ def image(images, name, tag=None,
         if isinstance(images, chainer.Variable):
             images = images.data
         images = cuda.to_cpu(images)
+        if ch_axis != -1:
+            roll_ax = np.append(np.delete(np.arange(
+                images.ndim), ch_axis), ch_axis)
+            images = images.transpose(roll_ax)
         current_reporter.report({name: images}, None)

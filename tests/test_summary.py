@@ -31,7 +31,6 @@ class TestImage(unittest.TestCase):
         with reporter.scope(self):
             summary.image(img2, 'test')
         assert len(summary._chainerui_global_observation) == 1
-        key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
         assert key in summary._chainerui_global_observation
         assert np.allclose(summary._chainerui_global_observation[key], img2)
 
@@ -41,7 +40,16 @@ class TestImage(unittest.TestCase):
         with reporter.scope(self):
             summary.image(img3, 'test', tag='tag')
         assert len(summary._chainerui_global_observation) == 2
-        key = summary.CHAINERUI_IMAGE_PREFIX+'/test/tag'
+        key_tag = summary.CHAINERUI_IMAGE_PREFIX+'/test/tag'
         assert key in summary._chainerui_global_observation
-        assert np.allclose(summary._chainerui_global_observation[key],
+        assert np.allclose(summary._chainerui_global_observation[key_tag],
                            img3.data)
+
+        img4 = np.zeros(750).reshape((10, 3, 5, 5))
+        img4[0, 0, 1, 0] = 1
+        with reporter.scope(self):
+            summary.image(img4, 'test', ch_axis=1)
+        assert len(summary._chainerui_global_observation) == 2
+        expected_img4 = img4.transpose(0, 2, 3, 1)
+        assert np.allclose(summary._chainerui_global_observation[key],
+                           expected_img4)
