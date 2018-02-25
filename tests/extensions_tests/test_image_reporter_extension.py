@@ -46,10 +46,10 @@ class TestImageReport(unittest.TestCase):
         img1 = np.zeros(3000).reshape((10, 10, 10, 3))
         img1[0, 0, 0, 0] = 1
         observation = summary.chainerui_image_observer.observation
-        observation[image_prefix+'/test/tag1'] = img1
+        observation[image_prefix+'/name1'] = img1
         img2 = np.zeros(3000).reshape((10, 10, 10, 3))
         img2[0, 0, 0, 1] = 1
-        observation[image_prefix+'/test/tag2'] = img1
+        observation[image_prefix+'/name2'] = img1
 
         # add image as batch
         updater.epoch = 2
@@ -57,7 +57,7 @@ class TestImageReport(unittest.TestCase):
         updater.iteration = 100
         target(trainer)
         assert len(target._infos) == 2
-        npy1_name = 'iter_100_%s.npy' % target._get_hash('test/tag1')
+        npy1_name = 'iter_100_%s.npy' % target._get_hash('name1')
         npy1_path = os.path.join(self._dir, npy1_name)
         assert os.path.exists(npy1_path)
         with open(npy1_path, 'rb') as f:
@@ -73,13 +73,12 @@ class TestImageReport(unittest.TestCase):
         def check_first_info(info):
             assert info['epoch'] == 2
             assert info['iteration'] == 100
-            assert info['name'] == 'test'
-            if info['tag'] == 'tag1':
+            if info['name'] == 'name1':
                 assert info['path'] == npy1_name
             else:
-                assert info['tag'] == 'tag2'
+                assert info['name'] == 'name2'
                 assert info['path'] == 'iter_100_%s.npy' % target._get_hash(
-                    'test/tag2')
+                    'name2')
         check_first_info(info[0])
         check_first_info(info[1])
 
@@ -93,16 +92,16 @@ class TestImageReport(unittest.TestCase):
         # add 2nd. batch image, and get latest image
         img3 = np.zeros(3000).reshape((10, 10, 10, 3))
         img3[0, 0, 0, 2] = 1
-        observation[image_prefix+'/test/tag1'] = img3
+        observation[image_prefix+'/name1'] = img3
         img4 = np.zeros(3000).reshape((10, 10, 10, 3))
         img4[0, 0, 1, 0] = 1
-        observation[image_prefix+'/test'] = img4
+        observation[image_prefix+'/0'] = img4
         updater.epoch = 4
         updater.epoch_detail = 4
         updater.iteration = 200
         target(trainer)
         assert len(target._infos) == 4
-        npy4_name = 'iter_200_%s.npy' % target._get_hash('test')
+        npy4_name = 'iter_200_%s.npy' % target._get_hash('0')
         npy4_path = os.path.join(self._dir, npy4_name)
         assert os.path.exists(npy4_path)
         with open(npy4_path, 'rb') as f:
@@ -116,12 +115,11 @@ class TestImageReport(unittest.TestCase):
         def check_second_info(info):
             assert info['epoch'] == 4
             assert info['iteration'] == 200
-            assert info['name'] == 'test'
-            if 'tag' in info:
-                assert info['tag'] == 'tag1'
+            if info['name'] == 'name1':
                 assert info['path'] == 'iter_200_%s.npy' % target._get_hash(
-                    'test/tag1')
+                    'name1')
             else:
+                assert info['name'] == '0'
                 assert info['path'] == npy4_name
         check_second_info(info[2])
         check_second_info(info[3])

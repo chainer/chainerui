@@ -16,7 +16,7 @@ class ImageSummary(object):
 chainerui_image_observer = ImageSummary()
 
 
-def image(images, name, tag=None, ch_axis=-1):
+def image(images, name=None, ch_axis=-1):
     """summary images to visualize.
 
     A batch of image is registered on global observation and these images
@@ -30,15 +30,14 @@ def image(images, name, tag=None, ch_axis=-1):
             `chainer.Variable`): batch of image, its shape is expected as
             [batch x height x width x channel].
         name (str): name of image.
-        tag (str): tar of image, optional.
         ch_axis (int): index number of channel dimension.
     """
 
     current_reporter = reporter.get_current_reporter()
     observer = chainerui_image_observer
     with reporter.report_scope(observer.observation):
-        if tag is not None:
-            name = '%s/%s' % (name, tag)
+        if name is None:
+            name = '0'
         if isinstance(images, chainer.Variable):
             images = images.data
         images = cuda.to_cpu(images)

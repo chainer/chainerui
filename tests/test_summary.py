@@ -40,9 +40,9 @@ class TestImage(unittest.TestCase):
         img3[0, 0, 0, 2] = 1
         img3 = chainer.Variable(img3)
         with reporter.scope(observer.observation):
-            summary.image(img3, 'test', tag='tag')
+            summary.image(img3)
         assert len(observer.observation) == 2
-        key_tag = summary.CHAINERUI_IMAGE_PREFIX+'/test/tag'
+        key_tag = summary.CHAINERUI_IMAGE_PREFIX+'/0'
         assert key in observer.observation
         assert np.allclose(observer.observation[key_tag], img3.data)
 
