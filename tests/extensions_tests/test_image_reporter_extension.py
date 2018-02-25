@@ -22,6 +22,9 @@ class TestImageReport(unittest.TestCase):
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
 
+    def _make_image_summary_value(self, img, row):
+        return dict(array=img, row=row)
+
     def test_call(self):
         updater = MagicMock()
         updater.epoch = 0
@@ -46,10 +49,12 @@ class TestImageReport(unittest.TestCase):
         img1 = np.zeros(3000).reshape((10, 10, 10, 3))
         img1[0, 0, 0, 0] = 1
         observation = summary.chainerui_image_observer.observation
-        observation[image_prefix+'/name1'] = img1
+        observation[image_prefix+'/name1'] = self._make_image_summary_value(
+            img1, 5)
         img2 = np.zeros(3000).reshape((10, 10, 10, 3))
         img2[0, 0, 0, 1] = 1
-        observation[image_prefix+'/name2'] = img1
+        observation[image_prefix+'/name2'] = self._make_image_summary_value(
+            img2, 5)
 
         # add image as batch
         updater.epoch = 2
@@ -73,6 +78,7 @@ class TestImageReport(unittest.TestCase):
         def check_first_info(info):
             assert info['epoch'] == 2
             assert info['iteration'] == 100
+            assert info['row'] == 5
             if info['name'] == 'name1':
                 assert info['path'] == npy1_name
             else:
@@ -92,10 +98,12 @@ class TestImageReport(unittest.TestCase):
         # add 2nd. batch image, and get latest image
         img3 = np.zeros(3000).reshape((10, 10, 10, 3))
         img3[0, 0, 0, 2] = 1
-        observation[image_prefix+'/name1'] = img3
+        observation[image_prefix+'/name1'] = self._make_image_summary_value(
+            img3, 5)
         img4 = np.zeros(3000).reshape((10, 10, 10, 3))
         img4[0, 0, 1, 0] = 1
-        observation[image_prefix+'/0'] = img4
+        observation[image_prefix+'/0'] = self._make_image_summary_value(
+            img4, 5)
         updater.epoch = 4
         updater.epoch_detail = 4
         updater.iteration = 200
@@ -115,6 +123,7 @@ class TestImageReport(unittest.TestCase):
         def check_second_info(info):
             assert info['epoch'] == 4
             assert info['iteration'] == 200
+            assert info['row'] == 5
             if info['name'] == 'name1':
                 assert info['path'] == 'iter_200_%s.npy' % target._get_hash(
                     'name1')
@@ -140,7 +149,7 @@ class TestImageReport(unittest.TestCase):
             def maker(trainer):
                 img = np.ones(750).reshape((10, 5, 5, 3))
                 summary.chainerui_image_observer.observation[
-                    name] = img
+                    name] = self._make_image_summary_value(img, 2)
             return maker
         target = ImageReport(image_fn=create_image_fn('test'))
         target.initialize(trainer)

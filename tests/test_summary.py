@@ -34,17 +34,19 @@ class TestImage(unittest.TestCase):
             summary.image(img2, 'test')
         assert len(observer.observation) == 1
         assert key in observer.observation
-        assert np.allclose(observer.observation[key], img2)
+        assert np.allclose(observer.observation[key]['array'], img2)
+        assert observer.observation[key]['row'] == 1
 
         img3 = np.zeros(750).reshape((10, 5, 5, 3))
         img3[0, 0, 0, 2] = 1
         img3 = chainer.Variable(img3)
         with reporter.scope(observer.observation):
-            summary.image(img3)
+            summary.image(img3, row=5)
         assert len(observer.observation) == 2
-        key_tag = summary.CHAINERUI_IMAGE_PREFIX+'/0'
-        assert key in observer.observation
-        assert np.allclose(observer.observation[key_tag], img3.data)
+        none_key = summary.CHAINERUI_IMAGE_PREFIX+'/0'
+        assert none_key in observer.observation
+        assert np.allclose(observer.observation[none_key]['array'], img3.data)
+        assert observer.observation[none_key]['row'] == 5
 
         img4 = np.zeros(750).reshape((10, 3, 5, 5))
         img4[0, 0, 1, 0] = 1
@@ -52,4 +54,5 @@ class TestImage(unittest.TestCase):
             summary.image(img4, 'test', ch_axis=1)
         assert len(observer.observation) == 2
         expected_img4 = img4.transpose(0, 2, 3, 1)
-        assert np.allclose(observer.observation[key], expected_img4)
+        assert np.allclose(observer.observation[key]['array'], expected_img4)
+        assert observer.observation[key]['row'] == 1

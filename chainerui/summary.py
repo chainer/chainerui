@@ -16,7 +16,7 @@ class ImageSummary(object):
 chainerui_image_observer = ImageSummary()
 
 
-def image(images, name=None, ch_axis=-1):
+def image(images, name=None, ch_axis=-1, row=1):
     """summary images to visualize.
 
     A batch of image is registered on global observation and these images
@@ -45,4 +45,5 @@ def image(images, name=None, ch_axis=-1):
             roll_ax = np.append(np.delete(np.arange(
                 images.ndim), ch_axis), ch_axis)
             images = images.transpose(roll_ax)
-        current_reporter.report({name: images}, observer)
+        value = dict(array=images, row=row)
+        current_reporter.report({name: value}, observer)

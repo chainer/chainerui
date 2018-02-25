@@ -46,7 +46,7 @@ class ImageReport(extension.Extension):
             return
 
         out_path = trainer.out
-        for key, images in pooled_images.items():
+        for key, value in pooled_images.items():
             names = key.split('/')
             if len(names) > 1:
                 name = names[0]
@@ -61,12 +61,13 @@ class ImageReport(extension.Extension):
             path = os.path.join(out_path, file_name)
             if not os.path.exists(path):
                 # TODO(tanakad) should execute as queue worker
-                np.save(path, images)
+                np.save(path, value['array'])
             info = {
                 'epoch': updater.epoch,
                 'iteration': updater.iteration,
                 'name': name,
                 'path': file_name,
+                'row': value['row']
             }
             if tag is not None:
                 info['tag'] = tag
