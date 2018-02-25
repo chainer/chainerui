@@ -4,12 +4,19 @@ from chainer import reporter
 import numpy as np
 
 
-CHAINERUI_IMAGE_PREFIX = 'image'
-_chainerui_global_observation = {}
+CHAINERUI_IMAGE_PREFIX = 'chainerui_image'
 
 
-def image(images, name, tag=None, ch_axis=-1,
-          observation=_chainerui_global_observation):
+class ImageSummary(object):
+
+    def __init__(self):
+        self.observation = {}
+
+
+chainerui_image_observer = ImageSummary()
+
+
+def image(images, name, tag=None, ch_axis=-1):
     """summary images to visualize.
 
     A batch of image is registered on global observation and these images
@@ -24,11 +31,12 @@ def image(images, name, tag=None, ch_axis=-1,
             [batch x height x width x channel].
         name (str): name of image.
         tag (str): tar of image, optional.
+        ch_axis (int): index number of channel dimension.
     """
 
     current_reporter = reporter.get_current_reporter()
-    with reporter.report_scope(observation):
-        name = '%s/%s' % (CHAINERUI_IMAGE_PREFIX, name)
+    observer = chainerui_image_observer
+    with reporter.report_scope(observer.observation):
         if tag is not None:
             name = '%s/%s' % (name, tag)
         if isinstance(images, chainer.Variable):
@@ -38,4 +46,4 @@ def image(images, name, tag=None, ch_axis=-1,
             roll_ax = np.append(np.delete(np.arange(
                 images.ndim), ch_axis), ch_axis)
             images = images.transpose(roll_ax)
-        current_reporter.report({name: images}, None)
+        current_reporter.report({name: images}, observer)

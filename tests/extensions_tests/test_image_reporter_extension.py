@@ -18,7 +18,7 @@ class TestImageReport(unittest.TestCase):
         self._dir = test_dir
 
     def tearDown(self):
-        summary._chainerui_global_observation = {}
+        summary.chainerui_image_observer.observation = {}
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
 
@@ -32,6 +32,7 @@ class TestImageReport(unittest.TestCase):
         trainer.updater = updater
 
         target = ImageReport()
+        target.initialize(trainer)
         target(trainer)
         assert len(target._infos) == 0
 
@@ -44,12 +45,11 @@ class TestImageReport(unittest.TestCase):
         image_prefix = summary.CHAINERUI_IMAGE_PREFIX
         img1 = np.zeros(3000).reshape((10, 10, 10, 3))
         img1[0, 0, 0, 0] = 1
-        summary._chainerui_global_observation[
-            image_prefix+'/test/tag1'] = img1
+        observation = summary.chainerui_image_observer.observation
+        observation[image_prefix+'/test/tag1'] = img1
         img2 = np.zeros(3000).reshape((10, 10, 10, 3))
         img2[0, 0, 0, 1] = 1
-        summary._chainerui_global_observation[
-            image_prefix+'/test/tag2'] = img1
+        observation[image_prefix+'/test/tag2'] = img1
 
         # add image as batch
         updater.epoch = 2
@@ -93,12 +93,10 @@ class TestImageReport(unittest.TestCase):
         # add 2nd. batch image, and get latest image
         img3 = np.zeros(3000).reshape((10, 10, 10, 3))
         img3[0, 0, 0, 2] = 1
-        summary._chainerui_global_observation[
-            image_prefix+'/test/tag1'] = img3
+        observation[image_prefix+'/test/tag1'] = img3
         img4 = np.zeros(3000).reshape((10, 10, 10, 3))
         img4[0, 0, 1, 0] = 1
-        summary._chainerui_global_observation[
-            image_prefix+'/test'] = img4
+        observation[image_prefix+'/test'] = img4
         updater.epoch = 4
         updater.epoch_detail = 4
         updater.iteration = 200
@@ -143,9 +141,11 @@ class TestImageReport(unittest.TestCase):
 
             def maker(trainer):
                 img = np.ones(750).reshape((10, 5, 5, 3))
-                summary._chainerui_global_observation[name] = img
+                summary.chainerui_image_observer.observation[
+                    name] = img
             return maker
         target = ImageReport(image_fn=create_image_fn('test'))
+        target.initialize(trainer)
         target(trainer)
         assert len(target._infos) == 1
         npy_name = 'iter_10_%s.npy' % target._get_hash('test')

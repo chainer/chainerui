@@ -23,6 +23,12 @@ class ImageReport(extension.Extension):
         self._info_name = '.chainerui_images'
         self._infos = []
 
+    def initialize(self, trainer):
+        observer = summary.chainerui_image_observer
+        trainer.reporter.add_observer(
+            summary.CHAINERUI_IMAGE_PREFIX, observer)
+        self._observer = observer
+
     def __call__(self, trainer):
         if not self._trigger(trainer):
             return
@@ -30,7 +36,7 @@ class ImageReport(extension.Extension):
             self._fn(trainer)
 
         image_prefix = summary.CHAINERUI_IMAGE_PREFIX
-        observations = summary._chainerui_global_observation
+        observations = self._observer.observation
         pooled_images = {}
         keys = observations.keys()
         for k in list(keys):
