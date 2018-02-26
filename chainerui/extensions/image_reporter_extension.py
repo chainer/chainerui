@@ -46,32 +46,28 @@ class ImageReport(extension.Extension):
             return
 
         out_path = trainer.out
+        updater = trainer.updater
+        images_info = []
         for key, value in pooled_images.items():
-            names = key.split('/')
-            if len(names) > 1:
-                name = names[0]
-                tag = key[len(name) + 1:]
-            else:
-                name = key
-                tag = None
-
-            updater = trainer.updater
             file_name = 'iter_%d_%s.npy' % (
                 updater.iteration, self._get_hash(key))
             path = os.path.join(out_path, file_name)
             if not os.path.exists(path):
-                # TODO(tanakad) should execute as queue worker
+                # TODO(disktnk) should execute as queue worker
                 np.save(path, value['array'])
-            info = {
-                'epoch': updater.epoch,
-                'iteration': updater.iteration,
-                'name': name,
+            image_info = {
                 'path': file_name,
-                'row': value['row']
+                'name': key
             }
-            if tag is not None:
-                info['tag'] = tag
-            self._infos.append(info)
+            if 'row' in value:
+                image_info['row'] = value['row']
+            images_info.append(image_info)
+        info = {
+            'epoch': updater.epoch,
+            'iteration': updater.iteration,
+            'images': images_info
+        }
+        self._infos.append(info)
 
         fd, path = tempfile.mkstemp(prefix=self._info_name, dir=out_path)
         with os.fdopen(fd, 'w') as f:

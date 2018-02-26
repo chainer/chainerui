@@ -35,7 +35,7 @@ class TestImage(unittest.TestCase):
         assert len(observer.observation) == 1
         assert key in observer.observation
         assert np.allclose(observer.observation[key]['array'], img2)
-        assert observer.observation[key]['row'] == 1
+        assert 'row' not in observer.observation[key]
 
         img3 = np.zeros(750).reshape((10, 5, 5, 3))
         img3[0, 0, 0, 2] = 1
@@ -55,4 +55,4 @@ class TestImage(unittest.TestCase):
         assert len(observer.observation) == 2
         expected_img4 = img4.transpose(0, 2, 3, 1)
         assert np.allclose(observer.observation[key]['array'], expected_img4)
-        assert observer.observation[key]['row'] == 1
+        assert 'row' not in observer.observation[key]
