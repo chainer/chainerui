@@ -16,7 +16,7 @@ class ImageSummary(object):
 chainerui_image_observer = ImageSummary()
 
 
-def image(images, name=None, ch_axis=-1, row=0):
+def image(images, name=None, ch_axis=1, row=0):
     """summary images to visualize.
 
     A batch of image is registered on global observation and these images
@@ -30,7 +30,7 @@ def image(images, name=None, ch_axis=-1, row=0):
             `chainer.Variable`): batch of images or an image.
         name (str): name of image. when not setting, assigned number
             automatically.
-        ch_axis (int): index number of channel dimension. set -1 by default.
+        ch_axis (int): index number of channel dimension. set 1 by default.
         row (int): row size to visualize batched images. when set 0,
             show on unstuck. if images set only one image, the row size
             will be ignored.

@@ -15,14 +15,14 @@ class TestImage(unittest.TestCase):
         img = np.zeros(750).reshape((10, 5, 5, 3))
 
         with self.assertRaises(IndexError) as e:
-            summary.image(img, 'test')
+            summary.image(img, 'test', ch_axis=-1)
         assert 'out of range' in str(e.exception)
 
         reporter = chainer.Reporter()
         observer = summary.chainerui_image_observer
         reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
         with reporter.scope(observer.observation):
-            summary.image(img, 'test')
+            summary.image(img, 'test', ch_axis=-1)
 
         assert len(observer.observation) == 1
         key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
@@ -31,7 +31,7 @@ class TestImage(unittest.TestCase):
         img2 = np.zeros(750).reshape((10, 5, 5, 3))
         img2[0, 0, 0, 1] = 1
         with reporter.scope(observer.observation):
-            summary.image(img2, 'test')
+            summary.image(img2, 'test', ch_axis=-1)
         assert len(observer.observation) == 1
         assert key in observer.observation
         assert np.allclose(observer.observation[key]['array'], img2)
@@ -41,7 +41,7 @@ class TestImage(unittest.TestCase):
         img3[0, 0, 0, 2] = 1
         img3 = chainer.Variable(img3)
         with reporter.scope(observer.observation):
-            summary.image(img3, row=5)
+            summary.image(img3, row=5, ch_axis=-1)
         assert len(observer.observation) == 2
         none_key = summary.CHAINERUI_IMAGE_PREFIX+'/0'
         assert none_key in observer.observation
@@ -51,7 +51,7 @@ class TestImage(unittest.TestCase):
         img4 = np.zeros(750).reshape((10, 3, 5, 5))
         img4[0, 0, 1, 0] = 1
         with reporter.scope(observer.observation):
-            summary.image(img4, 'test', ch_axis=1)
+            summary.image(img4, 'test')
         assert len(observer.observation) == 2
         expected_img4 = img4.transpose(0, 2, 3, 1)
         assert np.allclose(observer.observation[key]['array'], expected_img4)
