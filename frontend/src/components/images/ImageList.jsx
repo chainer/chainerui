@@ -1,29 +1,44 @@
 import React from 'react';
+import { Container, Row, Col } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-const visualizeImage = (images) => images.map((image) => [
-  (<dt>{image.name}</dt>),
-  (<dd><span>{image.tag}</span><span>{image.iteration}</span>
-    <img src={`${image.src}`} alt={`${image.name}`} /></dd>)
-]);
 
 const Images = (props) => {
   const { images } = props;
+
+  const viewImages = (srcs) => {
+    const srcList = srcs.map((src) => (<div><img src={`${src}`} alt="view" /></div>));
+    return srcList;
+  };
+
+  const imageCols = (contents) => {
+    const contentValues = Object.entries(contents);
+    return contentValues.map(([name, srcs]) => (<Col><div>{name}</div>{viewImages(srcs)}</Col>));
+  };
+
+  const infoCols = (trainInfo) => {
+    const trainInfoValues = Object.entries(trainInfo);
+    return trainInfoValues.map(([k, v]) => (<li>{k}: {v}</li>));
+  };
+
+  const srcRowElems = images.map((image) => (
+    <Row>
+      { imageCols(image.contents) }
+      <Col><ul>{ infoCols(image.train_info) }</ul></Col>
+    </Row>
+  ));
+
   return (
-    <div>
-      <dl>
-        {visualizeImage(images)}
-      </dl>
-    </div>
+    <Container>
+      {srcRowElems}
+    </Container>
   );
 };
 
 Images.propTypes = {
   images: PropTypes.arrayOf(PropTypes.shape({
-    src: PropTypes.any,
-    name: PropTypes.string,
-    tag: PropTypes.string,
-    iteration: PropTypes.number
+    contents: PropTypes.objectOf(PropTypes.any),
+    trainInfo: PropTypes.objectOf(PropTypes.any)
   })).isRequired
 };
 
