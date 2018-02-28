@@ -7,7 +7,7 @@ const Images = (props) => {
   const { images } = props;
 
   const viewImages = (srcs) => {
-    const srcList = srcs.map((src) => (<div><img src={`${src}`} alt="view" /></div>));
+    const srcList = srcs.map((src) => (<div><img src={`${src}`} alt="view" style={{ maxWidth: 300 }} /></div>));
     return srcList;
   };
 
