@@ -76,8 +76,9 @@ class TestApp(unittest.TestCase):
                 'images': [
                     {
                         'row': 2,
+                        'mode': 'hsv',
                         'path': npy2_path,
-                        'name': '0'
+                        'name': 'seg'
                     }
                 ]
             }
@@ -113,5 +114,11 @@ class TestApp(unittest.TestCase):
         assert 'epoch' in actual_img1['train_info']
         assert actual_img1['train_info']['epoch'] == 1
 
-        actual_img1 = actual_list[1]
-        assert len(actual_img1['contents']) == 1
+        actual_img2 = actual_list[1]
+        assert len(actual_img2['contents']) == 1
+        img2 = np.asarray(np.clip(img2 * 255, 0.0, 255.0), dtype=np.uint8)
+        img2 = img2.reshape((2, 5, 5, 5, 3)).transpose(
+            0, 2, 1, 3, 4).reshape((10, 25, 3))
+        img2_str = collect_images._make_src_tag(
+            collect_images._serialize(img2, mode='hsv'))
+        assert actual_img2['contents']['seg'][0] == img2_str

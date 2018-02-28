@@ -16,7 +16,7 @@ class ImageSummary(object):
 chainerui_image_observer = ImageSummary()
 
 
-def image(images, name=None, ch_axis=1, row=0):
+def image(images, name=None, ch_axis=1, row=0, mode=None):
     """summary images to visualize.
 
     A batch of image is registered on global observation and these images
@@ -51,4 +51,6 @@ def image(images, name=None, ch_axis=1, row=0):
         value = dict(array=images)
         if row > 0:
             value['row'] = row
+        if mode is not None:
+            value['mode'] = mode.lower()
         current_reporter.report({name: value}, observer)

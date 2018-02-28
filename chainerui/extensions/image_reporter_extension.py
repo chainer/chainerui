@@ -61,6 +61,8 @@ class ImageReport(extension.Extension):
             }
             if 'row' in value:
                 image_info['row'] = value['row']
+            if 'mode' in value:
+                image_info['mode'] = value['mode']
             images_info.append(image_info)
         info = {
             'epoch': updater.epoch,

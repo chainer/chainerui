@@ -10,9 +10,12 @@ from chainerui import DB_SESSION
 from chainerui.models.result import Result
 
 
-def _serialize(img, ext='PNG'):
+def _serialize(img, ext='PNG', mode=None):
     buf = io.BytesIO()
-    Image.fromarray(img).save(buf, format=ext)
+    if mode is None:
+        Image.fromarray(img).save(buf, format=ext)
+    elif mode == 'hsv':
+        Image.fromarray(img, mode='HSV').convert('RGB').save(buf, format=ext)
     return b64encode(buf.getvalue()).decode('utf-8')
 
 
@@ -58,6 +61,7 @@ def collect_images(result_id):
                 x = np.load(f)
             if x.dtype != np.uint8:
                 x = np.asarray(np.clip(x * 255, 0.0, 255.0), dtype=np.uint8)
+            mode = None if 'mode' not in info else info['mode']
             img_srcs = images['contents']
             if x.ndim == 4:
                 B, H, W, C = x.shape
@@ -68,16 +72,16 @@ def collect_images(result_id):
                     x = x.transpose(0, 2, 1, 3, 4)
                     x = x.reshape((rows * H, cols * W, 3))
 
-                    img_str = _make_src_tag(_serialize(x))
+                    img_str = _make_src_tag(_serialize(x, mode=mode))
                     img_srcs[info['name']] = [img_str]
                 else:
                     unstucked_images = []
                     for xx in x:
-                        img_str = _make_src_tag(_serialize(xx))
+                        img_str = _make_src_tag(_serialize(xx, mode=mode))
                         unstucked_images.append(img_str)
                     img_srcs[info['name']] = unstucked_images
             elif x.ndim == 3:
-                img_str = _make_src_tag(_serialize(x))
+                img_str = _make_src_tag(_serialize(x, mode=mode))
                 img_srcs[info['name']] = [img_str]
         for k, v in base_info.items():
             images['train_info'][k] = v

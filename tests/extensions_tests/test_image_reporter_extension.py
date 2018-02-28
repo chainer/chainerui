@@ -22,10 +22,12 @@ class TestImageReport(unittest.TestCase):
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
 
-    def _make_image_summary_value(self, img, row=None):
+    def _make_image_summary_value(self, img, row=None, mode=None):
         value = dict(array=img)
         if row is not None:
             value['row'] = row
+        if mode is not None:
+            value['mode'] = mode
         return value
 
     def test_call(self):
@@ -57,7 +59,7 @@ class TestImageReport(unittest.TestCase):
         img2 = np.zeros(3000).reshape((10, 10, 10, 3))
         img2[0, 0, 0, 1] = 1
         observation[image_prefix+'/name2'] = self._make_image_summary_value(
-            img2, 2)
+            img2, 2, 'hsv')
 
         # add image as batch
         updater.epoch = 2
@@ -85,11 +87,13 @@ class TestImageReport(unittest.TestCase):
             if info['name'] == 'name1':
                 assert info['path'] == npy1_name
                 assert info['row'] == 5
+                assert 'mode' not in info
             else:
                 assert info['name'] == 'name2'
                 assert info['path'] == 'iter_100_%s.npy' % target._get_hash(
                     'name2')
                 assert info['row'] == 2
+                assert info['mode'] == 'hsv'
         check_first_info(info[0]['images'][0])
         check_first_info(info[0]['images'][1])
 
@@ -136,6 +140,7 @@ class TestImageReport(unittest.TestCase):
                 assert info['name'] == '0'
                 assert info['path'] == npy4_name
                 assert 'row' not in info
+                assert 'mode' not in info
         check_second_info(info[1]['images'][0])
         check_second_info(info[1]['images'][1])
 
