@@ -22,6 +22,8 @@ class ResultRow extends React.Component {
     super(props);
 
     this.handleSelectToggle = this.handleSelectToggle.bind(this);
+    this.handleResultNameFocus = this.handleResultNameFocus.bind(this);
+    this.handleResultNameBlur = this.handleResultNameBlur.bind(this);
     this.handleResultNameChange = this.handleResultNameChange.bind(this);
     this.handleResultNameKeyPress = this.handleResultNameKeyPress.bind(this);
     this.handleResultUpdate = this.handleResultUpdate.bind(this);
@@ -30,13 +32,30 @@ class ResultRow extends React.Component {
 
     const { result } = this.props;
     this.state = {
-      resultName: result.name
+      resultName: result.name,
+      resultNameFocused: false,
+      showUnregisterModal: false
     };
   }
 
   handleSelectToggle() {
     const { project, result, resultConfig, onResultsConfigSelectUpdate } = this.props;
     onResultsConfigSelectUpdate(project.id, result.id, !resultConfig.hidden);
+  }
+
+  handleResultNameFocus() {
+    setTimeout(() => {
+      this.setState({
+        resultNameFocused: true
+      });
+    }, 100);
+  }
+
+  handleResultNameBlur() {
+    this.setState({
+      resultNameFocused: false
+    });
+    this.handleResultUpdate();
   }
 
   handleResultNameChange(e) {
@@ -72,7 +91,7 @@ class ResultRow extends React.Component {
   }
 
   render() {
-    const { resultName, showUnregisterModal } = this.state;
+    const { resultName, resultNameFocused, showUnregisterModal } = this.state;
     const { project, result, stats, resultConfig, isResultNameAlignRight } = this.props;
     const { args } = result;
 
@@ -92,6 +111,10 @@ class ResultRow extends React.Component {
     const argElems = stats.argKeys.map((argKey) => (<td key={`args-${argKey}`}>{argValue2string(argDict[argKey])}</td>));
 
     const truncateConfig = { length: 22, forward: isResultNameAlignRight };
+    const resultNameInputStyle = {
+      float: isResultNameAlignRight ? 'right' : 'left',
+      direction: (isResultNameAlignRight && !resultNameFocused) ? 'rtl' : 'ltr'
+    };
 
     return (
       <tr className="result-row">
@@ -102,17 +125,19 @@ class ResultRow extends React.Component {
           <Link to={urlForResultDetail(project.id, result.id)}>{result.id}</Link>
         </td>
         <td>
-          <Form inline>
+          <Form inline onSubmit={(e) => { e.preventDefault(); }}>
             <FormGroup>
               <Input
                 className={`result-name ${isResultNameAlignRight ? 'text-right' : ''}`}
                 type="text"
                 title={displayResultNameFull(project, result)}
+                style={resultNameInputStyle}
                 placeholder={truncate(getRelativeResultPathName(project, result), truncateConfig)}
                 value={resultName || ''}
                 onChange={this.handleResultNameChange}
                 onKeyPress={this.handleResultNameKeyPress}
-                onBlur={this.handleResultUpdate}
+                onFocus={this.handleResultNameFocus}
+                onBlur={this.handleResultNameBlur}
               />
             </FormGroup>
           </Form>
