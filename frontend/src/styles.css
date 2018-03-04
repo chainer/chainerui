@@ -21,6 +21,10 @@
   background-color: inherit;
 }
 
+.breadcrumb-item::before {
+  vertical-align: top;
+}
+
 .log-visualizer-tooltip {
   max-width: 300px;
 }
