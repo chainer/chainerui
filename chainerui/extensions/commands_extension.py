@@ -9,25 +9,6 @@ from chainerui.utils.command_item import CommandItem
 from chainerui.utils.commands_state import CommandsState
 
 
-def shouldExecute(trainer, command):
-    if 'response' in command:
-        # already executed
-        return False
-    request = command.get('request', {})
-    if 'schedule' in request:
-        schedule = request['schedule']
-        if schedule['key'] == 'epoch':
-            if trainer.updater.epoch != schedule['value']:
-                return False
-        elif schedule['key'] == 'iteration':
-            if trainer.updater.iteration != schedule['value']:
-                return False
-        else:
-            # invalid schedule key
-            return False
-    return True
-
-
 def take_snapshot(trainer, body):
     filename = 'snapshot_iter_{.updater.iteration}'
     savefun = npz.save_npz
@@ -49,7 +30,7 @@ def adjust_hyperparams(trainer, body):
     hyperparam_dict = hyperparam.get_dict()
     for key, value in six.iteritems(request_hyperparam):
         if (key not in hyperparam_dict) or (value is None):
-            continue
+            continue  # pragma: no cover
         setattr(hyperparam, key, value)
     return {
         'optimizer': optimizer_name,
