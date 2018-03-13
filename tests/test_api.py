@@ -236,9 +236,6 @@ class TestAPI(unittest.TestCase):
 
         # invalid project ID
         resp = self.app.get('/api/v1/projects/12345/results/1')
-        json_str = resp.data.decode()
-        print('aaa')
-        print(json_str)
         data = assert_json_api(resp, 404)
         assert len(data) == 2
         assert isinstance(data['message'], string_types)
@@ -360,7 +357,8 @@ class TestAPI(unittest.TestCase):
         assert 'not set' in data['message']
 
         # job run on v0.1.0 so .chainerui_commands is not created
-        open(os.path.join(result_path, 'commands'), 'w').close()
+        with open(os.path.join(result_path, 'commands'), 'w') as f:
+            json.dump([], f)
         resp = self.app.post(
             '/api/v1/projects/2/results/4/commands',
             data=json.dumps(request_jsons[0]),
