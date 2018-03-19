@@ -78,7 +78,7 @@ LogVisualizerTooltip.propTypes = {
     args: PropTypes.arrayOf(PropTypes.any),
     logs: PropTypes.arrayOf(PropTypes.any)
   })).isRequired,
-  xAxisKey: PropTypes.string.isRequired,
+  xAxisKey: PropTypes.string,
   isResultNameAlignRight: PropTypes.bool,
   // passed by reactstrap Tooltip
   label: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -87,6 +87,7 @@ LogVisualizerTooltip.propTypes = {
 };
 
 LogVisualizerTooltip.defaultProps = {
+  xAxisKey: '',
   isResultNameAlignRight: false,
   label: undefined,
   payload: []

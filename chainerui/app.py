@@ -70,8 +70,7 @@ def project_create_handler(args):
         print('Pathname already registered.')
 
 
-def main():
-    """main."""
+def create_parser():
     parser = argparse.ArgumentParser(description='chainerui command')
     parser.add_argument(
         '--version', '-v', action='version', version=_version.__version__)
@@ -112,6 +111,12 @@ def main():
     parser_project_create.set_defaults(
         handler=project_create_handler)
 
+    return parser
+
+
+def main():
+    """main."""
+    parser = create_parser()
     args = parser.parse_args()
 
     if hasattr(args, 'handler'):

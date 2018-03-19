@@ -73,6 +73,7 @@ export const RESULT_UPDATE_FAILURE = 'RESULT_UPDATE_FAILURE';
 export const RESULT_DELETE_REQUEST = 'RESULT_DELETE_REQUEST';
 export const RESULT_DELETE_SUCCESS = 'RESULT_DELETE_SUCCESS';
 export const RESULT_DELETE_FAILURE = 'RESULT_DELETE_FAILURE';
+export const RESULT_LIST_CLEAR = 'RESULT_LIST_CLEAR';
 
 export const getResultList = (projectId) => ({
   [CALL_API]: {
@@ -115,6 +116,10 @@ export const deleteResult = (projectId, resultId) => {
     }
   };
 };
+
+export const clearResultList = () => ({
+  type: RESULT_LIST_CLEAR
+});
 
 
 // commands API
