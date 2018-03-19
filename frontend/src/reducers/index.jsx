@@ -97,6 +97,8 @@ const resultsReducer = (state = {}, action) => {
         };
       }
       return state;
+    case ActionTypes.RESULT_LIST_CLEAR:
+      return {};
     default:
       return state;
   }

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   getProject,
-  getResultList, updateResult,
+  getResultList, updateResult, clearResultList,
   resetProjectConfig,
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
@@ -26,6 +26,8 @@ class PlotContainer extends React.Component {
   componentDidMount() {
     const { projectId, globalConfig } = this.props;
     const { pollingRate } = globalConfig;
+
+    this.props.clearResultList();
     this.props.getProject(projectId);
     this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId);
   }
@@ -188,6 +190,7 @@ PlotContainer.propTypes = {
   getProject: PropTypes.func.isRequired,
   getResultList: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
+  clearResultList: PropTypes.func.isRequired,
   resetProjectConfig: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
@@ -208,6 +211,7 @@ export default connect(mapStateToProps, {
   getProject,
   getResultList,
   updateResult,
+  clearResultList,
   resetProjectConfig,
   updateLineInAxis,
   updateAxisScale,
