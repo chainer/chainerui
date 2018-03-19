@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js --progress --profile",
-    "build:watch": "webpack --config webpack.config.js --progress --profile --watch",
+    "build": "cross-env NODE_ENV=production webpack --progress --profile",
+    "build:watch": "webpack --progress --profile --watch",
     "start": "webpack-dev-server --config webpack.server.config.js",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
