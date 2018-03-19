@@ -26,32 +26,35 @@ class SideBar extends React.Component {
   }
 
   handleConfigReset() {
-    const { projectId, onProjectConfigReset } = this.props;
+    const { project, onProjectConfigReset } = this.props;
     this.handleModalToggle();
-    onProjectConfigReset(projectId);
+    onProjectConfigReset(project.id);
   }
 
   render() {
     const {
-      projectId,
+      project,
       results,
       stats,
       projectConfig,
+      globalConfig,
       onAxisConfigLineUpdate,
       onAxisConfigScaleUpdate,
       onAxisConfigXKeyUpdate,
       onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate,
       onAxisConfigLogKeySelectToggle
     } = this.props;
+
     return (
       <div className="side-bar">
         <AxesConfigurator
           {
           ...{
-            projectId,
+            project,
             results,
             stats,
             projectConfig,
+            globalConfig,
             onAxisConfigLineUpdate,
             onAxisConfigScaleUpdate,
             onAxisConfigXKeyUpdate,
@@ -80,7 +83,10 @@ class SideBar extends React.Component {
 }
 
 SideBar.propTypes = {
-  projectId: PropTypes.number.isRequired,
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    pathName: PropTypes.string
+  }).isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string)
@@ -91,6 +97,9 @@ SideBar.propTypes = {
       yLeftAxis: PropTypes.any,
       yRightAxis: PropTypes.any
     })
+  }).isRequired,
+  globalConfig: PropTypes.shape({
+    isResultNameAlignRight: PropTypes.bool
   }).isRequired,
   onProjectConfigReset: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
