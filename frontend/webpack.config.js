@@ -7,6 +7,7 @@ const fs = require('fs');
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const NODE_PROD = (NODE_ENV === 'production');
@@ -32,7 +33,6 @@ module.exports = {
   entry: {
     chainerui: [
       'babel-polyfill',
-      'whatwg-fetch',
       './src/index.jsx'
     ],
     vendor: Object.keys(dependencies).concat([
@@ -133,7 +133,27 @@ module.exports = {
     }),
     new ExtractTextWebpackPlugin('[name].css', {
       allChunks: true
-    })
+    }),
+    ...(NODE_PROD ? [
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false,
+          screw_ie8: true,
+          drop_console: true,
+          drop_debugger: true
+        }
+      }),
+      new webpack.optimize.OccurrenceOrderPlugin(),
+      new webpack.optimize.AggressiveMergingPlugin(),
+      new OptimizeCssAssetsWebpackPlugin({
+        cssProcessor: require('cssnano'),
+        cssProcessorOptions: {
+          discardComments: {
+            removeAll: true
+          }
+        }
+      })
+    ] : [])
   ],
   node: {
     __dirname: false,
