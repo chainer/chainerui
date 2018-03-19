@@ -24,7 +24,8 @@ const version = versionMatches[1];
 const targets = {
   browsers: ['last 2 versions']
 };
-const dependencies = require('./package.json').dependencies;
+const { dependencies } = require('./package.json');
+
 delete dependencies['open-iconic'];
 
 module.exports = {
