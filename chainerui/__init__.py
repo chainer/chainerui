@@ -6,6 +6,7 @@ from alembic.config import Config
 from flask import Flask
 from flask import jsonify
 from flask import render_template
+from flask import send_from_directory
 from flask import url_for
 from sqlalchemy import create_engine
 from sqlalchemy.exc import OperationalError
@@ -108,6 +109,12 @@ def create_app():
     def index(**kwargs):
         """render react app."""
         return render_template('index.html')
+
+    @app.route('/favicon.ico')
+    def favicon():
+        return send_from_directory(
+            os.path.join(app.root_path, 'static', 'dist'),
+            'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
     # error handling
     @app.errorhandler(OperationalError)
