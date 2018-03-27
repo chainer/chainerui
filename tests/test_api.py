@@ -95,39 +95,6 @@ def setup_test_project(root_path):
         json.dump(commands, f)
     open(os.path.join(path, 'snapshot_iter_2400'), 'w').close()
 
-    # log, args, commands, status(run)
-    path = os.path.join(root_path, '10003')
-    os.makedirs(path)
-    with open(os.path.join(path, 'log'), 'w') as f:
-        json.dump(log, f)
-    with open(os.path.join(path, 'args'), 'w') as f:
-        json.dump(args, f)
-    with open(os.path.join(path, 'commands'), 'w') as f:
-        json.dump(commands, f)
-    CommandsState.run(path)
-
-    # log, args, commands, status(stop)
-    path = os.path.join(root_path, '10004')
-    os.makedirs(path)
-    with open(os.path.join(path, 'log'), 'w') as f:
-        json.dump(log, f)
-    with open(os.path.join(path, 'args'), 'w') as f:
-        json.dump(args, f)
-    with open(os.path.join(path, 'commands'), 'w') as f:
-        json.dump(commands, f)
-    CommandsState.stop(path)
-
-    # log, args, commands, status(not run)
-    path = os.path.join(root_path, '10005')
-    os.makedirs(path)
-    with open(os.path.join(path, 'log'), 'w') as f:
-        json.dump(log, f)
-    with open(os.path.join(path, 'args'), 'w') as f:
-        json.dump(args, f)
-    with open(os.path.join(path, 'commands'), 'w') as f:
-        json.dump(commands, f)
-    CommandsState._dump(path, CommandsState._load(path, initialize=True))
-
 
 def setup_test_db(project_path, project_name):
     create_db()
@@ -342,6 +309,13 @@ class TestAPI(unittest.TestCase):
 
     # POST /api/v1/projects/<int:project_id>/results/<int:result_id>/commands,
     def test_post_result_command(self):
+        project2_path = os.path.join(self._dir, 'test_project2')
+        result_path = os.path.join(project2_path, '10003')
+        os.makedirs(result_path)
+        with open(os.path.join(result_path, 'log'), 'w') as f:
+            json.dump([], f)
+        Project.create(project2_path, 'command-test-project')
+
         request_jsons = [
             {
                 'name': 'adjust_hyperparams',
@@ -372,10 +346,46 @@ class TestAPI(unittest.TestCase):
             },
         ]
 
+        # not set extension
+        resp = self.app.post(
+            '/api/v1/projects/2/results/4/commands',
+            data=json.dumps(request_jsons[0]),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 1
+        assert isinstance(data['message'], string_types)
+        assert 'not set' in data['message']
+
+        # job run on v0.1.0 so .chainerui_commands is not created
+        with open(os.path.join(result_path, 'commands'), 'w') as f:
+            json.dump([], f)
+        resp = self.app.post(
+            '/api/v1/projects/2/results/4/commands',
+            data=json.dumps(request_jsons[0]),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 1
+        assert isinstance(data['message'], string_types)
+        assert 'stopped' in data['message']
+
+        # extension is set up but not run
+        os.remove(os.path.join(result_path, '.chainerui_commands'))
+        CommandsState._dump(result_path, CommandsState._load(
+            result_path, initialize=True))
+        resp = self.app.post(
+            '/api/v1/projects/2/results/4/commands',
+            data=json.dumps(request_jsons[0]),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 1
+        assert isinstance(data['message'], string_types)
+        assert 'not run' in data['message']
+
         # job has already started
+        CommandsState.run(result_path)
         for i in range(3):
             resp = self.app.post(
-                '/api/v1/projects/1/results/4/commands',
+                '/api/v1/projects/2/results/4/commands',
                 data=json.dumps(request_jsons[i]),
                 content_type='application/json')
             data = assert_json_api(resp)
@@ -393,45 +403,16 @@ class TestAPI(unittest.TestCase):
             assert isinstance(command['request']['status'], string_types)
             assert 'response' in command
 
-        # not set extension
-        resp = self.app.post(
-            '/api/v1/projects/1/results/2/commands',
-            data=json.dumps(request_jsons[0]),
-            content_type='application/json')
-        data = assert_json_api(resp, 400)
-        assert len(data) == 1
-        assert isinstance(data['message'], string_types)
-        assert 'not set' in data['message']
-
-        # job run on v0.1.0 so .chainerui_commands is not created
-        resp = self.app.post(
-            '/api/v1/projects/1/results/3/commands',
-            data=json.dumps(request_jsons[0]),
-            content_type='application/json')
-        data = assert_json_api(resp, 400)
-        assert len(data) == 1
-        assert isinstance(data['message'], string_types)
-        assert 'stopped' in data['message']
-
         # jos has stopped
+        CommandsState.stop(result_path)
         resp = self.app.post(
-            '/api/v1/projects/1/results/5/commands',
+            '/api/v1/projects/2/results/4/commands',
             data=json.dumps(request_jsons[0]),
             content_type='application/json')
         data = assert_json_api(resp, 400)
         assert len(data) == 1
         assert isinstance(data['message'], string_types)
         assert 'stopped' in data['message']
-
-        # not set extension
-        resp = self.app.post(
-            '/api/v1/projects/1/results/6/commands',
-            data=json.dumps(request_jsons[0]),
-            content_type='application/json')
-        data = assert_json_api(resp, 400)
-        assert len(data) == 1
-        assert isinstance(data['message'], string_types)
-        assert 'not run' in data['message']
 
         request_jsons = [
             {
@@ -450,22 +431,22 @@ class TestAPI(unittest.TestCase):
 
         for i in range(2):
             resp = self.app.post(
-                '/api/v1/projects/1/results/4/commands',
+                '/api/v1/projects/2/results/4/commands',
                 data=json.dumps(request_jsons[i]),
                 content_type='application/json')
             data = assert_json_api(resp, 400)
             assert len(data) == 1
             assert isinstance(data['message'], string_types)
 
-        resp = self.app.post('/api/v1/projects/1/results/3/commands')
+        resp = self.app.post('/api/v1/projects/2/results/4/commands')
         data = assert_json_api(resp, 400)
         assert len(data) == 1
         assert isinstance(data['message'], string_types)
 
-        resp = self.app.post('/api/v1/projects/1/results/12345/commands')
+        resp = self.app.post('/api/v1/projects/2/results/12345/commands')
         data = assert_json_api(resp, 404)
         assert isinstance(data['message'], string_types)
         assert data['result'] is None
 
         # not raise an exception
-        #   when PUT /api/v1/projects/12345/results/1/commands
+        #   when PUT /api/v1/projects/12345/results/4/commands
