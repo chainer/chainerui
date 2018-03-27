@@ -179,7 +179,7 @@ class TestAPI(unittest.TestCase):
         assert isinstance(project['id'], int)
 
     def assert_test_project_result(self, result, name=None):
-        assert len(result) == 8
+        assert len(result) == 9
         assert isinstance(result['commands'], list)
         assert isinstance(result['logs'], list)
         assert isinstance(result['args'], list)
@@ -269,9 +269,6 @@ class TestAPI(unittest.TestCase):
 
         # invalid project ID
         resp = self.app.get('/api/v1/projects/12345/results/1')
-        json_str = resp.data.decode()
-        print('aaa')
-        print(json_str)
         data = assert_json_api(resp, 404)
         assert len(data) == 2
         assert isinstance(data['message'], string_types)
