@@ -32,8 +32,12 @@ export const truncate = (string, options = {}) => {
   return str;
 };
 
-export const displayResultName = (result = {}, options = {}) => (
-  truncate(result.name, options) || truncate(result.pathName, { ...options, forward: true })
+export const getRelativeResultPathName = (project = {}, result = {}) => (
+  path.relative(project.pathName || '', result.pathName || '')
+);
+
+export const displayResultNameFull = (project = {}, result = {}) => (
+  result.name || getRelativeResultPathName(project, result)
 );
 
 export const displayProjectNameFull = (project = {}) => (
@@ -43,8 +47,6 @@ export const displayProjectNameFull = (project = {}) => (
 export const displayProjectName = (project = {}, options = {}) => (
   truncate(displayProjectNameFull(project), options)
 );
-
-export const line2name = (line, result = {}) => `${displayResultName(result)}/${line.logKey}`;
 
 export const isFloat = (value) => (
   isFinite(value) && !Number.isInteger(value)

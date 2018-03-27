@@ -6,6 +6,7 @@ from alembic.config import Config
 from flask import Flask
 from flask import jsonify
 from flask import render_template
+from flask import send_from_directory
 from flask import url_for
 from sqlalchemy import create_engine
 from sqlalchemy.exc import OperationalError
@@ -40,6 +41,14 @@ DB_SESSION = scoped_session(
 )
 
 
+def get_db_migration_config():
+    ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
+    config = Config(ini_path)
+    config.set_main_option(
+        "script_location", os.path.join(PACKAGE_DIR, 'migration'))
+    return config
+
+
 def create_db():
     """create_db."""
     try:
@@ -54,10 +63,10 @@ def create_db():
 
 def upgrade_db():
     """upgrade_db."""
-    ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
-    config = Config(ini_path)
-    config.set_main_option(
-        "script_location", os.path.join(PACKAGE_DIR, 'migration'))
+    if not os.path.isdir(DB_FILE_DIR):
+        print('DB is not initialized, please run \'create\' command before')
+        return
+    config = get_db_migration_config()
     upgrade(config, 'head')
 
 
@@ -100,6 +109,12 @@ def create_app():
     def index(**kwargs):
         """render react app."""
         return render_template('index.html')
+
+    @app.route('/favicon.ico')
+    def favicon():
+        return send_from_directory(
+            os.path.join(app.root_path, 'static', 'dist'),
+            'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
     # error handling
     @app.errorhandler(OperationalError)

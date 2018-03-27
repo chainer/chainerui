@@ -23,7 +23,7 @@ def load_result_json(result_path, json_file_name):
     return _list
 
 
-def crawl_result_path(result_path):
+def crawl_result_path(result_path, include_log):
     """crawl_result_path."""
     result = {
         'logs': [],
@@ -33,7 +33,8 @@ def crawl_result_path(result_path):
     }
 
     if os.path.isdir(result_path):
-        result['logs'] = load_result_json(result_path, 'log')
+        if include_log:
+            result['logs'] = load_result_json(result_path, 'log')
         result['args'] = load_result_json(result_path, 'args')
         result['commands'] = CommandItem.load_commands(result_path)
 
@@ -71,35 +72,30 @@ def crawl_result(result_id, force=False):
 
     if (not force) and (now - current_result.updated_at).total_seconds() < 4:
         return current_result
-    if (not force) and not _check_log_updated(current_result):
-        return current_result
 
-    crawled_result = crawl_result_path(current_result.path_name)
+    # if log file is not updated, not necessary to get log contents
+    is_updated = _check_log_updated(current_result)
+    crawled_result = crawl_result_path(current_result.path_name, is_updated)
 
-    need_reset = len(crawled_result['logs']) < len(current_result.logs)
-
-    if need_reset:
-        current_result.logs = []
-        current_result.args = None
-
-    current_result.commands = []
-    current_result.snapshots = []
-
-    for log in crawled_result['logs'][len(current_result.logs):]:
-        current_result.logs.append(Log(log))
+    if is_updated:
+        current_log_idx = len(current_result.logs)
+        if len(crawled_result['logs']) < current_log_idx:
+            current_log_idx = 0
+            current_result.logs = []
+            current_result.args = None
+        for log in crawled_result['logs'][current_log_idx:]:
+            current_result.logs.append(Log(log))
 
     if current_result.args is None:
         current_result.args = Argument(json.dumps(crawled_result['args']))
 
-    for cmd in crawled_result['commands'][
-            len(current_result.commands):
-    ]:
+    current_result.commands = []
+    current_result.snapshots = []
+
+    for cmd in crawled_result['commands']:
         current_result.commands.append(cmd.to_model())
 
-    for snapshot in crawled_result['snapshots'][
-            len(current_result.snapshots):
-    ]:
-
+    for snapshot in crawled_result['snapshots']:
         number_str = snapshot.split('snapshot_iter_')[1]
         if is_numberable(number_str):
             current_result.snapshots.append(

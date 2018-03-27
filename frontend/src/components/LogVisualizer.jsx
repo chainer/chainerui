@@ -10,7 +10,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import {
-  line2key, line2name, line2dataKey,
+  line2key, line2dataKey,
   formatLogValue,
   getSelectedResults, getSelectedLogKeys,
   createLine
@@ -33,13 +33,12 @@ const getDomain = (axisConfig = {}) => {
   return domain;
 };
 
-const buildLineElem = (line, axisName, result) => {
+const buildLineElem = (line, axisName) => {
   const { config = {} } = line;
 
   return (
     <Line
       type="linear"
-      name={line2name(line, result)}
       dataKey={line2dataKey(line, axisName)}
       yAxisId={axisName}
       stroke={config.color}
@@ -66,7 +65,7 @@ const buildLineElems = (
       const line = lines[line2key({ resultId, logKey })] ||
         createLine(resultId, logKey, results, logKeys);
       if (line.config.isVisible) {
-        lineElems.push(buildLineElem(line, axisName, result));
+        lineElems.push(buildLineElem(line, axisName));
       }
     });
   });
@@ -76,8 +75,10 @@ const buildLineElems = (
 
 const LogVisualizer = (props) => {
   const {
+    project = {},
     results = {},
     projectConfig = {},
+    globalConfig = {},
     stats
   } = props;
   const { axes, resultsConfig = {}, lines = {} } = projectConfig;
@@ -128,7 +129,7 @@ const LogVisualizer = (props) => {
     ...buildLineElems(selectedResults, selectedLogKeys.yRightAxis, 'yRightAxis', results, projectConfig, logKeys)
   ];
 
-  const { chartSize } = props.globalConfig;
+  const { chartSize, isResultNameAlignRight } = globalConfig;
 
   return (
     <div className="log-visualizer-root">
@@ -165,9 +166,10 @@ const LogVisualizer = (props) => {
           <Tooltip
             content={
               <LogVisualizerTooltip
+                project={project}
                 results={results}
-                lines={lines}
                 xAxisKey={xAxisKey}
+                isResultNameAlignRight={isResultNameAlignRight}
               />
             }
           />
@@ -179,6 +181,11 @@ const LogVisualizer = (props) => {
 };
 
 LogVisualizer.propTypes = {
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    pathName: PropTypes.string
+  }).isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   stats: PropTypes.shape({
     logKeys: PropTypes.arrayOf(PropTypes.string),
@@ -210,7 +217,8 @@ LogVisualizer.propTypes = {
       width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       aspect: PropTypes.number.isRequired
-    })
+    }),
+    isResultNameAlignRight: PropTypes.bool
   }).isRequired
 };
 

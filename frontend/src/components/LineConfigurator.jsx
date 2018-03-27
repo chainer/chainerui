@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Label, Input, Collapse, Button, Col, Row } from 'reactstrap';
 import { ChromePicker, GithubPicker } from 'react-color';
-import { displayResultName, lineColorGenerator } from '../utils';
+import TruncatedResultName from './TruncatedResultName';
+import { lineColorGenerator } from '../utils';
 
 
 const RESULT_NONE = -1;
@@ -79,7 +80,7 @@ class LineConfigurator extends React.Component {
   }
 
   render() {
-    const { results, line = {} } = this.props;
+    const { project, results, line = {}, isResultNameAlignRight } = this.props;
     const { resultId = RESULT_NONE, logKey = LOG_KEY_NONE, config = {} } = line;
     const result = results[resultId] || {};
     const { color, isVisible } = config;
@@ -92,7 +93,13 @@ class LineConfigurator extends React.Component {
       <div className="line-configurator">
         <dl>
           <dt>result name</dt>
-          <dd>{displayResultName(result)}</dd>
+          <dd>
+            <TruncatedResultName
+              project={project}
+              result={result}
+              isResultNameAlignRight={isResultNameAlignRight}
+            />
+          </dd>
           <dt>log key</dt>
           <dd>{logKey}</dd>
         </dl>
@@ -141,7 +148,14 @@ class LineConfigurator extends React.Component {
 }
 
 LineConfigurator.propTypes = {
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    pathName: PropTypes.string
+  }).isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
+  stats: PropTypes.shape({
+    logKeys: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
   line: PropTypes.shape({
     resultId: PropTypes.number,
     logKey: PropTypes.string,
@@ -150,14 +164,13 @@ LineConfigurator.propTypes = {
       isVisible: PropTypes.bool
     })
   }),
-  stats: PropTypes.shape({
-    logKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
+  isResultNameAlignRight: PropTypes.bool,
   onChange: PropTypes.func
 };
 
 LineConfigurator.defaultProps = {
   line: {},
+  isResultNameAlignRight: false,
   onChange: () => {}
 };
 

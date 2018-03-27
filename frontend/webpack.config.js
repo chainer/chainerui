@@ -21,6 +21,11 @@ if (!versionMatches) {
 }
 
 const version = versionMatches[1];
+const targets = {
+  browsers: ['last 2 versions']
+};
+const dependencies = require('./package.json').dependencies;
+delete dependencies['open-iconic'];
 
 module.exports = {
   entry: {
@@ -29,8 +34,9 @@ module.exports = {
       'whatwg-fetch',
       './src/index.jsx'
     ],
-    vendor: Object.keys(require('./package.json').dependencies).concat([
+    vendor: Object.keys(dependencies).concat([
       'bootstrap/dist/css/bootstrap.css',
+      'open-iconic/font/css/open-iconic-bootstrap.css',
       'babel-polyfill'
     ])
   },
@@ -52,7 +58,13 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           presets: [
-            ['es2015', { modules: false }],
+            [
+              'env',
+              {
+                modules: false,
+                targets
+              }
+            ],
             'react'
           ],
           plugins: [
@@ -77,9 +89,7 @@ module.exports = {
               options: {
                 parser: 'postcss-scss',
                 plugins: [
-                  require('autoprefixer')({
-                    browsers: ['last 2 versions']
-                  })
+                  require('autoprefixer')(targets)
                 ]
               }
             }
@@ -87,7 +97,7 @@ module.exports = {
         })
       },
       {
-        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/,
+        test: /\.(png|jpe?g|gif|svg|eot|otf|ttf|woff2?)$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]'
@@ -113,7 +123,8 @@ module.exports = {
       Popper: ['popper.js', 'default']
     }),
     new HtmlWebpackPlugin({
-      title: 'chainerui'
+      title: 'chainerui',
+      favicon: 'src/favicon.ico'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',

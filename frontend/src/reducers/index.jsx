@@ -97,6 +97,8 @@ const resultsReducer = (state = {}, action) => {
         };
       }
       return state;
+    case ActionTypes.RESULT_LIST_CLEAR:
+      return {};
     default:
       return state;
   }
@@ -318,18 +320,22 @@ const defaultGlobaState = {
 };
 
 const global = (state = defaultGlobaState, action) => {
-  const { pollingRate, chartSize } = action;
+  const { pollingRate, chartSize, isResultNameAlignRight } = action;
   switch (action.type) {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
       return {
         ...state,
         pollingRate
       };
-
     case ActionTypes.GLOBAL_CONFIG_CHART_SIZE_UPDATE:
       return {
         ...state,
         chartSize
+      };
+    case ActionTypes.GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE:
+      return {
+        ...state,
+        isResultNameAlignRight
       };
     default:
       return state;

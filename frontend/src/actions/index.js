@@ -73,6 +73,7 @@ export const RESULT_UPDATE_FAILURE = 'RESULT_UPDATE_FAILURE';
 export const RESULT_DELETE_REQUEST = 'RESULT_DELETE_REQUEST';
 export const RESULT_DELETE_SUCCESS = 'RESULT_DELETE_SUCCESS';
 export const RESULT_DELETE_FAILURE = 'RESULT_DELETE_FAILURE';
+export const RESULT_LIST_CLEAR = 'RESULT_LIST_CLEAR';
 
 export const getResultList = (projectId) => ({
   [CALL_API]: {
@@ -115,6 +116,10 @@ export const deleteResult = (projectId, resultId) => {
     }
   };
 };
+
+export const clearResultList = () => ({
+  type: RESULT_LIST_CLEAR
+});
 
 
 // commands API
@@ -232,6 +237,7 @@ export const updateLineInAxis = (projectId, axisName, lineKey, line) => ({
 
 export const GLOBAL_CONFIG_POLLING_RATE_UPDATE = 'GLOBAL_CONFIG_POLLING_RATE_UPDATE';
 export const GLOBAL_CONFIG_CHART_SIZE_UPDATE = 'GLOBAL_CONFIG_CHART_SIZE_UPDATE';
+export const GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE = 'GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE';
 
 export const updateGlobalPollingRate = (pollingRate) => ({
   type: GLOBAL_CONFIG_POLLING_RATE_UPDATE,
@@ -242,3 +248,9 @@ export const updateGlobalChartSize = (chartSize) => ({
   type: GLOBAL_CONFIG_CHART_SIZE_UPDATE,
   chartSize
 });
+
+export const updateGlobalResultNameAlignment = (isResultNameAlignRight) => ({
+  type: GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE,
+  isResultNameAlignRight
+});
+
