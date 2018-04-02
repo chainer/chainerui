@@ -41,6 +41,7 @@ def setup_test_project(root_path):
             "main/accuracy": 0.9771820902824402,
             "validation/main/accuracy": 0.975399911403656
         }
+        # TODO: add more logs
     ]
     with open(os.path.join(path, 'log'), 'w') as f:
         json.dump(log, f)
@@ -145,16 +146,20 @@ class TestAPI(unittest.TestCase):
         assert project['name'] == self._project_name if name is None else name
         assert isinstance(project['id'], int)
 
-    def assert_test_project_result(self, result, name=None):
+    def assert_test_project_result(self, result, name=None, logs_limit=-1):
         assert len(result) == 9
         assert isinstance(result['commands'], list)
-        assert isinstance(result['logs'], list)
+        self.assert_test_logs(result['logs'], logs_limit)
         assert isinstance(result['args'], list)
         assert isinstance(result['snapshots'], list)
         assert isinstance(result['isUnregistered'], bool)
         assert isinstance(result['id'], int)
         assert result['pathName'].startswith(self._project_path)
         assert result['name'] == name
+
+    def assert_test_logs(self, logs, logs_limit=-1):
+        assert isinstance(logs, list)
+        assert logs_limit == -1 or len(logs) <= logs_limit
 
     # GET /api/v1/projects
     def test_get_project_list(self):
@@ -223,6 +228,8 @@ class TestAPI(unittest.TestCase):
         for i in range(3):
             self.assert_test_project_result(data['results'][i])
 
+        # TODO: add test case for logs_limit
+
         # raise an unexpected exception when GET /api/v1/projects/12345/results
 
     # GET /api/v1/projects/<int:project_id>/results/<int:id>
@@ -233,6 +240,8 @@ class TestAPI(unittest.TestCase):
             assert len(data) == 1
             self.assert_test_project_result(data['result'])
             assert data['result']['id'] == i + 1
+
+        # TODO: add test case for logs_limit
 
         # invalid project ID
         resp = self.app.get('/api/v1/projects/12345/results/1')
