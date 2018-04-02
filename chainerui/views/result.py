@@ -14,6 +14,8 @@ class ResultAPI(MethodView):
 
     def get(self, id=None, project_id=None):
         """get."""
+        logs_limit = request.args.get('logs_limit', default=-1, type=int)
+
         project = DB_SESSION.query(Project).\
             filter_by(id=project_id).\
             first()
@@ -36,7 +38,9 @@ class ResultAPI(MethodView):
                 result = crawl_result(result.id)
 
             return jsonify({
-                'results': [r.serialize for r in results]
+                'results': [
+                    r.serialize_with_sampled_logs(logs_limit) for r in results
+                ]
             })
 
         else:
@@ -55,7 +59,7 @@ class ResultAPI(MethodView):
             result = crawl_result(result.id)
 
             return jsonify({
-                'result': result.serialize
+                'result': result.serialize_with_sampled_logs(logs_limit)
             })
 
     def put(self, id, project_id=None):
