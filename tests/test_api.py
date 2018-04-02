@@ -403,7 +403,7 @@ class TestAPI(unittest.TestCase):
             assert isinstance(command['request']['status'], string_types)
             assert 'response' in command
 
-        # jos has stopped
+        # job has stopped
         CommandsState.stop(result_path)
         resp = self.app.post(
             '/api/v1/projects/2/results/4/commands',
