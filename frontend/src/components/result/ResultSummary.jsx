@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getLastLogDict } from '../../utils';
+import { keyOptions } from '../../constants';
 
 
 const ResultSummary = (props) => {
   const { result } = props;
   const lastLogDict = getLastLogDict(result);
+  const logKeys = keyOptions.filter((key) => Object.keys(lastLogDict).indexOf(key) > -1);
   return (
     <div className="card">
       <div className="card-header">Summary</div>
@@ -20,14 +22,12 @@ const ResultSummary = (props) => {
           <dt className="col-sm-3">path name</dt>
           <dd className="col-sm-9">{result.pathName}</dd>
 
-          <dt className="col-sm-3">epoch</dt>
-          <dd className="col-sm-9">{lastLogDict.epoch}</dd>
-
-          <dt className="col-sm-3">iteration</dt>
-          <dd className="col-sm-9">{lastLogDict.iteration}</dd>
-
-          <dt className="col-sm-3">elapsed time</dt>
-          <dd className="col-sm-9">{lastLogDict.elapsed_time}</dd>
+          {logKeys.map((key) => (
+            <React.Fragment key={`summary-${key}`}>
+              <dt className="col-sm-3">{key.split('_').join(' ')}</dt>
+              <dd className="col-sm-9">{lastLogDict[key]}</dd>
+            </React.Fragment>
+          ))}
         </dl>
       </div>
     </div>
