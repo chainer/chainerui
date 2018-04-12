@@ -33,6 +33,7 @@ module.exports = {
   entry: {
     chainerui: [
       'babel-polyfill',
+      'whatwg-fetch',
       './src/index.jsx'
     ],
     vendor: Object.keys(dependencies).concat([
