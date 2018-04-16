@@ -7,7 +7,7 @@ import { keyOptions } from '../../constants';
 const ResultSummary = (props) => {
   const { result } = props;
   const lastLogDict = getLastLogDict(result);
-  const logKeys = keyOptions.filter((key) => Object.keys(lastLogDict).indexOf(key) > -1);
+  const logKeys = keyOptions.filter((key) => key in lastLogDict);
   return (
     <div className="card">
       <div className="card-header">Summary</div>
