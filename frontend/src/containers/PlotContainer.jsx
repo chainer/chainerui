@@ -138,7 +138,7 @@ const mapEntitiesToStats = (entities) => {
   });
   const argKeys = Object.keys(argKeySet);
   const logKeys = Object.keys(logKeySet).sort();
-  const xAxisKeys = keyOptions.filter((key) => logKeys.indexOf(key) > -1);
+  const xAxisKeys = keyOptions.filter((key) => key in logKeySet);
 
   return { axes, argKeys, logKeys, xAxisKeys };
 };
