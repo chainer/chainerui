@@ -24,7 +24,7 @@ const ResultSummary = (props) => {
 
           {logKeys.map((key) => (
             <React.Fragment key={`summary-${key}`}>
-              <dt className="col-sm-3">{key.split('_').join(' ')}</dt>
+              <dt className="col-sm-3">{key.replace(/_/g, ' ')}</dt>
               <dd className="col-sm-9">{lastLogDict[key]}</dd>
             </React.Fragment>
           ))}
