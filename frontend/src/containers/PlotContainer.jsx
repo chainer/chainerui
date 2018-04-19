@@ -186,6 +186,7 @@ PlotContainer.propTypes = {
   globalConfig: PropTypes.shape({
     pollingRate: PropTypes.number,
     chartSize: PropTypes.objectOf(PropTypes.any),
+    logsLimit: PropTypes.number,
     isResultNameAlignRight: PropTypes.bool
   }).isRequired,
   stats: PropTypes.shape({

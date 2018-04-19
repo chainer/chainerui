@@ -8,23 +8,23 @@ import {
   Button
 } from 'reactstrap';
 import PollingStatus from './PollingStatus';
-import { chartSizeOptions, pollingOptions, CHAINERUI_VERSION } from '../constants';
+import { chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION } from '../constants';
 
 
 const RESULT_NAME_ALIGN_LEFT = 'result-name-align-left';
 const RESULT_NAME_ALIGN_RIGHT = 'result-name-align-right';
 
-const createPollingOptionElems = (options) => [
-  ...options.map((option) => (
-    <option key={option.id} value={option.value}>{option.name}</option>
-  ))
-];
+const createPollingOptionElems = (options) => options.map((option) => (
+  <option key={option.id} value={option.value}>{option.name}</option>
+));
 
-const createVisualizerSizeOptionElems = (options) => [
-  ...options.map((option) => (
-    <option key={option.id} value={option.id}>{option.name}</option>
-  ))
-];
+const createVisualizerSizeOptionElems = (options) => options.map((option) => (
+  <option key={option.id} value={option.id}>{option.name}</option>
+));
+//
+const createLogsLimitOptionElems = (options) => options.map((option) => (
+  <option key={option.id} value={option.value}>{option.name}</option>
+));
 
 class NavigationBar extends React.Component {
   constructor(props) {
@@ -63,9 +63,11 @@ class NavigationBar extends React.Component {
   render() {
     const pollingOptionElems = createPollingOptionElems(pollingOptions);
     const chartSizeElems = createVisualizerSizeOptionElems(chartSizeOptions);
+    const logsLimitOptionElems = createLogsLimitOptionElems(logsLimitOptions);
     const {
       pollingRate,
       chartSize = {},
+      logsLimit,
       isResultNameAlignRight
     } = this.props.globalConfig;
 
@@ -124,6 +126,20 @@ class NavigationBar extends React.Component {
                 </select>
               </FormGroup>
 
+              <FormGroup>
+                <Label for="global-config-logs-limit">Max log count</Label>
+                <select
+                  className="form-control"
+                  type="select"
+                  name="select"
+                  id="global-config-logs-limit"
+                  value={logsLimit}
+                  onChange={this.handleChangeLogsLimit}
+                >
+                  {logsLimitOptionElems}
+                </select>
+              </FormGroup>
+
               <FormGroup tag="fieldset">
                 <Label>Result name alignment</Label>
                 <FormGroup check>
@@ -168,6 +184,7 @@ NavigationBar.propTypes = {
   globalConfig: PropTypes.shape({
     pollingRate: PropTypes.number,
     chartSize: PropTypes.objectOf(PropTypes.any),
+    logsLimit: PropTypes.number,
     isResultNameAlignRight: PropTypes.bool
   }).isRequired,
   onGlobalConfigPollingRateUpdate: PropTypes.func.isRequired,

@@ -4,7 +4,7 @@ import { persistReducer } from 'redux-persist';
 import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions, defaultAxisConfig } from '../constants';
+import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig } from '../constants';
 
 
 const projectsReducer = (state = {}, action) => {
@@ -316,7 +316,8 @@ const projectsConfig = (state = {}, action) => {
 
 const defaultGlobaState = {
   pollingRate: pollingOptions[1].value,
-  chartSize: chartSizeOptions[0]
+  chartSize: chartSizeOptions[0],
+  logsLimit: logsLimitOptions[0].value
 };
 
 const global = (state = defaultGlobaState, action) => {
