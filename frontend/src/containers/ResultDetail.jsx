@@ -8,6 +8,7 @@ import {
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalLogsLimit,
   updateGlobalResultNameAlignment
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
@@ -58,6 +59,7 @@ class ResultDetail extends React.Component {
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
+          onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
           onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container fluid>
@@ -135,6 +137,7 @@ ResultDetail.propTypes = {
   createCommand: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
+  updateGlobalLogsLimit: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired
 };
 
@@ -149,6 +152,7 @@ export default connect(mapStateToProps, {
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalLogsLimit,
   updateGlobalResultNameAlignment
 })(ResultDetail);
 

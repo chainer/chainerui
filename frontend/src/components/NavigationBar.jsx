@@ -33,6 +33,7 @@ class NavigationBar extends React.Component {
     this.toggleSettingPopover = this.toggleSettingPopover.bind(this);
     this.handleChangePollingRate = this.handleChangePollingRate.bind(this);
     this.handleChangeChartSize = this.handleChangeChartSize.bind(this);
+    this.handleChangeLogsLimit = this.handleChangeLogsLimit.bind(this);
     this.handleResultNameAlignmentChange = this.handleResultNameAlignmentChange.bind(this);
     this.state = {
       settingPopoverOpen: false
@@ -53,6 +54,12 @@ class NavigationBar extends React.Component {
     const selectedId = Number(e.target.value);
     const chartSize = chartSizeOptions.find((o) => o.id === selectedId);
     this.props.onGlobalConfigChartSizeUpdate(chartSize);
+  }
+
+  handleChangeLogsLimit(e) {
+    const logsLimit = Number(e.target.value);
+    console.log('logsLimit', logsLimit);
+    this.props.onGlobalConfigLogsLimitUpdate(logsLimit);
   }
 
   handleResultNameAlignmentChange(e) {
@@ -189,6 +196,7 @@ NavigationBar.propTypes = {
   }).isRequired,
   onGlobalConfigPollingRateUpdate: PropTypes.func.isRequired,
   onGlobalConfigChartSizeUpdate: PropTypes.func.isRequired,
+  onGlobalConfigLogsLimitUpdate: PropTypes.func.isRequired,
   onGlobalConfigResultNameAlignmentUpdate: PropTypes.func.isRequired
 };
 

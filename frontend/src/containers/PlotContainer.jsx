@@ -11,6 +11,7 @@ import {
   updateResultsConfigSelect,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber
@@ -67,6 +68,7 @@ class PlotContainer extends React.Component {
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
+          onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
           onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container fluid>
@@ -206,6 +208,7 @@ PlotContainer.propTypes = {
   updateResultsConfigSelect: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
+  updateGlobalLogsLimit: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
@@ -227,6 +230,7 @@ export default connect(mapStateToProps, {
   updateResultsConfigSelect,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
   updateXAxisKey,
   updateAxisScaleRangeType,
