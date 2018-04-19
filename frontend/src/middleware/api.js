@@ -52,7 +52,6 @@ export default (store) => (next) => (action) => {
   };
 
   const [requestType, successType, failureType] = types;
-  next(actionWith({ type: requestType }));
 
   return attemptRequest(endpoint, {
     begin: () => (actionWith({ type: requestType })),
