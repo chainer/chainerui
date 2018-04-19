@@ -58,7 +58,6 @@ class NavigationBar extends React.Component {
 
   handleChangeLogsLimit(e) {
     const logsLimit = Number(e.target.value);
-    console.log('logsLimit', logsLimit);
     this.props.onGlobalConfigLogsLimitUpdate(logsLimit);
   }
 
