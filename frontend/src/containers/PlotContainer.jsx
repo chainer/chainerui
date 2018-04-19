@@ -17,6 +17,7 @@ import {
 } from '../actions';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
+import NewExperimentsTable from '../components/NewExperimentsTable';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
@@ -101,6 +102,16 @@ class PlotContainer extends React.Component {
                 globalConfig={globalConfig}
               />
               <ExperimentsTable
+                project={project}
+                results={results}
+                stats={stats}
+                projectConfig={projectConfig}
+                globalConfig={globalConfig}
+                onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
+                onResultUpdate={this.props.updateResult}
+              />
+
+              <NewExperimentsTable
                 project={project}
                 results={results}
                 stats={stats}
