@@ -321,7 +321,7 @@ const defaultGlobaState = {
 };
 
 const global = (state = defaultGlobaState, action) => {
-  const { pollingRate, chartSize, isResultNameAlignRight } = action;
+  const { pollingRate, chartSize, logsLimit, isResultNameAlignRight } = action;
   switch (action.type) {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
       return {
@@ -332,6 +332,11 @@ const global = (state = defaultGlobaState, action) => {
       return {
         ...state,
         chartSize
+      };
+    case ActionTypes.GLOBAL_CONFIG_LOGS_LIMIT_UPDATE:
+      return {
+        ...state,
+        logsLimit
       };
     case ActionTypes.GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE:
       return {
