@@ -28,21 +28,27 @@ import { startPolling, stopPolling } from '../utils';
 class PlotContainer extends React.Component {
   componentDidMount() {
     const { projectId, globalConfig } = this.props;
-    const { pollingRate } = globalConfig;
+    const { pollingRate, logsLimit } = globalConfig;
 
     this.props.clearResultList();
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId);
+    this.resultsPollingTimer = startPolling(
+      this.props.getResultList, pollingRate, projectId, logsLimit
+    );
   }
 
   componentWillReceiveProps(nextProps) {
     const { projectId, globalConfig } = this.props;
     const currentPollingRate = globalConfig.pollingRate;
+    const currentLogsLimit = globalConfig.logsLimit;
     const nextPollingRate = nextProps.globalConfig.pollingRate;
+    const nextLogsLimit = nextProps.globalConfig.logsLimit;
 
-    if (currentPollingRate !== nextPollingRate) {
+    if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate, projectId);
+      this.resultsPollingTimer = startPolling(
+        this.props.getResultList, nextPollingRate, projectId, nextLogsLimit
+      );
     }
   }
 

@@ -23,22 +23,24 @@ import { startPolling, stopPolling } from '../utils';
 class ResultDetail extends React.Component {
   componentDidMount() {
     const { projectId, resultId, globalConfig } = this.props;
-    const { pollingRate } = globalConfig;
+    const { pollingRate, logsLimit } = globalConfig;
     this.props.getProject(projectId);
     this.resultsPollingTimer = startPolling(
-      this.props.getResult, pollingRate, projectId, resultId
+      this.props.getResult, pollingRate, projectId, resultId, logsLimit
     );
   }
 
   componentWillReceiveProps(nextProps) {
     const { projectId, resultId, globalConfig } = this.props;
     const currentPollingRate = globalConfig.pollingRate;
+    const currentLogsLimit = globalConfig.logsLimit;
     const nextPollingRate = nextProps.globalConfig.pollingRate;
+    const nextLogsLimit = nextProps.globalConfig.logsLimit;
 
-    if (currentPollingRate !== nextPollingRate) {
+    if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit) {
       stopPolling(this.resultsPollingTimer);
       this.resultsPollingTimer = startPolling(
-        this.props.getResult, nextPollingRate, projectId, resultId
+        this.props.getResult, nextPollingRate, projectId, resultId, nextLogsLimit
       );
     }
   }

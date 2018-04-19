@@ -75,17 +75,17 @@ export const RESULT_DELETE_SUCCESS = 'RESULT_DELETE_SUCCESS';
 export const RESULT_DELETE_FAILURE = 'RESULT_DELETE_FAILURE';
 export const RESULT_LIST_CLEAR = 'RESULT_LIST_CLEAR';
 
-export const getResultList = (projectId) => ({
+export const getResultList = (projectId, logsLimit = -1) => ({
   [CALL_API]: {
     types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILURE],
-    endpoint: `projects/${projectId}/results`
+    endpoint: `projects/${projectId}/results?logs_limit=${logsLimit}`
   }
 });
 
-export const getResult = (projectId, resultId) => ({
+export const getResult = (projectId, resultId, logsLimit = -1) => ({
   [CALL_API]: {
     types: [RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILURE],
-    endpoint: `projects/${projectId}/results/${resultId}`
+    endpoint: `projects/${projectId}/results/${resultId}?logs_limit=${logsLimit}`
   }
 });
 
