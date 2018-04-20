@@ -22,6 +22,7 @@ Header
 * |header_config| : setup global configuration and show ChainerUI version:
     * select size of a chart
     * select polling interval
+    * select max log count per result
     * show ChainerUI version
 * |header_status_green| : connection status between ChainerUI server
     * green: success to connect
