@@ -21,7 +21,7 @@ const createPollingOptionElems = (options) => options.map((option) => (
 const createVisualizerSizeOptionElems = (options) => options.map((option) => (
   <option key={option.id} value={option.id}>{option.name}</option>
 ));
-//
+
 const createLogsLimitOptionElems = (options) => options.map((option) => (
   <option key={option.id} value={option.value}>{option.name}</option>
 ));

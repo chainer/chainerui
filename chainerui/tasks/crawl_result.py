@@ -7,8 +7,8 @@ from chainerui.models.argument import Argument
 from chainerui.models.log import Log
 from chainerui.models.result import Result
 from chainerui.models.snapshot import Snapshot
-from chainerui.utils import is_numberable
 from chainerui.utils.command_item import CommandItem
+from chainerui.utils import is_numberable
 
 
 def load_result_json(result_path, json_file_name):

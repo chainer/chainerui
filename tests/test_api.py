@@ -6,11 +6,15 @@ import unittest
 
 from six import string_types
 
-from chainerui import (CHAINERUI_ENV, DB_FILE_PATH, create_app, create_db,
-                       upgrade_db)
+from chainerui import CHAINERUI_ENV
+from chainerui import create_app
+from chainerui import create_db
+from chainerui import DB_FILE_PATH
 from chainerui.models.project import Project
+from chainerui import upgrade_db
 from chainerui.utils.commands_state import CommandsState
-from tests.helpers import NotInTestEnvironmentException, assert_json_api
+from tests.helpers import assert_json_api
+from tests.helpers import NotInTestEnvironmentException
 
 
 def setup_test_project(root_path):

@@ -1,9 +1,15 @@
 import datetime
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Boolean
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
 from sqlalchemy.orm import relationship
 
-from chainerui import DB_BASE, DB_SESSION
+from chainerui import DB_BASE
+from chainerui import DB_SESSION
 from chainerui.tasks import crawl_result
 
 
@@ -40,7 +46,8 @@ class Result(DB_BASE):
         return '<Result id: %r, path_name: %r />' % (self.id, self.path_name)
 
     @classmethod
-    def create(cls, path_name=None, name=None, project_id=None, log_modified_at=None):
+    def create(cls, path_name=None, name=None, project_id=None,
+               log_modified_at=None):
         """Initialize an instance and save it to db."""
         result = cls(path_name, name, project_id, log_modified_at)
 

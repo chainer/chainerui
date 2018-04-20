@@ -1,10 +1,12 @@
-from flask import jsonify, request
+from flask import jsonify
+from flask import request
 from flask.views import MethodView
 
 from chainerui import DB_SESSION
 from chainerui.models.project import Project
 from chainerui.models.result import Result
-from chainerui.tasks import collect_results, crawl_result
+from chainerui.tasks import collect_results
+from chainerui.tasks import crawl_result
 
 
 class ResultAPI(MethodView):
