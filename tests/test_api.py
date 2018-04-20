@@ -284,7 +284,6 @@ class TestAPI(unittest.TestCase):
 
     # GET /api/v1/projects/<int:project_id>/results/<int:id>
     def test_get_result(self):
-
         for logs_limit in [None, -1, 0, 5, 7, 100]:
             for i in range(3):
                 url = '/api/v1/projects/1/results/' + str(i + 1)
