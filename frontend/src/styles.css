@@ -28,3 +28,7 @@
 .log-visualizer-tooltip {
   max-width: 300px;
 }
+
+.ReactTable {
+  display: table;
+}

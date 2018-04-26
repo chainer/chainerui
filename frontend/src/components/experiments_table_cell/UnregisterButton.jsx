@@ -11,6 +11,7 @@ import {
 class UnregisterButton extends React.Component {
   constructor(props) {
     super(props);
+    this.handleUnregister = this.handleUnregister.bind(this);
     this.toggleUnregisterModal = this.toggleUnregisterModal.bind(this);
 
     this.state = {

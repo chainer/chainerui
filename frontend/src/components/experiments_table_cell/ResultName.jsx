@@ -24,6 +24,12 @@ class ResultName extends React.Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      resultName: nextProps.result.name
+    });
+  }
+
   handleResultNameFocus() {
     setTimeout(() => {
       this.setState({
