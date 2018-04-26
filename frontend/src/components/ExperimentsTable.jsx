@@ -14,7 +14,7 @@ import ToggleResult from './experiments_table_cell/ToggleResult';
 
 const emptyStr = '-';
 
-const NewExperimentsTable = (props) => {
+const ExperimentsTable = (props) => {
   const {
     project,
     results = {}, stats,
@@ -145,7 +145,7 @@ const NewExperimentsTable = (props) => {
   );
 };
 
-NewExperimentsTable.propTypes = {
+ExperimentsTable.propTypes = {
   project: PropTypes.shape({
     id: PropTypes.number,
     pathName: PropTypes.string
@@ -173,11 +173,11 @@ NewExperimentsTable.propTypes = {
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired
 };
-NewExperimentsTable.defaultProps = {
+ExperimentsTable.defaultProps = {
   results: {},
   stats: {
     argKeys: []
   }
 };
 
-export default NewExperimentsTable;
+export default ExperimentsTable;
