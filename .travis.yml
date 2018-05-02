@@ -18,7 +18,7 @@ install:
   - pushd frontend
   - npm install && npm run build -- --progress=false --profile=false
   - popd
-  - python setup.py --quiet install
+  - pip install -e .
 
 script:
   - flake8
