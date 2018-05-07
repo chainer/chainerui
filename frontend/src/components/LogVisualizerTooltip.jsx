@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'reactstrap';
+import TruncatedResultName from './TruncatedResultName';
 import {
   formatLogValue, formatLogTooltipLabel,
-  displayResultName,
   decomposeLineDataKey
 } from '../utils';
 
 
-const renderItems = (payload, formatter, results) => (
+const renderItems = (payload, formatter, project, results, isResultNameAlignRight) => (
   payload.filter((entry) => entry.value != null).map((entry) => {
     const { dataKey, color, value } = entry;
     const { resultId, logKey } = decomposeLineDataKey(dataKey);
@@ -21,7 +21,11 @@ const renderItems = (payload, formatter, results) => (
       >
         <Row>
           <Col xs="5" className="text-truncate px-1">
-            {displayResultName(result, { length: 16 })}
+            <TruncatedResultName
+              project={project}
+              result={result}
+              isResultNameAlignRight={isResultNameAlignRight}
+            />
           </Col>
           <Col xs="4" className="text-truncate px-1">
             {logKey}
@@ -36,7 +40,11 @@ const renderItems = (payload, formatter, results) => (
 );
 
 const LogVisualizerTooltip = (props) => {
-  const { xAxisKey, label, payload, results, lines } = props;
+  const {
+    xAxisKey,
+    label, payload,
+    project, results, isResultNameAlignRight
+  } = props;
 
   if (!payload || payload.length === 0) {
     return null;
@@ -51,13 +59,18 @@ const LogVisualizerTooltip = (props) => {
         <h6 className="card-title my-2">{labelFormatter(label)}</h6>
       </div>
       <ul className="list-group list-group-flush small text-muted">
-        {renderItems(payload, formatter, results, lines)}
+        {renderItems(payload, formatter, project, results, isResultNameAlignRight)}
       </ul>
     </div>
   );
 };
 
 LogVisualizerTooltip.propTypes = {
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    pathName: PropTypes.string
+  }).isRequired,
   results: PropTypes.objectOf(PropTypes.shape({
     id: PropTypes.number,
     pathName: PropTypes.string,
@@ -65,17 +78,8 @@ LogVisualizerTooltip.propTypes = {
     args: PropTypes.arrayOf(PropTypes.any),
     logs: PropTypes.arrayOf(PropTypes.any)
   })).isRequired,
-  lines: PropTypes.objectOf(
-    PropTypes.shape({
-      resultId: PropTypes.number,
-      logKey: PropTypes.string,
-      config: PropTypes.shape({
-        color: PropTypes.string,
-        isVisible: PropTypes.bool
-      })
-    })
-  ).isRequired,
-  xAxisKey: PropTypes.string.isRequired,
+  xAxisKey: PropTypes.string,
+  isResultNameAlignRight: PropTypes.bool,
   // passed by reactstrap Tooltip
   label: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   // passed by reactstrap Tooltip
@@ -83,6 +87,8 @@ LogVisualizerTooltip.propTypes = {
 };
 
 LogVisualizerTooltip.defaultProps = {
+  xAxisKey: '',
+  isResultNameAlignRight: false,
   label: undefined,
   payload: []
 };

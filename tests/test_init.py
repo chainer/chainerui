@@ -31,6 +31,11 @@ class TestInit(unittest.TestCase):
         assert resp.status_code == 200
         assert '<title>ChainerUI</title>' in resp.data.decode()
 
+    # GET /favicon.ico
+    def test_get_favicon(self):
+        resp = self.app.get('/favicon.ico')
+        assert resp.status_code == 200
+
     # raise an exception when GET /api/v1/projects
     def test_handle_invalid_usage(self):
         resp = self.app.get('/api/v1/projects')

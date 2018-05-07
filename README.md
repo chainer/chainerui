@@ -23,7 +23,7 @@ To install ChainerUI from source.
 $ git clone https://github.com/chainer/chainerui.git
 $ cd chainerui/frontend
 $ npm install && npm run build && cd ..
-$ python setup.py install
+$ pip install -e .
 ```
 
 - ChainerUI uses `sqlite3` module which is included in the standard Python library. If Python is built from source, `sqlite3` must be installed before building Python.

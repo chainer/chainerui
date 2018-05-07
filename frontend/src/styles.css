@@ -2,6 +2,10 @@
   width: 240px;
 }
 
+.text-truncate-right {
+  direction: rtl;
+}
+
 .table-xy-overflow-scroll {
   display: block;
   width: 100%;
@@ -15,4 +19,12 @@
   overflow: hidden;
   white-space: nowrap;
   background-color: inherit;
+}
+
+.breadcrumb-item::before {
+  vertical-align: top;
+}
+
+.log-visualizer-tooltip {
+  max-width: 300px;
 }

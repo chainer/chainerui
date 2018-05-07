@@ -4,12 +4,15 @@ import {
   Container,
   Collapse, Navbar, NavbarBrand,
   Popover, PopoverHeader, PopoverBody,
-  Form, FormGroup, Label,
+  Form, FormGroup, Label, Input,
   Button
 } from 'reactstrap';
 import PollingStatus from './PollingStatus';
 import { chartSizeOptions, pollingOptions, CHAINERUI_VERSION } from '../constants';
 
+
+const RESULT_NAME_ALIGN_LEFT = 'result-name-align-left';
+const RESULT_NAME_ALIGN_RIGHT = 'result-name-align-right';
 
 const createPollingOptionElems = (options) => [
   ...options.map((option) => (
@@ -30,6 +33,7 @@ class NavigationBar extends React.Component {
     this.toggleSettingPopover = this.toggleSettingPopover.bind(this);
     this.handleChangePollingRate = this.handleChangePollingRate.bind(this);
     this.handleChangeChartSize = this.handleChangeChartSize.bind(this);
+    this.handleResultNameAlignmentChange = this.handleResultNameAlignmentChange.bind(this);
     this.state = {
       settingPopoverOpen: false
     };
@@ -51,10 +55,19 @@ class NavigationBar extends React.Component {
     this.props.onGlobalConfigChartSizeUpdate(chartSize);
   }
 
+  handleResultNameAlignmentChange(e) {
+    const isResultNameAlignRight = (e.target.name === RESULT_NAME_ALIGN_RIGHT);
+    this.props.onGlobalConfigResultNameAlignmentUpdate(isResultNameAlignRight);
+  }
+
   render() {
     const pollingOptionElems = createPollingOptionElems(pollingOptions);
     const chartSizeElems = createVisualizerSizeOptionElems(chartSizeOptions);
-    const { chartSize = {} } = this.props.globalConfig;
+    const {
+      pollingRate,
+      chartSize = {},
+      isResultNameAlignRight
+    } = this.props.globalConfig;
 
     return (
       <Navbar className="navbar-light bg-light mb-3">
@@ -91,7 +104,7 @@ class NavigationBar extends React.Component {
                   name="select"
                   id="global-config-polling-rate"
                   onChange={this.handleChangePollingRate}
-                  value={this.props.globalConfig.pollingRate}
+                  value={pollingRate}
                 >
                   {pollingOptionElems}
                 </select>
@@ -110,6 +123,34 @@ class NavigationBar extends React.Component {
                   {chartSizeElems}
                 </select>
               </FormGroup>
+
+              <FormGroup tag="fieldset">
+                <Label>Result name alignment</Label>
+                <FormGroup check>
+                  <Label check>
+                    <Input
+                      type="radio"
+                      name={RESULT_NAME_ALIGN_LEFT}
+                      checked={!isResultNameAlignRight}
+                      onChange={this.handleResultNameAlignmentChange}
+                    />
+                    <span className="mx-1 oi oi-align-left" />
+                    Align left
+                  </Label>
+                </FormGroup>
+                <FormGroup check>
+                  <Label check>
+                    <Input
+                      type="radio"
+                      name={RESULT_NAME_ALIGN_RIGHT}
+                      checked={!!isResultNameAlignRight}
+                      onChange={this.handleResultNameAlignmentChange}
+                    />
+                    <span className="mx-1 oi oi-align-right" />
+                    Align right
+                  </Label>
+                </FormGroup>
+              </FormGroup>
             </Form>
             <p className="my-0"><small>ChainerUI {CHAINERUI_VERSION}</small></p>
           </PopoverBody>
@@ -126,10 +167,12 @@ NavigationBar.propTypes = {
   }).isRequired,
   globalConfig: PropTypes.shape({
     pollingRate: PropTypes.number,
-    chartSize: PropTypes.objectOf(PropTypes.any)
+    chartSize: PropTypes.objectOf(PropTypes.any),
+    isResultNameAlignRight: PropTypes.bool
   }).isRequired,
   onGlobalConfigPollingRateUpdate: PropTypes.func.isRequired,
-  onGlobalConfigChartSizeUpdate: PropTypes.func.isRequired
+  onGlobalConfigChartSizeUpdate: PropTypes.func.isRequired,
+  onGlobalConfigResultNameAlignmentUpdate: PropTypes.func.isRequired
 };
 
 NavigationBar.defaultProps = {

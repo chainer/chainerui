@@ -1,11 +1,12 @@
-import json
-
 from math import isinf
 from math import isnan
+
+import msgpack
+import numbers
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import LargeBinary
 
 from chainerui import DB_BASE
 
@@ -16,10 +17,11 @@ class Log(DB_BASE):
 
     id = Column(Integer, primary_key=True)
     result_id = Column(Integer, ForeignKey('result.id'))
-    data = Column(String(1024))
+    data = Column(LargeBinary(2048))
 
     def __init__(self, data=None):
-        self.data = data
+        bdata = msgpack.packb(data, use_bin_type=True)
+        self.data = bdata
 
     def __repr__(self):
         return '<Log id: %r />' % (self.id)
@@ -30,11 +32,20 @@ class Log(DB_BASE):
 
         log_items = []
 
-        for item in json.loads(self.data).items():
+        data = msgpack.unpackb(self.data, encoding='utf-8')
+        for item in data.items():
+            value_to_store = (
+                None
+                if not isinstance(item[1], numbers.Number)
+                or isinf(item[1])
+                or isnan(item[1])
+                else item[1]
+            )
+
             log_items.append({
                 'logId': self.id,
                 'key': item[0],
-                'value': None if isinf(item[1]) or isnan(item[1]) else item[1]
+                'value': value_to_store
             })
 
         return {

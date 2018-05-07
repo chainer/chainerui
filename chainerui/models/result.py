@@ -26,16 +26,19 @@ class Result(DB_BASE):
     )
     commands = relationship('Command', cascade='all, delete-orphan')
     snapshots = relationship('Snapshot', cascade='all, delete-orphan')
+    log_modified_at = Column(DateTime, default=None)
     created_at = Column(DateTime, default=datetime.datetime.now())
     updated_at = Column(
         DateTime,
         default=datetime.datetime.now()
     )
 
-    def __init__(self, path_name=None, name=None, project_id=None):
+    def __init__(self, path_name=None, name=None, project_id=None,
+                 log_modified_at=None):
         self.path_name = path_name
         self.name = name
         self.project_id = project_id
+        self.log_modified_at = log_modified_at
 
     def __repr__(self):
         return '<Result id: %r, path_name: %r />' % (self.id, self.path_name)
@@ -51,5 +54,6 @@ class Result(DB_BASE):
             'logs': [log.serialize for log in self.logs],
             'args': self.args.serialize if self.args is not None else [],
             'commands': [cmd.serialize for cmd in self.commands],
-            'snapshots': [cmd.serialize for cmd in self.snapshots]
+            'snapshots': [cmd.serialize for cmd in self.snapshots],
+            'logModifiedAt': self.log_modified_at
         }

@@ -4,12 +4,14 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
   getProject,
-  getResultList, updateResult,
+  getResultList, updateResult, clearResultList,
   resetProjectConfig,
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
   updateResultsConfigSelect,
-  updateGlobalPollingRate, updateGlobalChartSize,
+  updateGlobalPollingRate,
+  updateGlobalChartSize,
+  updateGlobalResultNameAlignment,
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber
 } from '../actions';
@@ -26,6 +28,8 @@ class PlotContainer extends React.Component {
   componentDidMount() {
     const { projectId, globalConfig } = this.props;
     const { pollingRate } = globalConfig;
+
+    this.props.clearResultList();
     this.props.getProject(projectId);
     this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId);
   }
@@ -47,7 +51,6 @@ class PlotContainer extends React.Component {
 
   render() {
     const {
-      projectId,
       project,
       results,
       fetchState,
@@ -64,19 +67,22 @@ class PlotContainer extends React.Component {
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
+          onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container fluid>
           <div className="row">
             <div className="col-md-4 col-lg-3">
               <BreadcrumbLink
                 length={2}
+                globalConfig={globalConfig}
                 project={project}
               />
               <SideBar
-                projectId={projectId}
+                project={project}
                 results={results}
                 stats={stats}
                 projectConfig={projectConfig}
+                globalConfig={globalConfig}
                 onProjectConfigReset={this.props.resetProjectConfig}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
                 onAxisConfigScaleUpdate={this.props.updateAxisScale}
@@ -88,16 +94,18 @@ class PlotContainer extends React.Component {
             </div>
             <div className="col-md-8 col-lg-9">
               <LogVisualizer
+                project={project}
                 results={results}
                 stats={stats}
                 projectConfig={projectConfig}
                 globalConfig={globalConfig}
               />
               <ExperimentsTable
-                projectId={projectId}
+                project={project}
                 results={results}
                 stats={stats}
                 projectConfig={projectConfig}
+                globalConfig={globalConfig}
                 onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
               />
@@ -130,7 +138,7 @@ const mapEntitiesToStats = (entities) => {
   });
   const argKeys = Object.keys(argKeySet);
   const logKeys = Object.keys(logKeySet).sort();
-  const xAxisKeys = keyOptions.filter((key) => logKeys.indexOf(key) > -1);
+  const xAxisKeys = keyOptions.filter((key) => key in logKeySet);
 
   return { axes, argKeys, logKeys, xAxisKeys };
 };
@@ -143,7 +151,7 @@ const mapStateToProps = (state, ownProps) => {
     config = defaultConfig
   } = state;
   const { projects = {}, results = {} } = entities;
-  const project = projects[projectId];
+  const project = projects[projectId] || { id: projectId };
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
   const globalConfig = config.global;
   const stats = mapEntitiesToStats(entities);
@@ -165,7 +173,7 @@ PlotContainer.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     pathName: PropTypes.string
-  }),
+  }).isRequired,
   results: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
     resultList: PropTypes.string
@@ -177,7 +185,8 @@ PlotContainer.propTypes = {
   }).isRequired,
   globalConfig: PropTypes.shape({
     pollingRate: PropTypes.number,
-    chartSize: PropTypes.objectOf(PropTypes.any)
+    chartSize: PropTypes.objectOf(PropTypes.any),
+    isResultNameAlignRight: PropTypes.bool
   }).isRequired,
   stats: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
@@ -188,6 +197,7 @@ PlotContainer.propTypes = {
   getProject: PropTypes.func.isRequired,
   getResultList: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
+  clearResultList: PropTypes.func.isRequired,
   resetProjectConfig: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
@@ -195,19 +205,20 @@ PlotContainer.propTypes = {
   updateResultsConfigSelect: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
+  updateGlobalResultNameAlignment: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
   updateAxisScaleRangeNumber: PropTypes.func.isRequired
 };
 
 PlotContainer.defaultProps = {
-  project: {}
 };
 
 export default connect(mapStateToProps, {
   getProject,
   getResultList,
   updateResult,
+  clearResultList,
   resetProjectConfig,
   updateLineInAxis,
   updateAxisScale,
@@ -215,6 +226,7 @@ export default connect(mapStateToProps, {
   updateResultsConfigSelect,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalResultNameAlignment,
   updateXAxisKey,
   updateAxisScaleRangeType,
   updateAxisScaleRangeNumber

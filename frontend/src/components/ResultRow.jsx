@@ -1,14 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import {
-  displayResultName,
+  Button, Modal, ModalHeader, ModalBody, ModalFooter,
+  Form, FormGroup, Input
+} from 'reactstrap';
+import {
+  getRelativeResultPathName,
+  displayResultNameFull,
   truncate,
   getLastLogDict,
   argValue2string,
-  urlForResultDetail,
-  urlForResultImage
+  urlForResultDetail
 } from '../utils';
 
 
@@ -19,6 +22,8 @@ class ResultRow extends React.Component {
     super(props);
 
     this.handleSelectToggle = this.handleSelectToggle.bind(this);
+    this.handleResultNameFocus = this.handleResultNameFocus.bind(this);
+    this.handleResultNameBlur = this.handleResultNameBlur.bind(this);
     this.handleResultNameChange = this.handleResultNameChange.bind(this);
     this.handleResultNameKeyPress = this.handleResultNameKeyPress.bind(this);
     this.handleResultUpdate = this.handleResultUpdate.bind(this);
@@ -27,13 +32,30 @@ class ResultRow extends React.Component {
 
     const { result } = this.props;
     this.state = {
-      resultName: result.name
+      resultName: result.name,
+      resultNameFocused: false,
+      showUnregisterModal: false
     };
   }
 
   handleSelectToggle() {
-    const { projectId, result, resultConfig, onResultsConfigSelectUpdate } = this.props;
-    onResultsConfigSelectUpdate(projectId, result.id, !resultConfig.hidden);
+    const { project, result, resultConfig, onResultsConfigSelectUpdate } = this.props;
+    onResultsConfigSelectUpdate(project.id, result.id, !resultConfig.hidden);
+  }
+
+  handleResultNameFocus() {
+    setTimeout(() => {
+      this.setState({
+        resultNameFocused: true
+      });
+    }, 100);
+  }
+
+  handleResultNameBlur() {
+    this.setState({
+      resultNameFocused: false
+    });
+    this.handleResultUpdate();
   }
 
   handleResultNameChange(e) {
@@ -49,16 +71,16 @@ class ResultRow extends React.Component {
   }
 
   handleResultUpdate() {
-    const { projectId, result, onResultUpdate } = this.props;
+    const { project, result, onResultUpdate } = this.props;
     const { resultName } = this.state;
     if (resultName !== result.name) {
-      onResultUpdate(projectId, { ...result, name: resultName });
+      onResultUpdate(project.id, { ...result, name: resultName });
     }
   }
 
   handleUnregister() {
-    const { projectId, result, onResultUpdate } = this.props;
-    onResultUpdate(projectId, { ...result, isUnregistered: true });
+    const { project, result, onResultUpdate } = this.props;
+    onResultUpdate(project.id, { ...result, isUnregistered: true });
     this.toggleUnregisterModal();
   }
 
@@ -69,8 +91,8 @@ class ResultRow extends React.Component {
   }
 
   render() {
-    const { resultName, showUnregisterModal } = this.state;
-    const { projectId, result, stats, resultConfig } = this.props;
+    const { resultName, resultNameFocused, showUnregisterModal } = this.state;
+    const { project, result, stats, resultConfig, isResultNameAlignRight } = this.props;
     const { args } = result;
 
     const lastLogDict = getLastLogDict(result);
@@ -88,27 +110,37 @@ class ResultRow extends React.Component {
     });
     const argElems = stats.argKeys.map((argKey) => (<td key={`args-${argKey}`}>{argValue2string(argDict[argKey])}</td>));
 
+    const truncateConfig = { length: 22, forward: isResultNameAlignRight };
+    const resultNameInputStyle = {
+      float: isResultNameAlignRight ? 'right' : 'left',
+      direction: (isResultNameAlignRight && !resultNameFocused) ? 'rtl' : 'ltr'
+    };
+
     return (
       <tr className="result-row">
         <td>
           <input type="checkbox" checked={!resultConfig.hidden} onChange={this.handleSelectToggle} />
         </td>
         <td>
-          <Link to={urlForResultDetail(projectId, result.id)}>{result.id}</Link>
+          <Link to={urlForResultDetail(project.id, result.id)}>{result.id}</Link>
         </td>
         <td>
-          <Link to={urlForResultImage(projectId, result.id)}>IMG</Link>
-        </td>
-        <td>
-          <input
-            className="form-control result-name"
-            type="text"
-            placeholder={truncate(result.pathName, { length: 22, forward: true })}
-            value={resultName || ''}
-            onChange={this.handleResultNameChange}
-            onKeyPress={this.handleResultNameKeyPress}
-            onBlur={this.handleResultUpdate}
-          />
+          <Form inline onSubmit={(e) => { e.preventDefault(); }}>
+            <FormGroup>
+              <Input
+                className={`result-name ${isResultNameAlignRight ? 'text-right' : ''}`}
+                type="text"
+                title={displayResultNameFull(project, result)}
+                style={resultNameInputStyle}
+                placeholder={truncate(getRelativeResultPathName(project, result), truncateConfig)}
+                value={resultName || ''}
+                onChange={this.handleResultNameChange}
+                onKeyPress={this.handleResultNameKeyPress}
+                onFocus={this.handleResultNameFocus}
+                onBlur={this.handleResultNameBlur}
+              />
+            </FormGroup>
+          </Form>
         </td>
         {logElems}
         {argElems}
@@ -119,7 +151,7 @@ class ResultRow extends React.Component {
           <Modal isOpen={showUnregisterModal}>
             <ModalHeader>Unregister a result</ModalHeader>
             <ModalBody>
-              Are you sure to unregister {displayResultName(result)} ?
+              Are you sure to unregister {displayResultNameFull(project, result)} ?
             </ModalBody>
             <ModalFooter>
               <Button color="secondary" onClick={this.toggleUnregisterModal}>Cancel</Button>
@@ -133,7 +165,10 @@ class ResultRow extends React.Component {
 }
 
 ResultRow.propTypes = {
-  projectId: PropTypes.number.isRequired,
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    pathName: PropTypes.string
+  }).isRequired,
   result: PropTypes.shape({
     id: PropTypes.number,
     pathName: PropTypes.string,
@@ -148,6 +183,7 @@ ResultRow.propTypes = {
   resultConfig: PropTypes.shape({
     hidden: PropTypes.bool
   }),
+  isResultNameAlignRight: PropTypes.bool,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired
 };
@@ -156,7 +192,8 @@ ResultRow.defaultProps = {
   stats: {
     argKeys: []
   },
-  resultConfig: { hidden: false }
+  resultConfig: { hidden: false },
+  isResultNameAlignRight: false
 };
 
 export default ResultRow;

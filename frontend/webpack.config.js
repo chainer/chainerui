@@ -7,6 +7,7 @@ const fs = require('fs');
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const NODE_PROD = (NODE_ENV === 'production');
@@ -24,7 +25,8 @@ const version = versionMatches[1];
 const targets = {
   browsers: ['last 2 versions']
 };
-const dependencies = require('./package.json').dependencies;
+const { dependencies } = require('./package.json');
+
 delete dependencies['open-iconic'];
 
 module.exports = {
@@ -123,7 +125,8 @@ module.exports = {
       Popper: ['popper.js', 'default']
     }),
     new HtmlWebpackPlugin({
-      title: 'chainerui'
+      title: 'chainerui',
+      favicon: 'src/favicon.ico'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -132,7 +135,27 @@ module.exports = {
     }),
     new ExtractTextWebpackPlugin('[name].css', {
       allChunks: true
-    })
+    }),
+    ...(NODE_PROD ? [
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false,
+          screw_ie8: true,
+          drop_console: true,
+          drop_debugger: true
+        }
+      }),
+      new webpack.optimize.OccurrenceOrderPlugin(),
+      new webpack.optimize.AggressiveMergingPlugin(),
+      new OptimizeCssAssetsWebpackPlugin({
+        cssProcessor: require('cssnano'),
+        cssProcessorOptions: {
+          discardComments: {
+            removeAll: true
+          }
+        }
+      })
+    ] : [])
   ],
   node: {
     __dirname: false,

@@ -5,7 +5,8 @@ import { Container, Row, Col } from 'reactstrap';
 import {
   getProjectList, updateProject, deleteProject,
   updateGlobalPollingRate,
-  updateGlobalChartSize
+  updateGlobalChartSize,
+  updateGlobalResultNameAlignment
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import Projects from '../components/projects/Projects';
@@ -27,6 +28,7 @@ class ProjectsContainer extends React.Component {
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
+          onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container fluid>
           <Row>
@@ -66,7 +68,8 @@ ProjectsContainer.propTypes = {
   updateProject: PropTypes.func.isRequired,
   deleteProject: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
-  updateGlobalChartSize: PropTypes.func.isRequired
+  updateGlobalChartSize: PropTypes.func.isRequired,
+  updateGlobalResultNameAlignment: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, {
@@ -74,6 +77,7 @@ export default connect(mapStateToProps, {
   updateProject,
   deleteProject,
   updateGlobalPollingRate,
-  updateGlobalChartSize
+  updateGlobalChartSize,
+  updateGlobalResultNameAlignment
 })(ProjectsContainer);
 

@@ -5,8 +5,10 @@ import ResultRow from './ResultRow';
 
 const ExperimentsTable = (props) => {
   const {
-    projectId,
-    results = {}, stats, projectConfig,
+    project,
+    results = {}, stats,
+    projectConfig,
+    globalConfig,
     onResultsConfigSelectUpdate, onResultUpdate
   } = props;
   const { argKeys, xAxisKeys } = stats;
@@ -23,7 +25,7 @@ const ExperimentsTable = (props) => {
 
   const handleResultsConfigSelectChange = (evt) => {
     resultKeys.forEach((resultId) => {
-      onResultsConfigSelectUpdate(projectId, resultId, !evt.target.checked);
+      onResultsConfigSelectUpdate(project.id, resultId, !evt.target.checked);
     });
   };
 
@@ -32,10 +34,11 @@ const ExperimentsTable = (props) => {
     const key = `result-row-${result.id}`;
     return (
       <ResultRow
-        projectId={projectId}
+        project={project}
         result={result}
         stats={stats}
         resultConfig={resultsConfig[resultId]}
+        isResultNameAlignRight={globalConfig.isResultNameAlignRight}
         key={key}
         onResultsConfigSelectUpdate={onResultsConfigSelectUpdate}
         onResultUpdate={onResultUpdate}
@@ -71,7 +74,10 @@ const ExperimentsTable = (props) => {
 };
 
 ExperimentsTable.propTypes = {
-  projectId: PropTypes.number.isRequired,
+  project: PropTypes.shape({
+    id: PropTypes.number,
+    pathName: PropTypes.string
+  }).isRequired,
   results: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.number,
@@ -84,6 +90,9 @@ ExperimentsTable.propTypes = {
     resultsConfig: PropTypes.objectOf(PropTypes.shape({
       hidden: PropTypes.bool
     }))
+  }).isRequired,
+  globalConfig: PropTypes.shape({
+    isResultNameAlignRight: PropTypes.bool
   }).isRequired,
   stats: PropTypes.shape({
     argKeys: PropTypes.arrayOf(PropTypes.string),
