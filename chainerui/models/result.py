@@ -70,7 +70,7 @@ class Result(DB_BASE):
         elif logs_limit == 0:
             return []
         elif logs_limit == 1:
-            return [self.logs[logs_count - 1]]
+            return [self.logs[-1]]
         else:
             def get_sampled_log(idx):
                 # always include the first and last element of `self.logs`
