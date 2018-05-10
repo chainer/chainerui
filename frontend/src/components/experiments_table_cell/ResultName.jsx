@@ -25,9 +25,11 @@ class ResultName extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      resultName: nextProps.result.name
-    });
+    if (this.props.result.id !== nextProps.result.id) {
+      this.setState({
+        resultName: nextProps.result.name
+      });
+    }
   }
 
   handleResultNameFocus() {
