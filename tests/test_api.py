@@ -190,7 +190,6 @@ class TestAPI(unittest.TestCase):
         assert isinstance(project['id'], int)
 
     def assert_test_project_result(self, result, name=None, logs_limit=None):
-        print(result)
         assert len(result) == 9
         assert isinstance(result['commands'], list)
         self.assert_test_logs(result['logs'], logs_limit)
@@ -205,7 +204,6 @@ class TestAPI(unittest.TestCase):
         assert isinstance(logs, list)
         assert logs_limit is None or logs_limit == -1 \
             or len(logs) == min(7, logs_limit)
-        print(len(logs), logs_limit)
 
     # GET /api/v1/projects
     def test_get_project_list(self):
