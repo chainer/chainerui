@@ -34,7 +34,7 @@ To install ChaineruI from source, build from a cloned Git repository. Frontend m
   $ git clone https://github.com/chainer/chainerui.git
   $ cd chainerui/frontend
   $ npm install && npm run build && cd ..
-  $ python setup.py install
+  $ pip install -e .
 
 
 Quick start

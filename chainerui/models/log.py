@@ -2,6 +2,7 @@ from math import isinf
 from math import isnan
 
 import msgpack
+import numbers
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
@@ -33,10 +34,18 @@ class Log(DB_BASE):
 
         data = msgpack.unpackb(self.data, encoding='utf-8')
         for item in data.items():
+            value_to_store = (
+                None
+                if not isinstance(item[1], numbers.Number)
+                or isinf(item[1])
+                or isnan(item[1])
+                else item[1]
+            )
+
             log_items.append({
                 'logId': self.id,
                 'key': item[0],
-                'value': None if isinf(item[1]) or isnan(item[1]) else item[1]
+                'value': value_to_store
             })
 
         return {
