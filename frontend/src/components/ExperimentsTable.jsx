@@ -141,6 +141,7 @@ const ExperimentsTable = (props) => {
       columns={columns}
       showPagination={false}
       minRows={3}
+      pageSize={resultList.length}
     />
   );
 };
