@@ -53,6 +53,8 @@ class Result(DB_BASE):
         DB_SESSION.add(result)
         DB_SESSION.commit()
 
+        # TODO(gky360): Fix import issue.
+        # See https://github.com/chainer/chainerui/pull/92 for details
         from chainerui.tasks import crawl_result
         crawl_result(result.id, True)
 
