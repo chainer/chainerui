@@ -1,7 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ResultRow from './ResultRow';
+import ReactTable from 'react-table';
+import { Link } from 'react-router';
+import {
+  argValue2string,
+  getLastLogDict,
+  urlForResultDetail
+} from '../utils';
 
+import UnregisterButton from './experiments_table_cell/UnregisterButton';
+import ResultName from './experiments_table_cell/ResultName';
+import ToggleResult from './experiments_table_cell/ToggleResult';
+
+const emptyStr = '-';
 
 const ExperimentsTable = (props) => {
   const {
@@ -13,9 +24,6 @@ const ExperimentsTable = (props) => {
   } = props;
   const { argKeys, xAxisKeys } = stats;
   const { resultsConfig = {} } = projectConfig;
-
-  const logHeaderElems = xAxisKeys.map((logKey) => (<th key={`logs-${logKey}`}>{logKey}</th>));
-  const argHeaderElems = argKeys.map((argKey) => (<th key={`args-${argKey}`}>{`(${argKey})`}</th>));
 
   const resultKeys = Object.keys(results);
   const resultCount = resultKeys.length;
@@ -29,46 +37,112 @@ const ExperimentsTable = (props) => {
     });
   };
 
-  const resultRowElems = resultKeys.map((resultId) => {
-    const result = results[resultId];
-    const key = `result-row-${result.id}`;
-    return (
-      <ResultRow
-        project={project}
-        result={result}
-        stats={stats}
-        resultConfig={resultsConfig[resultId]}
-        isResultNameAlignRight={globalConfig.isResultNameAlignRight}
-        key={key}
-        onResultsConfigSelectUpdate={onResultsConfigSelectUpdate}
-        onResultUpdate={onResultUpdate}
-      />
-    );
-  });
+  const resultList = resultKeys.map((resultId) => results[resultId]);
+
+  const logs = xAxisKeys.map((logKey) => ({
+    Header: logKey,
+    id: logKey,
+    Cell: (p) => {
+      const lastLogDict = getLastLogDict(p.original);
+      if (logKey === 'elapsed_time') {
+        return <span className="text-right">{lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2)}</span>;
+      }
+      return <span className="text-right">{lastLogDict[logKey]}</span>;
+    }
+  }));
+
+  const argsList = argKeys.map((argKey) => ({
+    Header: argKey,
+    id: argKey,
+    Cell: (p) => {
+      const { original } = p;
+      const { args } = original;
+      const argDict = {};
+      args.forEach((arg) => {
+        argDict[arg.key] = arg.value;
+      });
+      return <span>{argValue2string(argDict[argKey])}</span>;
+    }
+  }));
+
+  const columns = [
+    {
+      Header: <input
+        type="checkbox"
+        checked={visibleResultCount > 0}
+        style={{ opacity: isPartialSelect ? 0.5 : 1 }}
+        onChange={handleResultsConfigSelectChange}
+      />,
+      Cell: (p) => {
+        const { original } = p;
+        const { id } = original;
+        return (<ToggleResult
+          project={project}
+          result={original}
+          resultConfig={resultsConfig[id]}
+          onResultsConfigSelectUpdate={onResultsConfigSelectUpdate}
+        />);
+      },
+      className: 'text-center',
+      sortable: false,
+      minWidth: 40
+    },
+    {
+      Header: 'id',
+      id: 'result_id',
+      Cell: (p) => {
+        const { original } = p;
+        const { id } = original;
+        return (<Link to={urlForResultDetail(project.id, id)}>{id}</Link>);
+      },
+      className: 'text-center',
+      minWidth: 50
+    },
+    {
+      Header: 'name',
+      id: 'name',
+      Cell: (p) => {
+        const { original } = p;
+        return (<ResultName
+          project={project}
+          result={original}
+          isResultNameAlignRight={globalConfig.isResultNameAlignRight}
+          onResultUpdate={onResultUpdate}
+        />);
+      },
+      minWidth: 250
+    },
+    {
+      Header: 'last logs',
+      columns: logs
+    },
+    {
+      Header: 'args',
+      columns: argsList
+    },
+    {
+      Header: '',
+      Cell: (p) => {
+        const { original } = p;
+        return (<UnregisterButton
+          project={project}
+          result={original}
+          onResultUpdate={onResultUpdate}
+        />);
+      },
+      sortable: false,
+      minWidth: 30
+    }
+  ];
 
   return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th>
-            <input
-              type="checkbox"
-              checked={visibleResultCount > 0}
-              style={{ opacity: isPartialSelect ? 0.5 : 1 }}
-              onChange={handleResultsConfigSelectChange}
-            />
-          </th>
-          <th>id</th>
-          <th>name</th>
-          {logHeaderElems}
-          {argHeaderElems}
-          <th />
-        </tr>
-      </thead>
-      <tbody>
-        {resultRowElems}
-      </tbody>
-    </table>
+    <ReactTable
+      data={resultList}
+      columns={columns}
+      showPagination={false}
+      minRows={3}
+      pageSize={resultList.length}
+    />
   );
 };
 
