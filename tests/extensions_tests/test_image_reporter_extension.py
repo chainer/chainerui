@@ -153,7 +153,7 @@ class TestImageReport(unittest.TestCase):
         trainer.out = self._dir
         trainer.updater = updater
 
-        def create_image_fn(name):
+        def create_image_generator(name):
             image_prefix = summary.CHAINERUI_IMAGE_PREFIX
             name = image_prefix + '/' + name
 
@@ -162,7 +162,7 @@ class TestImageReport(unittest.TestCase):
                 summary.chainerui_image_observer.observation[
                     name] = self._make_image_summary_value(img)
             return maker
-        target = ImageReport(image_fn=create_image_fn('test'))
+        target = ImageReport(image_generator=create_image_generator('test'))
         target.initialize(trainer)
         target(trainer)
         assert len(target._infos) == 1

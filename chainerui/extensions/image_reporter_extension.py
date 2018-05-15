@@ -17,9 +17,9 @@ class ImageReport(extension.Extension):
     This extension supports visualizing image data on ChainerUI.
     """
 
-    def __init__(self, trigger=(1, 'epoch'), image_fn=None):
+    def __init__(self, trigger=(1, 'epoch'), image_generator=None):
         self._trigger = trigger_module.get_trigger(trigger)
-        self._fn = image_fn
+        self._fn = image_generator
         self._info_name = '.chainerui_images'
         self._infos = []
 
