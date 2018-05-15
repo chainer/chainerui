@@ -34,6 +34,8 @@ def image(images, name=None, ch_axis=1, row=0, mode=None):
         row (int): row size to visualize batched images. when set 0,
             show on unstuck. if images set only one image, the row size
             will be ignored.
+        mode (str): if the images are not RGB or RGBA space, set their
+            color space code. ChainerUI support 'HSV'.
     """
 
     current_reporter = reporter.get_current_reporter()
