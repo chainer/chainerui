@@ -2,10 +2,10 @@ from datetime import datetime
 import json
 import os
 import shutil
-import tempfile
 
 from chainerui.models.command import Command
 from chainerui.utils.is_jsonable import is_jsonable
+from chainerui.utils.tempdir import tempdir
 
 
 class CommandItem(object):
@@ -140,12 +140,13 @@ class CommandItem(object):
     def dump_commands(cls, commands, result_path, file_name=DEFAULT_FILE_NAME):
         commands_path = cls.commands_path(result_path, file_name)
 
-        fd, path = tempfile.mkstemp(prefix=file_name, dir=result_path)
-        with os.fdopen(fd, 'w') as f:
-            json.dump(list(map(lambda cmd: cmd.to_dict(), commands)),
-                      f, indent=4)
+        with tempdir(prefix=file_name, dir=result_path) as tempd:
+            path = os.path.join(tempd, 'dump_commands.json')
+            with open(path, 'w') as f:
+                json.dump(list(map(lambda cmd: cmd.to_dict(), commands)),
+                          f, indent=4)
 
-        shutil.move(path, commands_path)
+            shutil.move(path, commands_path)
 
     def to_dict(self):
         return {

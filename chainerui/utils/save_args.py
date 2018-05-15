@@ -2,7 +2,8 @@ import argparse
 import json
 import os
 import shutil
-import tempfile
+
+from chainerui.utils.tempdir import tempdir
 
 
 def save_args(conditions, out_path):
@@ -26,9 +27,11 @@ def save_args(conditions, out_path):
         os.makedirs(out_path)
     except OSError:
         pass
-    fd, path = tempfile.mkstemp(prefix='args', dir=out_path)
-    with os.fdopen(fd, 'w') as f:
-        json.dump(args_dict, f, indent=4)
 
-    new_path = os.path.join(out_path, 'args')
-    shutil.move(path, new_path)
+    with tempdir(prefix='args', dir=out_path) as tempd:
+        path = os.path.join(tempd, 'args.json')
+        with open(path, 'w') as f:
+            json.dump(args_dict, f, indent=4)
+
+        new_path = os.path.join(out_path, 'args')
+        shutil.move(path, new_path)

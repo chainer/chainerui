@@ -1,11 +1,11 @@
 import json
 import os
 import shutil
-import tempfile
 
 from chainer.training.trainer import _get_time
 
 from chainerui.utils.save_args import save_args
+from chainerui.utils.tempdir import tempdir
 
 
 class LogReport(object):
@@ -52,9 +52,10 @@ class LogReport(object):
             stats['elapsed_time'] = _get_time() - self._start_at
         self._log.append(stats)
 
-        fd, path = tempfile.mkstemp(prefix=self._log_name, dir=self._out_path)
-        with os.fdopen(fd, 'w') as f:
-            json.dump(self._log, f, indent=4)
+        with tempdir(prefix=self._log_name, dir=self._out_path) as tempd:
+            path = os.path.join(tempd, 'log.json')
+            with open(path, 'w') as f:
+                json.dump(self._log, f, indent=4)
 
-        new_path = os.path.join(self._out_path, self._log_name)
-        shutil.move(path, new_path)
+            new_path = os.path.join(self._out_path, self._log_name)
+            shutil.move(path, new_path)
