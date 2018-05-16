@@ -139,9 +139,10 @@ class TestAPI(unittest.TestCase):
         if os.path.exists(DB_FILE_PATH):
             os.remove(DB_FILE_PATH)
 
-    def assert_test_project(self, project, name=None):
+    def assert_test_project(self, project, path=None, name=None):
         assert len(project) == 3
-        assert project['pathName'] == self._project_path
+        assert project['pathName'] == self._project_path if \
+            path is None else path
         assert project['name'] == self._project_name if name is None else name
         assert isinstance(project['id'], int)
 
@@ -176,6 +177,36 @@ class TestAPI(unittest.TestCase):
         assert len(data) == 2
         assert isinstance(data['message'], string_types)
         assert data['project'] is None
+
+    # POST /api/v1/projects
+    def test_post_project(self):
+        temp_dir = os.path.join(self._dir, 'test_post_project')
+        os.mkdir(temp_dir)
+
+        # success
+        request_json = {'project': {'path_name': temp_dir}}
+        resp = self.app.post(
+            '/api/v1/projects', data=json.dumps(request_json),
+            content_type='application/json')
+        data = assert_json_api(resp)
+        assert len(data) == 1
+        self.assert_test_project(data['project'], path=temp_dir, name=temp_dir)
+
+        # fail, required param is lack
+        request_json = {'project': {'name': 'name'}}
+        resp = self.app.post(
+            '/api/v1/projects', data=json.dumps(request_json),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 2
+
+        # fail, the path is duplicated
+        request_json = {'project': {'path_name': self._project_path}}
+        resp = self.app.post(
+            '/api/v1/projects', data=json.dumps(request_json),
+            content_type='application/json')
+        data = assert_json_api(resp, 400)
+        assert len(data) == 2
 
     # PUT /api/v1/projects/<int:id>
     def test_put_project(self):

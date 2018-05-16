@@ -42,6 +42,7 @@ class Project(DB_BASE):
         DB_SESSION.commit()
 
         collect_results(project, force=True)
+        return project
 
     @property
     def serialize(self):
