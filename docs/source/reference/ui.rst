@@ -19,15 +19,35 @@ Header
 .. |header_status_green| image:: ../../images/header_status_green.png
    :scale: 50%
 
-* |header_config| : setup global configuration and show ChainerUI version:
-    * select size of a chart
-    * select polling interval
-    * show ChainerUI version
+* |header_config| : setup global settings and show ChainerUI version.
+  See :ref:`ui_global_settings` section below for more details.
 * |header_status_green| : connection status between ChainerUI server
     * green: success to connect
     * blue: loading
     * red: fail to connect
     * gray: disable polling
+
+
+.. _ui_global_settings:
+
+Global settings
+---------------
+
+**Results polling rate**
+
+Results polling rate is intervals between updates of results on project pages. When you feel your browser is slow, try choosing a longer value.
+
+**Chart size**
+
+Chart size is the size of the main plot on project pages.
+
+**Max log count**
+
+Max log count is the maximum number of logs per result that the ChainerUI server sends to the browser on each request. When you feel your browser is slow, try choosing a smaller value.
+
+**Result name alignment**
+
+Result name alignment controls which side of a result name to be truncated when it is too long to be displayed.
 
 
 .. _ui_home_project_list:
