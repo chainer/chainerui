@@ -108,8 +108,6 @@ class NavigationBar extends React.Component {
                 <Label for="global-config-polling-rate">Results polling rate</Label><br />
                 <select
                   className="form-control"
-                  type="select"
-                  name="select"
                   id="global-config-polling-rate"
                   onChange={this.handleChangePollingRate}
                   value={pollingRate}
@@ -122,8 +120,6 @@ class NavigationBar extends React.Component {
                 <Label for="global-config-chart-size">Chart size</Label><br />
                 <select
                   className="form-control"
-                  type="select"
-                  name="select"
                   id="global-config-chart-size"
                   value={chartSize.id}
                   onChange={this.handleChangeChartSize}
@@ -136,8 +132,6 @@ class NavigationBar extends React.Component {
                 <Label for="global-config-logs-limit">Max log count</Label>
                 <select
                   className="form-control"
-                  type="select"
-                  name="select"
                   id="global-config-logs-limit"
                   value={logsLimit}
                   onChange={this.handleChangeLogsLimit}
