@@ -107,3 +107,9 @@ export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
   }
 });
 
+export const sortMethod = (a, b) => {
+  if (isNaN(a) || isNaN(b)) {
+    return a > b ? 1 : -1;
+  }
+  return a - b;
+};
