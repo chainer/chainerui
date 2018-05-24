@@ -46,7 +46,7 @@ const ExperimentsTable = (props) => {
 
   const logs = xAxisKeys.map((logKey) => ({
     Header: logKey,
-    id: logKey,
+    id: `logKey${logKey}`,
     accessor: (p) => {
       const lastLogDict = getLastLogDict(p);
       if (logKey === 'elapsed_time') {
