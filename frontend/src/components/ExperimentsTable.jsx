@@ -142,6 +142,11 @@ const ExperimentsTable = (props) => {
       showPagination={false}
       minRows={3}
       pageSize={resultList.length}
+      defaultSorted={[
+        {
+          id: 'result_id'
+        }
+      ]}
     />
   );
 };
