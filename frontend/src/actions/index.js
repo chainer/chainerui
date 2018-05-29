@@ -75,17 +75,17 @@ export const RESULT_DELETE_SUCCESS = 'RESULT_DELETE_SUCCESS';
 export const RESULT_DELETE_FAILURE = 'RESULT_DELETE_FAILURE';
 export const RESULT_LIST_CLEAR = 'RESULT_LIST_CLEAR';
 
-export const getResultList = (projectId) => ({
+export const getResultList = (projectId, logsLimit = -1) => ({
   [CALL_API]: {
     types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILURE],
-    endpoint: `projects/${projectId}/results`
+    endpoint: `projects/${projectId}/results?logs_limit=${logsLimit}`
   }
 });
 
-export const getResult = (projectId, resultId) => ({
+export const getResult = (projectId, resultId, logsLimit = -1) => ({
   [CALL_API]: {
     types: [RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILURE],
-    endpoint: `projects/${projectId}/results/${resultId}`
+    endpoint: `projects/${projectId}/results/${resultId}?logs_limit=${logsLimit}`
   }
 });
 
@@ -237,6 +237,7 @@ export const updateLineInAxis = (projectId, axisName, lineKey, line) => ({
 
 export const GLOBAL_CONFIG_POLLING_RATE_UPDATE = 'GLOBAL_CONFIG_POLLING_RATE_UPDATE';
 export const GLOBAL_CONFIG_CHART_SIZE_UPDATE = 'GLOBAL_CONFIG_CHART_SIZE_UPDATE';
+export const GLOBAL_CONFIG_LOGS_LIMIT_UPDATE = 'GLOBAL_CONFIG_LOGS_LIMIT_UPDATE';
 export const GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE = 'GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE';
 
 export const updateGlobalPollingRate = (pollingRate) => ({
@@ -247,6 +248,11 @@ export const updateGlobalPollingRate = (pollingRate) => ({
 export const updateGlobalChartSize = (chartSize) => ({
   type: GLOBAL_CONFIG_CHART_SIZE_UPDATE,
   chartSize
+});
+
+export const updateGlobalLogsLimit = (logsLimit) => ({
+  type: GLOBAL_CONFIG_LOGS_LIMIT_UPDATE,
+  logsLimit
 });
 
 export const updateGlobalResultNameAlignment = (isResultNameAlignRight) => ({

@@ -6,6 +6,7 @@ import {
   getProjectList, updateProject, deleteProject,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalLogsLimit,
   updateGlobalResultNameAlignment
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
@@ -28,6 +29,7 @@ class ProjectsContainer extends React.Component {
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
+          onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
           onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container fluid>
@@ -69,6 +71,7 @@ ProjectsContainer.propTypes = {
   deleteProject: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
+  updateGlobalLogsLimit: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired
 };
 
@@ -78,6 +81,7 @@ export default connect(mapStateToProps, {
   deleteProject,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalLogsLimit,
   updateGlobalResultNameAlignment
 })(ProjectsContainer);
 

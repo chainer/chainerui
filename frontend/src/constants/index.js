@@ -59,6 +59,34 @@ export const pollingOptions = [
   }
 ];
 
+export const logsLimitOptions = [
+  {
+    id: 1,
+    name: '1000',
+    value: 1000
+  },
+  {
+    id: 2,
+    name: '500',
+    value: 500
+  },
+  {
+    id: 3,
+    name: '200',
+    value: 200
+  },
+  {
+    id: 4,
+    name: '100',
+    value: 100
+  },
+  {
+    id: 5,
+    name: 'Unlimited',
+    value: -1
+  }
+];
+
 export const defaultConfig = {
   projectsConfig: {},
   global: {}
