@@ -101,7 +101,7 @@ class NavigationBar extends React.Component {
           target="navbar-global-setting"
           toggle={this.toggleSettingPopover}
         >
-          <PopoverHeader className="popover-header">Global Setting</PopoverHeader>
+          <PopoverHeader className="popover-header">Global Settings</PopoverHeader>
           <PopoverBody className="popover-body">
             <Form>
               <FormGroup>
