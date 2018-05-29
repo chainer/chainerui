@@ -4,6 +4,8 @@ import shutil
 import tempfile
 import unittest
 
+from six import string_types
+
 from chainerui import CHAINERUI_ENV
 from chainerui import create_app
 from chainerui import create_db
@@ -11,9 +13,6 @@ from chainerui import DB_FILE_PATH
 from chainerui.models.project import Project
 from chainerui import upgrade_db
 from chainerui.utils.commands_state import CommandsState
-
-from six import string_types
-
 from tests.helpers import assert_json_api
 from tests.helpers import NotInTestEnvironmentException
 
@@ -24,22 +23,67 @@ def setup_test_project(root_path):
     os.makedirs(path)
     log = [
         {
-            "main/loss": 0.1933198869228363,
-            "validation/main/loss": 0.09147150814533234,
-            "iteration": 600,
-            "elapsed_time": 16.052587032318115,
+            "main/loss": 0.40800962336361407,
+            "main/accuracy": 0.8862333340570331,
+            "validation/main/loss": 0.19627878157887607,
+            "validation/main/accuracy": 0.9437000030279159,
             "epoch": 1,
-            "main/accuracy": 0.9421835541725159,
-            "validation/main/accuracy": 0.9703000783920288
+            "iteration": 600,
+            "elapsed_time": 11.176028114001383
         },
         {
-            "main/loss": 0.07222291827201843,
-            "validation/main/loss": 0.08141259849071503,
-            "iteration": 1200,
-            "elapsed_time": 19.54666304588318,
+            "main/loss": 0.175308293333898,
+            "main/accuracy": 0.9492000019550324,
+            "validation/main/loss": 0.14389827038859948,
+            "validation/main/accuracy": 0.9580000054836273,
             "epoch": 2,
-            "main/accuracy": 0.9771820902824402,
-            "validation/main/accuracy": 0.975399911403656
+            "iteration": 1200,
+            "elapsed_time": 22.5790320849992
+        },
+        {
+            "main/loss": 0.12263125797733665,
+            "main/accuracy": 0.9651666717727979,
+            "validation/main/loss": 0.11622621351154522,
+            "validation/main/accuracy": 0.9643000048398972,
+            "epoch": 3,
+            "iteration": 1800,
+            "elapsed_time": 33.954753322002944
+        },
+        {
+            "main/loss": 0.09348084449768067,
+            "main/accuracy": 0.9736166762312254,
+            "validation/main/loss": 0.0913344160350971,
+            "validation/main/accuracy": 0.9728000032901764,
+            "epoch": 4,
+            "iteration": 2400,
+            "elapsed_time": 46.84794206800143
+        },
+        {
+            "main/loss": 0.07337521777333071,
+            "main/accuracy": 0.9787000101804734,
+            "validation/main/loss": 0.08345628718438093,
+            "validation/main/accuracy": 0.9745000076293945,
+            "epoch": 5,
+            "iteration": 3000,
+            "elapsed_time": 58.61258131300565
+        },
+        {
+            "main/loss": 0.05976833035470918,
+            "main/accuracy": 0.9828166776895523,
+            "validation/main/loss": 0.07841673109389376,
+            "validation/main/accuracy": 0.9764000064134598,
+            "epoch": 6,
+            "iteration": 3600,
+            "elapsed_time": 70.17813067500538
+        },
+        {
+            "main/loss": 0.04946699039855351,
+            "main/accuracy": 0.9863833442330361,
+            "validation/main/loss": 0.08190375177306124,
+            "validation/main/accuracy": 0.974200005531311,
+            "epoch": 7,
+            "iteration": 4200,
+            "elapsed_time": 82.8319199510006
         }
     ]
     with open(os.path.join(path, 'log'), 'w') as f:
@@ -145,16 +189,21 @@ class TestAPI(unittest.TestCase):
         assert project['name'] == self._project_name if name is None else name
         assert isinstance(project['id'], int)
 
-    def assert_test_project_result(self, result, name=None):
+    def assert_test_project_result(self, result, name=None, logs_limit=None):
         assert len(result) == 9
         assert isinstance(result['commands'], list)
-        assert isinstance(result['logs'], list)
+        self.assert_test_logs(result['logs'], logs_limit)
         assert isinstance(result['args'], list)
         assert isinstance(result['snapshots'], list)
         assert isinstance(result['isUnregistered'], bool)
         assert isinstance(result['id'], int)
         assert result['pathName'].startswith(self._project_path)
         assert result['name'] == name
+
+    def assert_test_logs(self, logs, logs_limit=None):
+        assert isinstance(logs, list)
+        assert logs_limit is None or logs_limit == -1 \
+            or len(logs) == min(7, logs_limit)
 
     # GET /api/v1/projects
     def test_get_project_list(self):
@@ -216,23 +265,35 @@ class TestAPI(unittest.TestCase):
 
     # GET /api/v1/projects/<int:project_id>/results
     def test_get_result_list(self):
-        resp = self.app.get('/api/v1/projects/1/results')
-        data = assert_json_api(resp)
-        assert len(data) == 1
-        assert len(data['results']) >= 3
-        for i in range(3):
-            self.assert_test_project_result(data['results'][i])
+        for logs_limit in [None, -1, 0, 5, 7, 100]:
+            url = '/api/v1/projects/1/results'
+            if logs_limit is not None:
+                url += '?logs_limit=' + str(logs_limit)
+
+            resp = self.app.get(url)
+            data = assert_json_api(resp)
+            assert len(data) == 1
+            assert len(data['results']) >= 3
+            for i in range(3):
+                self.assert_test_project_result(
+                    data['results'][i], logs_limit=logs_limit)
 
         # raise an unexpected exception when GET /api/v1/projects/12345/results
 
     # GET /api/v1/projects/<int:project_id>/results/<int:id>
     def test_get_result(self):
-        for i in range(3):
-            resp = self.app.get('/api/v1/projects/1/results/' + str(i + 1))
-            data = assert_json_api(resp)
-            assert len(data) == 1
-            self.assert_test_project_result(data['result'])
-            assert data['result']['id'] == i + 1
+        for logs_limit in [None, -1, 0, 5, 7, 100]:
+            for i in range(3):
+                url = '/api/v1/projects/1/results/' + str(i + 1)
+                if logs_limit is not None:
+                    url += '?logs_limit=' + str(logs_limit)
+
+                resp = self.app.get(url)
+                data = assert_json_api(resp)
+                assert len(data) == 1
+                self.assert_test_project_result(
+                    data['result'], logs_limit=logs_limit)
+                assert data['result']['id'] == i + 1
 
         # invalid project ID
         resp = self.app.get('/api/v1/projects/12345/results/1')
@@ -403,7 +464,7 @@ class TestAPI(unittest.TestCase):
             assert isinstance(command['request']['status'], string_types)
             assert 'response' in command
 
-        # jos has stopped
+        # job has stopped
         CommandsState.stop(result_path)
         resp = self.app.post(
             '/api/v1/projects/2/results/4/commands',

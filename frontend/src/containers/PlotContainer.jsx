@@ -11,6 +11,7 @@ import {
   updateResultsConfigSelect,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber
@@ -27,21 +28,27 @@ import { startPolling, stopPolling } from '../utils';
 class PlotContainer extends React.Component {
   componentDidMount() {
     const { projectId, globalConfig } = this.props;
-    const { pollingRate } = globalConfig;
+    const { pollingRate, logsLimit } = globalConfig;
 
     this.props.clearResultList();
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId);
+    this.resultsPollingTimer = startPolling(
+      this.props.getResultList, pollingRate, projectId, logsLimit
+    );
   }
 
   componentWillReceiveProps(nextProps) {
     const { projectId, globalConfig } = this.props;
     const currentPollingRate = globalConfig.pollingRate;
+    const currentLogsLimit = globalConfig.logsLimit;
     const nextPollingRate = nextProps.globalConfig.pollingRate;
+    const nextLogsLimit = nextProps.globalConfig.logsLimit;
 
-    if (currentPollingRate !== nextPollingRate) {
+    if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate, projectId);
+      this.resultsPollingTimer = startPolling(
+        this.props.getResultList, nextPollingRate, projectId, nextLogsLimit
+      );
     }
   }
 
@@ -67,6 +74,7 @@ class PlotContainer extends React.Component {
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
+          onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
           onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container fluid>
@@ -186,6 +194,7 @@ PlotContainer.propTypes = {
   globalConfig: PropTypes.shape({
     pollingRate: PropTypes.number,
     chartSize: PropTypes.objectOf(PropTypes.any),
+    logsLimit: PropTypes.number,
     isResultNameAlignRight: PropTypes.bool
   }).isRequired,
   stats: PropTypes.shape({
@@ -205,6 +214,7 @@ PlotContainer.propTypes = {
   updateResultsConfigSelect: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
+  updateGlobalLogsLimit: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
@@ -226,6 +236,7 @@ export default connect(mapStateToProps, {
   updateResultsConfigSelect,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
   updateXAxisKey,
   updateAxisScaleRangeType,

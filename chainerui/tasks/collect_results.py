@@ -33,9 +33,7 @@ def _register_result(project_id, result_path):
     ).count()
 
     if result_size is 0:
-        new_result = Result(project_id=project_id, path_name=result_path)
-        DB_SESSION.add(new_result)
-        DB_SESSION.commit()
+        Result.create(project_id=project_id, path_name=result_path)
 
 
 def collect_results(project, force=False):

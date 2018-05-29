@@ -8,6 +8,7 @@ import {
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalLogsLimit,
   updateGlobalResultNameAlignment
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
@@ -22,22 +23,24 @@ import { startPolling, stopPolling } from '../utils';
 class ResultDetail extends React.Component {
   componentDidMount() {
     const { projectId, resultId, globalConfig } = this.props;
-    const { pollingRate } = globalConfig;
+    const { pollingRate, logsLimit } = globalConfig;
     this.props.getProject(projectId);
     this.resultsPollingTimer = startPolling(
-      this.props.getResult, pollingRate, projectId, resultId
+      this.props.getResult, pollingRate, projectId, resultId, logsLimit
     );
   }
 
   componentWillReceiveProps(nextProps) {
     const { projectId, resultId, globalConfig } = this.props;
     const currentPollingRate = globalConfig.pollingRate;
+    const currentLogsLimit = globalConfig.logsLimit;
     const nextPollingRate = nextProps.globalConfig.pollingRate;
+    const nextLogsLimit = nextProps.globalConfig.logsLimit;
 
-    if (currentPollingRate !== nextPollingRate) {
+    if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit) {
       stopPolling(this.resultsPollingTimer);
       this.resultsPollingTimer = startPolling(
-        this.props.getResult, nextPollingRate, projectId, resultId
+        this.props.getResult, nextPollingRate, projectId, resultId, nextLogsLimit
       );
     }
   }
@@ -58,6 +61,7 @@ class ResultDetail extends React.Component {
           globalConfig={globalConfig}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
+          onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
           onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container fluid>
@@ -135,6 +139,7 @@ ResultDetail.propTypes = {
   createCommand: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
+  updateGlobalLogsLimit: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired
 };
 
@@ -149,6 +154,7 @@ export default connect(mapStateToProps, {
   createCommand,
   updateGlobalPollingRate,
   updateGlobalChartSize,
+  updateGlobalLogsLimit,
   updateGlobalResultNameAlignment
 })(ResultDetail);
 
