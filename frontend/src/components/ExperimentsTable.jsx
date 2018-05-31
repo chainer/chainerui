@@ -54,8 +54,7 @@ const ExperimentsTable = (props) => {
       }
       return lastLogDict[logKey];
     },
-    style: defaultStyle,
-    sortMethod
+    style: defaultStyle
   }));
 
   const argsList = argKeys.map((argKey) => ({
@@ -69,8 +68,7 @@ const ExperimentsTable = (props) => {
       });
       return argValue2string(argDict[argKey]);
     },
-    style: defaultStyle,
-    sortMethod
+    style: defaultStyle
   }));
 
   const columns = [
@@ -150,6 +148,7 @@ const ExperimentsTable = (props) => {
       showPagination={false}
       minRows={3}
       pageSize={resultList.length}
+      defaultSortMethod={sortMethod}
       defaultSorted={[
         {
           id: 'result_id'

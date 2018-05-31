@@ -108,8 +108,10 @@ export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
 });
 
 export const sortMethod = (a, b) => {
-  if (isNaN(a) || isNaN(b)) {
-    return a > b ? 1 : -1;
-  }
-  return a - b;
+  const original = [a, b];
+  const casted = original.every((x) => isFinite(x) || !isNaN(x) || x === 'NaN') ?
+    original.map(x => Number(x)):
+    original.map(x => String(x).toLowerCase())
+  ;
+  return casted[0] > casted[1] ? 1 : casted[0] < casted[1] ? -1 : 0;
 };
