@@ -2,7 +2,6 @@ import hashlib
 import json
 import os
 import shutil
-import tempfile
 
 from chainer.training import extension
 from chainer.training import trigger as trigger_module
@@ -10,6 +9,7 @@ import numpy as np
 from PIL import Image
 
 from chainerui import summary
+from chainerui.utils import tempdir
 
 
 class ImageReport(extension.Extension):
@@ -68,12 +68,12 @@ class ImageReport(extension.Extension):
         }
         self._infos.append(info)
 
-        fd, path = tempfile.mkstemp(prefix=self._info_name, dir=out_path)
-        with os.fdopen(fd, 'w') as f:
-            json.dump(self._infos, f, indent=4)
+        with tempdir(prefix=self._info_name, dir=out_path) as tempd:
+            path = os.path.join(tempd, self._info_name)
+            with open(path, 'w') as f:
+                json.dump(self._infos, f, indent=4)
 
-        new_path = os.path.join(out_path, self._info_name)
-        shutil.move(path, new_path)
+            shutil.move(path, os.path.join(out_path, self._info_name))
 
     def _get_hash(self, key):
         return hashlib.md5(key.encode('utf-8')).hexdigest()[:8]
