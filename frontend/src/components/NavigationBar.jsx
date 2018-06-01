@@ -8,23 +8,23 @@ import {
   Button
 } from 'reactstrap';
 import PollingStatus from './PollingStatus';
-import { chartSizeOptions, pollingOptions, CHAINERUI_VERSION } from '../constants';
+import { chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION } from '../constants';
 
 
 const RESULT_NAME_ALIGN_LEFT = 'result-name-align-left';
 const RESULT_NAME_ALIGN_RIGHT = 'result-name-align-right';
 
-const createPollingOptionElems = (options) => [
-  ...options.map((option) => (
-    <option key={option.id} value={option.value}>{option.name}</option>
-  ))
-];
+const createPollingOptionElems = (options) => options.map((option) => (
+  <option key={option.id} value={option.value}>{option.name}</option>
+));
 
-const createVisualizerSizeOptionElems = (options) => [
-  ...options.map((option) => (
-    <option key={option.id} value={option.id}>{option.name}</option>
-  ))
-];
+const createVisualizerSizeOptionElems = (options) => options.map((option) => (
+  <option key={option.id} value={option.id}>{option.name}</option>
+));
+
+const createLogsLimitOptionElems = (options) => options.map((option) => (
+  <option key={option.id} value={option.value}>{option.name}</option>
+));
 
 class NavigationBar extends React.Component {
   constructor(props) {
@@ -33,6 +33,7 @@ class NavigationBar extends React.Component {
     this.toggleSettingPopover = this.toggleSettingPopover.bind(this);
     this.handleChangePollingRate = this.handleChangePollingRate.bind(this);
     this.handleChangeChartSize = this.handleChangeChartSize.bind(this);
+    this.handleChangeLogsLimit = this.handleChangeLogsLimit.bind(this);
     this.handleResultNameAlignmentChange = this.handleResultNameAlignmentChange.bind(this);
     this.state = {
       settingPopoverOpen: false
@@ -55,6 +56,11 @@ class NavigationBar extends React.Component {
     this.props.onGlobalConfigChartSizeUpdate(chartSize);
   }
 
+  handleChangeLogsLimit(e) {
+    const logsLimit = Number(e.target.value);
+    this.props.onGlobalConfigLogsLimitUpdate(logsLimit);
+  }
+
   handleResultNameAlignmentChange(e) {
     const isResultNameAlignRight = (e.target.name === RESULT_NAME_ALIGN_RIGHT);
     this.props.onGlobalConfigResultNameAlignmentUpdate(isResultNameAlignRight);
@@ -63,9 +69,11 @@ class NavigationBar extends React.Component {
   render() {
     const pollingOptionElems = createPollingOptionElems(pollingOptions);
     const chartSizeElems = createVisualizerSizeOptionElems(chartSizeOptions);
+    const logsLimitOptionElems = createLogsLimitOptionElems(logsLimitOptions);
     const {
       pollingRate,
       chartSize = {},
+      logsLimit,
       isResultNameAlignRight
     } = this.props.globalConfig;
 
@@ -93,15 +101,13 @@ class NavigationBar extends React.Component {
           target="navbar-global-setting"
           toggle={this.toggleSettingPopover}
         >
-          <PopoverHeader className="popover-header">Global Setting</PopoverHeader>
+          <PopoverHeader className="popover-header">Global Settings</PopoverHeader>
           <PopoverBody className="popover-body">
             <Form>
               <FormGroup>
                 <Label for="global-config-polling-rate">Results polling rate</Label><br />
                 <select
                   className="form-control"
-                  type="select"
-                  name="select"
                   id="global-config-polling-rate"
                   onChange={this.handleChangePollingRate}
                   value={pollingRate}
@@ -114,13 +120,23 @@ class NavigationBar extends React.Component {
                 <Label for="global-config-chart-size">Chart size</Label><br />
                 <select
                   className="form-control"
-                  type="select"
-                  name="select"
                   id="global-config-chart-size"
                   value={chartSize.id}
                   onChange={this.handleChangeChartSize}
                 >
                   {chartSizeElems}
+                </select>
+              </FormGroup>
+
+              <FormGroup>
+                <Label for="global-config-logs-limit">Max log count</Label>
+                <select
+                  className="form-control"
+                  id="global-config-logs-limit"
+                  value={logsLimit}
+                  onChange={this.handleChangeLogsLimit}
+                >
+                  {logsLimitOptionElems}
                 </select>
               </FormGroup>
 
@@ -168,10 +184,12 @@ NavigationBar.propTypes = {
   globalConfig: PropTypes.shape({
     pollingRate: PropTypes.number,
     chartSize: PropTypes.objectOf(PropTypes.any),
+    logsLimit: PropTypes.number,
     isResultNameAlignRight: PropTypes.bool
   }).isRequired,
   onGlobalConfigPollingRateUpdate: PropTypes.func.isRequired,
   onGlobalConfigChartSizeUpdate: PropTypes.func.isRequired,
+  onGlobalConfigLogsLimitUpdate: PropTypes.func.isRequired,
   onGlobalConfigResultNameAlignmentUpdate: PropTypes.func.isRequired
 };
 

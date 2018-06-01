@@ -2,11 +2,11 @@ from enum import Enum
 import json
 import os
 import shutil
-import tempfile
 
 from chainer import training
 
 from chainerui.utils.command_item import CommandItem
+from chainerui.utils.tempdir import tempdir
 
 
 class JobStatus(Enum):
@@ -85,9 +85,9 @@ class CommandsState(object):
 
     @classmethod
     def _dump(cls, out_path, state):
-        fd, path = tempfile.mkstemp(
-            prefix=cls._default_filename, dir=out_path)
-        with os.fdopen(fd, 'w') as f:
-            json.dump(state, f, indent=4, default=_job_status_converter)
+        with tempdir(prefix=cls._default_filename, dir=out_path) as tempd:
+            path = os.path.join(tempd, 'dump.json')
+            with open(path, 'w') as f:
+                json.dump(state, f, indent=4, default=_job_status_converter)
 
-        shutil.move(path, os.path.join(out_path, cls._default_filename))
+            shutil.move(path, os.path.join(out_path, cls._default_filename))

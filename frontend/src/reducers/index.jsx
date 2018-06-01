@@ -4,7 +4,7 @@ import { persistReducer } from 'redux-persist';
 import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions, defaultAxisConfig } from '../constants';
+import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig } from '../constants';
 
 
 const projectsReducer = (state = {}, action) => {
@@ -332,11 +332,12 @@ const projectsConfig = (state = {}, action) => {
 
 const defaultGlobaState = {
   pollingRate: pollingOptions[1].value,
-  chartSize: chartSizeOptions[0]
+  chartSize: chartSizeOptions[0],
+  logsLimit: logsLimitOptions[0].value
 };
 
 const global = (state = defaultGlobaState, action) => {
-  const { pollingRate, chartSize, isResultNameAlignRight } = action;
+  const { pollingRate, chartSize, logsLimit, isResultNameAlignRight } = action;
   switch (action.type) {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
       return {
@@ -347,6 +348,11 @@ const global = (state = defaultGlobaState, action) => {
       return {
         ...state,
         chartSize
+      };
+    case ActionTypes.GLOBAL_CONFIG_LOGS_LIMIT_UPDATE:
+      return {
+        ...state,
+        logsLimit
       };
     case ActionTypes.GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE:
       return {
@@ -365,7 +371,7 @@ const config = combineReducers({
 });
 
 
-const currentStoreVersion = 20170920.0;
+const currentStoreVersion = 20180420.0;
 
 const persistConfig = {
   key: 'config',

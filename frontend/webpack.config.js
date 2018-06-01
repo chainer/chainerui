@@ -39,6 +39,7 @@ module.exports = {
     vendor: Object.keys(dependencies).concat([
       'bootstrap/dist/css/bootstrap.css',
       'open-iconic/font/css/open-iconic-bootstrap.css',
+      'react-table/react-table.css',
       'babel-polyfill'
     ])
   },
