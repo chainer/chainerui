@@ -7,6 +7,7 @@ import tempfile
 from chainer.training import extension
 from chainer.training import trigger as trigger_module
 import numpy as np
+from PIL import Image
 
 from chainerui import summary
 
@@ -47,27 +48,23 @@ class ImageReport(extension.Extension):
 
         out_path = trainer.out
         updater = trainer.updater
-        images_info = []
+        image_paths = {}
         for key, value in pooled_images.items():
-            file_name = 'iter_%d_%s.npy' % (
-                updater.iteration, self._get_hash(key))
-            path = os.path.join(out_path, file_name)
-            if not os.path.exists(path):
-                # TODO(disktnk) should execute as queue worker
-                np.save(path, value['array'])
-            image_info = {
-                'path': file_name,
-                'name': key
-            }
-            if 'row' in value:
-                image_info['row'] = value['row']
-            if 'mode' in value:
-                image_info['mode'] = value['mode']
-            images_info.append(image_info)
+            images = self._make_image(value['array'], value.get('row', None))
+            paths = []
+            for i, img in enumerate(images):
+                file_name = 'iter_%d_%s_%d.png' % (
+                    updater.iteration, self._get_hash(key), i)
+                path = os.path.join(out_path, file_name)
+                if not os.path.exists(path):
+                    # TODO(disktnk) should execute as queue worker
+                    self._save_image(img, path, mode=value.get('mode', None))
+                paths.append(path)
+            image_paths[key] = paths
         info = {
             'epoch': updater.epoch,
             'iteration': updater.iteration,
-            'images': images_info
+            'images': image_paths,
         }
         self._infos.append(info)
 
@@ -80,3 +77,29 @@ class ImageReport(extension.Extension):
 
     def _get_hash(self, key):
         return hashlib.md5(key.encode('utf-8')).hexdigest()[:8]
+
+    def _make_image(self, array, row=None):
+        images = []
+        x = array
+        if array.dtype != np.uint8:
+            x = np.asarray(np.clip(x * 255, 0.0, 255.0), dtype=np.uint8)
+        if x.ndim == 4:
+            B, H, W, C = x.shape
+            if row is not None:
+                col = B // row
+                x = x.reshape((row, col, H, W, C))
+                x = x.transpose(0, 2, 1, 3, 4)
+                x = x.reshape((row * H, col * W, C))
+                images.append(x)
+            else:
+                images = [img for img in x]
+        elif x.ndim == 3:
+            images.append(x)
+        return images
+
+    def _save_image(self, img, name, ext='PNG', mode=None):
+        if mode is None:
+            Image.fromarray(img).save(name, format=ext)
+        elif mode == 'hsv':
+            Image.fromarray(img, mode='HSV').convert('RGB').save(
+                name, format=ext)

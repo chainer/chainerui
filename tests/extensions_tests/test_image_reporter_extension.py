@@ -6,6 +6,8 @@ import tempfile
 import unittest
 
 import numpy as np
+from PIL import Image
+from PIL import ImageChops
 
 from chainerui.extensions.image_reporter_extension import ImageReport
 from chainerui import summary
@@ -21,6 +23,9 @@ class TestImageReport(unittest.TestCase):
         summary.chainerui_image_observer.observation = {}
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
+
+    def _equal_image(self, img1, img2):
+        return ImageChops.difference(img1, img2).getbbox() is None
 
     def _make_image_summary_value(self, img, row=None, mode=None):
         value = dict(array=img)
@@ -51,13 +56,13 @@ class TestImageReport(unittest.TestCase):
         assert len(target._infos) == 0
 
         image_prefix = summary.CHAINERUI_IMAGE_PREFIX
-        img1 = np.zeros(3000).reshape((10, 10, 10, 3))
+        img1 = np.zeros(3000, dtype=np.uint8).reshape((10, 10, 10, 3))
         img1[0, 0, 0, 0] = 1
         observation = summary.chainerui_image_observer.observation
         observation[image_prefix+'/name1'] = self._make_image_summary_value(
             img1, 5)
-        img2 = np.zeros(3000).reshape((10, 10, 10, 3))
-        img2[0, 0, 0, 1] = 1
+        img2 = np.zeros(300, dtype=np.uint8).reshape((10, 10, 3))
+        img2[0, 0, 1] = 1
         observation[image_prefix+'/name2'] = self._make_image_summary_value(
             img2, 2, 'hsv')
 
@@ -67,12 +72,14 @@ class TestImageReport(unittest.TestCase):
         updater.iteration = 100
         target(trainer)
         assert len(target._infos) == 1
-        npy1_name = 'iter_100_%s.npy' % target._get_hash('name1')
-        npy1_path = os.path.join(self._dir, npy1_name)
-        assert os.path.exists(npy1_path)
-        with open(npy1_path, 'rb') as f:
-            npy1 = np.load(f)
-        assert np.allclose(npy1, img1)
+        png1_name = 'iter_100_%s_0.png' % target._get_hash('name1')
+        png1_path = os.path.join(self._dir, png1_name)
+        assert os.path.exists(png1_path)
+        loaded_img1 = Image.open(png1_path)
+        expected_img1 = Image.fromarray(
+            img1.reshape((5, 2, 10, 10, 3)).transpose(0, 2, 1, 3, 4).reshape(
+                50, 20, 3))
+        assert self._equal_image(loaded_img1, expected_img1)
 
         info_path = os.path.join(self._dir, target._info_name)
         assert os.path.exists(info_path)
@@ -83,19 +90,13 @@ class TestImageReport(unittest.TestCase):
         assert info[0]['iteration'] == 100
         assert len(info[0]['images']) == 2
 
-        def check_first_info(info):
-            if info['name'] == 'name1':
-                assert info['path'] == npy1_name
-                assert info['row'] == 5
-                assert 'mode' not in info
-            else:
-                assert info['name'] == 'name2'
-                assert info['path'] == 'iter_100_%s.npy' % target._get_hash(
-                    'name2')
-                assert info['row'] == 2
-                assert info['mode'] == 'hsv'
-        check_first_info(info[0]['images'][0])
-        check_first_info(info[0]['images'][1])
+        assert 'name1' in info[0]['images']
+        assert len(info[0]['images']['name1']) == 1
+        assert info[0]['images']['name1'][0] == png1_path
+        assert 'name2' in info[0]['images']
+        assert len(info[0]['images']['name2']) == 1
+        assert info[0]['images']['name2'][0] == os.path.join(
+            self._dir, 'iter_100_%s_0.png' % target._get_hash('name2'))
 
         # count up epoch, but no new image
         updater.epoch = 3
@@ -105,11 +106,11 @@ class TestImageReport(unittest.TestCase):
         assert len(target._infos) == 1
 
         # add 2nd. batch image, and get latest image
-        img3 = np.zeros(3000).reshape((10, 10, 10, 3))
-        img3[0, 0, 0, 2] = 1
+        img3 = np.full(3000, 0.1).reshape((10, 10, 10, 3))
+        img3[0, 0, 0, 2] = 0.9
         observation[image_prefix+'/name1'] = self._make_image_summary_value(
             img3, 5)
-        img4 = np.zeros(3000).reshape((10, 10, 10, 3))
+        img4 = np.zeros(3000, dtype=np.uint8).reshape((10, 10, 10, 3))
         img4[0, 0, 1, 0] = 1
         observation[image_prefix+'/0'] = self._make_image_summary_value(
             img4)
@@ -118,12 +119,13 @@ class TestImageReport(unittest.TestCase):
         updater.iteration = 200
         target(trainer)
         assert len(target._infos) == 2
-        npy4_name = 'iter_200_%s.npy' % target._get_hash('0')
-        npy4_path = os.path.join(self._dir, npy4_name)
-        assert os.path.exists(npy4_path)
-        with open(npy4_path, 'rb') as f:
-            npy4 = np.load(f)
-        assert np.allclose(npy4, img4)
+        for i in range(10):
+            png4_name = 'iter_200_%s_%d.png' % (target._get_hash('0'), i)
+            png4_path = os.path.join(self._dir, png4_name)
+            assert os.path.exists(png4_path)
+            loaded_img4 = Image.open(png4_path)
+            expected_img4 = Image.fromarray(img4[i])
+            assert self._equal_image(loaded_img4, expected_img4)
 
         with open(info_path, 'r') as f:
             info = json.load(f)
@@ -132,17 +134,16 @@ class TestImageReport(unittest.TestCase):
         assert info[1]['iteration'] == 200
         assert len(info[1]['images']) == 2
 
-        def check_second_info(info):
-            if info['name'] == 'name1':
-                assert info['path'] == 'iter_200_%s.npy' % target._get_hash(
-                    'name1')
-            else:
-                assert info['name'] == '0'
-                assert info['path'] == npy4_name
-                assert 'row' not in info
-                assert 'mode' not in info
-        check_second_info(info[1]['images'][0])
-        check_second_info(info[1]['images'][1])
+        assert 'name1' in info[1]['images']
+        assert len(info[1]['images']['name1']) == 1
+        assert info[1]['images']['name1'][0] == os.path.join(
+            self._dir, 'iter_200_%s_0.png' % target._get_hash('name1'))
+        assert '0' in info[1]['images']
+        assert len(info[1]['images']['0']) == 10
+        for i in range(10):
+            png4_name = 'iter_200_%s_%d.png' % (target._get_hash('0'), i)
+            png4_path = os.path.join(self._dir, png4_name)
+            assert info[1]['images']['0'][i] == png4_path
 
     def test_with_makefn(self):
         updater = MagicMock()
@@ -158,7 +159,7 @@ class TestImageReport(unittest.TestCase):
             name = image_prefix + '/' + name
 
             def maker(trainer):
-                img = np.ones(750).reshape((10, 5, 5, 3))
+                img = np.ones(750, dtype=np.uint8).reshape((10, 5, 5, 3))
                 summary.chainerui_image_observer.observation[
                     name] = self._make_image_summary_value(img)
             return maker
@@ -166,6 +167,11 @@ class TestImageReport(unittest.TestCase):
         target.initialize(trainer)
         target(trainer)
         assert len(target._infos) == 1
-        npy_name = 'iter_10_%s.npy' % target._get_hash('test')
-        npy_path = os.path.join(self._dir, npy_name)
-        assert os.path.exists(npy_path)
+        png_name = 'iter_10_%s_0.png' % target._get_hash('test')
+        png_path = os.path.join(self._dir, png_name)
+        assert os.path.exists(png_path)
+        loaded_img = Image.open(png_path)
+        expected_img = Image.fromarray(
+            np.ones(750, dtype=np.uint8).reshape((5, 2, 5, 5, 3)).transpose(
+                0, 2, 1, 3, 4).reshape(25, 10, 3))
+        assert self._equal_image(loaded_img, expected_img)
