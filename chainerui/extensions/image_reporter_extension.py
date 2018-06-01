@@ -2,14 +2,31 @@ import hashlib
 import json
 import os
 import shutil
+import warnings
 
 from chainer.training import extension
 from chainer.training import trigger as trigger_module
 import numpy as np
-from PIL import Image
 
 from chainerui import summary
 from chainerui.utils import tempdir
+
+
+try:
+    from PIL import Image  # NOQA
+
+    _available = True
+
+except (ImportError, TypeError):
+    _available = False
+
+
+def _check_available():
+    if not _available:
+        warnings.warn('Pillow is not installed on your environment, '
+                      'so no image will be output at this time.'
+                      'Please install Pillow to save images.\n\n'
+                      '  $ pip install Pillow\n')
 
 
 class ImageReport(extension.Extension):
@@ -19,10 +36,16 @@ class ImageReport(extension.Extension):
     """
 
     def __init__(self, trigger=(1, 'epoch'), image_generator=None):
+        _check_available()
         self._trigger = trigger_module.get_trigger(trigger)
         self._fn = image_generator
         self._info_name = '.chainerui_images'
         self._infos = []
+
+    @staticmethod
+    def available():
+        _check_available()
+        return _available
 
     def initialize(self, trainer):
         observer = summary.chainerui_image_observer
@@ -31,6 +54,8 @@ class ImageReport(extension.Extension):
         self._observer = observer
 
     def __call__(self, trainer):
+        if not _available:
+            return
         if not self._trigger(trainer):
             return
         if self._fn is not None:

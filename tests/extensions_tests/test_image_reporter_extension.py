@@ -4,11 +4,11 @@ import os
 import shutil
 import tempfile
 import unittest
+import warnings
 
 import numpy as np
-from PIL import Image
-from PIL import ImageChops
 
+from chainerui.extensions import image_reporter_extension
 from chainerui.extensions.image_reporter_extension import ImageReport
 from chainerui import summary
 
@@ -25,6 +25,7 @@ class TestImageReport(unittest.TestCase):
             shutil.rmtree(self._dir)
 
     def _equal_image(self, img1, img2):
+        from PIL import ImageChops
         return ImageChops.difference(img1, img2).getbbox() is None
 
     def _make_image_summary_value(self, img, row=None, mode=None):
@@ -35,7 +36,26 @@ class TestImageReport(unittest.TestCase):
             value['mode'] = mode
         return value
 
+    def test_available(self):
+        try:
+            import PIL  # NOQA
+            available = True
+        except ImportError:
+            available = False
+
+        with warnings.catch_warnings(record=True) as w:
+            assert ImageReport.available() == available
+
+        # It shows warning only when Pillow is not available
+        if available:
+            assert len(w) == 0
+        else:
+            assert len(w) == 1
+
+    @unittest.skipUnless(
+        image_reporter_extension._available, 'Pillow is not installed')
     def test_call(self):
+        from PIL import Image
         updater = MagicMock()
         updater.epoch = 0
         updater.epoch_detail = 0
@@ -145,7 +165,10 @@ class TestImageReport(unittest.TestCase):
             png4_path = os.path.join(self._dir, png4_name)
             assert info[1]['images']['0'][i] == png4_path
 
+    @unittest.skipUnless(
+        image_reporter_extension._available, 'Pillow is not installed')
     def test_with_makefn(self):
+        from PIL import Image
         updater = MagicMock()
         updater.epoch = 1
         updater.epoch_detail = 1

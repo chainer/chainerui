@@ -6,9 +6,6 @@ import shutil
 import tempfile
 import unittest
 
-import numpy as np
-from PIL import Image
-
 from chainerui.tasks import collect_images
 
 
@@ -35,21 +32,14 @@ class TestApp(unittest.TestCase):
         with patch('chainerui.tasks.collect_images.DB_SESSION', mock_session):
             collect_images.collect_images(0)
 
-        img1_1 = np.zeros(2*5*5*5*3, dtype=np.uint8).reshape((10, 25, 3))
-        img1_1[0, 0, 0] = 1
         img1_1_path = os.path.join(self._dir, 'img1_1.png')
-        Image.fromarray(img1_1).save(img1_1_path)
-        img1_2 = np.zeros(5*5*3, dtype=np.uint8).reshape((5, 5, 3))
-        img1_2[0, 0, 1] = 1
+        open(img1_1_path, 'w').close()
         img1_2_path = os.path.join(self._dir, 'img1_2.png')
-        Image.fromarray(img1_2).save(img1_2_path)
-        img1_3 = np.zeros(5*5*3, dtype=np.uint8).reshape((5, 5, 3))
-        img1_3[0, 1, 0] = 1
+        open(img1_2_path, 'w').close()
         img1_3_path = os.path.join(self._dir, 'img1_3.png')
-        Image.fromarray(img1_3).save(img1_3_path)
-        img2 = np.ones(2*5*5*5*3, dtype=np.uint8).reshape((10, 25, 3))
+        open(img1_3_path, 'w').close()
         img2_path = os.path.join(self._dir, 'img2.png')
-        Image.fromarray(img2).save(img2_path)
+        open(img2_path, 'w').close()
 
         test_data = [
             {
