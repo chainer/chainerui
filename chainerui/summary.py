@@ -35,13 +35,14 @@ def image(images, name=None, ch_axis=1, row=0, mode=None):
             show on unstuck. if images set only one image, the row size
             will be ignored.
         mode (str): if the images are not RGB or RGBA space, set their
-            color space code. ChainerUI support 'HSV'.
+            color space code. ChainerUI supports 'HSV'.
     """
 
     current_reporter = reporter.get_current_reporter()
     observer = chainerui_image_observer
     with reporter.report_scope(observer.observation):
         if name is None:
+            # TODO(disktnk): support tupled image and increment automatically
             name = '0'
         if isinstance(images, chainer.Variable):
             images = images.data
