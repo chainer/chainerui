@@ -18,7 +18,10 @@ def load_result_json(result_path, json_file_name):
     _list = []
     if os.path.isfile(json_path):
         with open(json_path) as json_data:
-            _list = json.load(json_data)
+            try:
+                _list = json.load(json_data)
+            except json.decoder.JSONDecodeError as err:
+                print("Failed to load result json: {}, {}".format(json_path, err))
 
     return _list
 
