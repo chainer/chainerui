@@ -10,7 +10,7 @@ from sqlalchemy import String
 
 from chainerui import DB_BASE
 from chainerui import DB_SESSION
-from chainerui.tasks import crawl_result
+from chainerui.tasks.crawl_result import crawl_result
 
 
 class Result(DB_BASE):
