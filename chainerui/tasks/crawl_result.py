@@ -5,7 +5,6 @@ import os
 from chainerui import DB_SESSION
 from chainerui.models.argument import Argument
 from chainerui.models.log import Log
-from chainerui.models.result import Result
 from chainerui.models.snapshot import Snapshot
 from chainerui.utils.command_item import CommandItem
 from chainerui.utils import is_numberable
@@ -63,11 +62,8 @@ def _check_log_updated(result):
     return False
 
 
-def crawl_result(result_id, force=False):
+def crawl_result(current_result, force=False):
     """crawl_results."""
-
-    current_result = DB_SESSION.query(Result).filter_by(id=result_id).first()
-
     now = datetime.datetime.now()
 
     if (not force) and (now - current_result.updated_at).total_seconds() < 4:

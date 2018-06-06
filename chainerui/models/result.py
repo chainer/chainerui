@@ -10,6 +10,7 @@ from sqlalchemy import String
 
 from chainerui import DB_BASE
 from chainerui import DB_SESSION
+from chainerui.tasks import crawl_result
 
 
 class Result(DB_BASE):
@@ -53,10 +54,7 @@ class Result(DB_BASE):
         DB_SESSION.add(result)
         DB_SESSION.commit()
 
-        # TODO(gky360): Fix import issue.
-        # See https://github.com/chainer/chainerui/pull/92 for details
-        from chainerui.tasks import crawl_result
-        crawl_result(result.id, True)
+        crawl_result(result, True)
 
         return result
 
