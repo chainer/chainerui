@@ -4,9 +4,9 @@ import os
 
 from chainerui import DB_SESSION
 from chainerui.models.argument import Argument
+from chainerui.models.command import Command
 from chainerui.models.log import Log
 from chainerui.models.snapshot import Snapshot
-from chainerui.utils.command_item import CommandItem
 from chainerui.utils import is_numberable
 
 
@@ -35,7 +35,7 @@ def crawl_result_path(result_path, include_log):
         if include_log:
             result['logs'] = load_result_json(result_path, 'log')
         result['args'] = load_result_json(result_path, 'args')
-        result['commands'] = CommandItem.load_commands(result_path)
+        result['commands'] = load_result_json(result_path, 'commands')
 
         snapshots = [
             x for x in os.listdir(result_path) if x.count('snapshot_iter_')
@@ -89,7 +89,7 @@ def crawl_result(result, force=False):
     result.snapshots = []
 
     for cmd in crawled_result['commands']:
-        result.commands.append(cmd.to_model())
+        result.commands.append(Command(**cmd))
 
     for snapshot in crawled_result['snapshots']:
         number_str = snapshot.split('snapshot_iter_')[1]
