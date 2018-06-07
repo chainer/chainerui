@@ -21,7 +21,7 @@ def load_result_json(result_path, json_file_name):
             try:
                 _list = json.load(json_data)
             except json.decoder.JSONDecodeError as err:
-                print("Failed to load result json: {}, {}".format(json_path, err))
+                print("Failed to load json: {}, {}".format(json_path, err))
 
     return _list
 
