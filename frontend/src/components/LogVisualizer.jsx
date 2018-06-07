@@ -13,6 +13,7 @@ import {
   line2key, line2dataKey,
   formatLogValue,
   getSelectedResults, getSelectedLogKeys,
+  getLogData,
   createLine
 } from '../utils';
 import LogVisualizerTooltip from './LogVisualizerTooltip';
@@ -81,7 +82,7 @@ const LogVisualizer = (props) => {
     globalConfig = {},
     stats
   } = props;
-  const { axes, resultsConfig = {}, lines = {} } = projectConfig;
+  const { axes, resultsConfig = {} } = projectConfig;
   const { logKeys = [], xAxisKeys } = stats;
   const {
     xAxis = { axisName: 'xAxis' },
@@ -95,34 +96,7 @@ const LogVisualizer = (props) => {
     yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
   };
 
-  const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
-  ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {
-    selectedResults.forEach((resultId) => {
-      const result = results[resultId];
-      if (result == null) {
-        return;
-      }
-      selectedLogKeys[axisName].forEach((logKey) => {
-        const line = lines[line2key({ resultId, logKey })] ||
-              createLine(resultId, logKey, results, logKeys);
-        const logs = result.logs || [];
-        logs.forEach((log) => {
-          const logDict = {};
-          log.logItems.forEach((logItem) => {
-            logDict[logItem.key] = logItem.value;
-          });
-          if (logDict[xAxisKey] == null || logDict[logKey] == null) {
-            return;
-          }
-          if (dataDict[logDict[xAxisKey]] == null) {
-            dataDict[logDict[xAxisKey]] = { [xAxisKey]: logDict[xAxisKey] };
-          }
-          dataDict[logDict[xAxisKey]][line2dataKey(line, axisName)] = logDict[logKey];
-        });
-      });
-    });
-  });
-  const data = Object.keys(dataDict).map((key) => (dataDict[key]));
+  const data = getLogData(results, projectConfig, stats);
 
   const lineElems = [
     ...buildLineElems(selectedResults, selectedLogKeys.yLeftAxis, 'yLeftAxis', results, projectConfig, logKeys),

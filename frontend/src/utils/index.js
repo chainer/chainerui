@@ -107,3 +107,51 @@ export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
   }
 });
 
+export const getLogData = (results, projectConfig, stats) => {
+  const { axes, resultsConfig = {}, lines = {} } = projectConfig;
+  const { logKeys = [], xAxisKeys } = stats;
+
+  const {
+    xAxis = { axisName: 'xAxis' },
+    yLeftAxis = { axisName: 'yLeftAxis' },
+    yRightAxis = { axisName: 'yRightAxis' }
+  } = axes || {};
+  const { xAxisKey = xAxisKeys[0] } = xAxis;
+
+  const selectedResults = getSelectedResults(results, resultsConfig);
+  const selectedLogKeys = {
+    yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
+    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
+  };
+
+  const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
+  ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {
+    selectedResults.forEach((resultId) => {
+      const result = results[resultId];
+      if (result == null) {
+        return;
+      }
+      selectedLogKeys[axisName].forEach((logKey) => {
+        const line = lines[line2key({ resultId, logKey })] ||
+              createLine(resultId, logKey, results, logKeys);
+        const logs = result.logs || [];
+        logs.forEach((log) => {
+          const logDict = {};
+          log.logItems.forEach((logItem) => {
+            logDict[logItem.key] = logItem.value;
+          });
+          if (logDict[xAxisKey] == null || logDict[logKey] == null) {
+            return;
+          }
+          if (dataDict[logDict[xAxisKey]] == null) {
+            dataDict[logDict[xAxisKey]] = { [xAxisKey]: logDict[xAxisKey] };
+          }
+          dataDict[logDict[xAxisKey]][line2dataKey(line, axisName)] = logDict[logKey];
+        });
+      });
+    });
+  });
+  const data = Object.keys(dataDict).map((key) => (dataDict[key]));
+
+  return data;
+};
