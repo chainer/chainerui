@@ -84,7 +84,7 @@ class ImageReport(extension.Extension):
                 if not os.path.exists(path):
                     # TODO(disktnk) should execute as queue worker
                     self._save_image(img, path, mode=value.get('mode', None))
-                paths.append(path)
+                paths.append(file_name)
             image_paths[key] = paths
         info = {
             'epoch': updater.epoch,

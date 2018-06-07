@@ -50,7 +50,8 @@ def collect_images(result_id):
         image_paths = base_info.pop('images')
         images = {'contents': {}, 'train_info': {}}
         for key, paths in image_paths.items():
-            img_strs = [_make_src_tag(_serialize(path)) for path in paths]
+            img_strs = [_make_src_tag(
+                _serialize(os.path.join(path_name, path))) for path in paths]
             images['contents'][key] = img_strs
         for k, v in base_info.items():
             images['train_info'][k] = v
