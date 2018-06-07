@@ -16,6 +16,7 @@ import {
   getLogData,
   createLine
 } from '../utils';
+import LogExporter from './LogExporter';
 import LogVisualizerTooltip from './LogVisualizerTooltip';
 
 
@@ -96,7 +97,7 @@ const LogVisualizer = (props) => {
     yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
   };
 
-  const data = getLogData(results, projectConfig, stats);
+  const data = getLogData(results, stats, projectConfig);
 
   const lineElems = [
     ...buildLineElems(selectedResults, selectedLogKeys.yLeftAxis, 'yLeftAxis', results, projectConfig, logKeys),
@@ -150,6 +151,12 @@ const LogVisualizer = (props) => {
           {lineElems}
         </LineChart>
       </ResponsiveContainer>
+      <LogExporter
+        project={project}
+        results={results}
+        stats={stats}
+        projectConfig={projectConfig}
+      />
     </div>
   );
 };

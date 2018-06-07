@@ -48,6 +48,10 @@ export const displayProjectName = (project = {}, options = {}) => (
   truncate(displayProjectNameFull(project), options)
 );
 
+export const getUrlSafeProjectNameFull = (project = {}) => (
+  displayProjectNameFull(project).replace(/[^a-z0-9]/gi, '_')
+);
+
 export const isFloat = (value) => (
   isFinite(value) && !Number.isInteger(value)
 );
@@ -107,7 +111,7 @@ export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
   }
 });
 
-export const getLogData = (results, projectConfig, stats) => {
+export const getLogData = (results, stats, projectConfig) => {
   const { axes, resultsConfig = {}, lines = {} } = projectConfig;
   const { logKeys = [], xAxisKeys } = stats;
 
@@ -154,4 +158,32 @@ export const getLogData = (results, projectConfig, stats) => {
   const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
   return data;
+};
+
+export const downloadObjectAsJson = (exportObj, exportName) => {
+  const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(exportObj))}`;
+  const downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute('href', dataStr);
+  downloadAnchorNode.setAttribute('download', `${exportName}.json`);
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+};
+
+export const padDigits = (num, len) => {
+  let str = `${num}`;
+  while (str.length < len) {
+    str = `0${str}`;
+  }
+  return str;
+};
+
+export const yyyymmddhhmmss = (date) => {
+  const yyyy = date.getFullYear().toString();
+  const MM = padDigits(date.getMonth() + 1, 2);
+  const dd = padDigits(date.getDate(), 2);
+  const hh = padDigits(date.getHours(), 2);
+  const mm = padDigits(date.getMinutes(), 2);
+  const ss = padDigits(date.getSeconds(), 2);
+  return yyyy + MM + dd + hh + mm + ss;
 };
