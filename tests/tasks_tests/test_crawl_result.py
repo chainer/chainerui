@@ -7,6 +7,7 @@ import unittest
 
 from chainerui.models.result import Result
 from chainerui.tasks.crawl_result import _check_log_updated
+from chainerui.tasks.crawl_result import load_result_json
 
 
 class TestCrawlResult(unittest.TestCase):
@@ -40,6 +41,9 @@ class TestCrawlResult(unittest.TestCase):
         ]
         with open(os.path.join(path, 'log'), 'w') as f:
             json.dump(log, f)
+
+        with open(os.path.join(path, 'log.txt'), 'w') as f:
+            f.write('json')
 
     def tearDown(self):
         if os.path.exists(self._dir):
@@ -76,3 +80,9 @@ class TestCrawlResult(unittest.TestCase):
 
         os.remove(os.path.join(self._result_path, 'log'))
         assert not _check_log_updated(result)
+
+    def test_load_result_json_with_correct_file(self):
+        assert len(load_result_json(self._result_path, 'log')) > 0
+
+    def test_load_result_json_with_incorrect_file(self):
+        assert len(load_result_json(self._result_path, 'log.txt')) == 0
