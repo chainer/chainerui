@@ -6,14 +6,21 @@ import PropTypes from 'prop-types';
 const Images = (props) => {
   const { images } = props;
 
-  const viewImages = (srcs) => {
-    const srcList = srcs.map((src) => (<div><img src={`${src}`} alt="view" style={{ maxWidth: 300 }} /></div>));
-    return srcList;
-  };
+  const viewImages = (srcs) =>
+    srcs.map((src) => (
+      <div>
+        <img src={`${src}`} alt="view" style={{ maxWidth: 300 }} />
+      </div>
+    ));
 
   const imageCols = (contents) => {
     const contentValues = Object.entries(contents);
-    return contentValues.map(([name, srcs]) => (<Col><div>{name}</div>{viewImages(srcs)}</Col>));
+    return contentValues.map(([name, srcs]) => (
+      <Col>
+        <div>{name}</div>
+        {viewImages(srcs)}
+      </Col>
+    ));
   };
 
   const infoCols = (trainInfo) => {
@@ -23,8 +30,12 @@ const Images = (props) => {
 
   const srcRowElems = images.map((image) => (
     <Row>
-      { imageCols(image.contents) }
-      <Col><ul>{ infoCols(image.train_info) }</ul></Col>
+      {imageCols(image.contents)}
+      <Col>
+        <ul>
+          {infoCols(image.train_info)}
+        </ul>
+      </Col>
     </Row>
   ));
 
