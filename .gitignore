@@ -1,13 +1,23 @@
-chainerui/static/dist
-chainerui/chainerui.db
-examples/result
-examples/**/commands
+# python
 *.pyc
-build
+**/__pycache__
 *.egg-info
 *.egg
-.idea/
-.cache/
+build/
 dist/
+.cache/
+.pytest_cache/
 .coverage
 htmlcov/
+
+# frontend
+chainerui/static/dist
+
+# working directory
+examples/result
+examples/mlp.model
+examples/mlp.state
+
+# IDE
+.idea/
+.vscode/
