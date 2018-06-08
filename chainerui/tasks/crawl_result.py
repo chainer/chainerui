@@ -10,6 +10,10 @@ from chainerui.models.snapshot import Snapshot
 from chainerui.utils.command_item import CommandItem
 from chainerui.utils import is_numberable
 
+try:
+    from json.decoder import JSONDecodeError
+except ImportError:
+    JSONDecodeError = ValueError
 
 def load_result_json(result_path, json_file_name):
     """load_result_json."""
