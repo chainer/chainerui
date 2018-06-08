@@ -8,7 +8,7 @@ from sqlalchemy import String
 
 from chainerui import DB_BASE
 from chainerui import DB_SESSION
-from chainerui.tasks import collect_results
+from chainerui.tasks.collect_results import collect_results
 
 
 class Project(DB_BASE):

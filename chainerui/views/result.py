@@ -35,7 +35,7 @@ class ResultAPI(MethodView):
                 all()
 
             for result in results:
-                result = crawl_result(result.id)
+                result = crawl_result(result)
 
             return jsonify({
                 'results': [
@@ -56,7 +56,7 @@ class ResultAPI(MethodView):
                     'message': 'No interface defined for URL.'
                 }), 404
 
-            result = crawl_result(result.id)
+            result = crawl_result(result)
 
             return jsonify({
                 'result': result.serialize_with_sampled_logs(logs_limit)
