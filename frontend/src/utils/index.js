@@ -109,9 +109,15 @@ export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
 
 export const sortMethod = (a, b) => {
   const original = [a, b];
-  const casted = original.every((x) => isFinite(x) || !isNaN(x) || x === 'NaN') ?
-    original.map(x => Number(x)):
-    original.map(x => String(x).toLowerCase())
-  ;
-  return casted[0] > casted[1] ? 1 : casted[0] < casted[1] ? -1 : 0;
+  const isNumber = original.every((o) => isFinite(o) || !isNaN(o) || o === 'NaN');
+  const casted = isNumber ?
+    original.map((o) => Number(o)) :
+    original.map((o) => String(o).toLowerCase());
+
+  if (casted[0] > casted[1]) {
+    return 1;
+  } else if (casted[0] < casted[1]) {
+    return -1;
+  }
+  return 0;
 };
