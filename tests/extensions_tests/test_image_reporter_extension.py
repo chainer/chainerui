@@ -112,11 +112,11 @@ class TestImageReport(unittest.TestCase):
 
         assert 'name1' in info[0]['images']
         assert len(info[0]['images']['name1']) == 1
-        assert info[0]['images']['name1'][0] == png1_path
+        assert info[0]['images']['name1'][0] == png1_name
         assert 'name2' in info[0]['images']
         assert len(info[0]['images']['name2']) == 1
-        assert info[0]['images']['name2'][0] == os.path.join(
-            self._dir, 'iter_100_%s_0.png' % target._get_hash('name2'))
+        assert info[0]['images']['name2'][0] == 'iter_100_%s_0.png' % \
+            target._get_hash('name2')
 
         # count up epoch, but no new image
         updater.epoch = 3
@@ -156,14 +156,13 @@ class TestImageReport(unittest.TestCase):
 
         assert 'name1' in info[1]['images']
         assert len(info[1]['images']['name1']) == 1
-        assert info[1]['images']['name1'][0] == os.path.join(
-            self._dir, 'iter_200_%s_0.png' % target._get_hash('name1'))
+        assert info[1]['images']['name1'][0] == 'iter_200_%s_0.png' % \
+            target._get_hash('name1')
         assert '0' in info[1]['images']
         assert len(info[1]['images']['0']) == 10
         for i in range(10):
             png4_name = 'iter_200_%s_%d.png' % (target._get_hash('0'), i)
-            png4_path = os.path.join(self._dir, png4_name)
-            assert info[1]['images']['0'][i] == png4_path
+            assert info[1]['images']['0'][i] == png4_name
 
     @unittest.skipUnless(
         image_reporter_extension._available, 'Pillow is not installed')
