@@ -7,6 +7,7 @@ import configureStore from '../store/configureStore';
 import ProjectsContainer from '../containers/ProjectsContainer';
 import PlotContainer from '../containers/PlotContainer';
 import ResultDetail from '../containers/ResultDetail';
+import ImagesContainer from '../containers/ImagesContainer';
 
 
 const store = configureStore();
@@ -36,6 +37,7 @@ class Root extends React.Component {
           <Route path="/" component={ProjectsContainer} />
           <Route path="/projects/(:projectId)" component={PlotContainer} />
           <Route path="/projects/(:projectId)/results/(:resultId)" component={ResultDetail} />
+          <Route path="/projects/(:projectId)/results/(:resultId)/images" component={ImagesContainer} />
         </Router>
       </Provider>
     );
