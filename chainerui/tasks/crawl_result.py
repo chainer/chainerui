@@ -15,6 +15,7 @@ try:
 except ImportError:
     JSONDecodeError = ValueError
 
+
 def load_result_json(result_path, json_file_name):
     """load_result_json."""
     json_path = os.path.join(result_path, json_file_name)
