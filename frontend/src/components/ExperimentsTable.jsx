@@ -5,7 +5,8 @@ import { Link } from 'react-router';
 import {
   argValue2string,
   getLastLogDict,
-  urlForResultDetail
+  urlForResultDetail,
+  sortMethod
 } from '../utils';
 
 import UnregisterButton from './experiments_table_cell/UnregisterButton';
@@ -37,32 +38,37 @@ const ExperimentsTable = (props) => {
     });
   };
 
+  const defaultStyle = {
+    textAlign: 'right'
+  };
+
   const resultList = resultKeys.map((resultId) => results[resultId]);
 
   const logs = xAxisKeys.map((logKey) => ({
     Header: logKey,
-    id: logKey,
-    Cell: (p) => {
-      const lastLogDict = getLastLogDict(p.original);
+    id: `logKey${logKey}`,
+    accessor: (p) => {
+      const lastLogDict = getLastLogDict(p);
       if (logKey === 'elapsed_time') {
-        return <span className="text-right">{lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2)}</span>;
+        return lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2);
       }
-      return <span className="text-right">{lastLogDict[logKey]}</span>;
-    }
+      return lastLogDict[logKey];
+    },
+    style: defaultStyle
   }));
 
   const argsList = argKeys.map((argKey) => ({
     Header: argKey,
     id: argKey,
-    Cell: (p) => {
-      const { original } = p;
-      const { args } = original;
+    accessor: (p) => {
+      const { args } = p;
       const argDict = {};
       args.forEach((arg) => {
         argDict[arg.key] = arg.value;
       });
-      return <span>{argValue2string(argDict[argKey])}</span>;
-    }
+      return argValue2string(argDict[argKey]);
+    },
+    style: defaultStyle
   }));
 
   const columns = [
@@ -142,6 +148,12 @@ const ExperimentsTable = (props) => {
       showPagination={false}
       minRows={3}
       pageSize={resultList.length}
+      defaultSortMethod={sortMethod}
+      defaultSorted={[
+        {
+          id: 'result_id'
+        }
+      ]}
     />
   );
 };
