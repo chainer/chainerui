@@ -11,22 +11,41 @@ class TestImage(unittest.TestCase):
     def tearDown(self):
         summary.chainerui_image_observer.observation = {}
 
-    def test_image(self):
+    def test_image_not_set_reporter(self):
         img = np.zeros(750).reshape((10, 5, 5, 3))
 
         with self.assertRaises(IndexError) as e:
             summary.image(img, 'test', ch_axis=-1)
         assert 'out of range' in str(e.exception)
 
+    def test_image_error(self):
         reporter = chainer.Reporter()
         observer = summary.chainerui_image_observer
         reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
-        with reporter.scope(observer.observation):
-            summary.image(img, 'test', ch_axis=-1)
 
+        img = np.zeros(10)
+        with self.assertRaises(ValueError) as e:
+            summary.image(img, 'test', batched=False)
+        assert 'must be 2 or 3' in str(e.exception)
+
+        img = np.zeros(10).reshape(2, 5)
+        with self.assertRaises(ValueError) as e:
+            summary.image(img, 'test')
+        assert 'must be 3 or 4' in str(e.exception)
+
+    def test_image(self):
+        reporter = chainer.Reporter()
+        observer = summary.chainerui_image_observer
+        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
+
+        img = np.zeros(250).reshape((10, 5, 5))
+        with reporter.scope(observer.observation):
+            summary.image(img, 'test')
         assert len(observer.observation) == 1
         key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
         assert key in observer.observation
+        assert np.allclose(observer.observation[key]['array'], img.reshape(
+            1, 10, 5, 5))
 
         img2 = np.zeros(750).reshape((10, 5, 5, 3))
         img2[0, 0, 0, 1] = 1
@@ -57,5 +76,17 @@ class TestImage(unittest.TestCase):
         assert len(observer.observation) == 2
         expected_img4 = img4.transpose(0, 2, 3, 1)
         assert np.allclose(observer.observation[key]['array'], expected_img4)
+        assert 'row' not in observer.observation[key]
+        assert 'mode' not in observer.observation[key]
+
+        img5 = np.zeros(25).reshape((5, 5))
+        img5[0, 0] = 1
+        with reporter.scope(observer.observation):
+            summary.image(img5, 'test2', batched=False)
+        assert len(observer.observation) == 3
+        key = summary.CHAINERUI_IMAGE_PREFIX+'/test2'
+        assert key in observer.observation
+        assert np.allclose(observer.observation[key]['array'], img5.reshape(
+            1, 5, 5))
         assert 'row' not in observer.observation[key]
         assert 'mode' not in observer.observation[key]
