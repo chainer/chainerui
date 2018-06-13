@@ -8,6 +8,10 @@
     "build:watch": "webpack --progress --profile --watch",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
+  "engines": {
+    "npm": ">=6.0.0 <7",
+    "node": ">=8.0.0 <10"
+  },
   "devDependencies": {
     "autoprefixer": "^7.2.5",
     "babel-core": "^6.26.0",
