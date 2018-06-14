@@ -30,10 +30,13 @@ build_script:
   # Server connection test
   - chainerui db create
   - chainerui db upgrade
-  - start chainerui server -p 5051
+  - ps: $MyProcess = Start-Process chainerui -PassThru -ArgumentList "server -p 5051"
   - timeout 4
   - curl -f http://127.0.0.1:5051/
 
 test_script:
   - set CHAINERUI_ENV=test
   - pytest --cov=chainerui
+
+on_finish:
+  - ps: Stop-Process -Id $MyProcess.Id
