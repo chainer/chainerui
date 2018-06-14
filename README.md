@@ -2,6 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/chainerui.svg)](https://pypi.python.org/pypi/chainerui)
 [![Build Status](https://travis-ci.org/chainer/chainerui.svg?branch=master)](https://travis-ci.org/chainer/chainerui)
+[![Build status](https://ci.appveyor.com/api/projects/status/bag5tjue689nxj4v/branch/master?svg=true)](https://ci.appveyor.com/project/disktnk/chainerui-1iviy/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/chainer/chainerui/badge.svg)](https://coveralls.io/github/chainer/chainerui)
 [![Documentation Status](https://readthedocs.org/projects/chainerui/badge/?version=latest)](http://chainerui.readthedocs.io/en/latest/?badge=latest)
 
