@@ -1,4 +1,6 @@
 environment:
+  nodejs_version: "9"
+
   matrix:
     - PYTHON: "C:\\Python27-x64"
     - PYTHON: "C:\\Python35-x64"
@@ -13,8 +15,7 @@ install:
   - pip install Pillow
 
   # Update Node.js
-  - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
-  - node --version
+  - ps: Install-Product node $env:nodejs_version
   # Update NPM
   - npm install -g npm
   - npm --version
