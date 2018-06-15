@@ -1,0 +1,42 @@
+environment:
+  nodejs_version: "9"
+
+  matrix:
+    - PYTHON: "C:\\Python27-x64"
+    - PYTHON: "C:\\Python35-x64"
+    - PYTHON: "C:\\Python36-x64"
+
+install:
+  - set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
+  - python --version
+  - pip --version
+
+  - pip install pytest-cov mock
+  - pip install Pillow
+
+  # Update Node.js
+  - ps: Install-Product node $env:nodejs_version
+  # Update NPM
+  - npm install -g npm
+  - npm --version
+
+build_script:
+  - cd frontend
+  - npm install
+  - npm run build -- --progress=false --profile=false
+  - cd ..
+  - pip install -e .
+
+  # Server connection test
+  - chainerui db create
+  - chainerui db upgrade
+  - ps: $MyProcess = Start-Process chainerui -PassThru -ArgumentList "server -p 5051"
+  - timeout 4
+  - curl -f http://127.0.0.1:5051/
+
+test_script:
+  - set CHAINERUI_ENV=test
+  - pytest --cov=chainerui
+
+on_finish:
+  - ps: Stop-Process -Id $MyProcess.Id
