@@ -2,6 +2,7 @@ import datetime
 import os
 
 from chainerui import DB_SESSION
+from chainerui.models.result import Result
 
 
 def _list_result_paths(target_path, log_file_name='log'):
@@ -18,9 +19,6 @@ def _list_result_paths(target_path, log_file_name='log'):
 
 
 def _register_result(project_id, result_path):
-    from chainerui import DB_SESSION
-    from chainerui.models.result import Result
-
     result_path = os.path.abspath(result_path)
 
     contain_log_file = os.path.isfile(os.path.join(result_path, 'log'))

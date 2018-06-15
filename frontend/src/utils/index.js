@@ -111,6 +111,21 @@ export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
   }
 });
 
+export const sortMethod = (a, b) => {
+  const original = [a, b];
+  const isNumber = original.every((o) => isFinite(o) || !isNaN(o) || o === 'NaN');
+  const casted = isNumber ?
+    original.map((o) => Number(o)) :
+    original.map((o) => String(o).toLowerCase());
+
+  if (casted[0] > casted[1]) {
+    return 1;
+  } else if (casted[0] < casted[1]) {
+    return -1;
+  }
+  return 0;
+};
+
 export const getLogData = (results, stats, projectConfig) => {
   const { axes, resultsConfig = {}, lines = {} } = projectConfig;
   const { logKeys = [], xAxisKeys } = stats;
