@@ -73,23 +73,18 @@ class ImageReport(extension.Extension):
 
         out_path = trainer.out
         updater = trainer.updater
-        image_paths = {}
+        image_path = {}
         for key, value in pooled_images.items():
-            images = self._make_image(value['array'], value.get('row', None))
-            paths = []
-            for i, img in enumerate(images):
-                file_name = 'iter_%d_%s_%d.png' % (
-                    updater.iteration, self._get_hash(key), i)
-                path = os.path.join(out_path, file_name)
-                if not os.path.exists(path):
-                    # TODO(disktnk) should execute as queue worker
-                    self._save_image(img, path, mode=value.get('mode', None))
-                paths.append(file_name)
-            image_paths[key] = paths
+            image = self._normalize_8bit(value['image'])
+            file_name = 'iter_%d_%s.png' % (
+                updater.iteration, self._get_hash(key))
+            file_path = os.path.join(out_path, file_name)
+            self._save_image(image, file_path, mode=value.get('mode', None))
+            image_path[key] = file_name
         info = {
             'epoch': updater.epoch,
             'iteration': updater.iteration,
-            'images': image_paths,
+            'images': image_path,
         }
         self._infos.append(info)
 
@@ -103,32 +98,10 @@ class ImageReport(extension.Extension):
     def _get_hash(self, key):
         return hashlib.md5(key.encode('utf-8')).hexdigest()[:8]
 
-    def _make_image(self, array, row=None):
-        images = []
-        x = array
-        if array.dtype != np.uint8:
-            x = np.asarray(np.clip(x * 255, 0.0, 255.0), dtype=np.uint8)
-        if x.ndim == 4:
-            B, H, W, C = x.shape
-            if row is not None:
-                col = B // row
-                x = x.reshape((row, col, H, W, C))
-                x = x.transpose(0, 2, 1, 3, 4)
-                x = x.reshape((row * H, col * W, C))
-                images.append(x)
-            else:
-                images = [img for img in x]
-        elif x.ndim == 3:
-            B, H, W = x.shape
-            if row is not None:
-                col = B // row
-                x = x.reshape((row, col, H, W))
-                x = x.transpose(0, 2, 1, 3)
-                x = x.reshape((row * H, col * W))
-                images.append(x)
-            else:
-                images = [img for img in x]
-        return images
+    def _normalize_8bit(self, array):
+        if array.dtype == np.uint8:
+            return array
+        return np.asarray(np.clip(array * 255, 0.0, 255.0), dtype=np.uint8)
 
     def _save_image(self, img, name, ext='PNG', mode=None):
         if mode is None:

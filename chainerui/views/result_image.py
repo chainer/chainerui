@@ -31,6 +31,6 @@ class ResultImageAPI(MethodView):
                 'message': 'No interface defined for URL.'
             }), 404
 
-        images = collect_images(result.id)
+        images = collect_images(result)
 
         return jsonify({'images': images})
