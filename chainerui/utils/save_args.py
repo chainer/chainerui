@@ -21,7 +21,6 @@ def save_args(conditions, out_path):
         args = vars(conditions)
     else:
         args = conditions
-    args_dict = {k: str(v) for k, v in args.items()}
 
     try:
         os.makedirs(out_path)
