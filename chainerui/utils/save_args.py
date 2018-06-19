@@ -30,7 +30,7 @@ def save_args(conditions, out_path):
     with tempdir(prefix='args', dir=out_path) as tempd:
         path = os.path.join(tempd, 'args.json')
         with open(path, 'w') as f:
-            json.dump(args_dict, f, indent=4)
+            json.dump(args, f, indent=4)
 
         new_path = os.path.join(out_path, 'args')
         shutil.move(path, new_path)
