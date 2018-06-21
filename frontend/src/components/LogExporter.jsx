@@ -4,8 +4,7 @@ import { Button } from 'reactstrap';
 import {
   getLogData,
   getUrlSafeProjectNameFull,
-  downloadObjectAsJson,
-  yyyymmddhhmmss
+  downloadObjectAsJson
 } from '../utils';
 
 class LogExporter extends React.Component {
@@ -13,20 +12,14 @@ class LogExporter extends React.Component {
     super(props);
 
     this.handleClickDownloadJSON = this.handleClickDownloadJSON.bind(this);
-    this.handleClickDownloadPNG = this.handleClickDownloadPNG.bind(this);
   }
 
   handleClickDownloadJSON() {
     const { project, results, stats, projectConfig } = this.props;
     const data = getLogData(results, stats, projectConfig);
-    const exportName = `${getUrlSafeProjectNameFull(project)}_${yyyymmddhhmmss(new Date())}`;
+    const exportName = getUrlSafeProjectNameFull(project);
     downloadObjectAsJson(data, exportName);
     console.log(project);
-  }
-
-  handleClickDownloadPNG() {
-    console.log('downloading png...');
-    console.log(this);
   }
 
   render() {
@@ -35,7 +28,7 @@ class LogExporter extends React.Component {
         <Button size="xs" className="m-1" onClick={this.handleClickDownloadJSON}>
           <span className="mx-1 oi oi-data-transfer-download" />json
         </Button>
-        <Button size="xs" className="m-1" onClick={this.handleClickDownloadPNG}>
+        <Button size="xs" className="m-1" onClick={this.props.onClickDownloadPNG}>
           <span className="mx-1 oi oi-data-transfer-download" />png
         </Button>
       </div>
@@ -74,7 +67,8 @@ LogExporter.propTypes = {
         })
       })
     )
-  }).isRequired
+  }).isRequired,
+  onClickDownloadPNG: PropTypes.func.isRequired
 };
 
 export default LogExporter;

@@ -1,4 +1,5 @@
 import path from 'path';
+import saveSvgAsPng from 'save-svg-as-png';
 import { lineColorGenerator } from '../utils';
 
 export * from './color';
@@ -175,16 +176,6 @@ export const getLogData = (results, stats, projectConfig) => {
   return data;
 };
 
-export const downloadObjectAsJson = (exportObj, exportName) => {
-  const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(exportObj))}`;
-  const downloadAnchorNode = document.createElement('a');
-  downloadAnchorNode.setAttribute('href', dataStr);
-  downloadAnchorNode.setAttribute('download', `${exportName}.json`);
-  document.body.appendChild(downloadAnchorNode); // required for firefox
-  downloadAnchorNode.click();
-  downloadAnchorNode.remove();
-};
-
 export const padDigits = (num, len) => {
   let str = `${num}`;
   while (str.length < len) {
@@ -201,4 +192,20 @@ export const yyyymmddhhmmss = (date) => {
   const mm = padDigits(date.getMinutes(), 2);
   const ss = padDigits(date.getSeconds(), 2);
   return yyyy + MM + dd + hh + mm + ss;
+};
+
+export const downloadObjectAsJson = (exportObj, exportName) => {
+  const fileName = `${exportName}_${yyyymmddhhmmss(new Date())}.json`;
+  const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(exportObj))}`;
+  const downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute('href', dataStr);
+  downloadAnchorNode.setAttribute('download', fileName);
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+};
+
+export const downloadChartAsPng = (chartDOMNode, exportName) => {
+  const fileName = `${exportName}_${yyyymmddhhmmss(new Date())}.png`;
+  saveSvgAsPng.saveSvgAsPng(chartDOMNode.getElementsByTagName('svg')[0], fileName);
 };

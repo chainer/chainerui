@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import {
   LineChart,
@@ -14,7 +15,9 @@ import {
   formatLogValue,
   getSelectedResults, getSelectedLogKeys,
   getLogData,
-  createLine
+  createLine,
+  getUrlSafeProjectNameFull,
+  downloadChartAsPng
 } from '../utils';
 import LogExporter from './LogExporter';
 import LogVisualizerTooltip from './LogVisualizerTooltip';
@@ -75,91 +78,115 @@ const buildLineElems = (
   return lineElems;
 };
 
-const LogVisualizer = (props) => {
-  const {
-    project = {},
-    results = {},
-    projectConfig = {},
-    globalConfig = {},
-    stats
-  } = props;
-  const { axes, resultsConfig = {} } = projectConfig;
-  const { logKeys = [], xAxisKeys } = stats;
-  const {
-    xAxis = { axisName: 'xAxis' },
-    yLeftAxis = { axisName: 'yLeftAxis' },
-    yRightAxis = { axisName: 'yRightAxis' }
-  } = axes || {};
-  const { xAxisKey = xAxisKeys[0] } = xAxis;
-  const selectedResults = getSelectedResults(results, resultsConfig);
-  const selectedLogKeys = {
-    yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
-    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
-  };
+class LogVisualizer extends React.Component {
+  constructor(props) {
+    super(props);
 
-  const data = getLogData(results, stats, projectConfig);
+    this.chart = null;
 
-  const lineElems = [
-    ...buildLineElems(selectedResults, selectedLogKeys.yLeftAxis, 'yLeftAxis', results, projectConfig, logKeys),
-    ...buildLineElems(selectedResults, selectedLogKeys.yRightAxis, 'yRightAxis', results, projectConfig, logKeys)
-  ];
+    this.chartRef = this.chartRef.bind(this);
+    this.handleClickDownloadPNG = this.handleClickDownloadPNG.bind(this);
+  }
 
-  const { chartSize, isResultNameAlignRight } = globalConfig;
+  chartRef(element) {
+    this.chart = element;
+  }
 
-  return (
-    <div className="log-visualizer-root">
-      <ResponsiveContainer
-        width={chartSize.width}
-        height={chartSize.height}
-        aspect={chartSize.aspect}
-      >
-        <LineChart data={data}>
-          <XAxis
-            type="number"
-            dataKey={xAxisKey}
-            scale={xAxis.scale}
-            domain={getDomain(xAxis)}
-            allowDataOverflow
-          />
-          <YAxis
-            yAxisId="yLeftAxis"
-            orientation="left"
-            scale={yLeftAxis.scale}
-            domain={getDomain(yLeftAxis)}
-            tickFormatter={formatLogValue()}
-            allowDataOverflow
-          />
-          <YAxis
-            yAxisId="yRightAxis"
-            orientation="right"
-            scale={yRightAxis.scale}
-            domain={getDomain(yRightAxis)}
-            tickFormatter={formatLogValue()}
-            allowDataOverflow
-          />
-          <CartesianGrid strokeDasharray="3 3" />
-          <Tooltip
-            content={
-              <LogVisualizerTooltip
-                project={project}
-                results={results}
-                xAxisKey={xAxisKey}
-                isResultNameAlignRight={isResultNameAlignRight}
-              />
+  handleClickDownloadPNG() {
+    console.log('downloading png...');
+    const { project } = this.props;
+    const exportName = getUrlSafeProjectNameFull(project);
+    // eslint-disable-next-line react/no-find-dom-node
+    downloadChartAsPng(ReactDOM.findDOMNode(this.chart), exportName);
+  }
+
+  render() {
+    const {
+      project = {},
+      results = {},
+      projectConfig = {},
+      globalConfig = {},
+      stats
+    } = this.props;
+    const { axes, resultsConfig = {} } = projectConfig;
+    const { logKeys = [], xAxisKeys } = stats;
+    const {
+      xAxis = { axisName: 'xAxis' },
+      yLeftAxis = { axisName: 'yLeftAxis' },
+      yRightAxis = { axisName: 'yRightAxis' }
+    } = axes || {};
+    const { xAxisKey = xAxisKeys[0] } = xAxis;
+    const selectedResults = getSelectedResults(results, resultsConfig);
+    const selectedLogKeys = {
+      yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
+      yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
+    };
+
+    const data = getLogData(results, stats, projectConfig);
+
+    const lineElems = [
+      ...buildLineElems(selectedResults, selectedLogKeys.yLeftAxis, 'yLeftAxis', results, projectConfig, logKeys),
+      ...buildLineElems(selectedResults, selectedLogKeys.yRightAxis, 'yRightAxis', results, projectConfig, logKeys)
+    ];
+
+    const { chartSize, isResultNameAlignRight } = globalConfig;
+
+    return (
+      <div className="log-visualizer-root">
+        <ResponsiveContainer
+          width={chartSize.width}
+          height={chartSize.height}
+          aspect={chartSize.aspect}
+        >
+          <LineChart data={data} ref={this.chartRef}>
+            <XAxis
+              type="number"
+              dataKey={xAxisKey}
+              scale={xAxis.scale}
+              domain={getDomain(xAxis)}
+              allowDataOverflow
+            />
+            <YAxis
+              yAxisId="yLeftAxis"
+              orientation="left"
+              scale={yLeftAxis.scale}
+              domain={getDomain(yLeftAxis)}
+              tickFormatter={formatLogValue()}
+              allowDataOverflow
+            />
+            <YAxis
+              yAxisId="yRightAxis"
+              orientation="right"
+              scale={yRightAxis.scale}
+              domain={getDomain(yRightAxis)}
+              tickFormatter={formatLogValue()}
+              allowDataOverflow
+            />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Tooltip
+              content={
+                <LogVisualizerTooltip
+                  project={project}
+                  results={results}
+                  xAxisKey={xAxisKey}
+                  isResultNameAlignRight={isResultNameAlignRight}
+                />
             }
-          />
-          {lineElems}
-        </LineChart>
-      </ResponsiveContainer>
-      <LogExporter
-        project={project}
-        results={results}
-        stats={stats}
-        projectConfig={projectConfig}
-      />
-    </div>
-  );
-};
+            />
+            {lineElems}
+          </LineChart>
+        </ResponsiveContainer>
+        <LogExporter
+          project={project}
+          results={results}
+          stats={stats}
+          projectConfig={projectConfig}
+          onClickDownloadPNG={this.handleClickDownloadPNG}
+        />
+      </div>
+    );
+  }
+}
 
 LogVisualizer.propTypes = {
   project: PropTypes.shape({
