@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
 import {
   LineChart,
   Line,
@@ -17,9 +18,9 @@ import {
   getLogData,
   createLine,
   getUrlSafeProjectNameFull,
+  downloadObjectAsJson,
   downloadChartAsPng
 } from '../utils';
-import LogExporter from './LogExporter';
 import LogVisualizerTooltip from './LogVisualizerTooltip';
 
 
@@ -85,11 +86,20 @@ class LogVisualizer extends React.Component {
     this.chart = null;
 
     this.chartRef = this.chartRef.bind(this);
+    this.handleClickDownloadJSON = this.handleClickDownloadJSON.bind(this);
     this.handleClickDownloadPNG = this.handleClickDownloadPNG.bind(this);
   }
 
   chartRef(element) {
     this.chart = element;
+  }
+
+  handleClickDownloadJSON() {
+    const { project, results, stats, projectConfig } = this.props;
+    const data = getLogData(results, stats, projectConfig);
+    const exportName = getUrlSafeProjectNameFull(project);
+    downloadObjectAsJson(data, exportName);
+    console.log(project);
   }
 
   handleClickDownloadPNG() {
@@ -176,13 +186,14 @@ class LogVisualizer extends React.Component {
             {lineElems}
           </LineChart>
         </ResponsiveContainer>
-        <LogExporter
-          project={project}
-          results={results}
-          stats={stats}
-          projectConfig={projectConfig}
-          onClickDownloadPNG={this.handleClickDownloadPNG}
-        />
+        <div>
+          <Button size="xs" className="m-1" onClick={this.handleClickDownloadJSON}>
+            <span className="mx-1 oi oi-data-transfer-download" />json
+          </Button>
+          <Button size="xs" className="m-1" onClick={this.handleClickDownloadPNG}>
+            <span className="mx-1 oi oi-data-transfer-download" />png
+          </Button>
+        </div>
       </div>
     );
   }
