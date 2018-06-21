@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 import { Link } from 'react-router';
+import { Button } from 'reactstrap';
 import {
   argValue2string,
   getLastLogDict,
@@ -154,6 +155,22 @@ const ExperimentsTable = (props) => {
           id: 'result_id'
         }
       ]}
+      freezeWhenExpanded={true}
+      SubComponent={ p => {
+        const { original } = p;
+        const { id } = original;
+        return (
+          <div>
+            <Button
+              tag={Link}
+              to={urlForResultDetail(project.id, id)}
+              color='primary'
+            >
+              Detail
+            </Button>
+          </div>
+        )
+      }}
     />
   );
 };
