@@ -99,11 +99,9 @@ class LogVisualizer extends React.Component {
     const data = getLogData(results, stats, projectConfig);
     const exportName = getUrlSafeProjectNameFull(project);
     downloadObjectAsJson(data, exportName);
-    console.log(project);
   }
 
   handleClickDownloadPNG() {
-    console.log('downloading png...');
     const { project } = this.props;
     const exportName = getUrlSafeProjectNameFull(project);
     // eslint-disable-next-line react/no-find-dom-node
