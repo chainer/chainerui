@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 import { Link } from 'react-router';
-import { Button } from 'reactstrap';
+import { Button, Badge } from 'reactstrap';
 import {
   argValue2string,
   getLastLogDict,
@@ -95,17 +95,6 @@ const ExperimentsTable = (props) => {
       minWidth: 40
     },
     {
-      Header: 'id',
-      id: 'result_id',
-      Cell: (p) => {
-        const { original } = p;
-        const { id } = original;
-        return (<Link to={urlForResultDetail(project.id, id)}>{id}</Link>);
-      },
-      className: 'text-center',
-      minWidth: 50
-    },
-    {
       Header: 'name',
       id: 'name',
       Cell: (p) => {
@@ -155,21 +144,24 @@ const ExperimentsTable = (props) => {
           id: 'result_id'
         }
       ]}
-      freezeWhenExpanded={true}
-      SubComponent={ p => {
+      freezeWhenExpanded
+      SubComponent={(p) => {
         const { original } = p;
         const { id } = original;
         return (
-          <div>
-            <Button
-              tag={Link}
-              to={urlForResultDetail(project.id, id)}
-              color='primary'
-            >
-              Detail
-            </Button>
+          <div style={{ padding: '1rem' }}>
+            <p>
+              <Button
+                tag={Link}
+                to={urlForResultDetail(project.id, id)}
+                color="primary"
+              >
+                Detail
+              </Button>
+            </p>
+            <Badge color="secondary" pill>{`result_id: ${id}`}</Badge>
           </div>
-        )
+        );
       }}
     />
   );
