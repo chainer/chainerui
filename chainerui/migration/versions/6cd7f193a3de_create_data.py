@@ -23,7 +23,7 @@ def upgrade():
         sa.Column('result_id', sa.Integer(), nullable=False),
         sa.Column('meta_info', sa.String(length=1024), nullable=True),
         sa.Column('file_modified_at', sa.DateTime(), nullable=False),
-        #sa.ForeignKeyConstraint(['result_id'], ['result.id'], ),
+        sa.ForeignKeyConstraint(['result_id'], ['result.id'], ),
         sa.PrimaryKeyConstraint('id')
     )
     op.create_table(

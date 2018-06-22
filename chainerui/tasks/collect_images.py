@@ -3,8 +3,8 @@ import json
 import os
 
 from chainerui import DB_SESSION
-from chainerui.models.data_info import DataInfo
 from chainerui.models.data_content import DataContent
+from chainerui.models.data_info import DataInfo
 
 
 def collect_images(result, data_infos, force=False):

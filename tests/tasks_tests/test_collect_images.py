@@ -8,9 +8,9 @@ from chainerui import CHAINERUI_ENV
 from chainerui import create_db
 from chainerui import DB_FILE_PATH
 from chainerui import DB_SESSION
-from chainerui import upgrade_db
 from chainerui.models.result import Result
 from chainerui.tasks import collect_images
+from chainerui import upgrade_db
 from tests.helpers import NotInTestEnvironmentException
 
 
