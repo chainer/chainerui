@@ -6,19 +6,14 @@ import PropTypes from 'prop-types';
 const Images = (props) => {
   const { images } = props;
 
-  const viewImages = (srcs) =>
-    srcs.map((src) => (
-      <div>
-        <img src={`${src}`} alt="view" style={{ maxWidth: 300 }} />
-      </div>
-    ));
-
   const imageCols = (contents) => {
     const contentValues = Object.entries(contents);
-    return contentValues.map(([name, srcs]) => (
+    return contentValues.map(([name, src]) => (
       <Col>
         <div>{name}</div>
-        {viewImages(srcs)}
+        <div>
+          <img src={`${src}`} alt="view" style={{ maxWidth: 300 }} />
+        </div>
       </Col>
     ));
   };
