@@ -30,12 +30,13 @@ class TestSaveArgs(unittest.TestCase):
 
         with open(args_path) as f:
             target = json.load(f)
+
         assert len(target) == 5
-        assert target['int'] == str(1)
-        assert target['float'] == str(0.1)
+        assert target['int'] == 1
+        assert target['float'] == 0.1
         assert target['str'] == 'foo'
-        assert target['inner'] == "{'int': 1}"
-        assert target['array'] == "['boo']"
+        assert target['inner'] == {'int': 1}
+        assert target['array'] == ['boo']
 
     def _create_parser(self):
         parser = argparse.ArgumentParser()
@@ -57,6 +58,6 @@ class TestSaveArgs(unittest.TestCase):
         with open(args_path) as f:
             target = json.load(f)
         assert len(target) == 3
-        assert target['i'] == str(-1)
+        assert target['i'] == -1
         assert target['s'] == 'foo'
-        assert target['a'] == "[0, 100]"
+        assert target['a'] == [0, 100]
