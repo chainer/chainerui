@@ -80,11 +80,11 @@ class TestImageReport(unittest.TestCase):
         img1[0, 0, 0, 0] = 1
         observation = summary.chainerui_image_observer.observation
         observation[image_prefix+'/name1'] = self._make_image_summary_value(
-            img1, 5)
-        img2 = np.zeros(300, dtype=np.uint8).reshape((10, 10, 3))
+            img1, 5, 'hsv')
+        img2 = np.zeros(1000, dtype=np.uint8).reshape((10, 10, 10))
         img2[0, 0, 1] = 1
         observation[image_prefix+'/name2'] = self._make_image_summary_value(
-            img2, 2, 'hsv')
+            img2, 2)
 
         # add image as batch
         updater.epoch = 2
@@ -98,8 +98,16 @@ class TestImageReport(unittest.TestCase):
         loaded_img1 = Image.open(png1_path)
         expected_img1 = Image.fromarray(
             img1.reshape((5, 2, 10, 10, 3)).transpose(0, 2, 1, 3, 4).reshape(
-                50, 20, 3))
+                50, 20, 3), mode='HSV').convert('RGB')
         assert self._equal_image(loaded_img1, expected_img1)
+        png2_name = 'iter_100_%s_0.png' % target._get_hash('name2')
+        png2_path = os.path.join(self._dir, png2_name)
+        assert os.path.exists(png2_path)
+        loaded_img2 = Image.open(png2_path)
+        expected_img2 = Image.fromarray(
+            img2.reshape((2, 5, 10, 10)).transpose(0, 2, 1, 3).reshape(
+                20, 50))
+        assert self._equal_image(loaded_img2, expected_img2)
 
         info_path = os.path.join(self._dir, target._info_name)
         assert os.path.exists(info_path)
@@ -129,23 +137,26 @@ class TestImageReport(unittest.TestCase):
         img3 = np.full(3000, 0.1).reshape((10, 10, 10, 3))
         img3[0, 0, 0, 2] = 0.9
         observation[image_prefix+'/name1'] = self._make_image_summary_value(
-            img3, 5)
-        img4 = np.zeros(3000, dtype=np.uint8).reshape((10, 10, 10, 3))
-        img4[0, 0, 1, 0] = 1
-        observation[image_prefix+'/0'] = self._make_image_summary_value(
-            img4)
+            img3)
+        img4 = np.zeros(100, dtype=np.uint8).reshape((1, 10, 10))
+        img4[0, 0, 1] = 1
+        observation[image_prefix+'/0'] = self._make_image_summary_value(img4)
         updater.epoch = 4
         updater.epoch_detail = 4
         updater.iteration = 200
         target(trainer)
         assert len(target._infos) == 2
         for i in range(10):
-            png4_name = 'iter_200_%s_%d.png' % (target._get_hash('0'), i)
-            png4_path = os.path.join(self._dir, png4_name)
-            assert os.path.exists(png4_path)
-            loaded_img4 = Image.open(png4_path)
-            expected_img4 = Image.fromarray(img4[i])
-            assert self._equal_image(loaded_img4, expected_img4)
+            png3_name = 'iter_200_%s_%d.png' % (target._get_hash('name1'), i)
+            png3_path = os.path.join(self._dir, png3_name)
+            assert os.path.exists(png3_path)
+            loaded_img3 = Image.open(png3_path)
+            expected_img3 = Image.fromarray(np.asarray(np.clip(
+                img3[i] * 255, 0.0, 255.0), dtype=np.uint8))
+            assert self._equal_image(loaded_img3, expected_img3)
+        png4_name = 'iter_200_%s_0.png' % target._get_hash('0')
+        png4_path = os.path.join(self._dir, png4_name)
+        assert os.path.exists(png4_path)
 
         with open(info_path, 'r') as f:
             info = json.load(f)
@@ -155,14 +166,14 @@ class TestImageReport(unittest.TestCase):
         assert len(info[1]['images']) == 2
 
         assert 'name1' in info[1]['images']
-        assert len(info[1]['images']['name1']) == 1
+        assert len(info[1]['images']['name1']) == 10
         assert info[1]['images']['name1'][0] == 'iter_200_%s_0.png' % \
             target._get_hash('name1')
         assert '0' in info[1]['images']
-        assert len(info[1]['images']['0']) == 10
+        assert len(info[1]['images']['0']) == 1
         for i in range(10):
-            png4_name = 'iter_200_%s_%d.png' % (target._get_hash('0'), i)
-            assert info[1]['images']['0'][i] == png4_name
+            png3_name = 'iter_200_%s_%d.png' % (target._get_hash('name1'), i)
+            assert info[1]['images']['name1'][i] == png3_name
 
     @unittest.skipUnless(
         image_reporter_extension._available, 'Pillow is not installed')

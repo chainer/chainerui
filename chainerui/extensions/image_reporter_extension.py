@@ -119,7 +119,15 @@ class ImageReport(extension.Extension):
             else:
                 images = [img for img in x]
         elif x.ndim == 3:
-            images.append(x)
+            B, H, W = x.shape
+            if row is not None:
+                col = B // row
+                x = x.reshape((row, col, H, W))
+                x = x.transpose(0, 2, 1, 3)
+                x = x.reshape((row * H, col * W))
+                images.append(x)
+            else:
+                images = [img for img in x]
         return images
 
     def _save_image(self, img, name, ext='PNG', mode=None):
