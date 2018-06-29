@@ -29,6 +29,31 @@ class ProjectAPI(MethodView):
                 'project': project.serialize
             })
 
+    def post(self):
+        data = request.get_json()  # if invalid data, raise BadRequest
+        project_json = data.get('project')
+        path = project_json.get('path_name', '')
+        if path == '':
+            return jsonify({
+                'project': None,
+                'message': 'Path of the project is not set.'
+            }), 400
+        name = project_json.get('name', '')
+        if name == '':
+            name = path
+
+        project = DB_SESSION.query(Project).filter_by(path_name=path).first()
+        if project is None:
+            project = Project.create(path, name)
+            return jsonify({
+                'project': project.serialize
+            })
+        else:
+            return jsonify({
+                'project': None,
+                'message': 'Pathname already registered.'
+            }), 400
+
     def put(self, id):
         """put."""
 

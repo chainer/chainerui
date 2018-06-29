@@ -148,6 +148,8 @@ def create_app():
         '/api/v1/projects',
         defaults={'id': None}, view_func=project_resource, methods=['GET'])
     app.add_url_rule(
+        '/api/v1/projects', view_func=project_resource, methods=['POST'])
+    app.add_url_rule(
         '/api/v1/projects/<int:id>',
         view_func=project_resource, methods=['GET', 'PUT', 'DELETE'])
 
