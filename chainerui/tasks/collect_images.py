@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import datetime
 import json
 import os
@@ -39,7 +40,7 @@ def collect_images(result, data_infos, force=False):
             return data_infos
 
     with open(info_path, 'r') as f:
-        info_list = json.load(f)
+        info_list = json.load(f, object_pairs_hook=OrderedDict)
 
     if len(info_list) < start_idx:
         start_idx = 0

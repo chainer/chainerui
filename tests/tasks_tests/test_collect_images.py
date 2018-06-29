@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import json
 import os
 import shutil
@@ -42,18 +43,18 @@ class TestApp(unittest.TestCase):
             {
                 'iteration': 1000,
                 'epoch': 1,
-                'images': {
-                    '0': 'img1_1.png',
-                    '1': 'img1_2.png',
-                }
+                'images': OrderedDict([
+                    ('0', 'img1_1.png'),
+                    ('1', 'img1_2.png'),
+                ])
             },
             {
                 'iteration': 2000,
                 'epoch': 2,
                 'custom': 'test',
-                'images': {
-                    'seg': 'img2.png',
-                }
+                'images': OrderedDict([
+                    ('seg', 'img2.png'),
+                ])
             }
         ]
         with open(info_path, 'w') as f:
@@ -163,10 +164,10 @@ class TestApp(unittest.TestCase):
             {
                 'iteration': 1001,
                 'epoch': 1,
-                'images': {
-                    '0': 'img1_1.png',
-                    '1': 'img1_2.png',
-                }
+                'images': OrderedDict([
+                    ('0', 'img1_1.png'),
+                    ('1', 'img1_2.png'),
+                ])
             }
         ]
         with open(self._info_path, 'w') as f:

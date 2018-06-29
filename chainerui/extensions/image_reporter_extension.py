@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import hashlib
 import json
 import os
@@ -63,7 +64,7 @@ class ImageReport(extension.Extension):
 
         image_prefix = summary.CHAINERUI_IMAGE_PREFIX
         observations = self._observer.observation
-        pooled_images = {}
+        pooled_images = OrderedDict()
         keys = observations.keys()
         for k in list(keys):
             if k.startswith(image_prefix):
