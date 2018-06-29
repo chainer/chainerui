@@ -1,5 +1,6 @@
 import path from 'path';
 import saveSvgAsPng from 'save-svg-as-png';
+import * as moment from 'moment';
 import { lineColorGenerator } from '../utils';
 
 export * from './color';
@@ -184,18 +185,8 @@ export const padDigits = (num, len) => {
   return str;
 };
 
-export const yyyymmddhhmmss = (date) => {
-  const yyyy = date.getFullYear().toString();
-  const MM = padDigits(date.getMonth() + 1, 2);
-  const dd = padDigits(date.getDate(), 2);
-  const hh = padDigits(date.getHours(), 2);
-  const mm = padDigits(date.getMinutes(), 2);
-  const ss = padDigits(date.getSeconds(), 2);
-  return yyyy + MM + dd + hh + mm + ss;
-};
-
 export const downloadObjectAsJson = (exportObj, exportName) => {
-  const fileName = `${exportName}_${yyyymmddhhmmss(new Date())}.json`;
+  const fileName = `${exportName}_${moment().format('YYYYMMDDHHmmss')}.json`;
   const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(exportObj))}`;
   const downloadAnchorNode = document.createElement('a');
   downloadAnchorNode.setAttribute('href', dataStr);
@@ -206,6 +197,6 @@ export const downloadObjectAsJson = (exportObj, exportName) => {
 };
 
 export const downloadChartAsPng = (chartDOMNode, exportName) => {
-  const fileName = `${exportName}_${yyyymmddhhmmss(new Date())}.png`;
+  const fileName = `${exportName}_${moment().format('YYYYMMDDHHmmss')}.png`;
   saveSvgAsPng.saveSvgAsPng(chartDOMNode.getElementsByTagName('svg')[0], fileName);
 };
