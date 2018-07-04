@@ -78,10 +78,23 @@ Show training logs and experimental conditions.
     * Drop-down list shows only keys existed in ``log`` files.
 
 * Select values by ``yLeftAxis`` and ``yRightAxis`` panes.
+
+    * Line color is selected automatically. To change color, click a job name or a key name, see :ref:`ui_edit_line`.
+
 * Select training job to show on a chart.
 * Reset setting button
 
     * Along with axis settings and selected checkboxes, log keys like ``main/loss`` are also cached on browser storage. The reset button restores cached key, too.
+
+
+.. _ui_edit_line:
+
+Edit a line
+~~~~~~~~~~~
+
+.. image:: ../../images/chart_edit_line.png
+
+Show detail information about the line, and enable to change the line color. To show this modal, click a job name or a key name on ``yLeftAxis`` (``yRightAxis``).
 
 
 .. _ui_training_job_table:
