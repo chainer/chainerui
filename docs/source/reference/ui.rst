@@ -33,6 +33,9 @@ Header
 Global settings
 ---------------
 
+.. image:: ../../images/global_setting.png
+   :scale: 50 %
+
 **Results polling rate**
 
 Results polling rate is intervals between updates of results on project pages. When you feel your browser is slow, try choosing a longer value.
@@ -88,7 +91,7 @@ Training job table
 
 .. image:: ../../images/result_table_condition_sample.png
 
-The training job table shows brief log information and experimental conditions. Job names are set to the directory name by default The name can be edit directory on the table. To unregister a result, click X button at the right end of the training job table.
+The training job table shows brief log information and experimental conditions. Job names are set to the directory name by default. The name can be edit directly on the table. To unregister a result, click X button at the right end of the training job table.
 
 .. note::
 
