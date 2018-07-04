@@ -59,6 +59,28 @@ Run ChainerUI server::
 
 Open http://localhost:5000/ and select "example-project", then show a chart of training logs.
 
+For more detailed usage, see :ref:`getstart`.
+
+
+Docker start
+------------
+
+Get Docker container from `DockerHub <https://hub.docker.com/r/chainer/chainerui/`__ and start ChainerUI server. The container has installed ChainerUI module, setup a DB and a command to start the server::
+
+  $ git clone https://github.com/chainer/chainerui.git
+  $ cd chainerui
+  $
+  $ # replace tag to the latest version number
+  $ docker pull chainer/chainerui:v0.4.0
+  $ docker run -d -p 5000:5000 -v $PWD:/projects --name chainerui chainer/chainerui:v0.4.0
+  $ # then ChainerUI server is running
+  $ # create project via HTTP
+  $ curl http://localhost:5000/api/v1/projects -X POST -H "Content-Type: application/json" -d '{"project":{"name":"example-project","path_name":"/projects/examples"}}'
+
+Open http://localhost:5000/ and select "example-project", then show a chart of training logs.
+
+Form more detailed usage, see :ref:`use_docker`.
+
 
 Browser compatibility
 ---------------------
