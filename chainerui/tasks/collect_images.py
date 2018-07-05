@@ -4,11 +4,11 @@ import json
 import os
 
 from chainerui import DB_SESSION
-from chainerui.models.data_content import DataContent
-from chainerui.models.data_info import DataInfo
+from chainerui.models.asset import Asset
+from chainerui.models.bindata import Bindata
 
 
-def collect_images(result, data_infos, force=False):
+def collect_images(result, assets, force=False):
     """collect images from meta file
 
     Example of returning structure will be:
@@ -30,32 +30,35 @@ def collect_images(result, data_infos, force=False):
     """
     path_name = result.path_name
     info_path = os.path.join(path_name, '.chainerui_images')
-    start_idx = len(data_infos)
+    start_idx = len(assets)
     if not os.path.isfile(info_path):
-        return data_infos
+        return assets
     file_modified_at = datetime.datetime.fromtimestamp(os.path.getmtime(
         info_path))
     if start_idx > 0:
-        if data_infos[-1].file_modified_at == file_modified_at:
-            return data_infos
+        if assets[-1].file_modified_at == file_modified_at:
+            return assets
 
     with open(info_path, 'r') as f:
         info_list = json.load(f, object_pairs_hook=OrderedDict)
 
     if len(info_list) < start_idx:
         start_idx = 0
-        data_infos = []
+        assets = []
 
     for base_info in info_list[start_idx:]:
         image_path = base_info.pop('images')
-        data_info = DataInfo.create(result.id, base_info, file_modified_at)
+        asset = Asset.create(
+            result_id=result.id, summary=base_info,
+            file_modified_at=file_modified_at)
         for key, path in image_path.items():
             with open(os.path.join(path_name, path), 'rb') as f:
                 data = f.read()
-            content = DataContent(data_info.id, path, key, data)
-            data_info.content_list.append(content)
-        data_infos.append(data_info)
+            content = Bindata(
+                asset_id=asset.id, name=path, tag=key, content=data)
+            asset.content_list.append(content)
+        assets.append(asset)
 
     DB_SESSION.commit()
 
-    return data_infos
+    return assets

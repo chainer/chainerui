@@ -95,17 +95,17 @@ class TestApp(unittest.TestCase):
         assert actual_img1.content_list[1].name == 'img1_2.png'
         assert actual_img1.content_list[1].tag == '1'
         assert actual_img1.content_list[1].content == b'text2'
-        actual_img1_meta = json.loads(actual_img1.meta_info)
-        assert 'iteration' in actual_img1_meta
-        assert actual_img1_meta['iteration'] == 1000
-        assert 'epoch' in actual_img1_meta
-        assert actual_img1_meta['epoch'] == 1
+        actual_img1_summary = json.loads(actual_img1.summary)
+        assert 'iteration' in actual_img1_summary
+        assert actual_img1_summary['iteration'] == 1000
+        assert 'epoch' in actual_img1_summary
+        assert actual_img1_summary['epoch'] == 1
 
         actual_img2 = actual_list[1]
-        actual_img2_meta = json.loads(actual_img2.meta_info)
-        assert 'images' not in actual_img2_meta
-        assert 'custom' in actual_img2_meta
-        assert actual_img2_meta['custom'] == 'test'
+        actual_img2_summary = json.loads(actual_img2.summary)
+        assert 'images' not in actual_img2_summary
+        assert 'custom' in actual_img2_summary
+        assert actual_img2_summary['custom'] == 'test'
         assert len(actual_img2.content_list) == 1
         assert actual_img2.content_list[0].name == 'img2.png'
         assert actual_img2.content_list[0].tag == 'seg'
@@ -113,17 +113,17 @@ class TestApp(unittest.TestCase):
 
     def test_collect_images_no_updated(self):
         result = self._get_dummy_result()
-        first_data_infos = collect_images.collect_images(result, [])
-        assert len(first_data_infos) == 2
+        first_assets = collect_images.collect_images(result, [])
+        assert len(first_assets) == 2
 
-        second_data_infos = collect_images.collect_images(
-            result, first_data_infos)
-        assert first_data_infos == second_data_infos
+        second_assets = collect_images.collect_images(
+            result, first_assets)
+        assert first_assets == second_assets
 
     def test_collect_images_updated(self):
         result = self._get_dummy_result()
-        first_data_infos = collect_images.collect_images(result, [])
-        assert len(first_data_infos) == 2
+        first_assets = collect_images.collect_images(result, [])
+        assert len(first_assets) == 2
 
         with open(os.path.join(self._dir, 'img1_3.png'), 'w') as f:
             f.write('text add')
@@ -140,25 +140,25 @@ class TestApp(unittest.TestCase):
         with open(self._info_path, 'w') as f:
             json.dump(meta, f)
 
-        second_data_infos = collect_images.collect_images(
-            result, first_data_infos)
-        assert len(second_data_infos) == 3
+        second_assets = collect_images.collect_images(
+            result, first_assets)
+        assert len(second_assets) == 3
 
-        actual_img3 = second_data_infos[2]
+        actual_img3 = second_assets[2]
         assert len(actual_img3.content_list) == 1
         assert actual_img3.content_list[0].name == 'img1_3.png'
         assert actual_img3.content_list[0].tag == '0'
         assert actual_img3.content_list[0].content == b'text add'
-        actual_img3_meta = json.loads(actual_img3.meta_info)
-        assert 'iteration' in actual_img3_meta
-        assert actual_img3_meta['iteration'] == 3000
-        assert 'epoch' in actual_img3_meta
-        assert actual_img3_meta['epoch'] == 3
+        actual_img3_summary = json.loads(actual_img3.summary)
+        assert 'iteration' in actual_img3_summary
+        assert actual_img3_summary['iteration'] == 3000
+        assert 'epoch' in actual_img3_summary
+        assert actual_img3_summary['epoch'] == 3
 
     def test_collect_images_new_meta(self):
         result = self._get_dummy_result()
-        first_data_infos = collect_images.collect_images(result, [])
-        assert len(first_data_infos) == 2
+        first_assets = collect_images.collect_images(result, [])
+        assert len(first_assets) == 2
 
         test_data = [
             {
@@ -172,10 +172,10 @@ class TestApp(unittest.TestCase):
         ]
         with open(self._info_path, 'w') as f:
             json.dump(test_data, f)
-        second_data_infos = collect_images.collect_images(
-            result, first_data_infos)
-        assert len(second_data_infos) == 1
-        actual_img1 = second_data_infos[0]
+        second_assets = collect_images.collect_images(
+            result, first_assets)
+        assert len(second_assets) == 1
+        actual_img1 = second_assets[0]
         assert len(actual_img1.content_list) == 2
         assert actual_img1.content_list[0].name == 'img1_1.png'
         assert actual_img1.content_list[0].tag == '0'
@@ -183,8 +183,8 @@ class TestApp(unittest.TestCase):
         assert actual_img1.content_list[1].name == 'img1_2.png'
         assert actual_img1.content_list[1].tag == '1'
         assert actual_img1.content_list[1].content == b'text2'
-        actual_img1_meta = json.loads(actual_img1.meta_info)
-        assert 'iteration' in actual_img1_meta
-        assert actual_img1_meta['iteration'] == 1001
-        assert 'epoch' in actual_img1_meta
-        assert actual_img1_meta['epoch'] == 1
+        actual_img1_summary = json.loads(actual_img1.summary)
+        assert 'iteration' in actual_img1_summary
+        assert actual_img1_summary['iteration'] == 1001
+        assert 'epoch' in actual_img1_summary
+        assert actual_img1_summary['epoch'] == 1

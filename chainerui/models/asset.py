@@ -12,38 +12,38 @@ from chainerui import DB_BASE
 from chainerui import DB_SESSION
 
 
-class DataInfo(DB_BASE):
-    __tablename__ = 'data_info'
+class Asset(DB_BASE):
+    __tablename__ = 'asset'
 
     id = Column(Integer, primary_key=True)
     result_id = Column(Integer, ForeignKey('result.id'))
-    meta_info = Column(String(512))
-    content_list = relationship('DataContent', cascade='all, delete-orphan')
+    summary = Column(String(512))
+    content_list = relationship('Bindata', cascade='all, delete-orphan')
     file_modified_at = Column(DateTime, default=datetime.datetime.now())
 
-    def __init__(self, result_id=None, meta_info=None, file_modified_at=None):
+    def __init__(self, result_id=None, summary=None, file_modified_at=None):
         self.result_id = result_id
-        self.meta_info = json.dumps(meta_info)
+        self.summary = json.dumps(summary)
         self.file_modified_at = file_modified_at
         self.content_list = []
 
     @classmethod
-    def create(cls, result_id=None, meta_info=None, file_modified_at=None):
+    def create(cls, result_id=None, summary=None, file_modified_at=None):
         """Initialize an instance and save it to db."""
-        data_info = cls(result_id, meta_info, file_modified_at)
+        asset = cls(result_id, summary, file_modified_at)
 
-        DB_SESSION.add(data_info)
+        DB_SESSION.add(asset)
         DB_SESSION.commit()
 
-        return data_info
+        return asset
 
     def __repr__(self):
-        return '<DataInfo id: %r, />' % (self.id)
+        return '<Asset id: %r, />' % (self.id)
 
     @property
     def serialize(self):
-        meta_info = json.loads(self.meta_info)
+        summary = json.loads(self.summary)
         return {
-            'train_info': meta_info,
+            'train_info': summary,
             'contents': {c.tag: c.serialize for c in self.content_list}
         }

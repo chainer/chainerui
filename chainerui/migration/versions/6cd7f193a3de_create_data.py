@@ -18,27 +18,28 @@ depends_on = None
 
 def upgrade():
     op.create_table(
-        'data_info',
+        'asset',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('result_id', sa.Integer(), nullable=False),
-        sa.Column('meta_info', sa.String(length=1024), nullable=True),
+        sa.Column('summary', sa.String(length=1024), nullable=True),
         sa.Column('file_modified_at', sa.DateTime(), nullable=False),
         sa.ForeignKeyConstraint(['result_id'], ['result.id'], ),
         sa.PrimaryKeyConstraint('id')
     )
     op.create_table(
-        'data_content',
+        'bindata',
         sa.Column('id', sa.Integer(), nullable=False),
-        sa.Column('data_info_id', sa.Integer(), nullable=False),
+        sa.Column('asset_id', sa.Integer(), nullable=False),
         sa.Column('name', sa.String(length=1024), nullable=False),
         sa.Column('tag', sa.String(length=1024), nullable=True),
+        sa.Column('note', sa.String(length=1024), nullable=True),
         # < 10MB
         sa.Column('content', sa.LargeBinary(length=1e7), nullable=False),
-        sa.ForeignKeyConstraint(['data_info_id'], ['data_info.id'], ),
+        sa.ForeignKeyConstraint(['asset_id'], ['asset.id'], ),
         sa.PrimaryKeyConstraint('id')
     )
 
 
 def downgrade():
-    op.drop_table('data_content')
-    op.drop_table('data_info')
+    op.drop_table('bindata')
+    op.drop_table('asset')
