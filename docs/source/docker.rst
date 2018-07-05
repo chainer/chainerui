@@ -9,11 +9,11 @@ ChainerUI provides ``Dockerfile`` from version 0.4.0 and ChainerUI server can be
 Get Docker container
 --------------------
 
-The Docker container can be got from `DockerHub <https://hub.docker.com/r/chainer/chainerui/>`__ or built yourself. When getting the container from DockerHub, set the latest version to the tag. The below code gets version 0.4.0::
+The Docker container can be got from `DockerHub <https://hub.docker.com/r/chainer/chainerui/>`__ or built yourself. When getting the container from DockerHub, set the latest version to the tag. The below code gets the version 0.4.0 container::
 
   $ docker pull chainer/chainerui:v0.4.0
 
-When building Docker container yourself, user ``Dockerfile`` placed in docker directory::
+When building Docker container yourself, use ``Dockerfile`` placed in docker directory::
 
   $ git clone https://github.com/chainer/chainerui.git
   $ cd chainerui
@@ -23,7 +23,7 @@ When building Docker container yourself, user ``Dockerfile`` placed in docker di
 Run ChainerUI server
 --------------------
 
-The Docker container has already setup a command to start the server, and requires port number to be linked (``-p`` option) and volume to be mounted (``-v`` option)::
+The Docker container has already setup a command to start the server, and requires port number to be linked to host (``-p`` option) and volume to be mounted (``-v`` option)::
 
   $ docker run -d -p 5000:5000 -v /path/to/job:/projects --name chainerui chainer/chainerui:v0.4.0
 
@@ -48,7 +48,7 @@ When restart the container::
 Create a project
 ----------------
 
-To store data such as logs and show a log chart, a project with a result directory path is needed. There are 2 way to register projects to the server, via HTTP or via ``docker exec``. For more detail about project function, see :ref:`getstart_create_project`
+To store data such as logs and show a log chart, a project with a result directory path is needed. There are 2 ways to register projects to the server, via HTTP or via ``docker exec``. For more detail about project function, see :ref:`getstart_create_project`
 
 .. note::
 
@@ -62,7 +62,7 @@ To store data such as logs and show a log chart, a project with a result directo
               |--- result2
                      |--- log
 
-   The project's path is ``/projects/results``, viewed from guest OS.
+   ``/path/to/job`` is mounted to ``/projects`` in guest OS, so the project's path is ``/projects/results``, viewed from guest OS.
 
 
 Via HTTP
