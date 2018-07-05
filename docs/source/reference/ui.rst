@@ -33,6 +33,9 @@ Header
 Global settings
 ---------------
 
+.. image:: ../../images/global_setting.png
+   :scale: 50 %
+
 **Results polling rate**
 
 Results polling rate is intervals between updates of results on project pages. When you feel your browser is slow, try choosing a longer value.
@@ -75,10 +78,23 @@ Show training logs and experimental conditions.
     * Drop-down list shows only keys existed in ``log`` files.
 
 * Select values by ``yLeftAxis`` and ``yRightAxis`` panes.
+
+    * Line color is selected automatically. To change color, click a job name or a key name, see :ref:`ui_edit_line`.
+
 * Select training job to show on a chart.
 * Reset setting button
 
     * Along with axis settings and selected checkboxes, log keys like ``main/loss`` are also cached on browser storage. The reset button restores cached key, too.
+
+
+.. _ui_edit_line:
+
+Edit a line
+~~~~~~~~~~~
+
+.. image:: ../../images/chart_edit_line.png
+
+Show detail information about the line, and enable to change the line color. To show this modal, click a job name or a key name on ``yLeftAxis`` (``yRightAxis``).
 
 
 .. _ui_training_job_table:
@@ -88,7 +104,7 @@ Training job table
 
 .. image:: ../../images/result_table_condition_sample.png
 
-The training job table shows brief log information and experimental conditions. Job names are set to the directory name by default The name can be edit directory on the table. To unregister a result, click X button at the right end of the training job table.
+The training job table shows brief log information and experimental conditions. Job names are set to the directory name by default. The name can be edit directly on the table. To unregister a result, click X button at the right end of the training job table.
 
 .. note::
 

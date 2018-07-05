@@ -82,6 +82,10 @@ ChainerUI plots training log values read from  the ``log`` files and shows the t
    * `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension sets ``epoch``, ``iteration`` and ``elapsed_time`` automatically.
    * :ref:`chainerui's LogReport <module_log_report>` sets ``elapsed_time`` automatically. Other x-axis keys have to be set manually if necessary.
 
+.. note::
+
+   When retrying a training job with a same directory, ``log`` file will be truncated and created, then the job overwrites logs the file. But ChainerUI cannot distinguish whether the ``log`` file is updated or recreated. ChainerUI recommends to create another directory for output result on retrying.
+
 Setup example from a brief  `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
 
 .. code-block:: python
