@@ -8,6 +8,7 @@ ChainerUI: User interface for Chainer
 
    install
    getstart
+   docker
 
 .. toctree::
    :maxdepth: 1
@@ -24,4 +25,5 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`search`
+
 .. * :ref:`modindex`

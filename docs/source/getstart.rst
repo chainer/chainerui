@@ -12,6 +12,8 @@ Please setup database at first::
   $ chainerui db upgrade
 
 
+.. _getstart_create_project:
+
 Create a project
 ----------------
 
