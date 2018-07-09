@@ -1,6 +1,6 @@
+import chainer
 import unittest
 
-import chainer
 import numpy as np
 
 from chainerui import summary
@@ -11,18 +11,7 @@ class TestImage(unittest.TestCase):
     def tearDown(self):
         summary.chainerui_image_observer.observation = {}
 
-    def test_image_not_set_reporter(self):
-        img = np.zeros(750).reshape((10, 5, 5, 3))
-
-        with self.assertRaises(IndexError) as e:
-            summary.image(img, 'test', ch_axis=-1)
-        assert 'out of range' in str(e.exception)
-
     def test_image_error(self):
-        reporter = chainer.Reporter()
-        observer = summary.chainerui_image_observer
-        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
-
         img = np.zeros(10)
         with self.assertRaises(ValueError) as e:
             summary.image(img, 'test', batched=False)
@@ -34,14 +23,11 @@ class TestImage(unittest.TestCase):
         assert 'must be 3 or 4' in str(e.exception)
 
     def test_image_bchw(self):
-        reporter = chainer.Reporter()
         observer = summary.chainerui_image_observer
-        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
 
         # unstuck
         img = np.zeros(10*3*5*5).reshape((10, 3, 5, 5))
-        with reporter.scope(observer.observation):
-            summary.image(img, 'test')
+        summary.image(img, 'test')
         assert len(observer.observation) == 1
         key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
         assert key in observer.observation
@@ -51,22 +37,18 @@ class TestImage(unittest.TestCase):
         # stuck, overwrite
         img2 = np.zeros(10*3*5*5).reshape((10, 3, 5, 5))
         img2[0, 0, 0, 0] = 10
-        with reporter.scope(observer.observation):
-            summary.image(img2, 'test', row=2)
+        summary.image(img2, 'test', row=2)
         assert len(observer.observation) == 1
         expected_img2 = np.zeros(10*3*5*5).reshape((10, 25, 3))
         expected_img2[0, 0, 0] = 10
         assert np.allclose(observer.observation[key]['image'], expected_img2)
 
     def test_image_bhwc(self):
-        reporter = chainer.Reporter()
         observer = summary.chainerui_image_observer
-        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
 
         # unstuck
         img = np.zeros(10*5*5*3).reshape((10, 5, 5, 3))
-        with reporter.scope(observer.observation):
-            summary.image(img, 'test', ch_axis=-1)
+        summary.image(img, 'test', ch_axis=-1)
         assert len(observer.observation) == 1
         key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
         assert key in observer.observation
@@ -76,8 +58,7 @@ class TestImage(unittest.TestCase):
         # stuck
         img2 = np.zeros(10*5*5*3).reshape((10, 5, 5, 3))
         img2[0, 0, 0, 0] = 10
-        with reporter.scope(observer.observation):
-            summary.image(img2, 'test2', ch_axis=-1, row=2)
+        summary.image(img2, 'test2', ch_axis=-1, row=2)
         assert len(observer.observation) == 2
         key2 = summary.CHAINERUI_IMAGE_PREFIX+'/test2'
         assert key2 in observer.observation
@@ -86,14 +67,11 @@ class TestImage(unittest.TestCase):
         assert np.allclose(observer.observation[key2]['image'], expected_img2)
 
     def test_image_bhw_no_name(self):
-        reporter = chainer.Reporter()
         observer = summary.chainerui_image_observer
-        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
 
         # unstuck
         img = np.zeros(10*5*5).reshape((10, 5, 5))
-        with reporter.scope(observer.observation):
-            summary.image(img)
+        summary.image(img)
         assert len(observer.observation) == 1
         key = summary.CHAINERUI_IMAGE_PREFIX+'/0'
         assert key in observer.observation
@@ -103,22 +81,18 @@ class TestImage(unittest.TestCase):
         # stuck
         img2 = np.zeros(10*5*5).reshape((10, 5, 5))
         img2[0, 0, 0] = 10
-        with reporter.scope(observer.observation):
-            summary.image(img2, row=2)
+        summary.image(img2, row=2)
         assert len(observer.observation) == 1
         expected_img2 = np.zeros(10*5*5).reshape((10, 25))
         expected_img2[0, 0] = 10
         assert np.allclose(observer.observation[key]['image'], expected_img2)
 
     def test_image_chw(self):
-        reporter = chainer.Reporter()
         observer = summary.chainerui_image_observer
-        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
 
         img = np.zeros(3*5*5).reshape((3, 5, 5))
         img = chainer.Variable(img)
-        with reporter.scope(observer.observation):
-            summary.image(img, 'test', ch_axis=0, batched=False)
+        summary.image(img, 'test', ch_axis=0, batched=False)
         assert len(observer.observation) == 1
         key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
         assert key in observer.observation
@@ -127,14 +101,11 @@ class TestImage(unittest.TestCase):
         assert 'mode' not in observer.observation[key]
 
     def test_image_hwc_hsv(self):
-        reporter = chainer.Reporter()
         observer = summary.chainerui_image_observer
-        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
 
         img = np.zeros(5*5*3).reshape((5, 5, 3))
         img = chainer.Variable(img)
-        with reporter.scope(observer.observation):
-            summary.image(img, 'test', batched=False, ch_axis=-1, mode='HSV')
+        summary.image(img, 'test', batched=False, ch_axis=-1, mode='HSV')
         assert len(observer.observation) == 1
         key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
         assert key in observer.observation
@@ -143,14 +114,11 @@ class TestImage(unittest.TestCase):
         assert observer.observation[key]['mode'] == 'hsv'
 
     def test_image_hw(self):
-        reporter = chainer.Reporter()
         observer = summary.chainerui_image_observer
-        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
 
         img = np.zeros(5*10).reshape((5, 10))
         img = chainer.Variable(img)
-        with reporter.scope(observer.observation):
-            summary.image(img, 'test', batched=False)
+        summary.image(img, 'test', batched=False)
         assert len(observer.observation) == 1
         key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
         assert key in observer.observation
