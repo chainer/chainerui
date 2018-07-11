@@ -2,6 +2,7 @@ from flask import jsonify
 from flask.views import MethodView
 
 from chainerui import DB_SESSION
+from chainerui.models.asset import Asset
 from chainerui.models.project import Project
 from chainerui.models.result import Result
 from chainerui.tasks.collect_images import collect_images
@@ -31,6 +32,12 @@ class ResultImageAPI(MethodView):
                 'message': 'No interface defined for URL.'
             }), 404
 
-        images = collect_images(result.id)
+        assets = DB_SESSION.query(Asset).\
+            filter_by(result_id=result_id).\
+            order_by(Asset.id).all()
+        if assets is None:
+            assets = []
 
-        return jsonify({'images': images})
+        images = collect_images(result, assets)
+
+        return jsonify({'images': [image.serialize for image in images]})

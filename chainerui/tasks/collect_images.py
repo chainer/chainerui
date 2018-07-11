@@ -1,30 +1,22 @@
-from base64 import b64encode
+from collections import OrderedDict
+import datetime
 import json
 import os
 
 from chainerui import DB_SESSION
-from chainerui.models.result import Result
+from chainerui.models.asset import Asset
+from chainerui.models.bindata import Bindata
 
 
-def _serialize(path):
-    with open(path, 'rb') as f:
-        data = f.read()
-    return b64encode(data).decode('utf-8')
-
-
-def _make_src_tag(src):
-    return 'data:image/png;base64,' + src
-
-
-def collect_images(result_id):
+def collect_images(result, assets, force=False):
     """collect images from meta file
 
-    Example of returning structure is:
+    Example of returning structure will be:
       [
         {
           "contents": {
-            "name1": ["data:image/png;base64,...","data:image/png;base64,..."],
-            "name2": ["data:image/png;base64,...","data:image/png;base64,..."]
+            "name1": "data:image/png;base64,...",
+            "name2": "data:image/png;base64,..."
           },
           "train_info" {
             "iteration": 1000,
@@ -36,25 +28,37 @@ def collect_images(result_id):
         }
       ]
     """
-    current_result = DB_SESSION.query(Result).filter_by(id=result_id).first()
-
-    path_name = current_result.path_name
+    path_name = result.path_name
     info_path = os.path.join(path_name, '.chainerui_images')
+    start_idx = len(assets)
     if not os.path.isfile(info_path):
-        return []
+        return assets
+    file_modified_at = datetime.datetime.fromtimestamp(os.path.getmtime(
+        info_path))
+    if start_idx > 0:
+        if assets[-1].file_modified_at == file_modified_at:
+            return assets
+
     with open(info_path, 'r') as f:
-        info_list = json.load(f)
+        info_list = json.load(f, object_pairs_hook=OrderedDict)
 
-    images_list = []
-    for base_info in info_list:
-        image_paths = base_info.pop('images')
-        images = {'contents': {}, 'train_info': {}}
-        for key, paths in image_paths.items():
-            img_strs = [_make_src_tag(
-                _serialize(os.path.join(path_name, path))) for path in paths]
-            images['contents'][key] = img_strs
-        for k, v in base_info.items():
-            images['train_info'][k] = v
-        images_list.append(images)
+    if len(info_list) < start_idx:
+        start_idx = 0
+        assets = []
 
-    return images_list
+    for base_info in info_list[start_idx:]:
+        image_path = base_info.pop('images')
+        asset = Asset.create(
+            result_id=result.id, summary=base_info,
+            file_modified_at=file_modified_at)
+        for key, path in image_path.items():
+            with open(os.path.join(path_name, path), 'rb') as f:
+                data = f.read()
+            content = Bindata(
+                asset_id=asset.id, name=path, tag=key, content=data)
+            asset.content_list.append(content)
+        assets.append(asset)
+
+    DB_SESSION.commit()
+
+    return assets

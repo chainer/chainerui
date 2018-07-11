@@ -34,6 +34,11 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True):
        >>> summary.image(x, name='test')  # images are tiled as 1x10
        >>> summary.image(x, name='test', row=5)  # images are tiled as 2x5
        >>>
+       >>> x.shape  # = [C, H, W]
+       (3, 5, 5)
+       >>> # need to set as a non-batched image and channel axis explicitly
+       >>> summary.image(x, name='test', ch_axis=0, batched=False)
+       >>>
        >>> x.shape  # = [B, H, W, C]
        (10, 5, 5, 3)
        >>> # need to set channel axis explicitly
@@ -71,37 +76,55 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True):
         batched (bool): if the image is not batched, set `False`.
     """
 
+    if isinstance(images, chainer.Variable):
+        images = images.data
+    images = cuda.to_cpu(images)
     ndim = images.ndim
     if batched:
         if not (ndim == 3 or ndim == 4):
             raise ValueError(
                 'Number of array dimension %d must be 3 or 4', ndim)
-        if ndim == 3:
-            ch_axis = None
+
+        if ndim == 4:
+            images = _move_ch_to_last(images, ch_axis)
+            B, H, W, C = images.shape
+            if row == 0:
+                row = B
+            col = B // row
+            images = images.reshape(row, col, H, W, C)
+            images = images.transpose(0, 2, 1, 3, 4)
+            stuck_image = images.reshape(row * H, col * W, C)
+        else:  # ndim == 3
+            B, H, W = images.shape
+            if row == 0:
+                row = B
+            col = B // row
+            images = images.reshape(row, col, H, W)
+            images = images.transpose(0, 2, 1, 3)
+            stuck_image = images.reshape(row * H, col * W)
     else:
         if not (ndim == 2 or ndim == 3):
             raise ValueError(
                 'Number of array dimension %d must be 2 or 3', ndim)
-        if ndim == 2:
-            ch_axis = None
-        images = images.reshape(1, *images.shape)
+        if ndim == 3:
+            images = _move_ch_to_last(images, ch_axis)
+        stuck_image = images
+
+    if name is None:
+        # TODO(disktnk): support tupled image and increment automatically
+        name = '0'
 
     current_reporter = reporter.get_current_reporter()
     observer = chainerui_image_observer
     with reporter.report_scope(observer.observation):
-        if name is None:
-            # TODO(disktnk): support tupled image and increment automatically
-            name = '0'
-        if isinstance(images, chainer.Variable):
-            images = images.data
-        images = cuda.to_cpu(images)
-        if ch_axis is not None and ch_axis != -1:
-            roll_ax = np.append(np.delete(np.arange(
-                images.ndim), ch_axis), ch_axis)
-            images = images.transpose(roll_ax)
-        value = dict(array=images)
-        if row > 0:
-            value['row'] = row
+        value = {'image': stuck_image}
         if mode is not None:
             value['mode'] = mode.lower()
         current_reporter.report({name: value}, observer)
+
+
+def _move_ch_to_last(x, axis):
+    if axis == -1:
+        return x
+    rolled_ax = np.append(np.delete(np.arange(x.ndim), axis), axis)
+    return x.transpose(rolled_ax)

@@ -33,60 +33,125 @@ class TestImage(unittest.TestCase):
             summary.image(img, 'test')
         assert 'must be 3 or 4' in str(e.exception)
 
-    def test_image(self):
+    def test_image_bchw(self):
         reporter = chainer.Reporter()
         observer = summary.chainerui_image_observer
         reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
 
-        img = np.zeros(250).reshape((10, 5, 5))
+        # unstuck
+        img = np.zeros(10*3*5*5).reshape((10, 3, 5, 5))
         with reporter.scope(observer.observation):
             summary.image(img, 'test')
         assert len(observer.observation) == 1
         key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
         assert key in observer.observation
-        assert np.allclose(observer.observation[key]['array'], img.reshape(
-            1, 10, 5, 5))
+        expected_img = np.zeros(10*3*5*5).reshape((50, 5, 3))
+        assert np.allclose(observer.observation[key]['image'], expected_img)
 
-        img2 = np.zeros(750).reshape((10, 5, 5, 3))
-        img2[0, 0, 0, 1] = 1
+        # stuck, overwrite
+        img2 = np.zeros(10*3*5*5).reshape((10, 3, 5, 5))
+        img2[0, 0, 0, 0] = 10
         with reporter.scope(observer.observation):
-            summary.image(img2, 'test', ch_axis=-1)
+            summary.image(img2, 'test', row=2)
         assert len(observer.observation) == 1
+        expected_img2 = np.zeros(10*3*5*5).reshape((10, 25, 3))
+        expected_img2[0, 0, 0] = 10
+        assert np.allclose(observer.observation[key]['image'], expected_img2)
+
+    def test_image_bhwc(self):
+        reporter = chainer.Reporter()
+        observer = summary.chainerui_image_observer
+        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
+
+        # unstuck
+        img = np.zeros(10*5*5*3).reshape((10, 5, 5, 3))
+        with reporter.scope(observer.observation):
+            summary.image(img, 'test', ch_axis=-1)
+        assert len(observer.observation) == 1
+        key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
         assert key in observer.observation
-        assert np.allclose(observer.observation[key]['array'], img2)
-        assert 'row' not in observer.observation[key]
-        assert 'mode' not in observer.observation[key]
+        expected_img = np.zeros(10*3*5*5).reshape((50, 5, 3))
+        assert np.allclose(observer.observation[key]['image'], expected_img)
 
-        img3 = np.zeros(750).reshape((10, 5, 5, 3))
-        img3[0, 0, 0, 2] = 1
-        img3 = chainer.Variable(img3)
+        # stuck
+        img2 = np.zeros(10*5*5*3).reshape((10, 5, 5, 3))
+        img2[0, 0, 0, 0] = 10
         with reporter.scope(observer.observation):
-            summary.image(img3, row=5, ch_axis=-1, mode='hsv')
+            summary.image(img2, 'test2', ch_axis=-1, row=2)
         assert len(observer.observation) == 2
-        none_key = summary.CHAINERUI_IMAGE_PREFIX+'/0'
-        assert none_key in observer.observation
-        assert np.allclose(observer.observation[none_key]['array'], img3.data)
-        assert observer.observation[none_key]['row'] == 5
-        assert observer.observation[none_key]['mode'] == 'hsv'
+        key2 = summary.CHAINERUI_IMAGE_PREFIX+'/test2'
+        assert key2 in observer.observation
+        expected_img2 = np.zeros(10*5*5*3).reshape((10, 25, 3))
+        expected_img2[0, 0, 0] = 10
+        assert np.allclose(observer.observation[key2]['image'], expected_img2)
 
-        img4 = np.zeros(750).reshape((10, 3, 5, 5))
-        img4[0, 0, 1, 0] = 1
-        with reporter.scope(observer.observation):
-            summary.image(img4, 'test')
-        assert len(observer.observation) == 2
-        expected_img4 = img4.transpose(0, 2, 3, 1)
-        assert np.allclose(observer.observation[key]['array'], expected_img4)
-        assert 'row' not in observer.observation[key]
-        assert 'mode' not in observer.observation[key]
+    def test_image_bhw_no_name(self):
+        reporter = chainer.Reporter()
+        observer = summary.chainerui_image_observer
+        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
 
-        img5 = np.zeros(25).reshape((5, 5))
-        img5[0, 0] = 1
+        # unstuck
+        img = np.zeros(10*5*5).reshape((10, 5, 5))
         with reporter.scope(observer.observation):
-            summary.image(img5, 'test2', batched=False)
-        assert len(observer.observation) == 3
-        key = summary.CHAINERUI_IMAGE_PREFIX+'/test2'
+            summary.image(img)
+        assert len(observer.observation) == 1
+        key = summary.CHAINERUI_IMAGE_PREFIX+'/0'
         assert key in observer.observation
-        assert np.allclose(observer.observation[key]['array'], img5.reshape(
-            1, 5, 5))
-        assert 'row' not in observer.observation[key]
+        expected_img = np.zeros(10*5*5).reshape((50, 5))
+        assert np.allclose(observer.observation[key]['image'], expected_img)
+
+        # stuck
+        img2 = np.zeros(10*5*5).reshape((10, 5, 5))
+        img2[0, 0, 0] = 10
+        with reporter.scope(observer.observation):
+            summary.image(img2, row=2)
+        assert len(observer.observation) == 1
+        expected_img2 = np.zeros(10*5*5).reshape((10, 25))
+        expected_img2[0, 0] = 10
+        assert np.allclose(observer.observation[key]['image'], expected_img2)
+
+    def test_image_chw(self):
+        reporter = chainer.Reporter()
+        observer = summary.chainerui_image_observer
+        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
+
+        img = np.zeros(3*5*5).reshape((3, 5, 5))
+        img = chainer.Variable(img)
+        with reporter.scope(observer.observation):
+            summary.image(img, 'test', ch_axis=0, batched=False)
+        assert len(observer.observation) == 1
+        key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
+        assert key in observer.observation
+        expected_img = np.zeros(5*5*3).reshape((5, 5, 3))
+        assert np.allclose(observer.observation[key]['image'], expected_img)
         assert 'mode' not in observer.observation[key]
+
+    def test_image_hwc_hsv(self):
+        reporter = chainer.Reporter()
+        observer = summary.chainerui_image_observer
+        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
+
+        img = np.zeros(5*5*3).reshape((5, 5, 3))
+        img = chainer.Variable(img)
+        with reporter.scope(observer.observation):
+            summary.image(img, 'test', batched=False, ch_axis=-1, mode='HSV')
+        assert len(observer.observation) == 1
+        key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
+        assert key in observer.observation
+        assert np.allclose(observer.observation[key]['image'], img.data)
+        assert 'mode' in observer.observation[key]
+        assert observer.observation[key]['mode'] == 'hsv'
+
+    def test_image_hw(self):
+        reporter = chainer.Reporter()
+        observer = summary.chainerui_image_observer
+        reporter.add_observer(summary.CHAINERUI_IMAGE_PREFIX, observer)
+
+        img = np.zeros(5*10).reshape((5, 10))
+        img = chainer.Variable(img)
+        with reporter.scope(observer.observation):
+            summary.image(img, 'test', batched=False)
+        assert len(observer.observation) == 1
+        key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
+        assert key in observer.observation
+        assert np.allclose(observer.observation[key]['image'], img.data)
