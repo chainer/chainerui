@@ -1,6 +1,6 @@
-import chainer
 import unittest
 
+import chainer
 import numpy as np
 
 from chainerui import summary
