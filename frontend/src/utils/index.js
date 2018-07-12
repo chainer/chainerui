@@ -172,7 +172,7 @@ export const getLogData = (results, stats, projectConfig) => {
       });
     });
   });
-  const data = Object.keys(dataDict).map((key) => (dataDict[key]));
+  const data = Object.values(dataDict);
 
   return data;
 };
