@@ -14,7 +14,8 @@ import {
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
   updateXAxisKey,
-  updateAxisScaleRangeType, updateAxisScaleRangeNumber
+  updateAxisScaleRangeType, updateAxisScaleRangeNumber,
+  createCommand
 } from '../actions';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
@@ -116,6 +117,7 @@ class PlotContainer extends React.Component {
                 globalConfig={globalConfig}
                 onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
+                onCommandSubmit={this.props.createCommand}
               />
             </div>
           </div>
@@ -207,6 +209,7 @@ PlotContainer.propTypes = {
   getResultList: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
   clearResultList: PropTypes.func.isRequired,
+  createCommand: PropTypes.func.isRequired,
   resetProjectConfig: PropTypes.func.isRequired,
   updateLineInAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
@@ -229,6 +232,7 @@ export default connect(mapStateToProps, {
   getResultList,
   updateResult,
   clearResultList,
+  createCommand,
   resetProjectConfig,
   updateLineInAxis,
   updateAxisScale,

@@ -1,171 +1,156 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
-import { Link } from 'react-router';
-import { Button, Badge } from 'reactstrap';
+
 import {
   argValue2string,
   getLastLogDict,
-  urlForResultDetail,
   sortMethod
 } from '../utils';
 
-import UnregisterButton from './experiments_table_cell/UnregisterButton';
 import ResultName from './experiments_table_cell/ResultName';
 import ToggleResult from './experiments_table_cell/ToggleResult';
+import SubComponent from './experiments_table_cell/SubComponent';
 
 const emptyStr = '-';
 
-const ExperimentsTable = (props) => {
-  const {
-    project,
-    results = {}, stats,
-    projectConfig,
-    globalConfig,
-    onResultsConfigSelectUpdate, onResultUpdate
-  } = props;
-  const { argKeys, xAxisKeys } = stats;
-  const { resultsConfig = {} } = projectConfig;
+class ExperimentsTable extends React.Component {
+  constructor() {
+    super();
+    this.state = { expanded: {} };
+  }
 
-  const resultKeys = Object.keys(results);
-  const resultCount = resultKeys.length;
-  const visibleResultCount = resultKeys
-    .filter((resultId) => !(resultsConfig[resultId] || {}).hidden).length;
-  const isPartialSelect = visibleResultCount > 0 && visibleResultCount < resultCount;
+  render() {
+    const {
+      project,
+      results = {}, stats,
+      projectConfig,
+      globalConfig,
+      onResultsConfigSelectUpdate, onResultUpdate, onCommandSubmit
+    } = this.props;
+    const { argKeys, xAxisKeys } = stats;
+    const { resultsConfig = {} } = projectConfig;
 
-  const handleResultsConfigSelectChange = (evt) => {
-    resultKeys.forEach((resultId) => {
-      onResultsConfigSelectUpdate(project.id, resultId, !evt.target.checked);
-    });
-  };
+    const resultKeys = Object.keys(results);
+    const resultCount = resultKeys.length;
+    const visibleResultCount = resultKeys
+      .filter((resultId) => !(resultsConfig[resultId] || {}).hidden).length;
+    const isPartialSelect = visibleResultCount > 0 && visibleResultCount < resultCount;
 
-  const defaultStyle = {
-    textAlign: 'right'
-  };
-
-  const resultList = resultKeys.map((resultId) => results[resultId]);
-
-  const logs = xAxisKeys.map((logKey) => ({
-    Header: logKey,
-    id: `logKey${logKey}`,
-    accessor: (p) => {
-      const lastLogDict = getLastLogDict(p);
-      if (logKey === 'elapsed_time') {
-        return lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2);
-      }
-      return lastLogDict[logKey];
-    },
-    style: defaultStyle
-  }));
-
-  const argsList = argKeys.map((argKey) => ({
-    Header: argKey,
-    id: argKey,
-    accessor: (p) => {
-      const { args } = p;
-      const argDict = {};
-      args.forEach((arg) => {
-        argDict[arg.key] = arg.value;
+    const handleResultsConfigSelectChange = (evt) => {
+      resultKeys.forEach((resultId) => {
+        onResultsConfigSelectUpdate(project.id, resultId, !evt.target.checked);
       });
-      return argValue2string(argDict[argKey]);
-    },
-    style: defaultStyle
-  }));
+    };
 
-  const columns = [
-    {
-      Header: <input
-        type="checkbox"
-        checked={visibleResultCount > 0}
-        style={{ opacity: isPartialSelect ? 0.5 : 1 }}
-        onChange={handleResultsConfigSelectChange}
-      />,
-      Cell: (p) => {
-        const { original } = p;
-        const { id } = original;
-        return (<ToggleResult
-          project={project}
-          result={original}
-          resultConfig={resultsConfig[id]}
-          onResultsConfigSelectUpdate={onResultsConfigSelectUpdate}
-        />);
-      },
-      className: 'text-center',
-      sortable: false,
-      minWidth: 40
-    },
-    {
-      Header: 'name',
-      id: 'name',
-      Cell: (p) => {
-        const { original } = p;
-        return (<ResultName
-          project={project}
-          result={original}
-          isResultNameAlignRight={globalConfig.isResultNameAlignRight}
-          onResultUpdate={onResultUpdate}
-        />);
-      },
-      minWidth: 250
-    },
-    {
-      Header: 'last logs',
-      columns: logs
-    },
-    {
-      Header: 'args',
-      columns: argsList
-    },
-    {
-      Header: '',
-      Cell: (p) => {
-        const { original } = p;
-        return (<UnregisterButton
-          project={project}
-          result={original}
-          onResultUpdate={onResultUpdate}
-        />);
-      },
-      sortable: false,
-      minWidth: 30
-    }
-  ];
+    const defaultStyle = {
+      textAlign: 'right'
+    };
 
-  return (
-    <ReactTable
-      data={resultList}
-      columns={columns}
-      showPagination={false}
-      minRows={3}
-      pageSize={resultList.length}
-      defaultSortMethod={sortMethod}
-      defaultSorted={[
-        {
-          id: 'result_id'
+    const resultList = resultKeys.map((resultId) => results[resultId]);
+
+    const logs = xAxisKeys.map((logKey) => ({
+      Header: logKey,
+      id: `logKey${logKey}`,
+      accessor: (p) => {
+        const lastLogDict = getLastLogDict(p);
+        if (logKey === 'elapsed_time') {
+          return lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2);
         }
-      ]}
-      freezeWhenExpanded
-      SubComponent={(p) => {
-        const { original } = p;
-        const { id } = original;
-        return (
-          <div style={{ padding: '1rem' }}>
-            <p>
-              <Button
-                tag={Link}
-                to={urlForResultDetail(project.id, id)}
-                color="primary"
-              >
-                Detail
-              </Button>
-            </p>
-            <Badge color="secondary" pill>{`result_id: ${id}`}</Badge>
-          </div>
-        );
-      }}
-    />
-  );
-};
+        return lastLogDict[logKey];
+      },
+      style: defaultStyle
+    }));
+
+    const argsList = argKeys.map((argKey) => ({
+      Header: argKey,
+      id: argKey,
+      accessor: (p) => {
+        const { args } = p;
+        const argDict = {};
+        args.forEach((arg) => {
+          argDict[arg.key] = arg.value;
+        });
+        return argValue2string(argDict[argKey]);
+      },
+      style: defaultStyle
+    }));
+
+    const columns = [
+      {
+        Header: <input
+          type="checkbox"
+          checked={visibleResultCount > 0}
+          style={{ opacity: isPartialSelect ? 0.5 : 1 }}
+          onChange={handleResultsConfigSelectChange}
+        />,
+        Cell: (p) => {
+          const { original } = p;
+          const { id } = original;
+          return (<ToggleResult
+            project={project}
+            result={original}
+            resultConfig={resultsConfig[id]}
+            onResultsConfigSelectUpdate={onResultsConfigSelectUpdate}
+          />);
+        },
+        className: 'text-center',
+        sortable: false,
+        minWidth: 40
+      },
+      {
+        Header: 'name',
+        id: 'name',
+        Cell: (p) => {
+          const { original } = p;
+          return (<ResultName
+            project={project}
+            result={original}
+            isResultNameAlignRight={globalConfig.isResultNameAlignRight}
+            onResultUpdate={onResultUpdate}
+          />);
+        },
+        minWidth: 250
+      },
+      {
+        Header: 'last logs',
+        columns: logs
+      },
+      {
+        Header: 'args',
+        columns: argsList
+      }
+    ];
+
+    return (
+      <ReactTable
+        data={resultList}
+        columns={columns}
+        showPagination={false}
+        minRows={3}
+        expanded={this.state.expanded}
+        onExpandedChange={(expanded) => this.setState({ expanded })}
+        pageSize={resultList.length}
+        defaultSortMethod={sortMethod}
+        defaultSorted={[
+          {
+            id: 'result_id'
+          }
+        ]}
+        freezeWhenExpanded
+        SubComponent={(p) => (
+          <SubComponent
+            original={p.original}
+            project={project}
+            onResultUpdate={onResultUpdate}
+            onResultUnregistered={() => this.setState({ expanded: {} })}
+            onCommandSubmit={onCommandSubmit}
+          />
+        )}
+      />
+    );
+  }
+}
 
 ExperimentsTable.propTypes = {
   project: PropTypes.shape({
@@ -193,7 +178,8 @@ ExperimentsTable.propTypes = {
     xAxisKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
-  onResultUpdate: PropTypes.func.isRequired
+  onResultUpdate: PropTypes.func.isRequired,
+  onCommandSubmit: PropTypes.func.isRequired
 };
 ExperimentsTable.defaultProps = {
   results: {},
