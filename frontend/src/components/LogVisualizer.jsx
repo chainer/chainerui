@@ -185,10 +185,10 @@ class LogVisualizer extends React.Component {
           </LineChart>
         </ResponsiveContainer>
         <div>
-          <Button size="xs" className="m-1" onClick={this.handleClickDownloadJSON}>
+          <Button size="sm" className="m-1" onClick={this.handleClickDownloadJSON}>
             <span className="mx-1 oi oi-data-transfer-download" />json
           </Button>
-          <Button size="xs" className="m-1" onClick={this.handleClickDownloadPNG}>
+          <Button size="sm" className="m-1" onClick={this.handleClickDownloadPNG}>
             <span className="mx-1 oi oi-data-transfer-download" />png
           </Button>
         </div>
