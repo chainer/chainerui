@@ -50,29 +50,6 @@ const buildLineElem = (line, axisName) => {
   );
 };
 
-const buildLineElems = (
-  selectedResults, selectedLogKeys, axisName, results, projectConfig, logKeys
-) => {
-  const { lines = {} } = projectConfig;
-
-  const lineElems = [];
-  selectedResults.forEach((resultId) => {
-    const result = results[resultId];
-    if (!result) {
-      return;
-    }
-    selectedLogKeys.forEach((logKey) => {
-      const line = lines[line2key({ resultId, logKey })] ||
-        createLine(resultId, logKey, results, logKeys);
-      if (line.config.isVisible) {
-        lineElems.push(buildLineElem(line, axisName));
-      }
-    });
-  });
-
-  return lineElems;
-};
-
 const LogVisualizer = (props) => {
   const {
     project = {},
@@ -95,6 +72,7 @@ const LogVisualizer = (props) => {
     yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
   };
 
+  const lineElems = [];
   const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
   ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {
     selectedResults.forEach((resultId) => {
@@ -105,6 +83,10 @@ const LogVisualizer = (props) => {
       selectedLogKeys[axisName].forEach((logKey) => {
         const line = lines[line2key({ resultId, logKey })] ||
               createLine(resultId, logKey, results, logKeys);
+        if (line.config.isVisible) {
+          lineElems.push(buildLineElem(line, axisName));
+        }
+
         const logs = result.logs || [];
         logs.forEach((log) => {
           const logDict = {};
@@ -123,11 +105,6 @@ const LogVisualizer = (props) => {
     });
   });
   const data = Object.keys(dataDict).map((key) => (dataDict[key]));
-
-  const lineElems = [
-    ...buildLineElems(selectedResults, selectedLogKeys.yLeftAxis, 'yLeftAxis', results, projectConfig, logKeys),
-    ...buildLineElems(selectedResults, selectedLogKeys.yRightAxis, 'yRightAxis', results, projectConfig, logKeys)
-  ];
 
   const { chartSize, isResultNameAlignRight } = globalConfig;
 
