@@ -21,12 +21,11 @@ export const decomposeLineDataKey = (dataKey) => {
 export const truncate = (string, options = {}) => {
   const { length = 20, restStr = '...', forward = false } = options;
   let str = string || '';
-  const chars = [...str];
-  if (chars.length > length) {
+  if (str.length > length) {
     if (forward) {
-      str = restStr + chars.slice(chars.length - length).join('');
+      str = restStr + str.slice(-length);
     } else {
-      str = chars.slice(0, length).join('') + restStr;
+      str = str.slice(0, length) + restStr;
     }
   }
   return str;
