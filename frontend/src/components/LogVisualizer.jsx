@@ -74,7 +74,7 @@ const LogVisualizer = (props) => {
 
   const lineElems = [];
   const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
-  ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {
+  Object.keys(selectedLogKeys).forEach((axisName) => {
     selectedResults.forEach((resultId) => {
       const result = results[resultId];
       if (result == null) {
@@ -104,8 +104,8 @@ const LogVisualizer = (props) => {
       });
     });
   });
-  const data = Object.keys(dataDict).map((key) => (dataDict[key]));
 
+  const data = Object.values(dataDict);
   const { chartSize, isResultNameAlignRight } = globalConfig;
 
   return (
