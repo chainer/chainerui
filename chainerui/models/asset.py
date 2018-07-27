@@ -45,5 +45,5 @@ class Asset(DB_BASE):
         summary = json.loads(self.summary)
         return {
             'train_info': summary,
-            'contents': {c.tag: c.serialize for c in self.content_list}
+            'contents': [c.serialize for c in self.content_list]
         }

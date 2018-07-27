@@ -1,5 +1,3 @@
-from base64 import b64encode
-
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
@@ -30,14 +28,22 @@ class Bindata(DB_BASE):
     def __repr__(self):
         return '<Bindata id: %r />' % (self.id)
 
-    def _convert(self):
-        b64_data = b64encode(self.content).decode('utf-8')
+    def mimetype(self):
         ext = self.name.split('.')[-1].lower()
         if ext == 'png':
-            return 'data:image/png;base64,' + b64_data
+            return 'image/png'
+        elif ext in ['jpg', 'jpeg']:
+            return 'image/jpeg'
         else:
             raise ValueError('"%s" is not support' % ext)
 
     @property
     def serialize(self):
-        return self._convert()
+        # omit content to reduce transport size
+        return {
+            'id': self.id,
+            'asset_id': self.asset_id,
+            'name': self.name,
+            'tag': self.tag,
+            'note': self.note
+        }
