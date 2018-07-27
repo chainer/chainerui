@@ -229,7 +229,7 @@ Setup example of a brief extract `MNIST example <https://github.com/chainer/chai
 
 .. note::
 
-   Adjusting the pyperparameters supports only `MomentumSGD <https://docs.chainer.org/en/stable/reference/generated/chainer.optimizers.MomentumSGD.html#chainer.optimizers.MomentumSGD>`__ and learning rate (``lr``). The optimizer is required to be registered by the name ``'main'``.
+   Adjusting the hyperparameters supports only `MomentumSGD <https://docs.chainer.org/en/stable/reference/generated/chainer.optimizers.MomentumSGD.html#chainer.optimizers.MomentumSGD>`__ and learning rate (``lr``). The optimizer is required to be registered by the name ``'main'``.
 
    *Support*
 
