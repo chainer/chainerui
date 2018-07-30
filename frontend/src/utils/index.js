@@ -89,7 +89,9 @@ export const isJsonString = (str) => {
 export const getSelectedResults = (results = {}, resultsConfig = {}) => (
   Object.keys(results).filter((resultId) => (
     !resultsConfig[resultId] || !resultsConfig[resultId].hidden
-  )).map(Number)
+  )).map((resultId) => (
+    Number(resultId)
+  ))
 );
 
 export const getSelectedLogKeys = (logKeysConfig = {}) => (
