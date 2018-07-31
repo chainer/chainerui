@@ -15,7 +15,8 @@ import {
   updateGlobalResultNameAlignment,
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber,
-  createCommand
+  createCommand,
+  updateTableExpanded
 } from '../actions';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
@@ -118,6 +119,7 @@ class PlotContainer extends React.Component {
                 onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
                 onCommandSubmit={this.props.createCommand}
+                onTableExpandedUpdate={this.props.updateTableExpanded}
               />
             </div>
           </div>
@@ -191,7 +193,8 @@ PlotContainer.propTypes = {
   projectConfig: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
     resultsConfig: PropTypes.objectOf(PropTypes.any),
-    global: PropTypes.objectOf(PropTypes.any)
+    global: PropTypes.objectOf(PropTypes.any),
+    tableState: PropTypes.objectOf(PropTypes.any)
   }).isRequired,
   globalConfig: PropTypes.shape({
     pollingRate: PropTypes.number,
@@ -221,7 +224,8 @@ PlotContainer.propTypes = {
   updateGlobalResultNameAlignment: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
-  updateAxisScaleRangeNumber: PropTypes.func.isRequired
+  updateAxisScaleRangeNumber: PropTypes.func.isRequired,
+  updateTableExpanded: PropTypes.func.isRequired
 };
 
 PlotContainer.defaultProps = {
@@ -244,6 +248,6 @@ export default connect(mapStateToProps, {
   updateGlobalResultNameAlignment,
   updateXAxisKey,
   updateAxisScaleRangeType,
-  updateAxisScaleRangeNumber
+  updateAxisScaleRangeNumber,
+  updateTableExpanded
 })(PlotContainer);
-

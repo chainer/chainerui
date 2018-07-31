@@ -302,6 +302,19 @@ const lines = (state = {}, action) => {
   }
 };
 
+const tableState = (state = {}, action) => {
+  const { expanded = {} } = action;
+  switch (action.type) {
+    case ActionTypes.TABLE_STATE_EXPANDED_UPDATE:
+      return {
+        ...state,
+        expanded
+      };
+    default:
+      return state;
+  }
+};
+
 
 const projectsConfig = (state = {}, action) => {
   const { projectId } = action;
@@ -321,7 +334,8 @@ const projectsConfig = (state = {}, action) => {
       [projectId]: {
         axes: axes(projectConfig.axes, action),
         resultsConfig: resultsConfig(projectConfig.resultsConfig, action),
-        lines: lines(projectConfig.lines, action)
+        lines: lines(projectConfig.lines, action),
+        tableState: tableState(projectConfig.tableState, action)
       }
     };
   }
@@ -371,7 +385,7 @@ const config = combineReducers({
 });
 
 
-const currentStoreVersion = 20180420.0;
+const currentStoreVersion = 20180727.0;
 
 const persistConfig = {
   key: 'config',

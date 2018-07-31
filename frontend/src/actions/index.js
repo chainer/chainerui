@@ -241,6 +241,14 @@ export const updateLineInAxis = (projectId, axisName, lineKey, line) => ({
   line
 });
 
+export const TABLE_STATE_EXPANDED_UPDATE = 'TABLE_STATE_EXPANDED_UPDATE';
+
+export const updateTableExpanded = (projectId, expanded) => ({
+  type: TABLE_STATE_EXPANDED_UPDATE,
+  projectId,
+  expanded
+});
+
 
 // global config
 

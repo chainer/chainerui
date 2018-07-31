@@ -106,7 +106,8 @@ export const defaultAxisConfig = {
 export const defaultProjectConfig = {
   axes: defaultAxisConfig,
   resultsConig: {},
-  lines: {}
+  lines: {},
+  tableState: {}
 };
 
 export const keyOptions = ['epoch', 'iteration', 'episode', 'step', 'elapsed_time'];
