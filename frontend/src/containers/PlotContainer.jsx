@@ -111,7 +111,6 @@ class PlotContainer extends React.Component {
               <ExperimentsTable
                 project={project}
                 results={results}
-                stats={stats}
                 projectConfig={projectConfig}
                 globalConfig={globalConfig}
                 onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
@@ -160,9 +159,17 @@ const mapStateToProps = (state, ownProps) => {
   } = state;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId] || { id: projectId };
-  const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
-  const globalConfig = config.global;
   const stats = mapEntitiesToStats(entities);
+  const baseProjectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
+  const projectConfig = {
+    ...baseProjectConfig,
+    experiments: {
+      logKeys: ['elapsed_time', 'epoch', 'iteration'],
+      argKeys: stats.argKeys,
+      ...baseProjectConfig.experiments
+    }
+  };
+  const globalConfig = config.global;
 
   return {
     projectId,
@@ -189,6 +196,7 @@ PlotContainer.propTypes = {
   projectConfig: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
     resultsConfig: PropTypes.objectOf(PropTypes.any),
+    experiments: PropTypes.objectOf(PropTypes.any),
     global: PropTypes.objectOf(PropTypes.any)
   }).isRequired,
   globalConfig: PropTypes.shape({
