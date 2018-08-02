@@ -9,6 +9,7 @@ import {
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
   updateResultsConfigSelect,
+  updateExperimentsConfigColumns,
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateGlobalLogsLimit,
@@ -18,6 +19,7 @@ import {
 } from '../actions';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
+import ExperimentsConfigurator from '../components/ExperimentsConfigurator';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
@@ -115,6 +117,12 @@ class PlotContainer extends React.Component {
                 globalConfig={globalConfig}
                 onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
+              />
+              <ExperimentsConfigurator
+                project={project}
+                stats={stats}
+                projectConfig={projectConfig}
+                onExperimentsConfigUpdate={this.props.updateExperimentsConfigColumns}
               />
             </div>
           </div>
@@ -220,6 +228,7 @@ PlotContainer.propTypes = {
   updateAxisScale: PropTypes.func.isRequired,
   toggleLogKeySelect: PropTypes.func.isRequired,
   updateResultsConfigSelect: PropTypes.func.isRequired,
+  updateExperimentsConfigColumns: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
@@ -242,6 +251,7 @@ export default connect(mapStateToProps, {
   updateAxisScale,
   toggleLogKeySelect,
   updateResultsConfigSelect,
+  updateExperimentsConfigColumns,
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateGlobalLogsLimit,
