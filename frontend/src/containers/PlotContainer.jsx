@@ -79,7 +79,7 @@ class PlotContainer extends React.Component {
         />
         <Container fluid>
           <div className="row">
-            <div className="col-md-4 col-lg-3">
+            <div className="col-md-4 col-lg-3 order-12 order-md-1">
               <BreadcrumbLink
                 length={2}
                 globalConfig={globalConfig}
@@ -100,7 +100,7 @@ class PlotContainer extends React.Component {
                 onAxisConfigLogKeySelectToggle={this.props.toggleLogKeySelect}
               />
             </div>
-            <div className="col-md-8 col-lg-9">
+            <div className="col-md-8 col-lg-9 order-1 order-md-12">
               <LogVisualizer
                 project={project}
                 results={results}
