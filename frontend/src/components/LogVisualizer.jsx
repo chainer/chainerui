@@ -56,29 +56,6 @@ const buildLineElem = (line, axisName) => {
   );
 };
 
-const buildLineElems = (
-  selectedResults, selectedLogKeys, axisName, results, projectConfig, logKeys
-) => {
-  const { lines = {} } = projectConfig;
-
-  const lineElems = [];
-  selectedResults.forEach((resultId) => {
-    const result = results[resultId];
-    if (!result) {
-      return;
-    }
-    selectedLogKeys.forEach((logKey) => {
-      const line = lines[line2key({ resultId, logKey })] ||
-        createLine(resultId, logKey, results, logKeys);
-      if (line.config.isVisible) {
-        lineElems.push(buildLineElem(line, axisName));
-      }
-    });
-  });
-
-  return lineElems;
-};
-
 class LogVisualizer extends React.Component {
   constructor(props) {
     super(props);
@@ -116,7 +93,7 @@ class LogVisualizer extends React.Component {
       globalConfig = {},
       stats
     } = this.props;
-    const { axes, resultsConfig = {} } = projectConfig;
+    const { axes, resultsConfig = {}, lines = {} } = projectConfig;
     const { logKeys = [], xAxisKeys } = stats;
     const {
       xAxis = { axisName: 'xAxis' },
@@ -132,10 +109,22 @@ class LogVisualizer extends React.Component {
 
     const data = getLogData(results, stats, projectConfig);
 
-    const lineElems = [
-      ...buildLineElems(selectedResults, selectedLogKeys.yLeftAxis, 'yLeftAxis', results, projectConfig, logKeys),
-      ...buildLineElems(selectedResults, selectedLogKeys.yRightAxis, 'yRightAxis', results, projectConfig, logKeys)
-    ];
+    const lineElems = [];
+    ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {
+      selectedResults.forEach((resultId) => {
+        const result = results[resultId];
+        if (result == null) {
+          return;
+        }
+        selectedLogKeys[axisName].forEach((logKey) => {
+          const line = lines[line2key({ resultId, logKey })] ||
+                createLine(resultId, logKey, results, logKeys);
+          if (line.config.isVisible) {
+            lineElems.push(buildLineElem(line, axisName));
+          }
+        });
+      });
+    });
 
     const { chartSize, isResultNameAlignRight } = globalConfig;
 
