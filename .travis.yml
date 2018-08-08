@@ -33,3 +33,12 @@ script:
 
 after_success:
   - if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then COVERALLS_TOKEN=$COVERALLS_TOKEN coveralls; fi
+
+deploy:
+  provider: pypi
+  user: $PYPI_MAINTAINER_NAME
+  passward: $PYPI_MAINTAINER_PASS
+  on:
+    tags: true
+    python: 3.6
+  allow_failure: false
