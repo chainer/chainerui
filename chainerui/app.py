@@ -10,6 +10,8 @@ from chainerui.models.project import Project
 from chainerui import upgrade_db
 from chainerui.utils import db_revision
 
+from gevent.pywsgi import WSGIServer
+
 
 def _check_db_revision():
     if not db_revision.check_current_db_revision():
@@ -29,7 +31,19 @@ def server_handler(args):
         return
 
     app = create_app()
-    app.run(host=args.host, port=args.port, debug=args.debug, threaded=True)
+    if args.debug:
+        # start server with:
+        # - env: development
+        # - debug: on
+        app.config['ENV'] = 'development'
+        app.run(host=args.host, port=args.port, debug=True, threaded=True)
+    else:
+        # start server with:
+        # - env: production
+        # - debug: off
+        listener = '{:s}:{:d}'.format(args.host, args.port)
+        http_server = WSGIServer(listener, application=app)
+        http_server.serve_forever()
 
 
 def db_handler(args):
