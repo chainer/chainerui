@@ -18,13 +18,12 @@ const emptyStr = '-';
 const ExperimentsTable = (props) => {
   const {
     project,
-    results = {}, stats,
+    results = {},
     projectConfig,
     globalConfig,
     onResultsConfigSelectUpdate, onResultUpdate
   } = props;
-  const { argKeys, xAxisKeys } = stats;
-  const { resultsConfig = {} } = projectConfig;
+  const { resultsConfig = {}, experiments } = projectConfig;
 
   const resultKeys = Object.keys(results);
   const resultCount = resultKeys.length;
@@ -44,7 +43,7 @@ const ExperimentsTable = (props) => {
 
   const resultList = resultKeys.map((resultId) => results[resultId]);
 
-  const logs = xAxisKeys.map((logKey) => ({
+  const logs = experiments.logKeys.map((logKey) => ({
     Header: logKey,
     id: `logKey${logKey}`,
     accessor: (p) => {
@@ -57,7 +56,7 @@ const ExperimentsTable = (props) => {
     style: defaultStyle
   }));
 
-  const argsList = argKeys.map((argKey) => ({
+  const argsList = experiments.argKeys.map((argKey) => ({
     Header: argKey,
     id: argKey,
     accessor: (p) => {
@@ -174,23 +173,20 @@ ExperimentsTable.propTypes = {
   projectConfig: PropTypes.shape({
     resultsConfig: PropTypes.objectOf(PropTypes.shape({
       hidden: PropTypes.bool
-    }))
+    })),
+    experiments: PropTypes.shape({
+      logKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
+      argKeys: PropTypes.arrayOf(PropTypes.string).isRequired
+    }).isRequired
   }).isRequired,
   globalConfig: PropTypes.shape({
     isResultNameAlignRight: PropTypes.bool
-  }).isRequired,
-  stats: PropTypes.shape({
-    argKeys: PropTypes.arrayOf(PropTypes.string),
-    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired
 };
 ExperimentsTable.defaultProps = {
-  results: {},
-  stats: {
-    argKeys: []
-  }
+  results: {}
 };
 
 export default ExperimentsTable;

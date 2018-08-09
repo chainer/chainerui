@@ -9,6 +9,7 @@ import {
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
   updateResultsConfigSelect,
+  updateExperimentsConfigColumns,
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateGlobalLogsLimit,
@@ -18,6 +19,7 @@ import {
 } from '../actions';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
+import ExperimentsConfigurator from '../components/ExperimentsConfigurator';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
@@ -111,11 +113,16 @@ class PlotContainer extends React.Component {
               <ExperimentsTable
                 project={project}
                 results={results}
-                stats={stats}
                 projectConfig={projectConfig}
                 globalConfig={globalConfig}
                 onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
+              />
+              <ExperimentsConfigurator
+                project={project}
+                stats={stats}
+                projectConfig={projectConfig}
+                onExperimentsConfigUpdate={this.props.updateExperimentsConfigColumns}
               />
             </div>
           </div>
@@ -160,9 +167,17 @@ const mapStateToProps = (state, ownProps) => {
   } = state;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId] || { id: projectId };
-  const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
-  const globalConfig = config.global;
   const stats = mapEntitiesToStats(entities);
+  const baseProjectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
+  const projectConfig = {
+    ...baseProjectConfig,
+    experiments: {
+      logKeys: ['elapsed_time', 'epoch', 'iteration'],
+      argKeys: stats.argKeys,
+      ...baseProjectConfig.experiments
+    }
+  };
+  const globalConfig = config.global;
 
   return {
     projectId,
@@ -189,6 +204,7 @@ PlotContainer.propTypes = {
   projectConfig: PropTypes.shape({
     axes: PropTypes.objectOf(PropTypes.any),
     resultsConfig: PropTypes.objectOf(PropTypes.any),
+    experiments: PropTypes.objectOf(PropTypes.any),
     global: PropTypes.objectOf(PropTypes.any)
   }).isRequired,
   globalConfig: PropTypes.shape({
@@ -212,6 +228,7 @@ PlotContainer.propTypes = {
   updateAxisScale: PropTypes.func.isRequired,
   toggleLogKeySelect: PropTypes.func.isRequired,
   updateResultsConfigSelect: PropTypes.func.isRequired,
+  updateExperimentsConfigColumns: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
@@ -234,6 +251,7 @@ export default connect(mapStateToProps, {
   updateAxisScale,
   toggleLogKeySelect,
   updateResultsConfigSelect,
+  updateExperimentsConfigColumns,
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateGlobalLogsLimit,

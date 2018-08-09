@@ -303,6 +303,23 @@ const lines = (state = {}, action) => {
 };
 
 
+const experiments = (state = {}, action) => {
+  const { experiments: exps } = action;
+  switch (action.type) {
+    case ActionTypes.EXPERIMENTS_CONFIG_SELECT_UPDATE:
+      if (exps == null) {
+        return state;
+      }
+      return {
+        ...state,
+        ...exps
+      };
+    default:
+      return state;
+  }
+};
+
+
 const projectsConfig = (state = {}, action) => {
   const { projectId } = action;
 
@@ -321,7 +338,8 @@ const projectsConfig = (state = {}, action) => {
       [projectId]: {
         axes: axes(projectConfig.axes, action),
         resultsConfig: resultsConfig(projectConfig.resultsConfig, action),
-        lines: lines(projectConfig.lines, action)
+        lines: lines(projectConfig.lines, action),
+        experiments: experiments(projectConfig.experiments, action)
       }
     };
   }

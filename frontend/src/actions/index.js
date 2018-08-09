@@ -242,6 +242,16 @@ export const updateLineInAxis = (projectId, axisName, lineKey, line) => ({
 });
 
 
+// experiments config
+
+export const EXPERIMENTS_CONFIG_SELECT_UPDATE = 'EXPERIMENTS_CONFIG_SELECT_UPDATE';
+
+export const updateExperimentsConfigColumns = (projectId, experiments) => ({
+  type: EXPERIMENTS_CONFIG_SELECT_UPDATE,
+  projectId,
+  experiments
+});
+
 // global config
 
 export const GLOBAL_CONFIG_POLLING_RATE_UPDATE = 'GLOBAL_CONFIG_POLLING_RATE_UPDATE';
