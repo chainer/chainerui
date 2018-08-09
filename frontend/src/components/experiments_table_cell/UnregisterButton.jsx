@@ -20,8 +20,9 @@ class UnregisterButton extends React.Component {
   }
 
   handleUnregister() {
-    const { project, result, onResultUpdate } = this.props;
+    const { project, result, onResultUpdate, onResultUnregistered } = this.props;
     onResultUpdate(project.id, { ...result, isUnregistered: true });
+    onResultUnregistered();
     this.toggleUnregisterModal();
   }
 
@@ -35,9 +36,9 @@ class UnregisterButton extends React.Component {
     const { showUnregisterModal } = this.state;
     const { project, result } = this.props;
     return (
-      <div>
-        <Button className="close" aria-label="Close" onClick={this.toggleUnregisterModal}>
-          <span aria-hidden>&times;</span>
+      <span>
+        <Button onClick={this.toggleUnregisterModal}>
+          Unregister
         </Button>
         <Modal isOpen={showUnregisterModal}>
           <ModalHeader>Unregister a result</ModalHeader>
@@ -49,7 +50,7 @@ class UnregisterButton extends React.Component {
             <Button color="danger" onClick={this.handleUnregister}>Unregister</Button>
           </ModalFooter>
         </Modal>
-      </div>
+      </span>
     );
   }
 }
@@ -64,7 +65,8 @@ UnregisterButton.propTypes = {
     pathName: PropTypes.string,
     name: PropTypes.string
   }).isRequired,
-  onResultUpdate: PropTypes.func.isRequired
+  onResultUpdate: PropTypes.func.isRequired,
+  onResultUnregistered: PropTypes.func.isRequired
 };
 
 export default UnregisterButton;

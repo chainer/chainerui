@@ -1,17 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
-import { Link } from 'react-router';
+
 import {
   argValue2string,
   getLastLogDict,
-  urlForResultDetail,
   sortMethod
 } from '../utils';
 
-import UnregisterButton from './experiments_table_cell/UnregisterButton';
 import ResultName from './experiments_table_cell/ResultName';
 import ToggleResult from './experiments_table_cell/ToggleResult';
+import SubComponent from './experiments_table_cell/SubComponent';
 
 const emptyStr = '-';
 
@@ -21,10 +20,11 @@ const ExperimentsTable = (props) => {
     results = {}, stats,
     projectConfig,
     globalConfig,
-    onResultsConfigSelectUpdate, onResultUpdate
+    onResultsConfigSelectUpdate, onResultUpdate, onCommandSubmit,
+    onTableExpandedUpdate
   } = props;
   const { argKeys, xAxisKeys } = stats;
-  const { resultsConfig = {} } = projectConfig;
+  const { resultsConfig = {}, tableState = {} } = projectConfig;
 
   const resultKeys = Object.keys(results);
   const resultCount = resultKeys.length;
@@ -43,6 +43,7 @@ const ExperimentsTable = (props) => {
   };
 
   const resultList = resultKeys.map((resultId) => results[resultId]);
+  const expanded = resultList.length === 0 ? {} : tableState.expanded;
 
   const logs = xAxisKeys.map((logKey) => ({
     Header: logKey,
@@ -94,17 +95,6 @@ const ExperimentsTable = (props) => {
       minWidth: 40
     },
     {
-      Header: 'id',
-      id: 'result_id',
-      Cell: (p) => {
-        const { original } = p;
-        const { id } = original;
-        return (<Link to={urlForResultDetail(project.id, id)}>{id}</Link>);
-      },
-      className: 'text-center',
-      minWidth: 50
-    },
-    {
       Header: 'name',
       id: 'name',
       Cell: (p) => {
@@ -125,19 +115,6 @@ const ExperimentsTable = (props) => {
     {
       Header: 'args',
       columns: argsList
-    },
-    {
-      Header: '',
-      Cell: (p) => {
-        const { original } = p;
-        return (<UnregisterButton
-          project={project}
-          result={original}
-          onResultUpdate={onResultUpdate}
-        />);
-      },
-      sortable: false,
-      minWidth: 30
     }
   ];
 
@@ -147,6 +124,8 @@ const ExperimentsTable = (props) => {
       columns={columns}
       showPagination={false}
       minRows={3}
+      expanded={expanded}
+      onExpandedChange={(nextExpanded) => onTableExpandedUpdate(project.id, nextExpanded)}
       pageSize={resultList.length}
       defaultSortMethod={sortMethod}
       defaultSorted={[
@@ -154,6 +133,16 @@ const ExperimentsTable = (props) => {
           id: 'result_id'
         }
       ]}
+      freezeWhenExpanded={expanded === {}}
+      SubComponent={(p) => (
+        <SubComponent
+          original={p.original}
+          project={project}
+          onResultUpdate={onResultUpdate}
+          onResultUnregistered={() => onTableExpandedUpdate(project.id, {})}
+          onCommandSubmit={onCommandSubmit}
+        />
+      )}
     />
   );
 };
@@ -174,7 +163,10 @@ ExperimentsTable.propTypes = {
   projectConfig: PropTypes.shape({
     resultsConfig: PropTypes.objectOf(PropTypes.shape({
       hidden: PropTypes.bool
-    }))
+    })),
+    tableState: PropTypes.shape({
+      expanded: PropTypes.any
+    }).isRequired
   }).isRequired,
   globalConfig: PropTypes.shape({
     isResultNameAlignRight: PropTypes.bool
@@ -184,7 +176,9 @@ ExperimentsTable.propTypes = {
     xAxisKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
-  onResultUpdate: PropTypes.func.isRequired
+  onResultUpdate: PropTypes.func.isRequired,
+  onCommandSubmit: PropTypes.func.isRequired,
+  onTableExpandedUpdate: PropTypes.func.isRequired
 };
 ExperimentsTable.defaultProps = {
   results: {},
