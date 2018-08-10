@@ -1,6 +1,8 @@
 import argparse
+import gevent
 from gevent.pywsgi import WSGIServer
 import os
+import signal
 
 from chainerui import _version
 from chainerui import create_app
@@ -42,11 +44,22 @@ def server_handler(args):
         # - debug: off
         listener = '{:s}:{:d}'.format(args.host, args.port)
         http_server = WSGIServer(listener, application=app, log=app.logger)
+
+        def stop_server():
+            if http_server.started:
+                http_server.stop()
+
+        gevent.signal(signal.SIGTERM, stop_server)
+        gevent.signal(signal.SIGINT, stop_server)
+
         print(' * Environment: production')
         print(' * Running on http://{}/ (Press CTRL+C to quit)'
               .format(listener))
 
-        http_server.serve_forever()
+        try:
+            http_server.serve_forever()
+        except (KeyboardInterrupt, SystemExit):
+            stop_server()
 
 
 def db_handler(args):
