@@ -1,4 +1,5 @@
 import argparse
+from gevent.pywsgi import WSGIServer
 import os
 
 from chainerui import _version
@@ -9,8 +10,6 @@ from chainerui import DB_SESSION
 from chainerui.models.project import Project
 from chainerui import upgrade_db
 from chainerui.utils import db_revision
-
-from gevent.pywsgi import WSGIServer
 
 
 def _check_db_revision():
@@ -42,7 +41,11 @@ def server_handler(args):
         # - env: production
         # - debug: off
         listener = '{:s}:{:d}'.format(args.host, args.port)
-        http_server = WSGIServer(listener, application=app)
+        http_server = WSGIServer(listener, application=app, log=app.logger)
+        print(' * Environment: production')
+        print(' * Running on http://{}/ (Press CTRL+C to quit)'
+              .format(listener))
+
         http_server.serve_forever()
 
 
