@@ -4,13 +4,13 @@ const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
 
-const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
-const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const NODE_PROD = (NODE_ENV === 'production');
 const nodeModulePath = path.resolve(__dirname, 'node_modules');
 
 const versionPyPath = path.resolve(path.dirname(__dirname), 'chainerui', '_version.py');
@@ -22,88 +22,83 @@ if (!versionMatches) {
 }
 
 const version = versionMatches[1];
-const targets = {
-  browsers: ['last 2 versions']
-};
-const { dependencies } = require('./package.json');
-
-delete dependencies['open-iconic'];
+const targetBrowser = 'last 2 versions';
 
 module.exports = {
   entry: {
     chainerui: [
       'babel-polyfill',
       'whatwg-fetch',
-      './src/index.jsx'
-    ],
-    vendor: Object.keys(dependencies).concat([
       'bootstrap/dist/css/bootstrap.css',
       'open-iconic/font/css/open-iconic-bootstrap.css',
       'react-table/react-table.css',
-      'babel-polyfill'
-    ])
+      './src/index.jsx'
+    ]
   },
   output: {
     path: path.resolve(path.dirname(__dirname), 'chainerui', 'static', 'dist'),
+    publicPath: '/',
     filename: '[name].js'
   },
+  mode: NODE_ENV,
   module: {
     rules: [
       {
         enforce: 'pre',
-        test: /\.jsx?$/,
         exclude: nodeModulePath,
-        loader: 'eslint-loader'
+        test: /\.jsx?$/,
+        use: 'eslint-loader'
       },
       {
-        test: /\.jsx?$/,
         exclude: nodeModulePath,
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            [
-              'env',
-              {
-                modules: false,
-                targets
-              }
-            ],
-            'react'
-          ],
-          plugins: [
-            'transform-object-rest-spread',
-            'babel-plugin-lodash'
-          ]
-        }
+        test: /\.jsx?$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    modules: false,
+                    targets: targetBrowser
+                  }
+                ],
+                '@babel/preset-react'
+              ],
+              plugins: [
+                '@babel/proposal-object-rest-spread',
+                'lodash'
+              ]
+            }
+          }
+        ]
       },
       {
         test: /\.css$/,
-        use: ExtractTextWebpackPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1
-              }
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                parser: 'postcss-scss',
-                plugins: [
-                  require('autoprefixer')(targets)
-                ]
-              }
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              parser: 'postcss-scss',
+              plugins: [
+                require('autoprefixer')({
+                  browsers: targetBrowser
+                })
+              ]
             }
-          ]
-        })
+          }
+        ]
       },
       {
         test: /\.(png|jpe?g|gif|svg|eot|otf|ttf|woff2?)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]'
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]'
+          }
         }
       }
     ]
@@ -111,10 +106,23 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx']
   },
-  devtool: NODE_PROD ? false : 'inline-source-map',
-  target: 'web',
+  optimization: {
+    splitChunks: {
+      chunks: 'initial',
+      name: 'vendor'
+    },
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true
+      }),
+      new OptimizeCSSAssetsPlugin({})
+    ]
+  },
   plugins: [
-    new WebpackCleanupPlugin(),
+    new CleanWebpackPlugin(['chainerui/static/dist'], {
+      root: path.join(__dirname, '..')
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
       'process.env.VERSION': JSON.stringify(version)
@@ -126,41 +134,30 @@ module.exports = {
       Popper: ['popper.js', 'default']
     }),
     new HtmlWebpackPlugin({
-      title: 'chainerui',
-      favicon: 'src/favicon.ico'
+      title: 'ChainerUI',
+      template: 'template.ejs',
+      favicon: 'src/favicon.ico',
+      minify: NODE_ENV === 'production' ? {
+        collapseBooleanAttributes: true,
+        collapseInlineTagWhitespace: true,
+        collapseWhitespace: true,
+        minifyCSS: true,
+        minifyJS: true,
+        removeComments: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        sortAttributes: true,
+        sortClassName: true,
+        useShortDoctype: true
+      } : null
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      filename: '[name].js',
-      minChunks: Infinity
-    }),
-    new ExtractTextWebpackPlugin('[name].css', {
-      allChunks: true
-    }),
-    ...(NODE_PROD ? [
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false,
-          screw_ie8: true,
-          drop_console: true,
-          drop_debugger: true
-        }
-      }),
-      new webpack.optimize.OccurrenceOrderPlugin(),
-      new webpack.optimize.AggressiveMergingPlugin(),
-      new OptimizeCssAssetsWebpackPlugin({
-        cssProcessor: require('cssnano'),
-        cssProcessorOptions: {
-          discardComments: {
-            removeAll: true
-          }
-        }
-      })
-    ] : [])
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: 'vendor.css'
+    })
   ],
   node: {
     __dirname: false,
     __filename: false
   }
 };
-
