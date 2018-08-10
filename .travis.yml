@@ -37,7 +37,7 @@ after_success:
 deploy:
   provider: pypi
   user: $PYPI_MAINTAINER_NAME
-  passward: $PYPI_MAINTAINER_PASS
+  password: $PYPI_MAINTAINER_PASS
   on:
     tags: true
     python: 3.6
