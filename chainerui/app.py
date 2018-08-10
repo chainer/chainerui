@@ -43,7 +43,7 @@ def server_handler(args):
         # - env: production
         # - debug: off
         listener = '{:s}:{:d}'.format(args.host, args.port)
-        http_server = WSGIServer(listener, application=app, log=app.logger)
+        http_server = WSGIServer(listener, application=app)
 
         def stop_server():
             if http_server.started:
