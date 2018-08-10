@@ -82,7 +82,6 @@ def create_app():
     """create_app."""
 
     app = Flask(__name__)
-    app.config['DEBUG'] = False
     app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
     def dated_url_for(endpoint, **values):
