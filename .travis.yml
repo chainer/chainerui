@@ -14,6 +14,8 @@ before_install:
   - pip install pytest-cov coveralls
   - pip install Pillow
   - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then pip install mock; fi
+  - npm install -g npm@6
+  - npm -v
 
 install:
   - pushd frontend
@@ -42,3 +44,4 @@ deploy:
     tags: true
     python: 3.6
   allow_failure: false
+  skip_cleanup: true
