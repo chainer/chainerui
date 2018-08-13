@@ -6,17 +6,14 @@ import PropTypes from 'prop-types';
 const Images = (props) => {
   const { images } = props;
 
-  const imageCols = (contents) => {
-    const contentValues = Object.entries(contents);
-    return contentValues.map(([name, src]) => (
-      <Col>
-        <div>{name}</div>
-        <div>
-          <img src={`${src}`} alt="view" style={{ maxWidth: 300 }} />
-        </div>
-      </Col>
-    ));
-  };
+  const imageCols = (contents) => contents.map((content) => (
+    <Col>
+      <div>{content.tag}</div>
+      <div>
+        <img src={content.uri} alt="view" style={{ maxWidth: 300 }} />
+      </div>
+    </Col>
+  ));
 
   const infoCols = (trainInfo) => {
     const trainInfoValues = Object.entries(trainInfo);

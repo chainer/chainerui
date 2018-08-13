@@ -169,5 +169,8 @@ def create_app():
     app.add_url_rule(
         '/api/v1/projects/<int:project_id>/results/<int:result_id>/images',
         view_func=result_image_resource, methods=['GET'])
+    app.add_url_rule(
+        '/api/v1/projects/<int:project_id>/results/<int:result_id>/images/<int:content_id>',  # NOQA
+        view_func=result_image_resource, methods=['GET'])
 
     return app

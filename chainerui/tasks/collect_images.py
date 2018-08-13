@@ -11,22 +11,8 @@ from chainerui.models.bindata import Bindata
 def collect_images(result, assets, force=False):
     """collect images from meta file
 
-    Example of returning structure will be:
-      [
-        {
-          "contents": {
-            "name1": "data:image/png;base64,...",
-            "name2": "data:image/png;base64,..."
-          },
-          "train_info" {
-            "iteration": 1000,
-            "epoch": 1,
-            "other_key": "value"
-          }
-        }, {
-          "... (same as above)"
-        }
-      ]
+    Collecting images only when the metafile is updated. If number of images
+    are decreased, assets are reset and re-collect the images.
     """
     path_name = result.path_name
     info_path = os.path.join(path_name, '.chainerui_images')
