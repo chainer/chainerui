@@ -49,10 +49,7 @@ class ImageReport(extension.Extension):
         return _available
 
     def initialize(self, trainer):
-        observer = summary.chainerui_image_observer
-        trainer.reporter.add_observer(
-            summary.CHAINERUI_IMAGE_PREFIX, observer)
-        self._observer = observer
+        self._observer = summary.chainerui_image_observer
 
     def __call__(self, trainer):
         if not _available:

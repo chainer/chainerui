@@ -1,6 +1,5 @@
 import chainer
 from chainer import cuda
-from chainer import reporter
 import numpy as np
 
 
@@ -12,6 +11,10 @@ class ImageSummary(object):
     def __init__(self):
         self.observation = {}
 
+    def add(self, name, value):
+        key = '%s/%s' % (CHAINERUI_IMAGE_PREFIX, name)
+        self.observation[key] = value
+
 
 chainerui_image_observer = ImageSummary()
 
@@ -21,9 +24,7 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True):
 
     A batch of image is registered on global observation and these images
     are collected by :class:`chainerui.extensions.ImageReporter`. This function
-    expects to be used with :class:`chainer.training.Trainer`. If using this
-    function without :class:`chainer.training.Trainer`, need to setup
-    :class:`chainer.Reporter` before using it.
+    expects to be used with :class:`chainer.training.Trainer`.
 
     Example of how to set arguments::
 
@@ -114,13 +115,11 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True):
         # TODO(disktnk): support tupled image and increment automatically
         name = '0'
 
-    current_reporter = reporter.get_current_reporter()
     observer = chainerui_image_observer
-    with reporter.report_scope(observer.observation):
-        value = {'image': stuck_image}
-        if mode is not None:
-            value['mode'] = mode.lower()
-        current_reporter.report({name: value}, observer)
+    value = {'image': stuck_image}
+    if mode is not None:
+        value['mode'] = mode.lower()
+    observer.add(name, value)
 
 
 def _move_ch_to_last(x, axis):
