@@ -12,10 +12,10 @@ from chainerui.models.result import Result
 from chainerui.tasks.collect_images import collect_images
 
 
-class ResultImageAPI(MethodView):
+class ResultAssetAPI(MethodView):
 
     def get(self, result_id=None, project_id=None, content_id=None):
-        # project is not necessary to collect images,
+        # project is not necessary to collect assets,
         # but check parent project exists or not
         project = DB_SESSION.query(Project).\
             filter_by(id=project_id).\
@@ -48,7 +48,7 @@ class ResultImageAPI(MethodView):
                 for content in asset['contents']:
                     content['uri'] = self._make_content_uri(
                         project_id, result_id, content['id'])
-            return jsonify({'images': assets_response})
+            return jsonify({'assets': assets_response})
 
         # sent content binary directly
         bindata = DB_SESSION.query(Bindata).\
@@ -56,7 +56,7 @@ class ResultImageAPI(MethodView):
             first()
         if bindata is None:
             return jsonify({
-                'image': None,
+                'asset': None,
                 'message': 'No interface defined for URL.'
             }), 404
         return send_file(
@@ -66,5 +66,5 @@ class ResultImageAPI(MethodView):
             attachment_filename=bindata.name)
 
     def _make_content_uri(self, project_id, result_id, content_id):
-        return '/api/v1/projects/%d/results/%d/images/%d' % (
+        return '/api/v1/projects/%d/results/%d/assets/%d' % (
             project_id, result_id, content_id)
