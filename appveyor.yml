@@ -17,7 +17,7 @@ install:
   # Update Node.js
   - ps: Install-Product node $env:nodejs_version
   # Update NPM
-  - npm install -g npm
+  - npm install -g npm@6
   - npm --version
 
 build_script:
