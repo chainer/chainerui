@@ -105,12 +105,12 @@ const resultsReducer = (state = {}, action) => {
 };
 
 
-const imagesReducer = (state = [], action) => {
+const assetsReducer = (state = [], action) => {
   switch (action.type) {
-    case ActionTypes.RESULT_IMAGE_SUCCESS:
-      if (action.response && action.response.images) {
-        const imageList = action.response.images;
-        return imageList;
+    case ActionTypes.RESULT_ASSET_SUCCESS:
+      if (action.response && action.response.assets) {
+        const assetList = action.response.assets;
+        return assetList;
       }
       return state;
     default:
@@ -122,7 +122,7 @@ const imagesReducer = (state = [], action) => {
 const entities = combineReducers({
   projects: projectsReducer,
   results: resultsReducer,
-  images: imagesReducer
+  assets: assetsReducer
 });
 
 

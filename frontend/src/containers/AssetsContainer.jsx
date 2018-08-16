@@ -3,24 +3,24 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 import {
-  getResultImage,
+  getResultAsset,
   updateGlobalPollingRate,
   updateGlobalChartSize
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
-import Images from '../components/images/ImageList';
+import Assets from '../components/assets/AssetList';
 import { defaultConfig } from '../constants';
 
 
-class ImagesContainer extends React.Component {
+class AssetsContainer extends React.Component {
   componentDidMount() {
     const { projectId, resultId } = this.props;
-    this.props.getResultImage(projectId, resultId);
+    this.props.getResultAsset(projectId, resultId);
   }
 
   render() {
     const {
-      images, globalConfig, fetchState
+      assets, globalConfig, fetchState
     } = this.props;
     return (
       <div>
@@ -31,7 +31,7 @@ class ImagesContainer extends React.Component {
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
         <Container fluid>
-          <Images images={images || []} />
+          <Assets assets={assets || []} />
         </Container>
       </div>
     );
@@ -46,26 +46,26 @@ const mapStateToProps = (state, ownProps) => {
     fetchState,
     config = defaultConfig
   } = state;
-  const { images = [] } = entities;
+  const { assets = [] } = entities;
   const globalConfig = config.global;
-  return { projectId, resultId, images, fetchState, globalConfig };
+  return { projectId, resultId, assets, fetchState, globalConfig };
 };
 
-ImagesContainer.propTypes = {
+AssetsContainer.propTypes = {
   projectId: PropTypes.number.isRequired,
   resultId: PropTypes.number.isRequired,
-  images: PropTypes.objectOf(PropTypes.any).isRequired,
+  assets: PropTypes.objectOf(PropTypes.any).isRequired,
   fetchState: PropTypes.shape({
     resultList: PropTypes.string
   }).isRequired,
   globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
-  getResultImage: PropTypes.func.isRequired,
+  getResultAsset: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, {
-  getResultImage,
+  getResultAsset,
   updateGlobalPollingRate,
   updateGlobalChartSize
-})(ImagesContainer);
+})(AssetsContainer);

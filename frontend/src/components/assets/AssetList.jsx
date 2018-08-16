@@ -3,10 +3,10 @@ import { Container, Row, Col } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 
-const Images = (props) => {
-  const { images } = props;
+const Assets = (props) => {
+  const { assets } = props;
 
-  const imageCols = (contents) => contents.map((content) => (
+  const assetCols = (contents) => contents.map((content) => (
     <Col>
       <div>{content.tag}</div>
       <div>
@@ -20,12 +20,12 @@ const Images = (props) => {
     return trainInfoValues.map(([k, v]) => (<li>{k}: {v}</li>));
   };
 
-  const srcRowElems = images.map((image) => (
+  const srcRowElems = assets.map((asset) => (
     <Row>
-      {imageCols(image.contents)}
+      {assetCols(asset.contents)}
       <Col>
         <ul>
-          {infoCols(image.train_info)}
+          {infoCols(asset.train_info)}
         </ul>
       </Col>
     </Row>
@@ -38,15 +38,15 @@ const Images = (props) => {
   );
 };
 
-Images.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.shape({
+Assets.propTypes = {
+  assets: PropTypes.arrayOf(PropTypes.shape({
     contents: PropTypes.objectOf(PropTypes.any),
     trainInfo: PropTypes.objectOf(PropTypes.any)
   })).isRequired
 };
 
-Images.defaultProps = {
-  images: []
+Assets.defaultProps = {
+  assets: []
 };
 
-export default Images;
+export default Assets;
