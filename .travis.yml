@@ -41,7 +41,7 @@ deploy:
   user: $PYPI_MAINTAINER_NAME
   password: $PYPI_MAINTAINER_PASS
   on:
-    tags: true
+    condition: '`git describe --abbrev=0 --tags` != v`chainerui -v`'
     python: 3.6
   allow_failure: false
   skip_cleanup: true
