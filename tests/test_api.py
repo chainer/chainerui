@@ -8,8 +8,7 @@ from six import string_types
 
 from chainerui import CHAINERUI_ENV
 from chainerui import create_app
-from chainerui import create_db
-from chainerui import DB_FILE_PATH
+from chainerui import db
 from chainerui.models.project import Project
 from chainerui import upgrade_db
 from chainerui.utils.commands_state import CommandsState
@@ -141,7 +140,6 @@ def setup_test_project(root_path):
 
 
 def setup_test_db(project_path, project_name):
-    create_db()
     upgrade_db()
 
     # insert test data
@@ -157,6 +155,7 @@ class TestAPI(unittest.TestCase):
                 'set environment variable CHAINERUI_ENV=test '
                 'when you run this test'
             )
+        db.setup(test_mode=True)
 
         test_dir = tempfile.mkdtemp(prefix='chainerui_test_api')
         cls._dir = test_dir
@@ -180,8 +179,7 @@ class TestAPI(unittest.TestCase):
 
     def tearDown(self):
         # remove test db if exists
-        if os.path.exists(DB_FILE_PATH):
-            os.remove(DB_FILE_PATH)
+        db.drop(test_mode=True)
 
     def assert_test_project(self, project, path=None, name=None):
         assert len(project) == 3

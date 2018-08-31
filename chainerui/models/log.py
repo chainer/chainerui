@@ -8,10 +8,10 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import LargeBinary
 
-from chainerui import DB_BASE
+from chainerui import database
 
 
-class Log(DB_BASE):
+class Log(database.BASE):
     """Log Model."""
     __tablename__ = 'log'
 

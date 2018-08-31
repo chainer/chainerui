@@ -4,10 +4,10 @@ from sqlalchemy import Integer
 from sqlalchemy import LargeBinary
 from sqlalchemy import String
 
-from chainerui import DB_BASE
+from chainerui import database
 
 
-class Bindata(DB_BASE):
+class Bindata(database.BASE):
     __tablename__ = 'bindata'
 
     id = Column(Integer, primary_key=True)

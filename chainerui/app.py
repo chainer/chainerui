@@ -1,17 +1,27 @@
 import argparse
-import gevent
-from gevent.pywsgi import WSGIServer
 import os
 import signal
 
+import gevent
+from gevent.pywsgi import WSGIServer
+
 from chainerui import _version
+from chainerui import CHAINERUI_ENV
 from chainerui import create_app
-from chainerui import create_db
-from chainerui import DB_FILE_PATH
-from chainerui import DB_SESSION
+from chainerui import db
+from chainerui import downgrade_db
 from chainerui.models.project import Project
 from chainerui import upgrade_db
 from chainerui.utils import db_revision
+
+
+def _setup_db(url=None):
+    if not db.check(url):
+        return False
+    test_mode = CHAINERUI_ENV == 'test'
+    echo = CHAINERUI_ENV == 'development'
+    db.setup(url=url, test_mode=test_mode, echo=echo)
+    return True
 
 
 def _check_db_revision():
@@ -28,6 +38,8 @@ def _check_db_revision():
 
 def server_handler(args):
     """server_handler."""
+    if not _setup_db(args.db):
+        return
     if not _check_db_revision():
         return
 
@@ -66,7 +78,11 @@ def db_handler(args):
     """db_handler."""
 
     if args.type == 'create':
-        create_db()
+        db.init(args.db)
+        return
+
+    if not _setup_db(args.db):
+        return
 
     if args.type == 'status':
         current_rev = db_revision.current_db_revision()
@@ -79,19 +95,22 @@ def db_handler(args):
         db_revision.new_revision()
 
     if args.type == 'drop':
-        if os.path.exists(DB_FILE_PATH):
-            os.remove(DB_FILE_PATH)
+        if args.db is not None:
+            downgrade_db()
+        db.drop(args.db)
 
 
 def project_create_handler(args):
     """project_create_handler."""
+    if not _setup_db(args.db):
+        return
     if not _check_db_revision():
         return
 
     project_path = os.path.abspath(args.project_dir)
     project_name = args.project_name
 
-    project = DB_SESSION.query(Project).\
+    project = db.session.query(Project).\
         filter_by(path_name=project_path).first()
 
     if project is None:
@@ -104,6 +123,9 @@ def create_parser():
     parser = argparse.ArgumentParser(description='chainerui command')
     parser.add_argument(
         '--version', '-v', action='version', version=_version.__version__)
+    parser.add_argument(
+        '--db', help='database resource address',
+        default=os.getenv('CHAINERUI_DB_URL', default=None))
     subparsers = parser.add_subparsers()
 
     # chainerui server

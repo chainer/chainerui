@@ -2,7 +2,7 @@ from flask import jsonify
 from flask import request
 from flask.views import MethodView
 
-from chainerui import DB_SESSION
+from chainerui import db
 from chainerui.models.result import Result
 from chainerui.tasks import crawl_result
 from chainerui.utils.command_item import CommandItem
@@ -16,7 +16,7 @@ class ResultCommandAPI(MethodView):
     def post(self, result_id, project_id):
         """POST /api/v1/results/<int:id>/commands."""
 
-        result = DB_SESSION.query(Result).filter_by(id=result_id).first()
+        result = db.session.query(Result).filter_by(id=result_id).first()
 
         if result is None:
             return jsonify({

@@ -5,10 +5,10 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 
-from chainerui import DB_BASE
+from chainerui import database
 
 
-class Command(DB_BASE):
+class Command(database.BASE):
     """Command Model."""
     __tablename__ = 'command'
 

@@ -8,11 +8,11 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy import String
 
-from chainerui import DB_BASE
-from chainerui import DB_SESSION
+from chainerui import database
+from chainerui import db
 
 
-class Asset(DB_BASE):
+class Asset(database.BASE):
     __tablename__ = 'asset'
 
     id = Column(Integer, primary_key=True)
@@ -32,8 +32,8 @@ class Asset(DB_BASE):
         """Initialize an instance and save it to db."""
         asset = cls(result_id, summary, file_modified_at)
 
-        DB_SESSION.add(asset)
-        DB_SESSION.commit()
+        db.session.add(asset)
+        db.session.commit()
 
         return asset
 

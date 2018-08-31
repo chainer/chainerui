@@ -5,10 +5,10 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 
-from chainerui import DB_BASE
+from chainerui import database
 
 
-class Argument(DB_BASE):
+class Argument(database.BASE):
     """Argument Model."""
     __tablename__ = 'argument'
 

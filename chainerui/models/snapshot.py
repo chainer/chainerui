@@ -3,10 +3,10 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 
-from chainerui import DB_BASE
+from chainerui import database
 
 
-class Snapshot(DB_BASE):
+class Snapshot(database.BASE):
     """Snapshot Model."""
     __tablename__ = 'snapshot'
 

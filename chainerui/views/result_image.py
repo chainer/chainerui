@@ -4,7 +4,7 @@ from flask import jsonify
 from flask import send_file
 from flask.views import MethodView
 
-from chainerui import DB_SESSION
+from chainerui import db
 from chainerui.models.asset import Asset
 from chainerui.models.bindata import Bindata
 from chainerui.models.project import Project
@@ -17,7 +17,7 @@ class ResultImageAPI(MethodView):
     def get(self, result_id=None, project_id=None, content_id=None):
         # project is not necessary to collect images,
         # but check parent project exists or not
-        project = DB_SESSION.query(Project).\
+        project = db.session.query(Project).\
             filter_by(id=project_id).\
             first()
         if project is None:
@@ -26,7 +26,7 @@ class ResultImageAPI(MethodView):
                 'message': 'No interface defined for URL.'
             }), 404
 
-        result = DB_SESSION.query(Result).\
+        result = db.session.query(Result).\
             filter_by(id=result_id).\
             filter_by(is_unregistered=False).\
             first()
@@ -37,7 +37,7 @@ class ResultImageAPI(MethodView):
             }), 404
 
         if content_id is None:
-            assets = DB_SESSION.query(Asset).\
+            assets = db.session.query(Asset).\
                 filter_by(result_id=result_id).\
                 order_by(Asset.id).all()
             if assets is None:
@@ -51,7 +51,7 @@ class ResultImageAPI(MethodView):
             return jsonify({'images': assets_response})
 
         # sent content binary directly
-        bindata = DB_SESSION.query(Bindata).\
+        bindata = db.session.query(Bindata).\
             filter_by(id=content_id).\
             first()
         if bindata is None:

@@ -2,12 +2,12 @@ from alembic.command import revision
 from alembic.migration import MigrationContext
 from alembic.script import ScriptDirectory
 
-from chainerui import ENGINE
+from chainerui import db
 from chainerui import get_db_migration_config
 
 
 def current_db_revision():
-    ctx = MigrationContext.configure(ENGINE.connect())
+    ctx = MigrationContext.configure(db.engine.connect())
     return ctx.get_current_revision()
 
 
