@@ -3,6 +3,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
+const URL = require('url').URL;
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
@@ -10,7 +11,12 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const convert = require('koa-connect');
+const history = require('connect-history-api-fallback');
+const proxy = require('http-proxy-middleware');
+
 const NODE_ENV = process.env.NODE_ENV || 'development';
+const API_ROOT = process.env.API_ROOT || 'http://localhost:5000';
 const nodeModulePath = path.resolve(__dirname, 'node_modules');
 
 const versionPyPath = path.resolve(path.dirname(__dirname), 'chainerui', '_version.py');
@@ -159,5 +165,17 @@ module.exports = {
   node: {
     __dirname: false,
     __filename: false
+  },
+  serve: {
+    content: [__dirname],
+    add: (app) => {
+      app.use(convert(proxy('/api', {
+        target: API_ROOT,
+        headers: {
+          Host: new URL(API_ROOT).host
+        },
+      })));
+      app.use(convert(history()));
+    }
   }
 };

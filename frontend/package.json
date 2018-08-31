@@ -6,6 +6,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --progress --profile",
     "build:watch": "webpack -w --progress --profile",
+    "serve": "webpack-serve --host 0.0.0.0",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
   "engines": {
