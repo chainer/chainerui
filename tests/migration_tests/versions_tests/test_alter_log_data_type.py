@@ -24,6 +24,7 @@ class TestUpgrade(unittest.TestCase):
                 'set environment variable CHAINERUI_ENV=test '
                 'when you run this test'
             )
+        db.init()
         db.setup(test_mode=True)
         cls.db_file_path = db._sqlite_db_path(test_mode=True)
 

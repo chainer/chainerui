@@ -17,7 +17,7 @@ class Database(object):
         self._session = None
 
     def init(self, url=None):
-        if url is None:
+        if url is not None:
             return
 
         db_dir = self._sqlite_db_dir()

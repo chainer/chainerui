@@ -22,6 +22,7 @@ class TestApp(unittest.TestCase):
                 'set environment variable CHAINERUI_ENV=test '
                 'when you run this test'
             )
+        db.init()
         db.setup(test_mode=True)
 
     def setUp(self):
