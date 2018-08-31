@@ -11,14 +11,6 @@ from chainerui.models.project import Project
 from chainerui import upgrade_db
 
 
-def _return_true():
-    return True
-
-
-def _return_false():
-    return False
-
-
 class TestApp(unittest.TestCase):
 
     def setUp(self):
@@ -28,6 +20,7 @@ class TestApp(unittest.TestCase):
         self._db_url = 'sqlite:///' + self._db_path
 
     def tearDown(self):
+        db.session.remove()
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
 
