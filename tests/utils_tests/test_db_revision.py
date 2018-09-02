@@ -20,13 +20,13 @@ class DBRevision(unittest.TestCase):
                 'set environment variable CHAINERUI_ENV=test '
                 'when you run this test'
             )
-        db.init()
+        db.init_db()
         db.setup(test_mode=True)
 
     @classmethod
     def tearDownClass(cls):
         db.session.remove()
-        db.drop(test_mode=True)
+        db.drop()
 
     def _upgrade(self):
         config = get_db_migration_config()

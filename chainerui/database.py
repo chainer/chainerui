@@ -11,16 +11,18 @@ BASE = declarative_base()
 
 
 class Database(object):
+
     def __init__(self):
+        self._url = None
         self._initialized = False
         self._engine = None
         self._session = None
+        self._external_db = False
 
-    def init(self, url=None):
-        if url is not None:
-            return
-
-        db_dir = self._sqlite_db_dir()
+    def init_db(self, db_dir=None):
+        if db_dir is None:
+            db_dir = self._sqlite_default_db_dir()
+        self._sqlite_db_dir = db_dir
         try:
             os.makedirs(db_dir)
         except OSError as e:
@@ -32,12 +34,21 @@ class Database(object):
 
     def setup(self, url=None, test_mode=False, echo=False):
         if url is None:
-            url = self._sqlite_url(test_mode)
+            db_file_name = 'chainerui_test.db' if test_mode else 'chainerui.db'
+            db_path = os.path.join(self._sqlite_db_dir, db_file_name)
+            self._sqlite_db_file_path = db_path
+            url = 'sqlite:///' + db_path
+        else:
+            self._external_db = True
+
+        if not self._check():
+            return False
+
         if url.startswith('sqlite'):
             connect_args = {'check_same_thread': False}
         else:
             connect_args = {}
-        self.url = url
+        self._url = url
 
         engine = create_engine(
             url,
@@ -51,31 +62,33 @@ class Database(object):
         )
         self._initialized = True
 
-    def check(self, url=None):
-        if url is None:
-            if not os.path.isdir(self._sqlite_db_dir()):
+        return True
+
+    def _check(self):
+        if not self._external_db:
+            if not os.path.isdir(self._sqlite_db_dir):
                 print('DB is not initialized, please run \'create\' command '
                       'before')
                 return False
+        # TODO(disktnk): add ping, to check connetion with external DB
         return True
 
-    def drop(self, url=None, test_mode=False):
-        if url is None:
-            path = self._sqlite_db_path(test_mode)
-            if os.path.exists(path):
-                os.remove(path)
+    def drop(self):
+        if not self._external_db:
+            if os.path.exists(self._sqlite_db_file_path):
+                os.remove(self._sqlite_db_file_path)
+        self.__init__()  # initialize all attribute
 
-    def _sqlite_db_dir(self):
+    def _sqlite_default_db_dir(self):
         root = os.path.abspath(
             os.path.expanduser(os.getenv('CHAINERUI_ROOT', '~/.chainerui')))
         return os.path.join(root, 'db')
 
-    def _sqlite_db_path(self, test_mode):
-        db_file_name = 'chainerui_test.db' if test_mode else 'chainerui.db'
-        return os.path.join(self._sqlite_db_dir(), db_file_name)
-
-    def _sqlite_url(self, test_mode):
-        return 'sqlite:///' + self._sqlite_db_path(test_mode)
+    @property
+    def url(self):
+        if not self._initialized:
+            raise ValueError('not setup DB URL')
+        return self._url
 
     @property
     def engine(self):

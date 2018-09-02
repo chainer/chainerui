@@ -155,7 +155,7 @@ class TestAPI(unittest.TestCase):
                 'set environment variable CHAINERUI_ENV=test '
                 'when you run this test'
             )
-        db.init()
+        db.init_db()
 
         test_dir = tempfile.mkdtemp(prefix='chainerui_test_api')
         cls._dir = test_dir
@@ -181,7 +181,7 @@ class TestAPI(unittest.TestCase):
 
     def tearDown(self):
         db.session.remove()
-        db.drop(test_mode=True)
+        db.drop()
 
     def assert_test_project(self, project, path=None, name=None):
         assert len(project) == 3

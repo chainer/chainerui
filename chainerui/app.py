@@ -15,13 +15,10 @@ from chainerui import upgrade_db
 from chainerui.utils import db_revision
 
 
-def _setup_db(url=None):
-    if not db.check(url):
-        return False
+def _setup_db(db_url):
     test_mode = CHAINERUI_ENV == 'test'
     echo = CHAINERUI_ENV == 'development'
-    db.setup(url=url, test_mode=test_mode, echo=echo)
-    return True
+    return db.setup(url=db_url, test_mode=test_mode, echo=echo)
 
 
 def _check_db_revision():
@@ -78,7 +75,8 @@ def db_handler(args):
     """db_handler."""
 
     if args.type == 'create':
-        db.init(args.db)
+        if args.db is None:
+            db.init_db()
         return
 
     if not _setup_db(args.db):
@@ -97,7 +95,7 @@ def db_handler(args):
     if args.type == 'drop':
         if args.db is not None:
             downgrade_db()
-        db.drop(args.db)
+        db.drop()
 
 
 def project_create_handler(args):

@@ -24,15 +24,15 @@ class TestUpgrade(unittest.TestCase):
                 'set environment variable CHAINERUI_ENV=test '
                 'when you run this test'
             )
-        db.init()
+        db.init_db()
         db.setup(test_mode=True)
-        cls.db_file_path = db._sqlite_db_path(test_mode=True)
+        cls.db_file_path = db._sqlite_db_file_path
 
         ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
         config = Config(ini_path)
         config.set_main_option(
             "script_location", os.path.join(PACKAGE_DIR, 'migration'))
-        config.set_main_option('url', db._sqlite_url(test_mode=True))
+        config.set_main_option('url', db.url)
         cls._config = config
 
         script_dir = alembic.script.ScriptDirectory.from_config(config)
@@ -44,7 +44,7 @@ class TestUpgrade(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         db.session.remove()
-        db.drop(test_mode=True)
+        db.drop()
 
     def test_upgrade_downgrade(self):
         # NOTE: don't use alembic operation module, the module is not

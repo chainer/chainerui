@@ -22,7 +22,7 @@ class TestApp(unittest.TestCase):
     def tearDown(self):
         if db._session is not None:
             db.session.remove()
-        db.drop(test_mode=True)
+        db.drop()
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
 

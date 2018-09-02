@@ -22,7 +22,7 @@ class TestApp(unittest.TestCase):
                 'set environment variable CHAINERUI_ENV=test '
                 'when you run this test'
             )
-        db.init()
+        db.init_db()
 
     def setUp(self):
         db.setup(test_mode=True)
@@ -66,7 +66,7 @@ class TestApp(unittest.TestCase):
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
         db.session.remove()
-        db.drop(test_mode=True)
+        db.drop()
 
     def _get_dummy_result(self):
         r = Result(path_name=self._dir)
