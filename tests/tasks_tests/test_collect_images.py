@@ -23,9 +23,9 @@ class TestApp(unittest.TestCase):
                 'when you run this test'
             )
         db.init()
-        db.setup(test_mode=True)
 
     def setUp(self):
+        db.setup(test_mode=True)
         upgrade_db()
 
         dir = tempfile.mkdtemp(prefix='chainerui_test_collect_images')

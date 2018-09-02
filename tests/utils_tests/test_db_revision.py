@@ -25,6 +25,7 @@ class DBRevision(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        db.session.remove()
         db.drop(test_mode=True)
 
     def _upgrade(self):

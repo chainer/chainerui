@@ -20,7 +20,9 @@ class TestApp(unittest.TestCase):
         self._db_url = 'sqlite:///' + self._db_path
 
     def tearDown(self):
-        db.session.remove()
+        if db._session is not None:
+            db.session.remove()
+        db.drop(test_mode=True)
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
 

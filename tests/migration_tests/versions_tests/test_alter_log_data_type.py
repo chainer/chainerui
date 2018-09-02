@@ -43,6 +43,7 @@ class TestUpgrade(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        db.session.remove()
         db.drop(test_mode=True)
 
     def test_upgrade_downgrade(self):
