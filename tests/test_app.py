@@ -60,12 +60,16 @@ class TestApp(unittest.TestCase):
         upgrade_db()
         p = db.session.query(Project).filter_by(path_name=self._dir).first()
         assert p is None
+        # on Windows/Python2, another session is create, need to remove
+        # this session externally (*)
+        db._session.remove()
 
         args.handler(args)
         p = db.session.query(Project).filter_by(path_name=self._dir).first()
         assert p is not None
         assert p.path_name == self._dir
         assert p.name == 'test'
+        db._session.remove()  # same as (*)
 
         args.handler(args)  # already registered, confirm not occur error
         ps = db.session.query(Project).filter_by(path_name=self._dir).all()
