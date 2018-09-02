@@ -71,25 +71,42 @@ class TestApp(unittest.TestCase):
         ps = db.session.query(Project).filter_by(path_name=self._dir).all()
         assert len(ps) == 1
 
-    def test_db(self):
+    def test_db_create(self):
         args = app.create_parser().parse_args(
             ['--db', self._db_url, 'db', 'create'])
         assert args.type == 'create'
         assert args.db == self._db_url
         args.handler(args)
+        assert os.path.isdir(db._sqlite_default_db_dir())
+        assert not db._initialized
 
+    def test_db_status(self):
         args = app.create_parser().parse_args(
             ['--db', self._db_url, 'db', 'status'])
         assert args.type == 'status'
         assert args.db == self._db_url
         args.handler(args)
+        assert db._initialized
+        assert db._external_db
 
+    def test_db_upgrade_drop(self):
         args = app.create_parser().parse_args(
             ['--db', self._db_url, 'db', 'upgrade'])
         assert args.type == 'upgrade'
         assert args.db == self._db_url
         args.handler(args)
+        assert db._initialized
+        assert db._external_db
 
+        args = app.create_parser().parse_args(
+            ['--db', self._db_url, 'db', 'drop'])
+        assert args.type == 'drop'
+        assert args.db == self._db_url
+        args.handler(args)
+        assert not db._initialized
+        assert not db._external_db
+
+    def test_db_revision(self):
         args = app.create_parser().parse_args(
             ['--db', self._db_url, 'db', 'revision'])
         assert args.type == 'revision'
@@ -97,9 +114,5 @@ class TestApp(unittest.TestCase):
         with patch('chainerui.app.db_revision.new_revision') as f:
             args.handler(args)
             assert f.called
-
-        args = app.create_parser().parse_args(
-            ['--db', self._db_url, 'db', 'drop'])
-        assert args.type == 'drop'
-        assert args.db == self._db_url
-        args.handler(args)
+        assert db._initialized
+        assert db._external_db

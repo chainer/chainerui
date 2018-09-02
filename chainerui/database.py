@@ -18,11 +18,10 @@ class Database(object):
         self._engine = None
         self._session = None
         self._external_db = False
+        self._sqlite_db_file_path = None
 
-    def init_db(self, db_dir=None):
-        if db_dir is None:
-            db_dir = self._sqlite_default_db_dir()
-        self._sqlite_db_dir = db_dir
+    def init_db(self):
+        db_dir = self._sqlite_default_db_dir()
         try:
             os.makedirs(db_dir)
         except OSError as e:
@@ -34,8 +33,9 @@ class Database(object):
 
     def setup(self, url=None, test_mode=False, echo=False):
         if url is None:
+            db_dir = self._sqlite_default_db_dir()
             db_file_name = 'chainerui_test.db' if test_mode else 'chainerui.db'
-            db_path = os.path.join(self._sqlite_db_dir, db_file_name)
+            db_path = os.path.join(db_dir, db_file_name)
             self._sqlite_db_file_path = db_path
             url = 'sqlite:///' + db_path
         else:
@@ -66,7 +66,7 @@ class Database(object):
 
     def _check(self):
         if not self._external_db:
-            if not os.path.isdir(self._sqlite_db_dir):
+            if not os.path.isdir(self._sqlite_default_db_dir()):
                 print('DB is not initialized, please run \'create\' command '
                       'before')
                 return False
@@ -74,7 +74,7 @@ class Database(object):
         return True
 
     def drop(self):
-        if not self._external_db:
+        if not self._external_db and self._sqlite_db_file_path is not None:
             if os.path.exists(self._sqlite_db_file_path):
                 os.remove(self._sqlite_db_file_path)
         self.__init__()  # initialize all attribute
