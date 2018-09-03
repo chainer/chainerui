@@ -1,17 +1,14 @@
 from contextlib import closing
 import json
-import os
 import sqlite3
 import unittest
 
 import alembic
-from alembic.config import Config
 import msgpack
 
 from chainerui import CHAINERUI_ENV
 from chainerui import db
 from chainerui.migration.versions import e3db52a480f8_alter_log_data_type as target  # NOQA
-from chainerui import PACKAGE_DIR
 from tests.helpers import NotInTestEnvironmentException
 
 
@@ -28,11 +25,7 @@ class TestUpgrade(unittest.TestCase):
         db.setup(test_mode=True)
         cls.db_file_path = db._sqlite_db_file_path
 
-        ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
-        config = Config(ini_path)
-        config.set_main_option(
-            "script_location", os.path.join(PACKAGE_DIR, 'migration'))
-        config.set_main_option('url', db.url)
+        config = db.alembic_config
         cls._config = config
 
         script_dir = alembic.script.ScriptDirectory.from_config(config)
@@ -44,7 +37,7 @@ class TestUpgrade(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         db.session.remove()
-        db.drop()
+        db.remove_db()
 
     def test_upgrade_downgrade(self):
         # NOTE: don't use alembic operation module, the module is not

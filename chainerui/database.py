@@ -1,6 +1,9 @@
 import errno
 import os
 
+from alembic.command import downgrade
+from alembic.command import upgrade
+from alembic.config import Config
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session
@@ -8,6 +11,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 BASE = declarative_base()
+_PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 class Database(object):
@@ -18,6 +22,8 @@ class Database(object):
         self._engine = None
         self._session = None
         self._external_db = False
+
+        self._alembic_config = None
         self._sqlite_db_file_path = None
 
     def init_db(self):
@@ -62,7 +68,17 @@ class Database(object):
         )
         self._initialized = True
 
+        self._setup_alembic_config(url)
+
         return True
+
+    def _setup_alembic_config(self, url):
+        ini_path = os.path.join(_PACKAGE_DIR, 'alembic.ini')
+        config = Config(ini_path)
+        config.set_main_option(
+            'script_location', os.path.join(_PACKAGE_DIR, 'migration'))
+        config.set_main_option('url', url)
+        self._alembic_config = config
 
     def _check(self):
         if not self._external_db:
@@ -73,7 +89,13 @@ class Database(object):
         # TODO(disktnk): add ping, to check connetion with external DB
         return True
 
-    def drop(self):
+    def upgrade(self):
+        upgrade(self.alembic_config, 'head')
+
+    def downgrade(self):
+        downgrade(self.alembic_config, 'base')
+
+    def remove_db(self):
         if not self._external_db and self._sqlite_db_file_path is not None:
             if os.path.exists(self._sqlite_db_file_path):
                 os.remove(self._sqlite_db_file_path)
@@ -101,6 +123,12 @@ class Database(object):
         if not self._initialized:
             raise ValueError('not setup database session')
         return self._session
+
+    @property
+    def alembic_config(self):
+        if not self._initialized:
+            raise ValueError('not setup migration configuration')
+        return self._alembic_config
 
 
 db = Database()

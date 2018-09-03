@@ -1,8 +1,5 @@
 import os
 
-from alembic.command import downgrade
-from alembic.command import upgrade
-from alembic.config import Config
 from flask import Flask
 from flask import jsonify
 from flask import render_template
@@ -18,27 +15,6 @@ __version__ = _version.__version__
 
 
 CHAINERUI_ENV = os.getenv('CHAINERUI_ENV', 'production')
-PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
-
-
-def get_db_migration_config():
-    ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
-    config = Config(ini_path)
-    config.set_main_option(
-        'script_location', os.path.join(PACKAGE_DIR, 'migration'))
-    config.set_main_option('url', db.url)
-    return config
-
-
-def upgrade_db():
-    """upgrade_db."""
-    config = get_db_migration_config()
-    upgrade(config, 'head')
-
-
-def downgrade_db():
-    config = get_db_migration_config()
-    downgrade(config, 'base')
 
 
 def create_app():

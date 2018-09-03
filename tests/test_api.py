@@ -10,7 +10,6 @@ from chainerui import CHAINERUI_ENV
 from chainerui import create_app
 from chainerui import db
 from chainerui.models.project import Project
-from chainerui import upgrade_db
 from chainerui.utils.commands_state import CommandsState
 from tests.helpers import assert_json_api
 from tests.helpers import NotInTestEnvironmentException
@@ -140,7 +139,7 @@ def setup_test_project(root_path):
 
 
 def setup_test_db(project_path, project_name):
-    upgrade_db()
+    db.upgrade()
 
     # insert test data
     Project.create(project_path, project_name)
@@ -181,7 +180,7 @@ class TestAPI(unittest.TestCase):
 
     def tearDown(self):
         db.session.remove()
-        db.drop()
+        db.remove_db()
 
     def assert_test_project(self, project, path=None, name=None):
         assert len(project) == 3

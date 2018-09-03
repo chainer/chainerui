@@ -4,8 +4,6 @@ from alembic.command import upgrade
 
 from chainerui import CHAINERUI_ENV
 from chainerui import db
-from chainerui import get_db_migration_config
-from chainerui import upgrade_db
 from chainerui.utils.db_revision import check_current_db_revision
 
 from tests.helpers import NotInTestEnvironmentException
@@ -26,10 +24,10 @@ class DBRevision(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         db.session.remove()
-        db.drop()
+        db.remove_db()
 
     def _upgrade(self):
-        config = get_db_migration_config()
+        config = db.alembic_config
         upgrade(config, '213e2a3392f2')  # = init revision
 
     def test_check_current_db_revision(self):
@@ -38,5 +36,5 @@ class DBRevision(unittest.TestCase):
         self._upgrade()
         assert not check_current_db_revision()
 
-        upgrade_db()
+        db.upgrade()
         assert check_current_db_revision()

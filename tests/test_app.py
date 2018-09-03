@@ -8,7 +8,6 @@ import unittest
 from chainerui import app
 from chainerui import db
 from chainerui.models.project import Project
-from chainerui import upgrade_db
 
 
 class TestApp(unittest.TestCase):
@@ -22,7 +21,7 @@ class TestApp(unittest.TestCase):
     def tearDown(self):
         if db._session is not None:
             db.session.remove()
-        db.drop()
+        db.remove_db()
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
 
@@ -42,7 +41,7 @@ class TestApp(unittest.TestCase):
             args.handler(args)
             f.assert_not_called()
 
-            upgrade_db()
+            db.upgrade()
             args.handler(args)
             f.assert_called_once()
             mock_app.run.assert_called_with(
@@ -57,7 +56,7 @@ class TestApp(unittest.TestCase):
         assert args.db == self._db_url
 
         args.handler(args)
-        upgrade_db()
+        db.upgrade()
         p = db.session.query(Project).filter_by(path_name=self._dir).first()
         assert p is None
         # on Windows/Python2, another session is create, need to remove

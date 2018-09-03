@@ -9,9 +9,7 @@ from chainerui import _version
 from chainerui import CHAINERUI_ENV
 from chainerui import create_app
 from chainerui import db
-from chainerui import downgrade_db
 from chainerui.models.project import Project
-from chainerui import upgrade_db
 from chainerui.utils import db_revision
 
 
@@ -87,15 +85,15 @@ def db_handler(args):
         print('current_rev', current_rev)
 
     if args.type == 'upgrade':
-        upgrade_db()
+        db.upgrade()
 
     if args.type == 'revision':
         db_revision.new_revision()
 
     if args.type == 'drop':
         if args.db is not None:
-            downgrade_db()
-        db.drop()
+            db.downgrade()
+        db.remove_db()
 
 
 def project_create_handler(args):
