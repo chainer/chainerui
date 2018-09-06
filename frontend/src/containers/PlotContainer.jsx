@@ -122,7 +122,9 @@ class PlotContainer extends React.Component {
                 onCommandSubmit={this.props.createCommand}
                 onTableExpandedUpdate={this.props.updateTableExpanded}
               />
-              <ExperimentsTableConfigurator />
+              <ExperimentsTableConfigurator
+                stats={stats}
+              />
             </div>
           </div>
         </Container>

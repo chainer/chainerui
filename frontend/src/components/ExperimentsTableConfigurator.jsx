@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Button,
   Modal,
@@ -31,6 +32,13 @@ class ExperimentsTableConfigurator extends React.Component {
   }
 
   render() {
+    console.log('ExperimentsTableConfigurator', this.props);
+    const { stats = {} } = this.props;
+    const {
+      logKeys = [],
+      argKeys = []
+    } = stats;
+
     return (
       <div>
         <Button color="secondary" className="my-2" onClick={this.handleModalShow}>
@@ -39,10 +47,22 @@ class ExperimentsTableConfigurator extends React.Component {
 
         <Modal isOpen={this.state.showModal}>
           <ModalHeader>
-            Edit Table Columns
+            Edit table columns visibility
           </ModalHeader>
           <ModalBody>
-            body
+            <p>
+              logKeys
+            </p>
+            {
+              logKeys.map((l) => <li key={l}>{l}</li>)
+            }
+            <hr />
+            <p>
+              argKeys
+            </p>
+            {
+              argKeys.map((a) => <li key={a}>{a}</li>)
+            }
           </ModalBody>
           <ModalFooter>
             <Button color="secondary" onClick={this.handleModalHide}>Close</Button>
@@ -53,7 +73,12 @@ class ExperimentsTableConfigurator extends React.Component {
   }
 }
 
-ExperimentsTableConfigurator.propTypes = {};
+ExperimentsTableConfigurator.propTypes = {
+  stats: PropTypes.shape({
+    logKeys: PropTypes.array,
+    argKeys: PropTypes.array
+  }).isRequired
+};
 
 ExperimentsTableConfigurator.defaultProps = {};
 
