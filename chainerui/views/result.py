@@ -34,14 +34,16 @@ class ResultAPI(MethodView):
                 filter_by(is_unregistered=False).\
                 all()
 
+            # NOTE: To improve performance, aggregate commit phase. By set
+            # `commit=False`, implicit transaction is not closed UPDATE query
+            # is not committed From this, result list does not call SELECT
+            # query again.
             for result in results:
-                result = crawl_result(result)
+                crawl_result(result, commit=False)
+            rs = [r.serialize_with_sampled_logs(logs_limit) for r in results]
+            db.session.commit()
 
-            return jsonify({
-                'results': [
-                    r.serialize_with_sampled_logs(logs_limit) for r in results
-                ]
-            })
+            return jsonify({'results': rs})
 
         else:
 

@@ -65,7 +65,7 @@ def _check_log_updated(result):
     return False
 
 
-def crawl_result(result, force=False):
+def crawl_result(result, force=False, commit=True):
     """crawl_results."""
     now = datetime.datetime.now()
 
@@ -102,6 +102,7 @@ def crawl_result(result, force=False):
             )
 
     result.updated_at = datetime.datetime.now()
-    db.session.commit()
+    if commit:
+        db.session.commit()
 
     return result
