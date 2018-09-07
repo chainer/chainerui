@@ -5,7 +5,11 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter
+  ModalFooter,
+  FormGroup,
+  Label,
+  Input,
+  Form
 } from 'reactstrap';
 
 class ExperimentsTableConfigurator extends React.Component {
@@ -13,6 +17,8 @@ class ExperimentsTableConfigurator extends React.Component {
     super(props);
     this.handleModalShow = this.handleModalShow.bind(this);
     this.handleModalHide = this.handleModalHide.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
 
     this.state = {
       showModal: false
@@ -28,6 +34,23 @@ class ExperimentsTableConfigurator extends React.Component {
   handleModalHide() {
     this.setState({
       showModal: false
+    });
+  }
+
+  handleChange(event) {
+    console.log(event.target.name);
+    console.log(event.target.checked);
+    this.setState({
+      showModal: true
+    });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    console.log(event);
+    // this.onTableConfigUpdate()
+    this.setState({
+      showModal: true
     });
   }
 
@@ -50,22 +73,35 @@ class ExperimentsTableConfigurator extends React.Component {
             Edit table columns visibility
           </ModalHeader>
           <ModalBody>
-            <p>
-              logKeys
-            </p>
-            {
-              logKeys.map((l) => <li key={l}>{l}</li>)
-            }
-            <hr />
-            <p>
-              argKeys
-            </p>
-            {
-              argKeys.map((a) => <li key={a}>{a}</li>)
-            }
+            <Form>
+              <legend>Log Keys</legend>
+              {
+                logKeys.map((l) => (
+                  <FormGroup check key={`logKey${l}`}>
+                    <Label check>
+                      <Input type="checkbox" name={`logKey.${l}`} onChange={this.handleChange} />
+                      {` ${l}`}
+                    </Label>
+                  </FormGroup>
+                ))
+              }
+              <hr />
+              <legend>Arg Keys</legend>
+              {
+                argKeys.map((a) => (
+                  <FormGroup check key={`argKey${a}`}>
+                    <Label check>
+                      <Input type="checkbox" />
+                      {` ${a}`}
+                    </Label>
+                  </FormGroup>
+                ))
+              }
+            </Form>
           </ModalBody>
           <ModalFooter>
             <Button color="secondary" onClick={this.handleModalHide}>Close</Button>
+            <Button color="primary" onClick={this.handleSubmit}>Save</Button>
           </ModalFooter>
         </Modal>
       </div>

@@ -250,8 +250,8 @@ export const updateTableExpanded = (projectId, expanded) => ({
 });
 
 export const TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
-export const updateTableVisibility = (projectId, visibleKeys, visibleArgs) => ({
-  type: TABLE_STATE_EXPANDED_UPDATE,
+export const updateTableColumnsVisibility = (projectId, visibleKeys, visibleArgs) => ({
+  type: TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
   projectId,
   visibleKeys,
   visibleArgs

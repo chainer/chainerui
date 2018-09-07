@@ -16,7 +16,8 @@ import {
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber,
   createCommand,
-  updateTableExpanded
+  updateTableExpanded,
+  updateTableColumnsVisibility
 } from '../actions';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
@@ -124,6 +125,7 @@ class PlotContainer extends React.Component {
               />
               <ExperimentsTableConfigurator
                 stats={stats}
+                onTableConfigUpdate={this.props.updateTableColumnsVisibility}
               />
             </div>
           </div>
@@ -229,7 +231,8 @@ PlotContainer.propTypes = {
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
   updateAxisScaleRangeNumber: PropTypes.func.isRequired,
-  updateTableExpanded: PropTypes.func.isRequired
+  updateTableExpanded: PropTypes.func.isRequired,
+  updateTableColumnsVisibility: PropTypes.func.isRequired
 };
 
 PlotContainer.defaultProps = {
@@ -253,5 +256,6 @@ export default connect(mapStateToProps, {
   updateXAxisKey,
   updateAxisScaleRangeType,
   updateAxisScaleRangeNumber,
-  updateTableExpanded
+  updateTableExpanded,
+  updateTableColumnsVisibility
 })(PlotContainer);
