@@ -8,12 +8,12 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy import String
 
-from chainerui import DB_BASE
-from chainerui import DB_SESSION
+from chainerui import database
+from chainerui import db
 from chainerui.tasks.crawl_result import crawl_result
 
 
-class Result(DB_BASE):
+class Result(database.BASE):
     """Result Model."""
     __tablename__ = 'result'
 
@@ -51,8 +51,8 @@ class Result(DB_BASE):
         """Initialize an instance and save it to db."""
         result = cls(path_name, name, project_id, log_modified_at)
 
-        DB_SESSION.add(result)
-        DB_SESSION.commit()
+        db.session.add(result)
+        db.session.commit()
 
         crawl_result(result, True)
 

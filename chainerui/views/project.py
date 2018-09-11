@@ -2,7 +2,7 @@ from flask import jsonify
 from flask import request
 from flask.views import MethodView
 
-from chainerui import DB_SESSION
+from chainerui import db
 from chainerui.models.project import Project
 
 
@@ -13,13 +13,13 @@ class ProjectAPI(MethodView):
         """get."""
 
         if id is None:
-            projects = DB_SESSION.query(Project).all()
+            projects = db.session.query(Project).all()
             return jsonify({
                 'projects': [project.serialize for project in projects]
             })
 
         else:
-            project = DB_SESSION.query(Project).filter_by(id=id).first()
+            project = db.session.query(Project).filter_by(id=id).first()
             if project is None:
                 return jsonify({
                     'project': None,
@@ -42,7 +42,7 @@ class ProjectAPI(MethodView):
         if name == '':
             name = path
 
-        project = DB_SESSION.query(Project).filter_by(path_name=path).first()
+        project = db.session.query(Project).filter_by(path_name=path).first()
         if project is None:
             project = Project.create(path, name)
             return jsonify({
@@ -57,7 +57,7 @@ class ProjectAPI(MethodView):
     def put(self, id):
         """put."""
 
-        project = DB_SESSION.query(Project).filter_by(id=id).first()
+        project = db.session.query(Project).filter_by(id=id).first()
 
         if project is None:
             return jsonify({
@@ -71,8 +71,8 @@ class ProjectAPI(MethodView):
         if project_name is not None:
             project.name = project_name
 
-        DB_SESSION.add(project)
-        DB_SESSION.commit()
+        db.session.add(project)
+        db.session.commit()
 
         return jsonify({
             'project': project.serialize
@@ -80,7 +80,7 @@ class ProjectAPI(MethodView):
 
     def delete(self, id):
         """delete."""
-        project = DB_SESSION.query(Project).filter_by(id=id).first()
+        project = db.session.query(Project).filter_by(id=id).first()
 
         if project is None:
             response = jsonify({
@@ -89,8 +89,8 @@ class ProjectAPI(MethodView):
             })
             return response, 404
 
-        DB_SESSION.delete(project)
-        DB_SESSION.commit()
+        db.session.delete(project)
+        db.session.commit()
 
         return jsonify({
             'project': project.serialize

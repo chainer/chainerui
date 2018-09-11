@@ -3,7 +3,7 @@ import datetime
 import json
 import os
 
-from chainerui import DB_SESSION
+from chainerui import db
 from chainerui.models.asset import Asset
 from chainerui.models.bindata import Bindata
 
@@ -45,6 +45,6 @@ def collect_images(result, assets, force=False):
             asset.content_list.append(content)
         assets.append(asset)
 
-    DB_SESSION.commit()
+    db.session.commit()
 
     return assets

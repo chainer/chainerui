@@ -1,10 +1,12 @@
+from mock import MagicMock
 import unittest
+
+from six import string_types
+from sqlalchemy.exc import OperationalError
 
 from chainerui import CHAINERUI_ENV
 from chainerui import create_app
-
-from six import string_types
-
+from chainerui import db
 from tests.helpers import assert_json_api
 from tests.helpers import NotInTestEnvironmentException
 
@@ -21,6 +23,12 @@ class TestInit(unittest.TestCase):
 
     def setUp(self):
         # not setup database
+        db._initialized = True
+        mock_session = MagicMock()
+        mock_session.query = MagicMock(
+            side_effect=OperationalError(None, None, None))
+        db._session = mock_session
+
         app = create_app()
         app.testing = True
         self.app = app.test_client()

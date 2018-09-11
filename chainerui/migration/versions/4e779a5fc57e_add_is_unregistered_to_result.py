@@ -23,5 +23,5 @@ def upgrade():
 
 
 def downgrade():
-    with op.batch_alter_table('command') as batch_op:
+    with op.batch_alter_table('result') as batch_op:
         batch_op.drop_column('is_unregistered')

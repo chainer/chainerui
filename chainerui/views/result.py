@@ -2,7 +2,7 @@ from flask import jsonify
 from flask import request
 from flask.views import MethodView
 
-from chainerui import DB_SESSION
+from chainerui import db
 from chainerui.models.project import Project
 from chainerui.models.result import Result
 from chainerui.tasks import collect_results
@@ -16,7 +16,7 @@ class ResultAPI(MethodView):
         """get."""
         logs_limit = request.args.get('logs_limit', default=-1, type=int)
 
-        project = DB_SESSION.query(Project).\
+        project = db.session.query(Project).\
             filter_by(id=project_id).\
             first()
         if project is None:
@@ -29,7 +29,7 @@ class ResultAPI(MethodView):
 
             collect_results(project)
 
-            results = DB_SESSION.query(Result).\
+            results = db.session.query(Result).\
                 filter_by(project_id=project_id).\
                 filter_by(is_unregistered=False).\
                 all()
@@ -45,7 +45,7 @@ class ResultAPI(MethodView):
 
         else:
 
-            result = DB_SESSION.query(Result).\
+            result = db.session.query(Result).\
                 filter_by(id=id).\
                 filter_by(is_unregistered=False).\
                 first()
@@ -64,7 +64,7 @@ class ResultAPI(MethodView):
 
     def put(self, id, project_id=None):
         """put."""
-        result = DB_SESSION.query(Result).filter_by(id=id).first()
+        result = db.session.query(Result).filter_by(id=id).first()
         if result is None:
             response = jsonify({
                 'result': None, 'message': 'No interface defined for URL.'
@@ -82,21 +82,21 @@ class ResultAPI(MethodView):
         if is_unregistered is not None:
             result.is_unregistered = is_unregistered
 
-        DB_SESSION.add(result)
-        DB_SESSION.commit()
+        db.session.add(result)
+        db.session.commit()
 
         return jsonify({'result': result.serialize})
 
     def delete(self, id, project_id=None):
         """delete."""
-        result = DB_SESSION.query(Result).filter_by(id=id).first()
+        result = db.session.query(Result).filter_by(id=id).first()
         if result is None:
             response = jsonify({
                 'result': None, 'message': 'No interface defined for URL.'
             })
             return response, 404
 
-        DB_SESSION.delete(result)
-        DB_SESSION.commit()
+        db.session.delete(result)
+        db.session.commit()
 
         return jsonify({'result': result.serialize})

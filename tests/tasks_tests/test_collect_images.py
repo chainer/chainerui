@@ -6,12 +6,9 @@ import tempfile
 import unittest
 
 from chainerui import CHAINERUI_ENV
-from chainerui import create_db
-from chainerui import DB_FILE_PATH
-from chainerui import DB_SESSION
+from chainerui import db
 from chainerui.models.result import Result
 from chainerui.tasks import collect_images
-from chainerui import upgrade_db
 from tests.helpers import NotInTestEnvironmentException
 
 
@@ -24,10 +21,11 @@ class TestApp(unittest.TestCase):
                 'set environment variable CHAINERUI_ENV=test '
                 'when you run this test'
             )
+        db.init_db()
 
     def setUp(self):
-        create_db()
-        upgrade_db()
+        db.setup(test_mode=True)
+        db.upgrade()
 
         dir = tempfile.mkdtemp(prefix='chainerui_test_collect_images')
         info_path = os.path.join(dir, '.chainerui_images')
@@ -66,9 +64,8 @@ class TestApp(unittest.TestCase):
     def tearDown(self):
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
-        DB_SESSION.remove()
-        if os.path.exists(DB_FILE_PATH):
-            os.remove(DB_FILE_PATH)
+        db.session.remove()
+        db.remove_db()
 
     def _get_dummy_result(self):
         r = Result(path_name=self._dir)

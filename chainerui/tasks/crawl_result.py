@@ -2,7 +2,7 @@ import datetime
 import json
 import os
 
-from chainerui import DB_SESSION
+from chainerui import db
 from chainerui.models.argument import Argument
 from chainerui.models.command import Command
 from chainerui.models.log import Log
@@ -102,6 +102,6 @@ def crawl_result(result, force=False):
             )
 
     result.updated_at = datetime.datetime.now()
-    DB_SESSION.commit()
+    db.session.commit()
 
     return result

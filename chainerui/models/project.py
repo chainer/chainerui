@@ -6,12 +6,12 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy import String
 
-from chainerui import DB_BASE
-from chainerui import DB_SESSION
+from chainerui import database
+from chainerui import db
 from chainerui.tasks.collect_results import collect_results
 
 
-class Project(DB_BASE):
+class Project(database.BASE):
     """Project Model."""
     __tablename__ = 'project'
 
@@ -38,8 +38,8 @@ class Project(DB_BASE):
 
         project = cls(path_name, name)
 
-        DB_SESSION.add(project)
-        DB_SESSION.commit()
+        db.session.add(project)
+        db.session.commit()
 
         collect_results(project, force=True)
         return project

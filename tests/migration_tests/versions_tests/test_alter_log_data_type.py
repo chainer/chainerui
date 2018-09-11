@@ -1,18 +1,14 @@
 from contextlib import closing
 import json
-import os
 import sqlite3
 import unittest
 
 import alembic
-from alembic.config import Config
 import msgpack
 
 from chainerui import CHAINERUI_ENV
-from chainerui import DB_FILE_PATH
+from chainerui import db
 from chainerui.migration.versions import e3db52a480f8_alter_log_data_type as target  # NOQA
-from chainerui import PACKAGE_DIR
-
 from tests.helpers import NotInTestEnvironmentException
 
 
@@ -25,11 +21,11 @@ class TestUpgrade(unittest.TestCase):
                 'set environment variable CHAINERUI_ENV=test '
                 'when you run this test'
             )
+        db.init_db()
+        db.setup(test_mode=True)
+        cls.db_file_path = db._sqlite_db_file_path
 
-        ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
-        config = Config(ini_path)
-        config.set_main_option(
-            "script_location", os.path.join(PACKAGE_DIR, 'migration'))
+        config = db.alembic_config
         cls._config = config
 
         script_dir = alembic.script.ScriptDirectory.from_config(config)
@@ -40,13 +36,13 @@ class TestUpgrade(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        if os.path.exists(DB_FILE_PATH):
-            os.remove(DB_FILE_PATH)
+        db.session.remove()
+        db.remove_db()
 
     def test_upgrade_downgrade(self):
         # NOTE: don't use alembic operation module, the module is not
         #       initialized before calling upgrade command.
-        with closing(sqlite3.connect(DB_FILE_PATH)) as conn:
+        with closing(sqlite3.connect(self.db_file_path)) as conn:
             c = conn.cursor()
             insert_sql = 'INSERT INTO log (id, result_id, data) VALUES ' +\
                          '(?, ?, ?)'
@@ -60,7 +56,7 @@ class TestUpgrade(unittest.TestCase):
 
         alembic.command.upgrade(self._config, target.revision)
 
-        with closing(sqlite3.connect(DB_FILE_PATH)) as conn:
+        with closing(sqlite3.connect(self.db_file_path)) as conn:
             c = conn.cursor()
             select_sql = 'SELECT id, result_id, data FROM log ORDER BY id'
             rows = c.execute(select_sql).fetchall()
@@ -75,7 +71,7 @@ class TestUpgrade(unittest.TestCase):
 
         alembic.command.downgrade(self._config, target.down_revision)
 
-        with closing(sqlite3.connect(DB_FILE_PATH)) as conn:
+        with closing(sqlite3.connect(self.db_file_path)) as conn:
             c = conn.cursor()
             select_sql = 'SELECT id, result_id, data FROM log ORDER BY id'
             rows = c.execute(select_sql).fetchall()

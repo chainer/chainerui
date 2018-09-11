@@ -1,7 +1,7 @@
 import datetime
 import os
 
-from chainerui import DB_SESSION
+from chainerui import db
 from chainerui.models.result import Result
 
 
@@ -26,7 +26,7 @@ def _register_result(project_id, result_path):
     if not contain_log_file:
         return False
 
-    result_size = DB_SESSION.query(Result).filter_by(
+    result_size = db.session.query(Result).filter_by(
         path_name=result_path
     ).count()
 
@@ -52,4 +52,4 @@ def collect_results(project, force=False):
 
     project.updated_at = datetime.datetime.now()
 
-    DB_SESSION.commit()
+    db.session.commit()

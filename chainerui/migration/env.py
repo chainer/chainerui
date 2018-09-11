@@ -1,8 +1,7 @@
 import alembic
+from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
-from chainerui import SQLALCHEMY_DATABASE_URI
 
 
 def run_migrations_online(config):
@@ -26,8 +25,8 @@ def run_migrations_online(config):
 
 def main():
     """main."""
-    config = alembic.config.Config()
-    config.set_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URI)
+    config = context.config
+    config.set_main_option("sqlalchemy.url", config.get_main_option('url'))
     run_migrations_online(config)
 
 

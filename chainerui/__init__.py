@@ -1,81 +1,20 @@
-import errno
 import os
 
-from alembic.command import upgrade
-from alembic.config import Config
 from flask import Flask
 from flask import jsonify
 from flask import render_template
 from flask import send_from_directory
 from flask import url_for
-from sqlalchemy import create_engine
 from sqlalchemy.exc import OperationalError
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session
-from sqlalchemy.orm import sessionmaker
 
 from chainerui import _version
+from chainerui.database import db
 
 
 __version__ = _version.__version__
 
 
 CHAINERUI_ENV = os.getenv('CHAINERUI_ENV', 'production')
-CHAINERUI_ROOT = os.path.abspath(
-    os.path.expanduser(os.getenv('CHAINERUI_ROOT', '~/.chainerui')))
-PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_FILE_DIR = os.path.join(CHAINERUI_ROOT, 'db')
-DB_FILE_NAME = 'chainerui_test.db' if CHAINERUI_ENV == 'test' \
-    else 'chainerui.db'
-DB_FILE_PATH = os.path.join(DB_FILE_DIR, DB_FILE_NAME)
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DB_FILE_PATH
-ENGINE = create_engine(
-    SQLALCHEMY_DATABASE_URI,
-    convert_unicode=True,
-    connect_args={'check_same_thread': False},
-    echo=(CHAINERUI_ENV == 'development')
-)
-DB_BASE = declarative_base()
-DB_SESSION = scoped_session(
-    sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
-)
-
-
-def get_db_migration_config():
-    ini_path = os.path.join(PACKAGE_DIR, 'alembic.ini')
-    config = Config(ini_path)
-    config.set_main_option(
-        "script_location", os.path.join(PACKAGE_DIR, 'migration'))
-    return config
-
-
-def create_db():
-    """create_db."""
-    try:
-        os.makedirs(DB_FILE_DIR)
-    except OSError as exception:
-        if exception.errno == errno.EEXIST and os.path.isdir(DB_FILE_DIR):
-            pass
-        else:
-            raise
-    print('DB_FILE_PATH: ', DB_FILE_PATH)
-
-
-def upgrade_db():
-    """upgrade_db."""
-    if not os.path.isdir(DB_FILE_DIR):
-        print('DB is not initialized, please run \'create\' command before')
-        return
-    config = get_db_migration_config()
-    upgrade(config, 'head')
-
-
-def create_db_session():
-    """create_db_session."""
-    session = scoped_session(
-        sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
-    )
-    return session()
 
 
 def create_app():
@@ -100,7 +39,7 @@ def create_app():
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
-        DB_SESSION.remove()
+        db.session.remove()
 
     @app.route('/')
     @app.route('/projects/<int:project_id>')
