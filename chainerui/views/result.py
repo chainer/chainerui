@@ -35,9 +35,9 @@ class ResultAPI(MethodView):
                 all()
 
             # NOTE: To improve performance, aggregate commit phase. By set
-            # `commit=False`, implicit transaction is not closed UPDATE query
-            # is not committed From this, result list does not call SELECT
-            # query again.
+            # `commit=False`, implicit transaction is not closed, UPDATE query
+            # is not committed. Consequently a process of serializing does not
+            # have to call SELECT query again.
             for result in results:
                 crawl_result(result, commit=False)
             rs = [r.serialize_with_sampled_logs(logs_limit) for r in results]
