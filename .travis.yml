@@ -4,6 +4,9 @@ python:
   - "3.5"
   - "3.6"
 
+services:
+  - docker
+
 notifications:
   email: false
 
@@ -37,11 +40,17 @@ after_success:
   - if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then COVERALLS_TOKEN=$COVERALLS_TOKEN coveralls; fi
 
 deploy:
-  provider: pypi
-  user: $PYPI_MAINTAINER_NAME
-  password: $PYPI_MAINTAINER_PASS
-  on:
-    tags: true
-    python: 3.6
-  allow_failure: false
-  skip_cleanup: true
+  - provider: pypi
+    user: $PYPI_MAINTAINER_NAME
+    password: $PYPI_MAINTAINER_PASS
+    on:
+      tags: true
+      python: 3.6
+    allow_failure: false
+    skip_cleanup: true
+  - provider: script
+    script: bash .travis/docker_push.sh
+    on:
+      tags: true
+      python: 3.6
+    allow_failure: false
