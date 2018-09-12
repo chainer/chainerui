@@ -29,7 +29,7 @@ To install ChainerUI, use ``pip``::
 Install ChainerUI from source
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To install ChaineruI from source, build from a cloned Git repository. Frontend module requires ``npm`` 5.6.0+::
+To install ChaineruI from source, build from a cloned Git repository. Frontend module requires ``npm`` 6.2.0+::
 
   $ git clone https://github.com/chainer/chainerui.git
   $ cd chainerui/frontend
