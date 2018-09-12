@@ -3,7 +3,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
-const URL = require('url').URL;
+const { URL } = require('url');
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
@@ -173,7 +173,7 @@ module.exports = {
         target: API_ROOT,
         headers: {
           Host: new URL(API_ROOT).host
-        },
+        }
       })));
       app.use(convert(history()));
     }
