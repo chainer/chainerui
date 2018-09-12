@@ -541,3 +541,67 @@ class TestAPI(unittest.TestCase):
 
         # not raise an exception
         #   when PUT /api/v1/projects/12345/results/4/commands
+
+    # GET /api/v1/projects/<int:project_id>/results/<int:id>/assets
+    def test_get_assets(self):
+        project3_path = os.path.join(self._dir, 'test_project3')
+        path = os.path.join(project3_path, '10004')
+        os.makedirs(path)
+        image_info = [
+            {
+                "epoch": 1,
+                "iteration": 600,
+                "images": {
+                    "train": "iter_600_61b3a8fa.png",
+                    "train_reconstructed": "iter_600_c15c042b.png",
+                }
+            }
+        ]
+        with open(os.path.join(path, '.chainerui_images'), 'w') as f:
+            json.dump(image_info, f)
+        open(os.path.join(path, 'iter_600_61b3a8fa.png'), 'w') .close()
+        open(os.path.join(path, 'iter_600_c15c042b.png'), 'w') .close()
+        with open(os.path.join(path, 'log'), 'w') as f:
+            json.dump([], f)
+        Project.create(project3_path, 'assets-test-project')
+
+        url = '/api/v1/projects/2/results/4/assets'
+        resp = self.app.get(url)
+        data = assert_json_api(resp)
+        assert 'assets' in data
+        assert len(data['assets']) == 1
+        assert 'contents' in data['assets'][0]
+        assert len(data['assets'][0]['contents']) == 2
+        assert 'train_info' in data['assets'][0]
+
+        # invalid project ID
+        resp = self.app.get('/api/v1/projects/12345/results/4/assets')
+        data = assert_json_api(resp, 404)
+        assert len(data) == 2
+        assert isinstance(data['message'], string_types)
+        assert data['project'] is None
+
+        # invalid result ID
+        resp = self.app.get('/api/v1/projects/2/results/12345/assets')
+        data = assert_json_api(resp, 404)
+        assert len(data) == 2
+        assert isinstance(data['message'], string_types)
+        assert data['result'] is None
+
+        # empty assets
+        resp = self.app.get('/api/v1/projects/1/results/1/assets')
+        data = assert_json_api(resp)
+        assert 'assets' in data
+        assert len(data['assets']) == 0
+
+        # resource check
+        resource_url = url + '/1'
+        resp = self.app.get(resource_url)
+        assert resp.status_code == 200
+
+        resource_url = url + '/3'
+        resp = self.app.get(resource_url)
+        data = assert_json_api(resp, 404)
+        assert len(data) == 2
+        assert isinstance(data['message'], string_types)
+        assert data['asset'] is None

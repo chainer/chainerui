@@ -44,7 +44,7 @@ def create_app():
     @app.route('/')
     @app.route('/projects/<int:project_id>')
     @app.route('/projects/<int:project_id>/results/<int:result_id>')
-    @app.route('/projects/<int:project_id>/results/<int:result_id>/images')
+    @app.route('/projects/<int:project_id>/results/<int:result_id>/assets')
     def index(**kwargs):
         """render react app."""
         return render_template('index.html')
@@ -73,13 +73,13 @@ def create_app():
     from chainerui.views.project import ProjectAPI
     from chainerui.views.result import ResultAPI
     from chainerui.views.result_command import ResultCommandAPI
-    from chainerui.views.result_image import ResultImageAPI
+    from chainerui.views.result_image import ResultAssetAPI
 
     project_resource = ProjectAPI.as_view('project_resource')
     result_resource = ResultAPI.as_view('result_resource')
     result_command_resource = ResultCommandAPI.as_view(
         'result_command_resource')
-    result_image_resource = ResultImageAPI.as_view('result_image_resource')
+    result_assets_resource = ResultAssetAPI.as_view('result_assets_resource')
 
     # project API
     app.add_url_rule(
@@ -106,10 +106,10 @@ def create_app():
 
     # result image API
     app.add_url_rule(
-        '/api/v1/projects/<int:project_id>/results/<int:result_id>/images',
-        view_func=result_image_resource, methods=['GET'])
+        '/api/v1/projects/<int:project_id>/results/<int:result_id>/assets',
+        view_func=result_assets_resource, methods=['GET'])
     app.add_url_rule(
-        '/api/v1/projects/<int:project_id>/results/<int:result_id>/images/<int:content_id>',  # NOQA
-        view_func=result_image_resource, methods=['GET'])
+        '/api/v1/projects/<int:project_id>/results/<int:result_id>/assets/<int:content_id>',  # NOQA
+        view_func=result_assets_resource, methods=['GET'])
 
     return app
