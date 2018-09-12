@@ -43,7 +43,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(path.dirname(__dirname), 'chainerui', 'static', 'dist'),
-    publicPath: '/',
+    publicPath: process.env.WEBPACK_SERVE ? '/' : undefined,
     filename: '[name].js'
   },
   mode: NODE_ENV,
