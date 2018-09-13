@@ -20,7 +20,7 @@ import {
   downloadObjectAsJson,
   downloadChartAsPng
 } from '../utils';
-import LogVisualizerTooltip from './LogVisualizerTooltip';
+import LogVisualizerLegend from './LogVisualizerLegend';
 
 
 const getDomain = (axisConfig = {}) => {
@@ -168,7 +168,7 @@ class LogVisualizer extends React.Component {
             {lineElems.yRightAxis}
           </LineChart>
         </ResponsiveContainer>
-        <LogVisualizerTooltip
+        <LogVisualizerLegend
           project={project}
           results={results}
           lines={axisLines}
