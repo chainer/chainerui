@@ -109,8 +109,9 @@ class LogVisualizer extends React.Component {
 
     const data = getLogData(results, stats, projectConfig);
 
-    const lineElems = [];
+    const axisLines = {};
     ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {
+      axisLines[axisName] = [];
       selectedResults.forEach((resultId) => {
         const result = results[resultId];
         if (result == null) {
@@ -120,10 +121,14 @@ class LogVisualizer extends React.Component {
           const line = lines[line2key({ resultId, logKey })] ||
                 createLine(resultId, logKey, results, logKeys);
           if (line.config.isVisible) {
-            lineElems.push(buildLineElem(line, axisName));
+            axisLines[axisName].push(line);
           }
         });
       });
+    });
+    const lineElems = {};
+    Object.keys(axisLines).forEach((axisName) => {
+      lineElems[axisName] = axisLines[axisName].map((line) => buildLineElem(line, axisName));
     });
 
     const { chartSize, isResultNameAlignRight } = globalConfig;
@@ -170,7 +175,8 @@ class LogVisualizer extends React.Component {
                 />
             }
             />
-            {lineElems}
+            {lineElems.yLeftAxis}
+            {lineElems.yRightAxis}
           </LineChart>
         </ResponsiveContainer>
         <div>
