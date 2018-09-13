@@ -8,7 +8,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer
 } from 'recharts';
 import {
@@ -165,20 +164,16 @@ class LogVisualizer extends React.Component {
               allowDataOverflow
             />
             <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip
-              content={
-                <LogVisualizerTooltip
-                  project={project}
-                  results={results}
-                  xAxisKey={xAxisKey}
-                  isResultNameAlignRight={isResultNameAlignRight}
-                />
-            }
-            />
             {lineElems.yLeftAxis}
             {lineElems.yRightAxis}
           </LineChart>
         </ResponsiveContainer>
+        <LogVisualizerTooltip
+          project={project}
+          results={results}
+          lines={axisLines}
+          isResultNameAlignRight={isResultNameAlignRight}
+        />
         <div>
           <Button size="sm" className="m-1" onClick={this.handleClickDownloadJSON}>
             <span className="mx-1 oi oi-data-transfer-download" />json
