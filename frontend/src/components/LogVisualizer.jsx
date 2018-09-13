@@ -134,54 +134,57 @@ class LogVisualizer extends React.Component {
 
     return (
       <div className="log-visualizer-root">
-        <ResponsiveContainer
-          width={chartSize.width}
-          height={chartSize.height}
-          aspect={chartSize.aspect}
-        >
-          <LineChart data={data} ref={this.chartRef}>
-            <XAxis
-              type="number"
-              dataKey={xAxisKey}
-              scale={xAxis.scale}
-              domain={getDomain(xAxis)}
-              allowDataOverflow
+        <div className="d-flex">
+          <ResponsiveContainer
+            width={chartSize.width}
+            height={chartSize.height}
+            aspect={chartSize.aspect}
+          >
+            <LineChart data={data} ref={this.chartRef}>
+              <XAxis
+                type="number"
+                dataKey={xAxisKey}
+                scale={xAxis.scale}
+                domain={getDomain(xAxis)}
+                allowDataOverflow
+              />
+              <YAxis
+                yAxisId="yLeftAxis"
+                orientation="left"
+                scale={yLeftAxis.scale}
+                domain={getDomain(yLeftAxis)}
+                tickFormatter={formatLogValue()}
+                allowDataOverflow
+              />
+              <YAxis
+                yAxisId="yRightAxis"
+                orientation="right"
+                scale={yRightAxis.scale}
+                domain={getDomain(yRightAxis)}
+                tickFormatter={formatLogValue()}
+                allowDataOverflow
+              />
+              <CartesianGrid strokeDasharray="3 3" />
+              {lineElems.yLeftAxis}
+              {lineElems.yRightAxis}
+            </LineChart>
+          </ResponsiveContainer>
+          <div>
+            <LogVisualizerLegend
+              project={project}
+              results={results}
+              lines={axisLines}
+              maxHeight={chartSize.height}
+              isResultNameAlignRight={isResultNameAlignRight}
             />
-            <YAxis
-              yAxisId="yLeftAxis"
-              orientation="left"
-              scale={yLeftAxis.scale}
-              domain={getDomain(yLeftAxis)}
-              tickFormatter={formatLogValue()}
-              allowDataOverflow
-            />
-            <YAxis
-              yAxisId="yRightAxis"
-              orientation="right"
-              scale={yRightAxis.scale}
-              domain={getDomain(yRightAxis)}
-              tickFormatter={formatLogValue()}
-              allowDataOverflow
-            />
-            <CartesianGrid strokeDasharray="3 3" />
-            {lineElems.yLeftAxis}
-            {lineElems.yRightAxis}
-          </LineChart>
-        </ResponsiveContainer>
-        <LogVisualizerLegend
-          project={project}
-          results={results}
-          lines={axisLines}
-          isResultNameAlignRight={isResultNameAlignRight}
-        />
-        <div>
-          <Button size="sm" className="m-1" onClick={this.handleClickDownloadJSON}>
-            <span className="mx-1 oi oi-data-transfer-download" />json
-          </Button>
-          <Button size="sm" className="m-1" onClick={this.handleClickDownloadPNG}>
-            <span className="mx-1 oi oi-data-transfer-download" />png
-          </Button>
+          </div>
         </div>
+        <Button size="sm" className="m-1" onClick={this.handleClickDownloadJSON}>
+          <span className="mx-1 oi oi-data-transfer-download" />json
+        </Button>
+        <Button size="sm" className="m-1" onClick={this.handleClickDownloadPNG}>
+          <span className="mx-1 oi oi-data-transfer-download" />png
+        </Button>
       </div>
     );
   }

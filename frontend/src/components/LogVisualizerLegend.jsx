@@ -36,15 +36,17 @@ const renderItems = (lines, axisName, project, results, isResultNameAlignRight) 
 
 const LogVisualizerTooltip = (props) => {
   const {
-    project, results, lines, isResultNameAlignRight
+    project, results, lines, maxHeight, isResultNameAlignRight
   } = props;
 
   return (
-    <div className="log-visualizer-tooltip card">
-      <ul className="list-group list-group-flush small text-muted">
-        {renderItems(lines, 'yLeftAxis', project, results, isResultNameAlignRight)}
-        {renderItems(lines, 'yRightAxis', project, results, isResultNameAlignRight)}
-      </ul>
+    <div className="log-visualizer-legend" style={{ maxHeight }}>
+      <div className="card">
+        <ul className="list-group list-group-flush small text-muted">
+          {renderItems(lines, 'yLeftAxis', project, results, isResultNameAlignRight)}
+          {renderItems(lines, 'yRightAxis', project, results, isResultNameAlignRight)}
+        </ul>
+      </div>
     </div>
   );
 };
@@ -63,6 +65,7 @@ LogVisualizerTooltip.propTypes = {
     logs: PropTypes.arrayOf(PropTypes.any)
   })).isRequired,
   lines: PropTypes.objectOf(PropTypes.any),
+  maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isResultNameAlignRight: PropTypes.bool
 };
 
