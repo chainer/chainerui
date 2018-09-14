@@ -1,7 +1,9 @@
+import datetime
 import os
 
 from flask import Flask
 from flask import jsonify
+from flask import request
 from flask import render_template
 from flask import send_from_directory
 from flask import url_for
@@ -9,6 +11,7 @@ from sqlalchemy.exc import OperationalError
 
 from chainerui import _version
 from chainerui.database import db
+from chainerui.logging import get_logger
 
 
 __version__ = _version.__version__
@@ -21,6 +24,8 @@ def create_app():
     """create_app."""
 
     app = Flask(__name__)
+    app.logger.disabled = True
+    logger = get_logger()
     app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
     def dated_url_for(endpoint, **values):
@@ -68,6 +73,19 @@ def create_app():
         })
         response.status_code = 400  # Bad Request
 
+        return response
+
+    @app.after_request
+    def after_request(response):
+        now = datetime.datetime.now().replace(microsecond=0)
+        logger.info(
+            '%s - - [%s] "%s %s %s" %d %d' % (
+                request.remote_addr, now, request.method, request.full_path,
+                request.environ.get('SERVER_PROTOCOL'), response.status_code,
+                response.content_length))
+        logger.error('error')
+        logger.warning('warn')
+        logger.debug('debug')
         return response
 
     from chainerui.views.project import ProjectAPI

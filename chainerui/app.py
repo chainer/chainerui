@@ -1,15 +1,14 @@
 import argparse
+import logging
 import os
 import signal
-
-import gevent
-from gevent.pywsgi import WSGIServer
 
 from chainerui import _version
 from chainerui import CHAINERUI_ENV
 from chainerui import create_app
 from chainerui import db
 from chainerui.models.project import Project
+import chainerui.logging as logging_util
 from chainerui.utils import db_revision
 
 
@@ -31,6 +30,19 @@ def _check_db_revision():
     return True
 
 
+def _show_server_banner_debug(app, logger, listener):
+    logger.info('Environment: {}'.format(app.config['ENV']))
+    logger.info('Debug mode: on')
+    from werkzeug.debug import get_pin_and_cookie_name
+    pin, _ = get_pin_and_cookie_name(app)
+    if pin is not None:
+        # level warning is followed by werkzeug implementation
+        logger.warning('Debugger is active!')
+        logger.info('Debugger PIN: {:s}:'.format(pin))
+    logger.info('Running on http://{}/ (Press CTRL+C to quit)'.format(
+        listener))
+
+
 def server_handler(args):
     """server_handler."""
     if not _setup_db(args.db):
@@ -39,18 +51,25 @@ def server_handler(args):
         return
 
     app = create_app()
+    logger = logging_util.get_logger()
+    listener = '{:s}:{:d}'.format(args.host, args.port)
     if args.debug:
-        # start server with:
-        # - env: development
-        # - debug: on
         app.config['ENV'] = 'development'
-        app.run(host=args.host, port=args.port, debug=True, threaded=True)
+        app.debug = True
+        logging.getLogger('werkzeug').disabled = True
+        _show_server_banner_debug(app, logger,  listener)
+        from werkzeug.serving import run_simple
+        run_simple(
+            args.host, args.port, app, use_reloader=True, use_debugger=True,
+            threaded=True)
     else:
         # start server with:
         # - env: production
         # - debug: off
+        import gevent
+        from gevent.pywsgi import WSGIServer
         listener = '{:s}:{:d}'.format(args.host, args.port)
-        http_server = WSGIServer(listener, application=app)
+        http_server = WSGIServer(listener, application=app, log=None)
 
         def stop_server():
             if http_server.started:
@@ -59,9 +78,9 @@ def server_handler(args):
         gevent.signal(signal.SIGTERM, stop_server)
         gevent.signal(signal.SIGINT, stop_server)
 
-        print(' * Environment: production')
-        print(' * Running on http://{}/ (Press CTRL+C to quit)'
-              .format(listener))
+        logger.info(' * Environment: production')
+        logger.info(' * Running on http://{}/ (Press CTRL+C to quit)'.format(
+            listener))
 
         try:
             http_server.serve_forever()
