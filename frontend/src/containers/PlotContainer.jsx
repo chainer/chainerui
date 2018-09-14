@@ -124,8 +124,10 @@ class PlotContainer extends React.Component {
                 onTableExpandedUpdate={this.props.updateTableExpanded}
               />
               <ExperimentsTableConfigurator
+                project={project}
                 stats={stats}
-                onTableConfigUpdate={this.props.updateTableColumnsVisibility}
+                projectConfig={projectConfig}
+                onTableColumnsVisibilityUpdate={this.props.updateTableColumnsVisibility}
               />
             </div>
           </div>

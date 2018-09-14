@@ -60,7 +60,7 @@ const ExperimentsTable = (props) => {
       return lastLogDict[logKey];
     },
     style: defaultStyle,
-    show: !!visibleKeys.find((k) => k === logKey)
+    show: !visibleKeys.find((k) => k === logKey)
   }));
 
   const argsList = argKeys.map((argKey) => ({
@@ -75,7 +75,7 @@ const ExperimentsTable = (props) => {
       return argValue2string(argDict[argKey]);
     },
     style: defaultStyle,
-    show: !!visibleArgs.find((k) => k === argKey)
+    show: !visibleArgs.find((k) => k === argKey)
   }));
 
   const columns = [
