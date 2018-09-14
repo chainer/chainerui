@@ -134,7 +134,8 @@ ExperimentsTableConfigurator.propTypes = {
     id: PropTypes.number
   }).isRequired,
   projectConfig: PropTypes.shape({
-    visibleKeys: PropTypes.array
+    hiddenLogKeys: PropTypes.array,
+    hiddenArgKeys: PropTypes.array
   }).isRequired,
   stats: PropTypes.shape({
     logKeys: PropTypes.array,
