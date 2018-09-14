@@ -24,14 +24,9 @@ def _register_result(project_id, result_path):
     contain_log_file = os.path.isfile(os.path.join(result_path, 'log'))
 
     if not contain_log_file:
-        return False
+        return
 
-    result_size = db.session.query(Result).filter_by(
-        path_name=result_path
-    ).count()
-
-    if result_size is 0:
-        Result.create(project_id=project_id, path_name=result_path)
+    Result.create(project_id=project_id, path_name=result_path)
 
 
 def collect_results(project, force=False):
@@ -43,12 +38,17 @@ def collect_results(project, force=False):
         return project
 
     result_paths = []
-
     if os.path.isdir(project.path_name):
         result_paths.extend(_list_result_paths(project.path_name))
 
+    registered_results = db.session.query(Result.path_name).filter_by(
+        project_id=project.id
+    ).all()
+    registered_paths = {r.path_name for r in registered_results}
+
     for result_path in result_paths:
-        _register_result(project.id, result_path)
+        if result_path not in registered_paths:
+            _register_result(project.id, result_path)
 
     project.updated_at = datetime.datetime.now()
 
