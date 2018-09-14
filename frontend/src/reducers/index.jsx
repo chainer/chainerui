@@ -305,8 +305,8 @@ const lines = (state = {}, action) => {
 const tableState = (state = {}, action) => {
   const {
     expanded = {},
-    visibleKeys = [],
-    visibleArgs = []
+    hiddenLogKeys = [],
+    hiddenArgKeys = []
   } = action;
   switch (action.type) {
     case ActionTypes.TABLE_STATE_EXPANDED_UPDATE:
@@ -317,8 +317,8 @@ const tableState = (state = {}, action) => {
     case ActionTypes.TABLE_STATE_COLUMNS_VISIBILITY_UPDATE:
       return {
         ...state,
-        visibleKeys,
-        visibleArgs
+        hiddenLogKeys,
+        hiddenArgKeys
       };
     default:
       return state;

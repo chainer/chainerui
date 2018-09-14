@@ -45,8 +45,8 @@ const ExperimentsTable = (props) => {
   const resultList = resultKeys.map((resultId) => results[resultId]);
   const expanded = resultList.length === 0 ? {} : tableState.expanded;
   const {
-    visibleKeys = [],
-    visibleArgs = []
+    hiddenLogKeys = [],
+    hiddenArgKeys = []
   } = tableState;
 
   const logs = xAxisKeys.map((logKey) => ({
@@ -60,7 +60,7 @@ const ExperimentsTable = (props) => {
       return lastLogDict[logKey];
     },
     style: defaultStyle,
-    show: !visibleKeys.find((k) => k === logKey)
+    show: !hiddenLogKeys.find((k) => k === logKey)
   }));
 
   const argsList = argKeys.map((argKey) => ({
@@ -75,7 +75,7 @@ const ExperimentsTable = (props) => {
       return argValue2string(argDict[argKey]);
     },
     style: defaultStyle,
-    show: !visibleArgs.find((k) => k === argKey)
+    show: !hiddenArgKeys.find((k) => k === argKey)
   }));
 
   const columns = [

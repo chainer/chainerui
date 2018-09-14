@@ -250,11 +250,11 @@ export const updateTableExpanded = (projectId, expanded) => ({
 });
 
 export const TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
-export const updateTableColumnsVisibility = (projectId, visibleKeys, visibleArgs) => ({
+export const updateTableColumnsVisibility = (projectId, hiddenLogKeys, hiddenArgKeys) => ({
   type: TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
   projectId,
-  visibleKeys,
-  visibleArgs
+  hiddenLogKeys,
+  hiddenArgKeys
 });
 
 // global config

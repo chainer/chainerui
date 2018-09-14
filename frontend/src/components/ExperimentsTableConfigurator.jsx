@@ -39,22 +39,25 @@ class ExperimentsTableConfigurator extends React.Component {
   handleChange(prefix, event) {
     const { projectConfig } = this.props;
     const { tableState } = projectConfig;
-    const { visibleArgs = [], visibleKeys = [] } = tableState;
+    const {
+      hiddenLogKeys = [],
+      hiddenArgKeys = []
+    } = tableState;
 
     if (prefix === 'logKey') {
-      const nextVisibleKeys = !event.target.checked
-        ? visibleKeys.concat(event.target.name)
-        : visibleKeys.filter((vk) => vk !== event.target.name);
+      const nextHiddenLogKeys = !event.target.checked
+        ? hiddenLogKeys.concat(event.target.name)
+        : hiddenLogKeys.filter((vk) => vk !== event.target.name);
 
       this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, nextVisibleKeys, visibleArgs);
+        this.props.project.id, nextHiddenLogKeys, hiddenArgKeys);
     } else {
-      const nextVisibleArgs = !event.target.checked
-        ? visibleArgs.concat(event.target.name)
-        : visibleArgs.filter((vk) => vk !== event.target.name);
+      const nextHiddenArgKeys = !event.target.checked
+        ? hiddenArgKeys.concat(event.target.name)
+        : hiddenArgKeys.filter((vk) => vk !== event.target.name);
 
       this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, visibleKeys, nextVisibleArgs);
+        this.props.project.id, hiddenLogKeys, nextHiddenArgKeys);
     }
   }
 
@@ -66,8 +69,8 @@ class ExperimentsTableConfigurator extends React.Component {
       argKeys = []
     } = stats;
     const {
-      visibleKeys = [],
-      visibleArgs = []
+      hiddenLogKeys = [],
+      hiddenArgKeys = []
     } = tableState;
 
     return (
@@ -90,7 +93,7 @@ class ExperimentsTableConfigurator extends React.Component {
                       <Input
                         type="checkbox"
                         name={l}
-                        checked={!visibleKeys.some((vk) => vk === l)}
+                        checked={!hiddenLogKeys.some((vk) => vk === l)}
                         onChange={(e) => this.handleChange('logKey', e)}
                       />
                       {` ${l}`}
@@ -107,7 +110,7 @@ class ExperimentsTableConfigurator extends React.Component {
                       <Input
                         type="checkbox"
                         name={a}
-                        checked={!visibleArgs.some((va) => va === a)}
+                        checked={!hiddenArgKeys.some((va) => va === a)}
                         onChange={(e) => this.handleChange('argKey', e)}
                       />
                       {` ${a}`}
