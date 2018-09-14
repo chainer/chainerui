@@ -105,7 +105,7 @@ class ExperimentsTableConfigurator extends React.Component {
               <legend>Arg Keys</legend>
               {
                 argKeys.map((a) => (
-                  <FormGroup check key={`argKey.${a}`} >
+                  <FormGroup check key={`argKey.${a}`}>
                     <Label check>
                       <Input
                         type="checkbox"
