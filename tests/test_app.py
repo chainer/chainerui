@@ -25,7 +25,7 @@ class TestApp(unittest.TestCase):
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
 
-    def test_server(self):
+    def test_server_debug(self):
         args = app.create_parser().parse_args(
             ['--db', self._db_url, 'server', '-H', 'test.domain',
              '-p', '5001', '-d'])
@@ -36,16 +36,42 @@ class TestApp(unittest.TestCase):
 
         mock_app = MagicMock()
         mock_app_creator = MagicMock(return_value=mock_app)
-
-        with patch('chainerui.app.create_app', mock_app_creator) as f:
+        with patch('werkzeug.serving.run_simple', MagicMock()) as f, \
+                patch('chainerui.app.create_app', mock_app_creator):
             args.handler(args)
             f.assert_not_called()
 
             db.upgrade()
             args.handler(args)
             f.assert_called_once()
-            mock_app.run.assert_called_with(
-                host='test.domain', port=5001, debug=True, threaded=True)
+            f.assert_called_with(
+                'test.domain', 5001, mock_app, use_reloader=True,
+                use_debugger=True, threaded=True)
+
+    def test_server_production(self):
+        args = app.create_parser().parse_args(
+            ['--db', self._db_url, 'server', '-H', 'test.domain',
+             '-p', '5001'])
+        assert args.host == 'test.domain'
+        assert args.port == 5001
+        assert not args.debug
+        assert args.db == self._db_url
+
+        mock_app = MagicMock()
+        mock_app_creator = MagicMock(return_value=mock_app)
+        mock_server = MagicMock()
+        mock_server_init = MagicMock(return_value=mock_server)
+        with patch('gevent.pywsgi.WSGIServer', mock_server_init), \
+                patch('chainerui.app.create_app', mock_app_creator):
+            args.handler(args)
+            mock_server.serve_forever.assert_not_called()
+
+            db.upgrade()
+            args.handler(args)
+            mock_server.serve_forever.assert_called_once()
+            mock_server.serve_forever(
+                'test.domain', 5001, mock_app, use_reloader=True,
+                use_debugger=True, threaded=True)
 
     def test_project_create(self):
         args = app.create_parser().parse_args(
