@@ -51,7 +51,7 @@ def _show_banner_debug(app, listener):
         logger.info(' * Environment: {}'.format(app.config['ENV']))
         logger.info(' * Debug mode: on')
         logger.info(' * Running on http://{}/ (Press CTRL+C to quit)'.format(
-                listener))
+            listener))
 
 
 def server_handler(args):
@@ -88,7 +88,7 @@ def server_handler(args):
 
         logger.info(' * Environment: {}'.format(app.config['ENV']))
         logger.info(' * Running on http://{}/ (Press CTRL+C to quit)'.format(
-                listener))
+            listener))
 
         try:
             http_server.serve_forever()

@@ -3,8 +3,8 @@ import os
 
 from flask import Flask
 from flask import jsonify
-from flask import request
 from flask import render_template
+from flask import request
 from flask import send_from_directory
 from flask import url_for
 from sqlalchemy.exc import OperationalError
@@ -82,9 +82,9 @@ def create_app():
     def output_log(response):
         now = datetime.datetime.now()
         log_msg = '%s - - [%s] "%s %s %s" %d' % (
-                request.remote_addr, now.replace(microsecond=0),
-                request.method, request.full_path,
-                request.environ.get('SERVER_PROTOCOL'), response.status_code)
+            request.remote_addr, now.replace(microsecond=0),
+            request.method, request.full_path,
+            request.environ.get('SERVER_PROTOCOL'), response.status_code)
         if response.content_length is not None:
             log_msg += ' %d' % response.content_length
         if request._comming_at is not None:
