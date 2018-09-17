@@ -3,6 +3,7 @@ import json
 import os
 
 from chainerui import db
+from chainerui import logger
 from chainerui.models.argument import Argument
 from chainerui.models.command import Command
 from chainerui.models.log import Log
@@ -20,7 +21,8 @@ def load_result_json(result_path, json_file_name):
             try:
                 _list = json.load(json_data)
             except ValueError as err:
-                print("Failed to load json: {}, {}".format(json_path, err))
+                logger.error(
+                    'Failed to load json: {}, {}'.format(json_path, err))
 
     return _list
 

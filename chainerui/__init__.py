@@ -11,7 +11,7 @@ from sqlalchemy.exc import OperationalError
 
 from chainerui import _version
 from chainerui.database import db
-from chainerui.logging import get_logger
+from chainerui.logging import logger
 
 
 __version__ = _version.__version__
@@ -25,7 +25,6 @@ def create_app():
 
     app = Flask(__name__)
     app.logger.disabled = True
-    logger = get_logger()
     app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
     def dated_url_for(endpoint, **values):
@@ -64,7 +63,7 @@ def create_app():
     @app.errorhandler(OperationalError)
     def handle_invalid_usage(error):
         """handle errors caused by db query."""
-        print('caught exception from db:', error.args)
+        logger.error('caught exception from db: %s' % error.args)
         response = jsonify({
             'error': {
                 'type': 'DBOperationalError',
@@ -75,17 +74,23 @@ def create_app():
 
         return response
 
+    @app.before_request
+    def add_timestamp():
+        request._comming_at = datetime.datetime.now()
+
     @app.after_request
-    def after_request(response):
-        now = datetime.datetime.now().replace(microsecond=0)
-        logger.info(
-            '%s - - [%s] "%s %s %s" %d %d' % (
-                request.remote_addr, now, request.method, request.full_path,
-                request.environ.get('SERVER_PROTOCOL'), response.status_code,
-                response.content_length))
-        logger.error('error')
-        logger.warning('warn')
-        logger.debug('debug')
+    def output_log(response):
+        now = datetime.datetime.now()
+        log_msg = '%s - - [%s] "%s %s %s" %d' % (
+                request.remote_addr, now.replace(microsecond=0),
+                request.method, request.full_path,
+                request.environ.get('SERVER_PROTOCOL'), response.status_code)
+        if response.content_length is not None:
+            log_msg += ' %d' % response.content_length
+        if request._comming_at is not None:
+            delta = (now - request._comming_at).total_seconds()
+            log_msg += ' %.6f' % delta
+        logger.info(log_msg)
         return response
 
     from chainerui.views.project import ProjectAPI
