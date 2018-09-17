@@ -30,6 +30,7 @@ def get_logger():
             logger_factory=structlog.stdlib.LoggerFactory(),
         )
 
+        own_logger = _get_library_logger()
         if not logging.getLogger().handlers:
             # own hander is set only when python root logger is not setup
             formatter = structlog.stdlib.ProcessorFormatter(
@@ -37,9 +38,9 @@ def get_logger():
             )
             handler = logging.StreamHandler()
             handler.setFormatter(formatter)
-            own_logger = _get_library_logger()
             own_logger.addHandler(handler)
-            own_logger.setLevel(logging.INFO)
+
+        own_logger.setLevel(logging.INFO)
         _logger = structlog.get_logger('chainerui')
     return _logger
 
