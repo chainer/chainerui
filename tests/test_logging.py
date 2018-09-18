@@ -15,10 +15,11 @@ def test_get_logger_with_pytest_default(caplog):
     logger.info('info')
     logger.debug('debug')
 
-    texts = caplog.text
-    assert "{'event': 'error'}" in texts
-    assert "{'event': 'info'}" in texts
-    assert 'debug' not in texts
+    assert len(caplog.records) == 2
+    assert 'event' in caplog.records[0].message
+    assert "error" in caplog.records[0].message
+    assert 'event' in caplog.records[1].message
+    assert 'info' in caplog.records[1].message
 
 
 def test_get_logger_with_own_handler(capsys):
