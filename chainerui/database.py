@@ -61,7 +61,7 @@ class Database(object):
                 connect_args=connect_args,
                 echo=echo
             )
-        except ModuleNotFoundError as e:
+        except ImportError as e:
             print(e, ', Please install the driver to support the external DB')
             return False
         self._engine = engine
