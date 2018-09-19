@@ -5,6 +5,7 @@ from alembic.command import downgrade
 from alembic.command import upgrade
 from alembic.config import Config
 from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
@@ -47,22 +48,27 @@ class Database(object):
         else:
             self._external_db = True
 
-        if not self._check():
-            return False
-
         if url.startswith('sqlite'):
             connect_args = {'check_same_thread': False}
         else:
             connect_args = {}
         self._url = url
 
-        engine = create_engine(
-            url,
-            convert_unicode=True,
-            connect_args=connect_args,
-            echo=echo
-        )
+        try:
+            engine = create_engine(
+                url,
+                convert_unicode=True,
+                connect_args=connect_args,
+                echo=echo
+            )
+        except ModuleNotFoundError as e:
+            print(e, ', Please install the driver to support the external DB')
+            return False
         self._engine = engine
+
+        if not self._check():
+            return False
+
         self._session = scoped_session(
             sessionmaker(autocommit=False, autoflush=False, bind=engine)
         )
@@ -83,10 +89,15 @@ class Database(object):
     def _check(self):
         if not self._external_db:
             if not os.path.isdir(self._sqlite_default_db_dir()):
-                print('DB is not initialized, please run \'create\' command '
-                      'before')
+                print('DB is not initialized, please run '
+                      '\'chainerui db create\' command before')
                 return False
-        # TODO(disktnk): add ping, to check connetion with external DB
+        try:
+            connection = self._engine.connect()
+            connection.close()
+        except OperationalError as e:
+            print(e)
+            return False
         return True
 
     def upgrade(self):
