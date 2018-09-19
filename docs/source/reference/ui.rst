@@ -87,6 +87,15 @@ Show training logs and experimental conditions.
     * Along with axis settings and selected checkboxes, log keys like ``main/loss`` are also cached on browser storage. The reset button restores cached key, too.
 
 
+.. _ui_save_log_chart:
+
+Save log chart
+~~~~~~~~~~~~~~
+
+.. image:: ../../images/chart_save.png
+
+Save log chart as PNG or JSON, download will be started.
+
 .. _ui_edit_line:
 
 Edit a line
@@ -104,7 +113,11 @@ Training job table
 
 .. image:: ../../images/result_table_condition_sample.png
 
-The training job table shows brief log information and experimental conditions. Job names are set to the directory name by default. The name can be edit directly on the table. To unregister a result, click X button at the right end of the training job table.
+.. figure:: ../../images/result_table_expand_row.png
+
+   expanded the first row to show sub components.
+
+The training job table shows brief log information and experimental conditions. Job names are set to the directory name by default. The name can be edit directly on the table. To unregister a result, click ``Unregister`` button in the expanded row. Expanded row has some operation buttons. These buttons operate similarly to buttons in :ref:`Commands pane <ui_result_page_commands>`.
 
 .. note::
 
