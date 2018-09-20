@@ -39,7 +39,7 @@ def _show_banner_debug(app, listener):
     # server started.
     from werkzeug.serving import is_running_from_reloader
     if is_running_from_reloader():
-        # On debut mode, the banner is shown every reloaded.
+        # On debug mode, the banner is shown every reloaded.
         # run_simple set reloader type as 'stat' on default
         logger.info(' * Restarning with stat')
         # level warning is followed by werkzeug implementation
