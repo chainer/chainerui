@@ -69,9 +69,6 @@ class TestApp(unittest.TestCase):
             db.upgrade()
             args.handler(args)
             mock_server.serve_forever.assert_called_once()
-            mock_server.serve_forever(
-                'test.domain', 5001, mock_app, use_reloader=True,
-                use_debugger=True, threaded=True)
 
     def test_project_create(self):
         args = app.create_parser().parse_args(
