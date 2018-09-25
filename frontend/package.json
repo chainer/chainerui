@@ -61,7 +61,7 @@
     "react-router-redux": "^4.0.8",
     "react-table": "^6.8.2",
     "reactstrap": "^5.0.0-alpha.4",
-    "recharts": "^1.1.0",
+    "recharts": "git+https://github.com/ofk/recharts.git#v1.1.0-patch",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.4.0",
