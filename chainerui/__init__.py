@@ -25,6 +25,7 @@ def create_app():
 
     app = Flask(__name__)
     app.logger.disabled = True
+    app.logger.handlers.clear()
     app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
     def dated_url_for(endpoint, **values):

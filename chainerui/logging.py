@@ -11,7 +11,7 @@ _logger = None
 
 
 def _get_library_logger():
-    return logging.getLogger('chainerui')
+    return logging.getLogger(__name__)
 
 
 def set_loglevel(level):
@@ -43,7 +43,7 @@ def get_logger():
             own_logger.addHandler(handler)
 
         own_logger.setLevel(logging.INFO)
-        _logger = structlog.get_logger('chainerui')
+        _logger = structlog.get_logger(__name__)
     return _logger
 
 

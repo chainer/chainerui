@@ -77,6 +77,7 @@ def server_handler(args):
             args.host, args.port, app, use_reloader=True, use_debugger=True,
             threaded=True)
     else:
+        app.config['ENV'] = 'production'
         import gevent
         from gevent.pywsgi import WSGIServer
         http_server = WSGIServer(listener, application=app, log=None)
@@ -87,7 +88,6 @@ def server_handler(args):
 
         gevent.signal(signal.SIGTERM, stop_server)
         gevent.signal(signal.SIGINT, stop_server)
-
         logger.info(' * Environment: {}'.format(app.config['ENV']))
         logger.info(' * Running on http://{}/ (Press CTRL+C to quit)'.format(
             listener))
