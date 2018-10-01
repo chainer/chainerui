@@ -1,15 +1,28 @@
+from chainerui.logging import _get_library_logger
 from chainerui.logging import get_logger
 
 
 def test_get_logger_with_pytest_default(caplog):
+    # On flask 0.12.x, when remove flask's handler, local handler is also
+    # no effect (not known exactly why?). Need to set caplog handler again.
+    _get_library_logger().addHandler(caplog.handler)
+    # caplog has already set on start unittest module
     import logging
-    caplog.set_level(logging.INFO)
+    assert logging.getLogger().handlers
 
     # other test suite has already called chainerui.logger, so need to reset
     # library logger
     import chainerui.logging as logging_util
     logging_util._logger = None
     logger = get_logger()
+
+    # When added caplog handler manually, caplog captures logging 2 times,
+    # on root logger and on local logger. To prevent from this issue,
+    # remove root handler manually after get local logger.
+    root_logger = logging.getLogger()
+    if root_logger.handlers:
+        for handler in root_logger.handlers[:]:
+            root_logger.removeHandler(handler)
 
     logger.error('error')
     logger.info('info')
@@ -27,7 +40,7 @@ def test_get_logger_with_own_handler(capsys):
     import logging
     root_logger = logging.getLogger()
     if root_logger.handlers:
-        for handler in root_logger.handlers:
+        for handler in root_logger.handlers[:]:
             root_logger.removeHandler(handler)
 
     # other test suite has already called chainerui.logger, so need to reset

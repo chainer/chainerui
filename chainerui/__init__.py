@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import datetime
 import os
 
@@ -25,7 +26,8 @@ def create_app():
 
     app = Flask(__name__)
     app.logger.disabled = True
-    app.logger.handlers.clear()
+    for h in app.logger.handlers[:]:
+        app.logger.removeHandler(h)
     app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
     def dated_url_for(endpoint, **values):

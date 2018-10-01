@@ -24,7 +24,6 @@ def get_logger():
     with _mutex:
         if _logger is not None:
             return _logger
-
         structlog.configure(
             processors=[
                 structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
