@@ -34,6 +34,13 @@ def test_get_logger_with_pytest_default(caplog):
     assert 'event' in caplog.records[1].message
     assert 'info' in caplog.records[1].message
 
+    logging_util.set_loglevel(logging.DEBUG)
+    logger2 = get_logger()
+    logger2.debug('debug')
+    assert len(caplog.records) == 3
+    assert 'event' in caplog.records[2].message
+    assert 'debug' in caplog.records[2].message
+
 
 def test_get_logger_with_own_handler(capsys):
     # reset pytest logging capture
