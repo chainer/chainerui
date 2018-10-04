@@ -93,7 +93,7 @@ class ExperimentsTableConfigurator extends React.Component {
                       <Input
                         type="checkbox"
                         name={l}
-                        checked={!hiddenLogKeys.some((vk) => vk === l)}
+                        checked={!hiddenLogKeys.find((vk) => vk === l)}
                         onChange={(e) => this.handleChange('logKey', e)}
                       />
                       {` ${l}`}
@@ -110,7 +110,7 @@ class ExperimentsTableConfigurator extends React.Component {
                       <Input
                         type="checkbox"
                         name={a}
-                        checked={!hiddenArgKeys.some((va) => va === a)}
+                        checked={!hiddenArgKeys.find((va) => va === a)}
                         onChange={(e) => this.handleChange('argKey', e)}
                       />
                       {` ${a}`}
