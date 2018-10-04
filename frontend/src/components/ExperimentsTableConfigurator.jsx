@@ -79,7 +79,7 @@ class ExperimentsTableConfigurator extends React.Component {
           Table settings
         </Button>
 
-        <Modal isOpen={this.state.showModal}>
+        <Modal isOpen={this.state.showModal} toggle={this.handleModalHide}>
           <ModalHeader>
             Edit table columns visibility
           </ModalHeader>
