@@ -23,7 +23,7 @@ const ExperimentsTable = (props) => {
     onResultsConfigSelectUpdate, onResultUpdate, onCommandSubmit,
     onTableExpandedUpdate
   } = props;
-  const { argKeys, xAxisKeys } = stats;
+  const { argKeys, logKeys } = stats;
   const { resultsConfig = {}, tableState = {} } = projectConfig;
 
   const resultKeys = Object.keys(results);
@@ -49,7 +49,7 @@ const ExperimentsTable = (props) => {
     hiddenArgKeys = []
   } = tableState;
 
-  const logs = xAxisKeys.map((logKey) => ({
+  const logs = logKeys.map((logKey) => ({
     Header: logKey,
     id: `logKey${logKey}`,
     accessor: (p) => {
