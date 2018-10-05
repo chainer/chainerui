@@ -89,7 +89,7 @@ class ExperimentsTableConfigurator extends React.Component {
               {
                 logKeys.map((l) => (
                   <FormGroup check key={`logKey.${l}`}>
-                    <Label check>
+                    <Label check className="form-check-label-break-word">
                       <Input
                         type="checkbox"
                         name={l}
@@ -106,7 +106,7 @@ class ExperimentsTableConfigurator extends React.Component {
               {
                 argKeys.map((a) => (
                   <FormGroup check key={`argKey.${a}`}>
-                    <Label check>
+                    <Label check className="form-check-label-break-word">
                       <Input
                         type="checkbox"
                         name={a}
