@@ -6,3 +6,4 @@ sqlalchemy>=1.1.14
 alembic>=0.9.5
 chainer>=3.0.0
 gevent>=1.2.0
+structlog>=18.2.0

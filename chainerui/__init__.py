@@ -1,14 +1,18 @@
+from __future__ import absolute_import
+import datetime
 import os
 
 from flask import Flask
 from flask import jsonify
 from flask import render_template
+from flask import request
 from flask import send_from_directory
 from flask import url_for
 from sqlalchemy.exc import OperationalError
 
 from chainerui import _version
 from chainerui.database import db
+from chainerui.logging import logger
 
 
 __version__ = _version.__version__
@@ -21,6 +25,9 @@ def create_app():
     """create_app."""
 
     app = Flask(__name__)
+    app.logger.disabled = True
+    for h in app.logger.handlers[:]:
+        app.logger.removeHandler(h)
     app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
     def dated_url_for(endpoint, **values):
@@ -59,7 +66,7 @@ def create_app():
     @app.errorhandler(OperationalError)
     def handle_invalid_usage(error):
         """handle errors caused by db query."""
-        print('caught exception from db:', error.args)
+        logger.error('caught exception from db: %s' % error.args)
         response = jsonify({
             'error': {
                 'type': 'DBOperationalError',
@@ -68,6 +75,25 @@ def create_app():
         })
         response.status_code = 400  # Bad Request
 
+        return response
+
+    @app.before_request
+    def add_timestamp():
+        request._comming_at = datetime.datetime.now()
+
+    @app.after_request
+    def output_log(response):
+        now = datetime.datetime.now()
+        log_msg = '%s - - [%s] "%s %s %s" %d' % (
+            request.remote_addr, now.replace(microsecond=0),
+            request.method, request.full_path,
+            request.environ.get('SERVER_PROTOCOL'), response.status_code)
+        if response.content_length is not None:
+            log_msg += ' %d' % response.content_length
+        if request._comming_at is not None:
+            delta = (now - request._comming_at).total_seconds()
+            log_msg += ' %.6f' % delta
+        logger.info(log_msg)
         return response
 
     from chainerui.views.project import ProjectAPI
