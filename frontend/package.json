@@ -7,7 +7,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --profile",
     "build:watch": "webpack -w --progress --profile",
     "serve": "webpack-serve --host 0.0.0.0",
-    "lint": "eslint --fix --ext .js,.jsx ."
+    "lint": "eslint --ext .js,.jsx ."
   },
   "engines": {
     "npm": ">=6.0.0 <7",
