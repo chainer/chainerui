@@ -33,7 +33,7 @@
 
 .log-visualizer-legend {
   max-width: 300px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .ReactTable {
