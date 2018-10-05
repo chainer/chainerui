@@ -20,6 +20,11 @@
   overflow-y: auto;
 }
 
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+}
+
 .breadcrumb-link {
   width: 100%;
   overflow: hidden;
