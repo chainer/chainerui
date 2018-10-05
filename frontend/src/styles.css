@@ -1,8 +1,14 @@
-.result-row .result-name {
-  width: 240px;
+.text-truncate.text-right {
+  text-align: left;
+  direction: rtl;
 }
 
-.text-truncate-right {
+.text-truncate.text-right:focus {
+  direction: ltr;
+}
+
+.text-truncate.text-right[value=""]:focus {
+  text-align: left;
   direction: rtl;
 }
 

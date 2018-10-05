@@ -1,17 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Input } from 'reactstrap';
+import { Input } from 'reactstrap';
 
 import {
   getRelativeResultPathName,
-  displayResultNameFull,
-  truncate
+  displayResultNameFull
 } from '../../utils';
 
 class ResultName extends React.Component {
   constructor(props) {
     super(props);
-    this.handleResultNameFocus = this.handleResultNameFocus.bind(this);
     this.handleResultNameBlur = this.handleResultNameBlur.bind(this);
     this.handleResultNameChange = this.handleResultNameChange.bind(this);
     this.handleResultNameKeyPress = this.handleResultNameKeyPress.bind(this);
@@ -19,8 +17,7 @@ class ResultName extends React.Component {
 
     const { result } = this.props;
     this.state = {
-      resultName: result.name,
-      resultNameFocused: false
+      resultName: result.name
     };
   }
 
@@ -32,18 +29,7 @@ class ResultName extends React.Component {
     }
   }
 
-  handleResultNameFocus() {
-    setTimeout(() => {
-      this.setState({
-        resultNameFocused: true
-      });
-    }, 100);
-  }
-
   handleResultNameBlur() {
-    this.setState({
-      resultNameFocused: false
-    });
     this.handleResultUpdate();
   }
 
@@ -68,33 +54,20 @@ class ResultName extends React.Component {
   }
 
   render() {
-    const { resultName, resultNameFocused } = this.state;
+    const { resultName } = this.state;
     const { project, result, isResultNameAlignRight } = this.props;
 
-    const truncateConfig = { length: 22, forward: isResultNameAlignRight };
-    const resultNameInputStyle = {
-      float: isResultNameAlignRight ? 'right' : 'left',
-      direction: (isResultNameAlignRight && !resultNameFocused) ? 'rtl' : 'ltr',
-      width: '100%'
-    };
-
     return (
-      <Form inline onSubmit={(e) => { e.preventDefault(); }}>
-        <FormGroup style={{ width: '100%' }}>
-          <Input
-            className={`result-name ${isResultNameAlignRight ? 'text-right' : ''}`}
-            type="text"
-            title={displayResultNameFull(project, result)}
-            style={resultNameInputStyle}
-            placeholder={truncate(getRelativeResultPathName(project, result), truncateConfig)}
-            value={resultName || ''}
-            onChange={this.handleResultNameChange}
-            onKeyPress={this.handleResultNameKeyPress}
-            onFocus={this.handleResultNameFocus}
-            onBlur={this.handleResultNameBlur}
-          />
-        </FormGroup>
-      </Form>
+      <Input
+        className={`result-name text-truncate ${isResultNameAlignRight ? 'text-right' : ''}`}
+        type="text"
+        title={displayResultNameFull(project, result)}
+        placeholder={getRelativeResultPathName(project, result)}
+        value={resultName || ''}
+        onChange={this.handleResultNameChange}
+        onKeyPress={this.handleResultNameKeyPress}
+        onBlur={this.handleResultNameBlur}
+      />
     );
   }
 }
