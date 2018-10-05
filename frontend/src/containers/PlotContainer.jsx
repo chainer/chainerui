@@ -16,10 +16,12 @@ import {
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber,
   createCommand,
-  updateTableExpanded
+  updateTableExpanded,
+  updateTableColumnsVisibility
 } from '../actions';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
+import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigurator';
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
@@ -120,6 +122,12 @@ class PlotContainer extends React.Component {
                 onResultUpdate={this.props.updateResult}
                 onCommandSubmit={this.props.createCommand}
                 onTableExpandedUpdate={this.props.updateTableExpanded}
+              />
+              <ExperimentsTableConfigurator
+                project={project}
+                stats={stats}
+                projectConfig={projectConfig}
+                onTableColumnsVisibilityUpdate={this.props.updateTableColumnsVisibility}
               />
             </div>
           </div>
@@ -225,7 +233,8 @@ PlotContainer.propTypes = {
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
   updateAxisScaleRangeNumber: PropTypes.func.isRequired,
-  updateTableExpanded: PropTypes.func.isRequired
+  updateTableExpanded: PropTypes.func.isRequired,
+  updateTableColumnsVisibility: PropTypes.func.isRequired
 };
 
 PlotContainer.defaultProps = {
@@ -249,5 +258,6 @@ export default connect(mapStateToProps, {
   updateXAxisKey,
   updateAxisScaleRangeType,
   updateAxisScaleRangeNumber,
-  updateTableExpanded
+  updateTableExpanded,
+  updateTableColumnsVisibility
 })(PlotContainer);
