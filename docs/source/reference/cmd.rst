@@ -50,3 +50,21 @@ ChainerUI manages multiple projects and each project manages multiple training l
 
 * ``-d``: (required) target path
 * ``-n``: (optional) name of project. use directory name on default.
+
+
+Common option
+-------------
+
+.. _cmd_common_option_db:
+
+``--db``
+~~~~~~~~
+
+When use external database, set ``--db`` option to use it. For example, when use SQLite with an original database file placed at ``/path/to/original.db``, initialize commands are::
+
+
+  $ chaiherui --db sqlite:////path/to/original.db db upgrade
+  $ chaiherui --db sqlite:////path/to/original.db server
+
+
+This ``--db`` option is given priority over environment variable ``CHAINERUI_DB_URL``. More detail, see :ref:`Use external database <use_external_db>`
