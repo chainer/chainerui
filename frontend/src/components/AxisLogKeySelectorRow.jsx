@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Label, Input } from 'reactstrap';
+import { FormGroup, Label, Input } from 'reactstrap';
 
 
 class AxisLogKeySelectorRow extends React.Component {
@@ -18,15 +18,15 @@ class AxisLogKeySelectorRow extends React.Component {
   render() {
     const { logKey, logKeyConfig } = this.props;
     return (
-      <div>
-        <Label check>
+      <FormGroup check>
+        <Label check className="form-check-label-break-word">
           <Input
             type="checkbox"
             checked={logKeyConfig.selected}
             onChange={this.handleSelectToggle}
           /> {logKey}
         </Label>
-      </div>
+      </FormGroup>
     );
   }
 }

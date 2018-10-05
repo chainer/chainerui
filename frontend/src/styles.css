@@ -33,3 +33,9 @@
 .ReactTable {
   display: table;
 }
+
+.form-check-label-break-word {
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}

@@ -195,15 +195,22 @@ Here is an ``args`` file examples, with values shown as experimental conditions 
 Operate training loop
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: ../images/result_page_operation_block.png
-
 ChainerUI supports operating a training loop with :ref:`CommandsExtension <module_command_extension>`. The latest version supports:
 
 * Taking snapshot
 * Adjusting the hyperparameters of an optimizer
 * Stopping the training loop
 
-Operation buttons are in :ref:`result page <ui_result_page>`.
+Operation buttons are in result table row, click ``▼`` button, or in :ref:`result page <ui_result_page>`, click ``Detail`` button in expanded row.
+
+.. figure:: ../images/result_table_collapsable_row.gif
+   :scale: 30%
+
+   expand table row to show sub components.
+
+.. figure:: ../images/result_page_operation_block.png
+
+   commands pane of result page
 
 Setup example of a brief extract `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
 
