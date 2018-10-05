@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Collapse, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { line2key, getSelectedResults, getSelectedLogKeys, createLine } from '../utils';
 import LinesConfiguratorRow from './LinesConfiguratorRow';
 import LineConfigurator from './LineConfigurator';
@@ -16,9 +16,11 @@ class LinesConfigurator extends React.Component {
     this.handleEditingLineChange = this.handleEditingLineChange.bind(this);
     this.handleAxisConfigLineSave = this.handleAxisConfigLineSave.bind(this);
     this.handleLineVisibilityUpdate = this.handleLineVisibilityUpdate.bind(this);
+    this.toggleLinesConfig = this.toggleLinesConfig.bind(this);
 
     this.state = {
       showModal: false,
+      showLinesConfig: false,
       editingLine: undefined
     };
   }
@@ -67,6 +69,12 @@ class LinesConfigurator extends React.Component {
     onAxisConfigLineUpdate(project.id, axisName, targetLineKey, line);
   }
 
+  toggleLinesConfig() {
+    this.setState({
+      showLinesConfig: !this.state.showLinesConfig
+    });
+  }
+
   render() {
     const { axisName, project, results, stats, projectConfig, globalConfig } = this.props;
     const { editingLine } = this.state;
@@ -103,7 +111,12 @@ class LinesConfigurator extends React.Component {
 
     return (
       <div className="list-group list-group-flush">
-        {lineConfiguratorElems}
+        <div className="list-group-item">
+          <Button size="sm" className="my-2" onClick={this.toggleLinesConfig}>Toggle lines setting</Button>
+        </div>
+        <Collapse isOpen={this.state.showLinesConfig}>
+          {lineConfiguratorElems}
+        </Collapse>
         <div className="list-group-item text-right">
           <Modal isOpen={this.state.showModal} toggle={this.handleModalToggle} className="">
             <ModalHeader toggle={this.handleModalToggle}>Edit a line</ModalHeader>
