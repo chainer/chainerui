@@ -8,7 +8,7 @@ const TruncatedResultName = (props) => {
 
   return (
     <div
-      className={`text-truncate ${isResultNameAlignRight ? 'text-truncate-right' : ''}`}
+      className={`text-truncate ${isResultNameAlignRight ? 'text-right' : ''}`}
       title={resultNameFull}
     >
       {resultNameFull}

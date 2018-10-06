@@ -65,7 +65,7 @@ For more detailed usage, see :ref:`getstart`.
 Docker start
 ------------
 
-Get Docker container from `DockerHub <https://hub.docker.com/r/chainer/chainerui/`__ and start ChainerUI server. The container has installed ChainerUI module, setup a DB and a command to start the server::
+Get Docker container from `DockerHub <https://hub.docker.com/r/chainer/chainerui/>`__ and start ChainerUI server. The container has installed ChainerUI module, setup a DB and a command to start the server::
 
   $ git clone https://github.com/chainer/chainerui.git
   $ cd chainerui

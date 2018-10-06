@@ -1,14 +1,16 @@
+from __future__ import absolute_import
+
 import argparse
+import logging
 import os
 import signal
-
-import gevent
-from gevent.pywsgi import WSGIServer
 
 from chainerui import _version
 from chainerui import CHAINERUI_ENV
 from chainerui import create_app
 from chainerui import db
+from chainerui import logger
+from chainerui.logging import set_loglevel
 from chainerui.models.project import Project
 from chainerui.utils import db_revision
 
@@ -31,6 +33,29 @@ def _check_db_revision():
     return True
 
 
+def _show_banner_debug(app, listener):
+    # Such banner should be shown after running process of the server is
+    # completed, but Flask has not supported to inject function after the
+    # server started.
+    from werkzeug.serving import is_running_from_reloader
+    if is_running_from_reloader():
+        # On debug mode, the banner is shown every reloaded.
+        # run_simple set reloader type as 'stat' on default
+        logger.info(' * Restarning with stat')
+        # level warning is followed by werkzeug implementation
+        logger.warning(' * Debugger is active!')
+        from werkzeug.debug import get_pin_and_cookie_name
+        pin, _ = get_pin_and_cookie_name(app)
+        if pin is not None:
+            logger.info(' * Debugger PIN: {:s}'.format(pin))
+        return
+    else:
+        logger.info(' * Environment: {}'.format(app.config['ENV']))
+        logger.info(' * Debug mode: on')
+        logger.info(' * Running on http://{}/ (Press CTRL+C to quit)'.format(
+            listener))
+
+
 def server_handler(args):
     """server_handler."""
     if not _setup_db(args.db):
@@ -39,18 +64,23 @@ def server_handler(args):
         return
 
     app = create_app()
+    listener = '{:s}:{:d}'.format(args.host, args.port)
     if args.debug:
-        # start server with:
-        # - env: development
-        # - debug: on
+        logging.getLogger('werkzeug').disabled = True
+        set_loglevel(logging.DEBUG)
         app.config['ENV'] = 'development'
-        app.run(host=args.host, port=args.port, debug=True, threaded=True)
+        app.debug = True
+
+        _show_banner_debug(app, listener)
+        from werkzeug.serving import run_simple
+        run_simple(
+            args.host, args.port, app, use_reloader=True, use_debugger=True,
+            threaded=True)
     else:
-        # start server with:
-        # - env: production
-        # - debug: off
-        listener = '{:s}:{:d}'.format(args.host, args.port)
-        http_server = WSGIServer(listener, application=app)
+        app.config['ENV'] = 'production'
+        import gevent
+        from gevent.pywsgi import WSGIServer
+        http_server = WSGIServer(listener, application=app, log=None)
 
         def stop_server():
             if http_server.started:
@@ -58,10 +88,9 @@ def server_handler(args):
 
         gevent.signal(signal.SIGTERM, stop_server)
         gevent.signal(signal.SIGINT, stop_server)
-
-        print(' * Environment: production')
-        print(' * Running on http://{}/ (Press CTRL+C to quit)'
-              .format(listener))
+        logger.info(' * Environment: {}'.format(app.config['ENV']))
+        logger.info(' * Running on http://{}/ (Press CTRL+C to quit)'.format(
+            listener))
 
         try:
             http_server.serve_forever()

@@ -19,7 +19,7 @@ class AxisLogKeySelectorRow extends React.Component {
     const { logKey, logKeyConfig } = this.props;
     return (
       <FormGroup check>
-        <Label check>
+        <Label check className="form-check-label-break-word">
           <Input
             type="checkbox"
             checked={logKeyConfig.selected}

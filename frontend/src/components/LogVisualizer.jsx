@@ -8,7 +8,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer
 } from 'recharts';
 import {
@@ -21,7 +20,7 @@ import {
   downloadObjectAsJson,
   downloadChartAsPng
 } from '../utils';
-import LogVisualizerTooltip from './LogVisualizerTooltip';
+import LogVisualizerLegend from './LogVisualizerLegend';
 
 
 const getDomain = (axisConfig = {}) => {
@@ -109,8 +108,9 @@ class LogVisualizer extends React.Component {
 
     const data = getLogData(results, stats, projectConfig);
 
-    const lineElems = [];
+    const axisLines = {};
     ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {
+      axisLines[axisName] = [];
       selectedResults.forEach((resultId) => {
         const result = results[resultId];
         if (result == null) {
@@ -120,67 +120,71 @@ class LogVisualizer extends React.Component {
           const line = lines[line2key({ resultId, logKey })] ||
                 createLine(resultId, logKey, results, logKeys);
           if (line.config.isVisible) {
-            lineElems.push(buildLineElem(line, axisName));
+            axisLines[axisName].push(line);
           }
         });
       });
+    });
+    const lineElems = {};
+    Object.keys(axisLines).forEach((axisName) => {
+      lineElems[axisName] = axisLines[axisName].map((line) => buildLineElem(line, axisName));
     });
 
     const { chartSize, isResultNameAlignRight } = globalConfig;
 
     return (
       <div className="log-visualizer-root">
-        <ResponsiveContainer
-          width={chartSize.width}
-          height={chartSize.height}
-          aspect={chartSize.aspect}
-        >
-          <LineChart data={data} ref={this.chartRef}>
-            <XAxis
-              type="number"
-              dataKey={xAxisKey}
-              scale={xAxis.scale}
-              domain={getDomain(xAxis)}
-              allowDataOverflow
+        <div className="d-flex">
+          <ResponsiveContainer
+            width={chartSize.width}
+            height={chartSize.height}
+            aspect={chartSize.aspect}
+          >
+            <LineChart data={data} ref={this.chartRef}>
+              <XAxis
+                type="number"
+                dataKey={xAxisKey}
+                scale={xAxis.scale}
+                domain={getDomain(xAxis)}
+                allowDataOverflow
+              />
+              <YAxis
+                yAxisId="yLeftAxis"
+                orientation="left"
+                scale={yLeftAxis.scale}
+                domain={getDomain(yLeftAxis)}
+                tickFormatter={formatLogValue()}
+                allowDataOverflow
+              />
+              <YAxis
+                yAxisId="yRightAxis"
+                orientation="right"
+                scale={yRightAxis.scale}
+                domain={getDomain(yRightAxis)}
+                tickFormatter={formatLogValue()}
+                allowDataOverflow
+              />
+              <CartesianGrid strokeDasharray="3 3" />
+              {lineElems.yLeftAxis}
+              {lineElems.yRightAxis}
+            </LineChart>
+          </ResponsiveContainer>
+          <div>
+            <LogVisualizerLegend
+              project={project}
+              results={results}
+              lines={axisLines}
+              maxHeight={chartSize.height}
+              isResultNameAlignRight={isResultNameAlignRight}
             />
-            <YAxis
-              yAxisId="yLeftAxis"
-              orientation="left"
-              scale={yLeftAxis.scale}
-              domain={getDomain(yLeftAxis)}
-              tickFormatter={formatLogValue()}
-              allowDataOverflow
-            />
-            <YAxis
-              yAxisId="yRightAxis"
-              orientation="right"
-              scale={yRightAxis.scale}
-              domain={getDomain(yRightAxis)}
-              tickFormatter={formatLogValue()}
-              allowDataOverflow
-            />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip
-              content={
-                <LogVisualizerTooltip
-                  project={project}
-                  results={results}
-                  xAxisKey={xAxisKey}
-                  isResultNameAlignRight={isResultNameAlignRight}
-                />
-            }
-            />
-            {lineElems}
-          </LineChart>
-        </ResponsiveContainer>
-        <div>
-          <Button size="sm" className="m-1" onClick={this.handleClickDownloadJSON}>
-            <span className="mx-1 oi oi-data-transfer-download" />json
-          </Button>
-          <Button size="sm" className="m-1" onClick={this.handleClickDownloadPNG}>
-            <span className="mx-1 oi oi-data-transfer-download" />png
-          </Button>
+          </div>
         </div>
+        <Button size="sm" className="m-1" onClick={this.handleClickDownloadJSON}>
+          <span className="mx-1 oi oi-data-transfer-download" />json
+        </Button>
+        <Button size="sm" className="m-1" onClick={this.handleClickDownloadPNG}>
+          <span className="mx-1 oi oi-data-transfer-download" />png
+        </Button>
       </div>
     );
   }

@@ -23,7 +23,7 @@ const ExperimentsTable = (props) => {
     onResultsConfigSelectUpdate, onResultUpdate, onCommandSubmit,
     onTableExpandedUpdate
   } = props;
-  const { argKeys, xAxisKeys } = stats;
+  const { argKeys, logKeys } = stats;
   const { resultsConfig = {}, tableState = {} } = projectConfig;
 
   const resultKeys = Object.keys(results);
@@ -44,8 +44,12 @@ const ExperimentsTable = (props) => {
 
   const resultList = resultKeys.map((resultId) => results[resultId]);
   const expanded = resultList.length === 0 ? {} : tableState.expanded;
+  const {
+    hiddenLogKeys = [],
+    hiddenArgKeys = []
+  } = tableState;
 
-  const logs = xAxisKeys.map((logKey) => ({
+  const logs = logKeys.map((logKey) => ({
     Header: logKey,
     id: `logKey${logKey}`,
     accessor: (p) => {
@@ -55,7 +59,8 @@ const ExperimentsTable = (props) => {
       }
       return lastLogDict[logKey];
     },
-    style: defaultStyle
+    style: defaultStyle,
+    show: !hiddenLogKeys.find((k) => k === logKey)
   }));
 
   const argsList = argKeys.map((argKey) => ({
@@ -69,7 +74,8 @@ const ExperimentsTable = (props) => {
       });
       return argValue2string(argDict[argKey]);
     },
-    style: defaultStyle
+    style: defaultStyle,
+    show: !hiddenArgKeys.find((k) => k === argKey)
   }));
 
   const columns = [

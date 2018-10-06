@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Label, Input, Collapse, Button, Col, Row } from 'reactstrap';
+import { Form, FormGroup, Label, Input, Collapse, Button, Col } from 'reactstrap';
 import { ChromePicker, GithubPicker } from 'react-color';
 import TruncatedResultName from './TruncatedResultName';
 import { lineColorGenerator } from '../utils';
@@ -124,22 +124,20 @@ class LineConfigurator extends React.Component {
             <Button onClick={this.togglePicker} size="sm" className="my-2">Toggle color picker</Button>
             <Button onClick={this.handleResetColorClick} size="sm" className="m-2">Reset color</Button>
           </FormGroup>
-          <FormGroup>
-            <Row>
-              <Label for="line-configurator-select-visibility" sm={{ size: 2 }}>visibility</Label>
-              <Col sm={{ size: 10 }}>
-                <FormGroup check>
-                  <Label check>
-                    <Input
-                      type="checkbox"
-                      id="line-configurator-select-visibility"
-                      checked={isVisible}
-                      onChange={this.handleVisibilityChange}
-                    />{' '}
-                  </Label>
-                </FormGroup>
-              </Col>
-            </Row>
+          <FormGroup row>
+            <Label for="line-configurator-select-visibility" className="col-sm-2">visibility</Label>
+            <Col sm={{ size: 10 }}>
+              <FormGroup check>
+                <Label check>
+                  <Input
+                    type="checkbox"
+                    id="line-configurator-select-visibility"
+                    checked={isVisible}
+                    onChange={this.handleVisibilityChange}
+                  />&nbsp;
+                </Label>
+              </FormGroup>
+            </Col>
           </FormGroup>
         </Form>
       </div>

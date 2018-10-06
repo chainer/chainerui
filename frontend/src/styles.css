@@ -1,8 +1,14 @@
-.result-row .result-name {
-  width: 240px;
+.text-truncate.text-right {
+  text-align: left;
+  direction: rtl;
 }
 
-.text-truncate-right {
+.text-truncate.text-right:focus {
+  direction: ltr;
+}
+
+.text-truncate.text-right[value=""]:focus {
+  text-align: left;
   direction: rtl;
 }
 
@@ -12,6 +18,11 @@
   max-height: 400px;
   overflow-x: auto;
   overflow-y: auto;
+}
+
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
 }
 
 .breadcrumb-link {
@@ -25,10 +36,17 @@
   vertical-align: top;
 }
 
-.log-visualizer-tooltip {
+.log-visualizer-legend {
   max-width: 300px;
+  overflow: auto;
 }
 
 .ReactTable {
   display: table;
+}
+
+.form-check-label-break-word {
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }

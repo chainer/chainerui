@@ -1,18 +1,20 @@
-=====================================
-ChainerUI: User interface for Chainer
-=====================================
+=======================================
+ChainerUI -- User interface for Chainer
+=======================================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Getting Started:
+   :caption: ChainerUI Documents
 
    install
    getstart
    docker
+   external_db
+
 
 .. toctree::
    :maxdepth: 1
-   :caption: Reference:
+   :caption: Reference
 
    reference/ui
    reference/cmd
