@@ -24,32 +24,30 @@ class Result(database.BASE):
     is_unregistered = Column(Boolean(), default=False)
     logs = relationship('Log', cascade='all, delete-orphan')
     args = relationship(
-        'Argument', uselist=False, cascade='all, delete-orphan'
-    )
+        'Argument', uselist=False, cascade='all, delete-orphan')
     commands = relationship('Command', cascade='all, delete-orphan')
     snapshots = relationship('Snapshot', cascade='all, delete-orphan')
     log_modified_at = Column(DateTime, default=None)
+    crawlable = Column(Boolean(), default=True)
     created_at = Column(DateTime, default=datetime.datetime.now())
-    updated_at = Column(
-        DateTime,
-        default=datetime.datetime.now()
-    )
+    updated_at = Column(DateTime, default=datetime.datetime.now())
 
     def __init__(self, path_name=None, name=None, project_id=None,
-                 log_modified_at=None):
+                 log_modified_at=None, crawlable=True):
         self.path_name = path_name
         self.name = name
         self.project_id = project_id
         self.log_modified_at = log_modified_at
+        self.crawlable = crawlable
 
     def __repr__(self):
         return '<Result id: %r, path_name: %r />' % (self.id, self.path_name)
 
     @classmethod
     def create(cls, path_name=None, name=None, project_id=None,
-               log_modified_at=None):
+               log_modified_at=None, crawlable=True):
         """Initialize an instance and save it to db."""
-        result = cls(path_name, name, project_id, log_modified_at)
+        result = cls(path_name, name, project_id, log_modified_at, crawlable)
 
         db.session.add(result)
         db.session.commit()
@@ -93,7 +91,7 @@ class Result(database.BASE):
             'args': self.args.serialize if self.args is not None else [],
             'commands': [cmd.serialize for cmd in self.commands],
             'snapshots': [cmd.serialize for cmd in self.snapshots],
-            'logModifiedAt': self.log_modified_at
+            'logModifiedAt': self.log_modified_at.isoformat()
         }
 
     @property
