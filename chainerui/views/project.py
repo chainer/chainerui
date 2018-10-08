@@ -26,7 +26,7 @@ class ProjectAPI(MethodView):
 
             projects = db.session.query(Project).all()
             return jsonify({
-                'projects': [project.serialize for project in projects]
+                'projects': [p.serialize for p in projects]
             })
 
         else:
