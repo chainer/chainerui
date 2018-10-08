@@ -13,6 +13,17 @@ class ProjectAPI(MethodView):
         """get."""
 
         if id is None:
+            path = request.args.get('path_name', default=None)
+            if path is not None:
+                project = db.session.query(Project).filter_by(
+                    path_name=path).first()
+                if project is None:
+                    return jsonify({
+                        'project': None,
+                        'message': 'Project path \'%s\' is not found' % path
+                    }), 400
+                return jsonify({'project': project.serialize})
+
             projects = db.session.query(Project).all()
             return jsonify({
                 'projects': [project.serialize for project in projects]
@@ -32,7 +43,10 @@ class ProjectAPI(MethodView):
     def post(self):
         data = request.get_json()  # if invalid data, raise BadRequest
         project_json = data.get('project')
-        path = project_json.get('path_name', '')
+        path = project_json.get('pathName', '')
+        if path == '':
+            # follow backward compatibility
+            path = project_json.get('path_name', '')
         if path == '':
             return jsonify({
                 'project': None,
@@ -41,10 +55,12 @@ class ProjectAPI(MethodView):
         name = project_json.get('name', '')
         if name == '':
             name = path
+        crawlable = project_json.get('crawlable', True)
 
         project = db.session.query(Project).filter_by(path_name=path).first()
         if project is None:
-            project = Project.create(path, name)
+            project = Project.create(
+                path_name=path, name=name, crawlable=crawlable)
             return jsonify({
                 'project': project.serialize
             })
