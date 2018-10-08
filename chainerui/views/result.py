@@ -85,7 +85,7 @@ class ResultAPI(MethodView):
 
         data = request.get_json()
         result_json = data.get('result')
-        path = result_json.get('path_name', '')
+        path = result_json.get('pathName', '')
         if path == '':
             return jsonify({
                 'result': None,
@@ -100,7 +100,7 @@ class ResultAPI(MethodView):
 
         name = result_json.get('name', None)
         crawlable = result_json.get('crawlable', True)
-        log_modified_at = result_json.get('log_modified_at', None)
+        log_modified_at = result_json.get('logModifiedAt', None)
         if log_modified_at is not None:
             log_modified_at = datetime.datetime.fromtimestamp(log_modified_at)
         result = Result.create(

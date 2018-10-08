@@ -28,7 +28,7 @@ class LogAPI(MethodView):
 
         data = request.get_json()
         log_json = data.get('log')
-        modified_at = log_json.get('modified_at', None)
+        modified_at = log_json.get('modifiedAt', None)
         if modified_at is not None:
             result.log_modified_at = datetime.datetime.fromtimestamp(
                 modified_at)

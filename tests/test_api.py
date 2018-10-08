@@ -251,7 +251,7 @@ class TestAPI(unittest.TestCase):
         os.mkdir(temp_dir)
 
         # success
-        request_json = {'project': {'path_name': temp_dir}}
+        request_json = {'project': {'pathName': temp_dir}}
         resp = self.app.post(
             '/api/v1/projects', data=json.dumps(request_json),
             content_type='application/json')
@@ -268,7 +268,7 @@ class TestAPI(unittest.TestCase):
         assert len(data) == 2
 
         # fail, the path is duplicated
-        request_json = {'project': {'path_name': self._project_path}}
+        request_json = {'project': {'pathName': self._project_path}}
         resp = self.app.post(
             '/api/v1/projects', data=json.dumps(request_json),
             content_type='application/json')
@@ -387,10 +387,10 @@ class TestAPI(unittest.TestCase):
         test_time = os.path.getmtime(os.path.abspath(__file__))
         request_json = {
             'result': {
-                'path_name': temp_dir,
+                'pathName': temp_dir,
                 'name': 'post_test',
                 'crawlable': False,
-                'log_modified_at': test_time
+                'logModifiedAt': test_time
             }
         }
         resp = self.app.post(
@@ -412,7 +412,7 @@ class TestAPI(unittest.TestCase):
         assert data['result'] is None
 
         # fail, required param is lack
-        del request_json['result']['path_name']
+        del request_json['result']['pathName']
         resp = self.app.post(
             '/api/v1/projects/1/results', data=json.dumps(request_json),
             content_type='application/json')
@@ -498,7 +498,7 @@ class TestAPI(unittest.TestCase):
                 'values': [
                     {'epoch': 8, 'loss': 0.1}, {'epoch': 9, 'loss': 0.1}
                 ],
-                'modified_at': test_time
+                'modifiedAt': test_time
             }
         }
         resp = self.app.post(
