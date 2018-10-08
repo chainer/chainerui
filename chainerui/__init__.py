@@ -96,6 +96,8 @@ def create_app():
         logger.info(log_msg)
         return response
 
+    from chainerui.views.argument import ArgumentAPI
+    from chainerui.views.log import LogAPI
     from chainerui.views.project import ProjectAPI
     from chainerui.views.result import ResultAPI
     from chainerui.views.result_command import ResultCommandAPI
@@ -103,6 +105,8 @@ def create_app():
 
     project_resource = ProjectAPI.as_view('project_resource')
     result_resource = ResultAPI.as_view('result_resource')
+    log_resource = LogAPI.as_view('log_resource')
+    arg_resource = ArgumentAPI.as_view('arg_resource')
     result_command_resource = ResultCommandAPI.as_view(
         'result_command_resource')
     result_assets_resource = ResultAssetAPI.as_view('result_assets_resource')
@@ -122,8 +126,20 @@ def create_app():
         '/api/v1/projects/<int:project_id>/results',
         defaults={'id': None}, view_func=result_resource, methods=['GET'])
     app.add_url_rule(
+        '/api/v1/projects/<int:project_id>/results',
+        view_func=result_resource, methods=['POST'])
+    app.add_url_rule(
         '/api/v1/projects/<int:project_id>/results/<int:id>',
         view_func=result_resource, methods=['GET', 'PUT', 'DELETE'])
+
+    # result log API
+    app.add_url_rule(
+        '/api/v1/projects/<int:project_id>/results/<int:result_id>/logs',
+        view_func=log_resource, methods=['POST'])
+    # result argument API
+    app.add_url_rule(
+        '/api/v1/projects/<int:project_id>/results/<int:result_id>/args',
+        view_func=arg_resource, methods=['POST'])
 
     # result command API
     app.add_url_rule(
