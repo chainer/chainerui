@@ -69,6 +69,8 @@ def _check_log_updated(result):
 
 def crawl_result(result, force=False, commit=True):
     """crawl_results."""
+    if not result.crawlable:
+        return result
     now = datetime.datetime.now()
 
     if (not force) and (now - result.updated_at).total_seconds() < 4:
