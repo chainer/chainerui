@@ -23,12 +23,11 @@ def _setup_db(db_url):
 
 def _check_db_revision():
     if not db_revision.check_current_db_revision():
-        command = 'upgrade'
+        command = '\'chainerui db upgrade\''
         if db_revision.current_db_revision() is None:
-            command = 'setup'
-        msg = 'The current DB schema version is not supported, ' +\
-            'please %s DB' % command
-        print(msg)
+            command = 'both \'chainerui db create\' and ' + command
+        print('The current DB schema version is not supported.')
+        print('Please run {} command before.'.format(command))
         return False
     return True
 
@@ -111,7 +110,7 @@ def db_handler(args):
 
     if args.type == 'status':
         current_rev = db_revision.current_db_revision()
-        print('current_rev', current_rev)
+        print('The current DB schema version:', current_rev)
 
     if args.type == 'upgrade':
         db.upgrade()
@@ -141,7 +140,7 @@ def project_create_handler(args):
     if project is None:
         project = Project.create(project_path, project_name)
     else:
-        print('Pathname already registered.')
+        print("Path '{}' has already registered.".format(project.path_name))
 
 
 def create_parser():
