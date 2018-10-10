@@ -99,7 +99,7 @@ export const resultConfig = PropTypes.shape({
   hidden: PropTypes.bool.isRequired
 });
 
-const resultsConfig = PropTypes.objectOf(resultConfig);
+export const resultsConfig = PropTypes.objectOf(resultConfig);
 
 export const logKeyConfig = PropTypes.shape({
   selected: PropTypes.bool.isRequired
@@ -147,7 +147,9 @@ export const assets = PropTypes.arrayOf(PropTypes.shape({
   trainInfo: PropTypes.objectOf(PropTypes.any)
 }));
 
-export const resultStatus = PropTypes.shape({});
+export const resultStatus = PropTypes.shape({
+  selected: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
+});
 
 export const resultsStatus = PropTypes.objectOf(resultStatus);
 

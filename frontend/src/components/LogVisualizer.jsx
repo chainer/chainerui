@@ -91,8 +91,10 @@ class LogVisualizer extends React.Component {
       projectStatus,
       projectConfig,
       globalConfig,
+      onResultSelect,
       stats
     } = this.props;
+    const { resultsStatus = {} } = projectStatus;
     const { axes, resultsConfig, lines } = projectConfig;
     const { logKeys, xAxisKeys } = stats;
     const {
@@ -127,20 +129,46 @@ class LogVisualizer extends React.Component {
       });
     });
 
+    const anySelected = selectedResults.some((resultId) => {
+      const resultStatus = resultsStatus[resultId];
+      return resultStatus && resultStatus.selected;
+    });
+
     const lineElems = [];
     Object.keys(axisLines).forEach((axisName) => {
       axisLines[axisName].forEach((line) => {
-        const { config = {} } = line;
+        const { config = {}, resultId, logKey } = line;
+        const resultStatus = resultsStatus[resultId] || {};
+        const selected = resultStatus.selected === true || resultStatus.selected === logKey;
         lineElems.push(
           <Line
             type="linear"
             dataKey={line2dataKey(line, axisName)}
             yAxisId={axisName}
             stroke={config.color}
+            strokeOpacity={!anySelected || selected ? 1 : 0.1}
             connectNulls
             isAnimationActive={false}
             dot={false}
             key={line2dataKey(line, axisName)}
+          />,
+          <Line
+            type="linear"
+            dataKey={line2dataKey(line, axisName)}
+            yAxisId={axisName}
+            stroke={config.color}
+            strokeWidth="10"
+            strokeOpacity="0"
+            connectNulls
+            isAnimationActive={false}
+            dot={false}
+            key={`${line2dataKey(line, axisName)}-events`}
+            onMouseEnter={() => {
+              onResultSelect(project.id, resultId, logKey);
+            }}
+            onMouseLeave={() => {
+              onResultSelect(project.id, resultId, false);
+            }}
           />
         );
       });
@@ -238,9 +266,11 @@ class LogVisualizer extends React.Component {
             <LogVisualizerLegend
               project={project}
               results={results}
+              resultsStatus={resultsStatus}
               lines={axisLines}
               maxHeight={chartSize.height}
               isResultNameAlignRight={isResultNameAlignRight}
+              onResultSelect={onResultSelect}
             />
           </div>
         </div>
@@ -262,7 +292,8 @@ LogVisualizer.propTypes = {
   stats: uiPropTypes.stats.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
-  onChartDownloadStatusUpdate: PropTypes.func.isRequired
+  onChartDownloadStatusUpdate: PropTypes.func.isRequired,
+  onResultSelect: PropTypes.func.isRequired
 };
 
 export default LogVisualizer;

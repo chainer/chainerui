@@ -10,6 +10,7 @@ import {
   resetProjectConfig,
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
+  updateResultSelect,
   updateResultsConfigSelect,
   updateGlobalPollingRate,
   updateGlobalChartSize,
@@ -117,15 +118,18 @@ class PlotContainer extends React.Component {
                 projectConfig={projectConfig}
                 globalConfig={globalConfig}
                 onChartDownloadStatusUpdate={this.props.updateChartDownloadStatus}
+                onResultSelect={this.props.updateResultSelect}
               />
               <ExperimentsTable
                 project={project}
                 results={results}
+                resultsStatus={projectStatus.resultsStatus}
                 stats={stats}
                 projectConfig={projectConfig}
                 globalConfig={globalConfig}
                 onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
+                onResultSelect={this.props.updateResultSelect}
                 onCommandSubmit={this.props.createCommand}
                 onTableExpandedUpdate={this.props.updateTableExpanded}
               />
@@ -208,6 +212,7 @@ PlotContainer.propTypes = {
   updateLineInAxis: PropTypes.func.isRequired,
   updateAxisScale: PropTypes.func.isRequired,
   toggleLogKeySelect: PropTypes.func.isRequired,
+  updateResultSelect: PropTypes.func.isRequired,
   updateResultsConfigSelect: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
@@ -231,6 +236,7 @@ export default connect(mapStateToProps, {
   updateLineInAxis,
   updateAxisScale,
   toggleLogKeySelect,
+  updateResultSelect,
   updateResultsConfigSelect,
   updateGlobalPollingRate,
   updateGlobalChartSize,

@@ -6,7 +6,7 @@ import {
 
 
 const renderItems = (payload, formatter) => (
-  payload.filter((entry) => entry.value != null).map((entry) => {
+  payload.filter((entry) => entry.value != null && entry.strokeOpacity !== '0').map((entry) => {
     const { dataKey, color, value } = entry;
     return (
       <li
