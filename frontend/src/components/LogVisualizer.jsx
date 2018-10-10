@@ -43,23 +43,6 @@ const getDomain = (axisConfig = {}) => {
   return domain;
 };
 
-const buildLineElem = (line, axisName) => {
-  const { config = {} } = line;
-
-  return (
-    <Line
-      type="linear"
-      dataKey={line2dataKey(line, axisName)}
-      yAxisId={axisName}
-      stroke={config.color}
-      connectNulls
-      isAnimationActive={false}
-      dot={false}
-      key={line2dataKey(line, axisName)}
-    />
-  );
-};
-
 class LogVisualizer extends React.Component {
   constructor(props) {
     super(props);
@@ -143,9 +126,24 @@ class LogVisualizer extends React.Component {
         });
       });
     });
-    const lineElems = {};
+
+    const lineElems = [];
     Object.keys(axisLines).forEach((axisName) => {
-      lineElems[axisName] = axisLines[axisName].map((line) => buildLineElem(line, axisName));
+      axisLines[axisName].forEach((line) => {
+        const { config = {} } = line;
+        lineElems.push(
+          <Line
+            type="linear"
+            dataKey={line2dataKey(line, axisName)}
+            yAxisId={axisName}
+            stroke={config.color}
+            connectNulls
+            isAnimationActive={false}
+            dot={false}
+            key={line2dataKey(line, axisName)}
+          />
+        );
+      });
     });
 
     const { chartSize, isResultNameAlignRight } = globalConfig;
@@ -183,8 +181,7 @@ class LogVisualizer extends React.Component {
                 allowDataOverflow
               />
               <CartesianGrid strokeDasharray="3 3" />
-              {lineElems.yLeftAxis}
-              {lineElems.yRightAxis}
+              {lineElems}
             </LineChart>
           </ResponsiveContainer>
           <div>
@@ -233,8 +230,7 @@ class LogVisualizer extends React.Component {
                 allowDataOverflow
               />
               <CartesianGrid strokeDasharray="3 3" />
-              {lineElems.yLeftAxis}
-              {lineElems.yRightAxis}
+              {lineElems}
               <Tooltip content={<LogVisualizerTooltip xAxisKey={xAxisKey} />} />
             </LineChart>
           </ResponsiveContainer>
