@@ -220,6 +220,7 @@ export const toggleLogKeySelect = (projectId, axisName, logKey) => ({
 // results config
 
 export const RESULTS_CONFIG_SELECT_UPDATE = 'RESULTS_CONFIG_SELECT_UPDATE';
+export const RESULT_SELECT_UPDATE = 'RESULT_SELECT_UPDATE';
 
 export const updateResultsConfigSelect = (projectId, resultId, hidden) => ({
   type: RESULTS_CONFIG_SELECT_UPDATE,
@@ -228,6 +229,12 @@ export const updateResultsConfigSelect = (projectId, resultId, hidden) => ({
   hidden
 });
 
+export const updateResultSelect = (projectId, resultId, selected) => ({
+  type: RESULT_SELECT_UPDATE,
+  projectId,
+  resultId,
+  selected
+});
 
 // lines config
 

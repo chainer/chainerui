@@ -159,7 +159,21 @@ const fetchState = (state = {}, action) => {
 
 
 const resultsStatus = (state = {}, action) => {
+  const { resultId } = action;
+  const resultStatus = state[resultId] || {};
+
   switch (action.type) {
+    case ActionTypes.RESULT_SELECT_UPDATE:
+      if (resultId == null) {
+        return state;
+      }
+      return {
+        ...state,
+        [Number(resultId)]: {
+          ...resultStatus,
+          selected: action.selected
+        }
+      };
     default:
       return state;
   }
