@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import { displayResultNameFull } from '../utils';
 
 const TruncatedResultName = (props) => {
@@ -17,17 +19,8 @@ const TruncatedResultName = (props) => {
 };
 
 TruncatedResultName.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string
-  }).isRequired,
-  result: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string,
-    name: PropTypes.string,
-    args: PropTypes.arrayOf(PropTypes.any),
-    logs: PropTypes.arrayOf(PropTypes.any)
-  }).isRequired,
+  project: uiPropTypes.project.isRequired,
+  result: uiPropTypes.result.isRequired,
   isResultNameAlignRight: PropTypes.bool
 };
 

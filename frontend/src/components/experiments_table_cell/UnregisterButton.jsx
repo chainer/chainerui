@@ -4,6 +4,7 @@ import {
   Button, Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap';
 
+import * as uiPropTypes from '../../store/uiPropTypes';
 import {
   displayResultNameFull
 } from '../../utils';
@@ -56,15 +57,8 @@ class UnregisterButton extends React.Component {
 }
 
 UnregisterButton.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string
-  }).isRequired,
-  result: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string,
-    name: PropTypes.string
-  }).isRequired,
+  project: uiPropTypes.project.isRequired,
+  result: uiPropTypes.result.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
   onResultUnregistered: PropTypes.func.isRequired
 };

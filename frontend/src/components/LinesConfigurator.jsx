@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Collapse, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import { line2key, getSelectedResults, getSelectedLogKeys, createLine } from '../utils';
 import LinesConfiguratorRow from './LinesConfiguratorRow';
 import LineConfigurator from './LineConfigurator';
@@ -146,39 +148,12 @@ class LinesConfigurator extends React.Component {
 }
 
 LinesConfigurator.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string
-  }).isRequired,
-  results: PropTypes.objectOf(PropTypes.any).isRequired,
-  axisName: PropTypes.string.isRequired,
-  stats: PropTypes.shape({
-    logKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
-  projectConfig: PropTypes.shape({
-    axes: PropTypes.objectOf(PropTypes.shape({
-      axisName: PropTypes.string,
-      logKeysConfig: PropTypes.objectOf(PropTypes.shape({
-        selected: PropTypes.bool
-      }))
-    })),
-    resultsConfig: PropTypes.objectOf(PropTypes.shape({
-      hidden: PropTypes.bool
-    })),
-    lines: PropTypes.objectOf(
-      PropTypes.shape({
-        resultId: PropTypes.number,
-        logKey: PropTypes.string,
-        config: PropTypes.shape({
-          color: PropTypes.string,
-          isVisible: PropTypes.bool
-        })
-      })
-    )
-  }).isRequired,
-  globalConfig: PropTypes.shape({
-    isResultNameAlignRight: PropTypes.bool
-  }).isRequired,
+  project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results.isRequired,
+  axisName: uiPropTypes.axisName.isRequired,
+  stats: uiPropTypes.stats.isRequired,
+  projectConfig: uiPropTypes.projectConfig.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired
 };
 

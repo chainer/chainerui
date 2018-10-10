@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import * as uiPropTypes from '../store/uiPropTypes';
+
 
 const XAxisKeySelector = (props) => {
   const { projectId, stats, value, onChange } = props;
@@ -18,10 +20,8 @@ const XAxisKeySelector = (props) => {
 };
 
 XAxisKeySelector.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  stats: PropTypes.shape({
-    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
+  projectId: uiPropTypes.projectId.isRequired,
+  stats: uiPropTypes.stats.isRequired,
   value: PropTypes.string,
   onChange: PropTypes.func
 };

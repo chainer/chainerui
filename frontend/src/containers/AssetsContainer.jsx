@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import {
   getResultAsset,
   updateGlobalPollingRate,
@@ -52,13 +54,11 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 AssetsContainer.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  resultId: PropTypes.number.isRequired,
+  projectId: uiPropTypes.projectId.isRequired,
+  resultId: uiPropTypes.resultId.isRequired,
   assets: PropTypes.objectOf(PropTypes.any).isRequired,
-  fetchState: PropTypes.shape({
-    resultList: PropTypes.string
-  }).isRequired,
-  globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
+  fetchState: uiPropTypes.fetchState.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired,
   getResultAsset: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired

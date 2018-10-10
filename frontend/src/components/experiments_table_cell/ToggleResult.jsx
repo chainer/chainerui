@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import * as uiPropTypes from '../../store/uiPropTypes';
+
 class ToggleResult extends React.Component {
   constructor(props) {
     super(props);
@@ -25,16 +27,10 @@ class ToggleResult extends React.Component {
 }
 
 ToggleResult.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number
-  }).isRequired,
-  result: PropTypes.shape({
-    id: PropTypes.number
-  }).isRequired,
+  project: uiPropTypes.project.isRequired,
+  result: uiPropTypes.result.isRequired,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
-  resultConfig: PropTypes.shape({
-    hidden: PropTypes.bool
-  })
+  resultConfig: uiPropTypes.resultConfig
 };
 
 ToggleResult.defaultProps = {
