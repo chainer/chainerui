@@ -174,7 +174,7 @@ class CommandsExtension(extension.Extension):
                 response_body = receiver(trainer, request.get('body', None))
                 response_status = CommandItem.RESPONSE_SUCCESS
             except Exception as e:
-                print('catched execption from receiver:', e.args)
+                print('caught an exception from receiver:', e.args)
                 response_body = None
                 response_status = CommandItem.RESPONSE_FAILURE
 

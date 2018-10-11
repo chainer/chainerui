@@ -36,7 +36,7 @@ class Database(object):
                 pass
             else:
                 raise
-        print('DB_FILE_PATH:', db_dir)
+        print('DB file path:', db_dir)
 
     def setup(self, url=None, test_mode=False, echo=False):
         if url is None:
