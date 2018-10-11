@@ -21,8 +21,10 @@ install:
   - npm --version
 
 build_script:
-  - npm install -prefix frontend
-  - npm run -prefix frontend build -- --progress=false --profile=false
+  - cd frontend
+  - npm install
+  - npm run build -- --progress=false --profile=false
+  - cd ..
   - pip install -e .
 
   # Server connection test

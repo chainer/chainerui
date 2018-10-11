@@ -21,8 +21,9 @@ before_install:
   - npm -v
 
 install:
-  - npm install -prefix frontend
-  - npm run -prefix frontend build -- --progress=false --profile=false
+  - pushd frontend
+  - npm install && npm run build -- --progress=false --profile=false
+  - popd
   - pip install -e .
 
 script:
@@ -31,7 +32,9 @@ script:
   - autopep8 -r . --global-config .pep8 --diff | tee check_autopep8
   - test ! -s check_autopep8
   # frontend style check
-  - npm run -prefix frontend lint
+  - pushd frontend
+  - npm run lint
+  - popd
   # chainerui install test
   - chainerui db create
   - chainerui db upgrade
