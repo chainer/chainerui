@@ -7,6 +7,8 @@ import {
   Form, FormGroup, Label, Input,
   Button
 } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import PollingStatus from './PollingStatus';
 import { chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION } from '../constants';
 
@@ -178,15 +180,8 @@ class NavigationBar extends React.Component {
 
 NavigationBar.propTypes = {
   pollingKey: PropTypes.string,
-  fetchState: PropTypes.shape({
-    resultList: PropTypes.string
-  }).isRequired,
-  globalConfig: PropTypes.shape({
-    pollingRate: PropTypes.number,
-    chartSize: PropTypes.objectOf(PropTypes.any),
-    logsLimit: PropTypes.number,
-    isResultNameAlignRight: PropTypes.bool
-  }).isRequired,
+  fetchState: uiPropTypes.fetchState.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired,
   onGlobalConfigPollingRateUpdate: PropTypes.func.isRequired,
   onGlobalConfigChartSizeUpdate: PropTypes.func.isRequired,
   onGlobalConfigLogsLimitUpdate: PropTypes.func.isRequired,

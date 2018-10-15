@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import AxisConfigurator from './AxisConfigurator';
 import LinesConfigurator from './LinesConfigurator';
 import XAxisKeySelector from './XAxisKeySelector';
@@ -96,24 +98,11 @@ const AxesConfigurator = (props) => {
 };
 
 AxesConfigurator.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string
-  }).isRequired,
-  results: PropTypes.objectOf(PropTypes.any).isRequired,
-  stats: PropTypes.shape({
-    logKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
-  projectConfig: PropTypes.shape({
-    axes: PropTypes.shape({
-      xAxis: PropTypes.any,
-      yLeftAxis: PropTypes.any,
-      yRightAxis: PropTypes.any
-    })
-  }).isRequired,
-  globalConfig: PropTypes.shape({
-    isResultNameAlignRight: PropTypes.bool
-  }).isRequired,
+  project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results.isRequired,
+  stats: uiPropTypes.stats.isRequired,
+  projectConfig: uiPropTypes.projectConfig.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleUpdate: PropTypes.func.isRequired,
   onAxisConfigXKeyUpdate: PropTypes.func.isRequired,

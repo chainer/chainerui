@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import {
   getProject,
   getResultList, updateResult, clearResultList,
@@ -188,34 +190,13 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 PlotContainer.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    pathName: PropTypes.string
-  }).isRequired,
-  results: PropTypes.objectOf(PropTypes.any).isRequired,
-  fetchState: PropTypes.shape({
-    resultList: PropTypes.string
-  }).isRequired,
-  projectConfig: PropTypes.shape({
-    axes: PropTypes.objectOf(PropTypes.any),
-    resultsConfig: PropTypes.objectOf(PropTypes.any),
-    global: PropTypes.objectOf(PropTypes.any),
-    tableState: PropTypes.objectOf(PropTypes.any)
-  }).isRequired,
-  globalConfig: PropTypes.shape({
-    pollingRate: PropTypes.number,
-    chartSize: PropTypes.objectOf(PropTypes.any),
-    logsLimit: PropTypes.number,
-    isResultNameAlignRight: PropTypes.bool
-  }).isRequired,
-  stats: PropTypes.shape({
-    axes: PropTypes.objectOf(PropTypes.any),
-    argKeys: PropTypes.arrayOf(PropTypes.string),
-    logKeys: PropTypes.arrayOf(PropTypes.string),
-    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
+  projectId: uiPropTypes.projectId.isRequired,
+  project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results.isRequired,
+  fetchState: uiPropTypes.fetchState.isRequired,
+  projectConfig: uiPropTypes.projectConfig.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired,
+  stats: uiPropTypes.stats.isRequired,
   getProject: PropTypes.func.isRequired,
   getResultList: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,

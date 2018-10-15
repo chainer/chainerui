@@ -12,6 +12,8 @@ import {
   Form
 } from 'reactstrap';
 
+import * as uiPropTypes from '../store/uiPropTypes';
+
 class ExperimentsTableConfigurator extends React.Component {
   constructor(props) {
     super(props);
@@ -130,17 +132,9 @@ class ExperimentsTableConfigurator extends React.Component {
 }
 
 ExperimentsTableConfigurator.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number
-  }).isRequired,
-  projectConfig: PropTypes.shape({
-    hiddenLogKeys: PropTypes.array,
-    hiddenArgKeys: PropTypes.array
-  }).isRequired,
-  stats: PropTypes.shape({
-    logKeys: PropTypes.array,
-    argKeys: PropTypes.array
-  }).isRequired,
+  project: uiPropTypes.project.isRequired,
+  projectConfig: uiPropTypes.projectConfig.isRequired,
+  stats: uiPropTypes.stats.isRequired,
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired
 };
 
