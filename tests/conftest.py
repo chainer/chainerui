@@ -4,6 +4,9 @@ import tempfile
 
 import pytest
 
+from chainerui import create_app
+from chainerui import db
+
 
 @pytest.fixture(scope='session')
 def base_dir():
@@ -43,3 +46,27 @@ class TempDirTestCase(object):
         test_dir = _make_new_directory(func_base)
 
         self.dir = test_dir
+
+
+@pytest.fixture(scope='function')
+def app():
+    app = create_app()
+    app.testing = True
+    return app.test_client()
+
+
+@pytest.fixture(scope='function')
+def func_init_db(func_dir):
+    url = 'sqlite:///' + os.path.join(func_dir, 'chainerui.db')
+    db.setup(url=url, echo=False)
+
+    yield
+
+    if db._session is not None:
+        db.session.remove()
+    db.remove_db()
+
+
+@pytest.fixture(scope='function')
+def func_db(func_init_db):
+    db.upgrade()
