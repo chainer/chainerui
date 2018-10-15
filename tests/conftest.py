@@ -26,7 +26,7 @@ def _make_new_directory(base):
     return new_dir
 
 
-@pytest.fixture(autouse=True, scope='function')
+@pytest.fixture(scope='function')
 def func_dir(request, base_dir):
     func_name = request.function.__name__
     func_base = os.path.join(base_dir, func_name)
