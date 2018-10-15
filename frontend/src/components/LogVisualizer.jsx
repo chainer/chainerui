@@ -135,13 +135,13 @@ class LogVisualizer extends React.Component {
 
     return (
       <div className="log-visualizer-root">
-        <div className="d-flex">
+        <div className="d-flex" ref={this.chartRef}>
           <ResponsiveContainer
             width={chartSize.width}
             height={chartSize.height}
             aspect={chartSize.aspect}
           >
-            <LineChart data={data} ref={this.chartRef}>
+            <LineChart data={data}>
               <XAxis
                 type="number"
                 dataKey={xAxisKey}
