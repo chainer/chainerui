@@ -10,7 +10,7 @@ import {
   updateGlobalChartSize
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
-import Assets from '../components/assets/AssetList';
+import AssetsTable from '../components/AssetsTable';
 import { defaultConfig } from '../constants';
 
 
@@ -32,8 +32,8 @@ class AssetsContainer extends React.Component {
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
         />
-        <Container fluid>
-          <Assets assets={assets || []} />
+        <Container>
+          <AssetsTable assets={assets || []} />
         </Container>
       </div>
     );
