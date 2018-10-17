@@ -16,6 +16,7 @@ import {
   formatLogValue,
   getSelectedResults, getSelectedLogKeys,
   getLogData,
+  getPlotLogData,
   createLine,
   getUrlSafeProjectNameFull,
   downloadObjectAsJson,
@@ -73,7 +74,7 @@ class LogVisualizer extends React.Component {
 
   handleClickDownloadJSON() {
     const { project, results, stats, projectConfig } = this.props;
-    const data = getLogData(results, stats, projectConfig);
+    const data = getPlotLogData(results, stats, projectConfig);
     const exportName = getUrlSafeProjectNameFull(project);
     downloadObjectAsJson(data, exportName);
   }
