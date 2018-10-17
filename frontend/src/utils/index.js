@@ -203,14 +203,15 @@ export const getPlotLogData = (results, stats, projectConfig) => {
   Object.keys(results).forEach((resultId) => {
     const result = results[resultId];
     const logs = result.logs || [];
-    const logDict = {};
-    logs.forEach((log) => {
+    const allLogs = logs.map((log) => {
+      const logDict = {};
       log.logItems.forEach((logItem) => {
         logDict[logItem.key] = logItem.value;
       });
+      return logDict;
     });
     allData[result.id] = {
-      log: logDict,
+      log: allLogs,
       name: result.name || result.pathName
     };
   });
