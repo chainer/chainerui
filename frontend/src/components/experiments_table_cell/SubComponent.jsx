@@ -62,18 +62,11 @@ const SubComponent = (props) => {
 };
 
 SubComponent.propTypes = {
-  original: PropTypes.shape({
-    id: PropTypes.number
-  }),
-  project: uiPropTypes.project,
+  original: uiPropTypes.result.isRequired,
+  project: uiPropTypes.project.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
   onResultUnregistered: PropTypes.func.isRequired,
   onCommandSubmit: PropTypes.func.isRequired
-};
-
-SubComponent.defaultProps = {
-  original: {},
-  project: {}
 };
 
 export default SubComponent;

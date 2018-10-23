@@ -57,7 +57,7 @@ const mapStateToProps = (state) => {
     fetchState,
     config
   } = state;
-  const { projects = {} } = entities;
+  const { projects } = entities;
   const globalConfig = config.global;
   return { projects, fetchState, globalConfig };
 };
@@ -73,6 +73,10 @@ ProjectsContainer.propTypes = {
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired
+};
+
+ProjectsContainer.defaultProps = {
+  projects: {}
 };
 
 export default connect(mapStateToProps, {

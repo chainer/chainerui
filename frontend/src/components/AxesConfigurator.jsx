@@ -25,7 +25,7 @@ const AxesConfigurator = (props) => {
     xAxis = { axisName: 'xAxis' },
     yLeftAxis = { axisName: 'yLeftAxis' },
     yRightAxis = { axisName: 'yRightAxis' }
-  } = projectConfig.axes || {};
+  } = projectConfig.axes;
 
   return (
     <div className="axes-configurator">

@@ -58,11 +58,7 @@ LogVisualizerLegend.propTypes = {
   results: uiPropTypes.results.isRequired,
   lines: PropTypes.objectOf(PropTypes.any).isRequired,
   maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  isResultNameAlignRight: PropTypes.bool
-};
-
-LogVisualizerLegend.defaultProps = {
-  isResultNameAlignRight: false
+  isResultNameAlignRight: PropTypes.bool.isRequired
 };
 
 export default LogVisualizerLegend;
