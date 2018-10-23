@@ -18,7 +18,7 @@ export const logs = PropTypes.arrayOf(PropTypes.shape({
   logItems: PropTypes.arrayOf(PropTypes.shape({
     logId: PropTypes.number,
     key: PropTypes.string.isRequired,
-    value: PropTypes.any.isRequired
+    value: PropTypes.any
   })).isRequired
 }));
 
