@@ -88,10 +88,10 @@ export const globalConfig = PropTypes.shape({
     width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     aspect: PropTypes.number.isRequired
-  }),
-  pollingRate: PropTypes.number,
-  logsLimit: PropTypes.number,
-  isResultNameAlignRight: PropTypes.bool
+  }).isRequired,
+  pollingRate: PropTypes.number.isRequired,
+  logsLimit: PropTypes.number.isRequired,
+  isResultNameAlignRight: PropTypes.bool.isRequired
 });
 
 export const resultConfig = PropTypes.shape({

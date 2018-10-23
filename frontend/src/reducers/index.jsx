@@ -357,7 +357,8 @@ const projectsConfig = (state = {}, action) => {
 const defaultGlobalState = {
   pollingRate: pollingOptions[1].value,
   chartSize: chartSizeOptions[0],
-  logsLimit: logsLimitOptions[0].value
+  logsLimit: logsLimitOptions[0].value,
+  isResultNameAlignRight: false
 };
 
 const global = (state = defaultGlobalState, action) => {
