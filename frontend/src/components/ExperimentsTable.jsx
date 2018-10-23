@@ -166,10 +166,7 @@ ExperimentsTable.propTypes = {
   onTableExpandedUpdate: PropTypes.func.isRequired
 };
 ExperimentsTable.defaultProps = {
-  results: {},
-  stats: {
-    argKeys: []
-  }
+  results: {}
 };
 
 export default ExperimentsTable;
