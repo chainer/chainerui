@@ -29,9 +29,7 @@ rules:
   no-else-return: off
   no-multiple-empty-lines: off
   operator-linebreak: off
-  import/no-self-import: off
   import/no-unresolved: off
-  import/no-useless-path-segments: off
   react/destructuring-assignment: off
   react/jsx-one-expression-per-line: off
   react/jsx-wrap-multilines: off
