@@ -354,13 +354,13 @@ const projectsConfig = (state = {}, action) => {
 };
 
 
-const defaultGlobaState = {
+const defaultGlobalState = {
   pollingRate: pollingOptions[1].value,
   chartSize: chartSizeOptions[0],
   logsLimit: logsLimitOptions[0].value
 };
 
-const global = (state = defaultGlobaState, action) => {
+const global = (state = defaultGlobalState, action) => {
   const { pollingRate, chartSize, logsLimit, isResultNameAlignRight } = action;
   switch (action.type) {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:

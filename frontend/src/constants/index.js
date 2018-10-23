@@ -100,7 +100,7 @@ export const defaultAxisConfig = {
 
 export const defaultProjectConfig = {
   axes: defaultAxisConfig,
-  resultsConig: {},
+  resultsConfig: {},
   lines: {},
   tableState: {}
 };
