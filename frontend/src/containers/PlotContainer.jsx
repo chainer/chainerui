@@ -140,12 +140,6 @@ class PlotContainer extends React.Component {
 }
 
 const mapEntitiesToStats = (entities) => {
-  const axes = {
-    xAxis: {},
-    yLeftAxis: {},
-    yRightAxis: {}
-  };
-
   const { results = {} } = entities;
   const argKeySet = {};
   const logKeySet = {};
@@ -162,7 +156,7 @@ const mapEntitiesToStats = (entities) => {
   const logKeys = Object.keys(logKeySet).sort();
   const xAxisKeys = keyOptions.filter((key) => key in logKeySet);
 
-  return { axes, argKeys, logKeys, xAxisKeys };
+  return { argKeys, logKeys, xAxisKeys };
 };
 
 const mapStateToProps = (state, ownProps) => {

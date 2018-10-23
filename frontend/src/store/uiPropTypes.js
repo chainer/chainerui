@@ -136,7 +136,6 @@ export const projectConfig = PropTypes.shape({
 });
 
 export const stats = PropTypes.shape({
-  axes: PropTypes.objectOf(PropTypes.object),
   argKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   logKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   xAxisKeys: PropTypes.arrayOf(PropTypes.string).isRequired
