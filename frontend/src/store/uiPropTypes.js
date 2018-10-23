@@ -131,7 +131,7 @@ export const projectConfig = PropTypes.shape({
     hiddenLogKeys: PropTypes.arrayOf(PropTypes.string),
     hiddenArgKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  resultsConfig,
+  resultsConfig: resultsConfig.isRequired,
   lines: lines.isRequired
 });
 
