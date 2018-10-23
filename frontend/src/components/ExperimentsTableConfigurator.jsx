@@ -138,6 +138,4 @@ ExperimentsTableConfigurator.propTypes = {
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired
 };
 
-ExperimentsTableConfigurator.defaultProps = {};
-
 export default ExperimentsTableConfigurator;

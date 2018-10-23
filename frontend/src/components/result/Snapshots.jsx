@@ -39,8 +39,5 @@ Snapshots.propTypes = {
   snapshots: uiPropTypes.snapshots.isRequired
 };
 
-Snapshots.defaultProps = {
-};
-
 export default Snapshots;
 

@@ -95,8 +95,5 @@ CommandScheduleForm.propTypes = {
   onScheduleChange: PropTypes.func.isRequired
 };
 
-CommandScheduleForm.defaultProps = {
-};
-
 export default CommandScheduleForm;
 

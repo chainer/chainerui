@@ -82,6 +82,7 @@ AxisConfigurator.propTypes = {
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired
 };
+
 AxisConfigurator.defaultProps = {
   children: null
 };

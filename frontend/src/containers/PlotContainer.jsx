@@ -218,9 +218,6 @@ PlotContainer.propTypes = {
   updateTableColumnsVisibility: PropTypes.func.isRequired
 };
 
-PlotContainer.defaultProps = {
-};
-
 export default connect(mapStateToProps, {
   getProject,
   getResultList,

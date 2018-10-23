@@ -39,8 +39,5 @@ ResultSummary.propTypes = {
   result: uiPropTypes.result.isRequired
 };
 
-ResultSummary.defaultProps = {
-};
-
 export default ResultSummary;
 

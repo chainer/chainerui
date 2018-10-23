@@ -99,8 +99,5 @@ SideBar.propTypes = {
   onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
 };
 
-SideBar.defaultProps = {
-};
-
 export default SideBar;
 

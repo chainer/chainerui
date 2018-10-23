@@ -199,8 +199,5 @@ LogVisualizer.propTypes = {
   globalConfig: uiPropTypes.globalConfig.isRequired
 };
 
-LogVisualizer.defaultProps = {
-};
-
 export default LogVisualizer;
 

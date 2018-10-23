@@ -111,8 +111,5 @@ AxesConfigurator.propTypes = {
   onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
 };
 
-AxesConfigurator.defaultProps = {
-};
-
 export default AxesConfigurator;
 

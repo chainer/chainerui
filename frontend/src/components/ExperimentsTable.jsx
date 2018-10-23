@@ -165,6 +165,7 @@ ExperimentsTable.propTypes = {
   onCommandSubmit: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired
 };
+
 ExperimentsTable.defaultProps = {
   results: {}
 };

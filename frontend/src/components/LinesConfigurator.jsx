@@ -157,8 +157,5 @@ LinesConfigurator.propTypes = {
   onAxisConfigLineUpdate: PropTypes.func.isRequired
 };
 
-LinesConfigurator.defaultProps = {
-};
-
 export default LinesConfigurator;
 
