@@ -87,11 +87,6 @@ export const logsLimitOptions = [
   }
 ];
 
-export const defaultConfig = {
-  projectsConfig: {},
-  global: {}
-};
-
 export const defaultAxisConfig = {
   yLeftAxis: {
     axisName: 'yLeftAxis',

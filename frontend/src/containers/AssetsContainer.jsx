@@ -11,7 +11,6 @@ import {
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import Assets from '../components/assets/AssetList';
-import { defaultConfig } from '../constants';
 
 
 class AssetsContainer extends React.Component {
@@ -46,7 +45,7 @@ const mapStateToProps = (state, ownProps) => {
   const {
     entities,
     fetchState,
-    config = defaultConfig
+    config
   } = state;
   const { assets = [] } = entities;
   const globalConfig = config.global;

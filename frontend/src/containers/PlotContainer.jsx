@@ -27,7 +27,7 @@ import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigur
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
-import { defaultConfig, defaultProjectConfig, keyOptions } from '../constants';
+import { defaultProjectConfig, keyOptions } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
@@ -164,7 +164,7 @@ const mapStateToProps = (state, ownProps) => {
   const {
     entities,
     fetchState,
-    config = defaultConfig
+    config
   } = state;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId] || { id: projectId };
