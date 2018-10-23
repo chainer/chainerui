@@ -7,8 +7,8 @@ import { SCHEDULE_NOW, SCHEDULE_CUSTOM } from '../../constants';
 
 
 class CommandScheduleForm extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.handleScheduleTypeChange = this.handleScheduleTypeChange.bind(this);
     this.handleScheduleValueChange = this.handleScheduleValueChange.bind(this);
