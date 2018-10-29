@@ -7,12 +7,13 @@ import * as uiPropTypes from '../store/uiPropTypes';
 import {
   getResultAsset,
   updateGlobalPollingRate,
-  updateGlobalChartSize
+  updateGlobalChartSize,
+  updateGlobalLogsLimit,
+  updateGlobalResultNameAlignment
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import AssetsTable from '../components/AssetsTable';
 import { defaultConfig } from '../constants';
-
 
 class AssetsContainer extends React.Component {
   componentDidMount() {
@@ -29,11 +30,17 @@ class AssetsContainer extends React.Component {
         <NavigationBar
           fetchState={fetchState}
           globalConfig={globalConfig}
+          onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
+          onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container>
-          <AssetsTable assets={assets || []} />
+          {
+            assets.length > 0
+            ? (<AssetsTable assets={assets} />)
+            : null
+          }
         </Container>
       </div>
     );
@@ -56,7 +63,7 @@ const mapStateToProps = (state, ownProps) => {
 AssetsContainer.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   resultId: uiPropTypes.resultId.isRequired,
-  assets: PropTypes.objectOf(PropTypes.any).isRequired,
+  assets: PropTypes.arrayOf(PropTypes.any).isRequired,
   fetchState: uiPropTypes.fetchState.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   getResultAsset: PropTypes.func.isRequired,
@@ -67,5 +74,7 @@ AssetsContainer.propTypes = {
 export default connect(mapStateToProps, {
   getResultAsset,
   updateGlobalPollingRate,
-  updateGlobalChartSize
+  updateGlobalChartSize,
+  updateGlobalLogsLimit,
+  updateGlobalResultNameAlignment
 })(AssetsContainer);
