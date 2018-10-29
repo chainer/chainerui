@@ -36,11 +36,7 @@ class AssetsContainer extends React.Component {
           onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container>
-          {
-            assets.length > 0
-            ? (<AssetsTable assets={assets} />)
-            : null
-          }
+          <AssetsTable assets={assets} />
         </Container>
       </div>
     );
@@ -68,7 +64,9 @@ AssetsContainer.propTypes = {
   globalConfig: uiPropTypes.globalConfig.isRequired,
   getResultAsset: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
-  updateGlobalChartSize: PropTypes.func.isRequired
+  updateGlobalChartSize: PropTypes.func.isRequired,
+  updateGlobalResultNameAlignment: PropTypes.func.isRequired,
+  updateGlobalLogsLimit: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, {

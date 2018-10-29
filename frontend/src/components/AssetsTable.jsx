@@ -14,6 +14,7 @@ const AssetsTable = (props) => {
   const trainInfoColumns = uniqueTrainInfoKeys.map((k) => ({
     Header: k,
     id: k,
+    className: 'text-right',
     accessor: (p) => {
       const trainInfo = p.train_info;
       return trainInfo[k];
@@ -23,6 +24,8 @@ const AssetsTable = (props) => {
   const contentColumns = uniqueContentKeys.map((k) => ({
     Header: k,
     id: k,
+    className: 'text-center',
+    sortable: false,
     Cell: (p) => {
       const { original } = p;
       const selectedContent = original.contents.find((content) => content.tag === k);
@@ -30,6 +33,8 @@ const AssetsTable = (props) => {
         <img
           src={selectedContent.uri}
           alt={selectedContent.tag}
+          width="80%"
+          height="auto"
         />
       );
     }
