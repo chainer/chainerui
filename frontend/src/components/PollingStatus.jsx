@@ -10,8 +10,8 @@ import {
 
 
 class PollingStatus extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.toggleTooltip = this.toggleTooltip.bind(this);
 

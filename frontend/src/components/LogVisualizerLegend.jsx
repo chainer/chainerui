@@ -36,7 +36,7 @@ const renderItems = (lines, axisName, project, results, isResultNameAlignRight) 
   })
 );
 
-const LogVisualizerTooltip = (props) => {
+const LogVisualizerLegend = (props) => {
   const {
     project, results, lines, maxHeight, isResultNameAlignRight
   } = props;
@@ -53,7 +53,7 @@ const LogVisualizerTooltip = (props) => {
   );
 };
 
-LogVisualizerTooltip.propTypes = {
+LogVisualizerLegend.propTypes = {
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
   lines: PropTypes.objectOf(PropTypes.any),
@@ -61,12 +61,12 @@ LogVisualizerTooltip.propTypes = {
   isResultNameAlignRight: PropTypes.bool
 };
 
-LogVisualizerTooltip.defaultProps = {
+LogVisualizerLegend.defaultProps = {
   xAxisKey: '',
   isResultNameAlignRight: false,
   label: undefined,
   payload: []
 };
 
-export default LogVisualizerTooltip;
+export default LogVisualizerLegend;
 

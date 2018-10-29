@@ -1,7 +1,7 @@
 import path from 'path';
 import saveSvgAsPng from 'save-svg-as-png';
 import * as moment from 'moment';
-import { lineColorGenerator } from '../utils';
+import { lineColorGenerator } from './color';
 
 export * from './color';
 export * from './command.jsx';

@@ -9,8 +9,8 @@ import LineConfigurator from './LineConfigurator';
 
 
 class LinesConfigurator extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.handleModalToggle = this.handleModalToggle.bind(this);
     this.handleModalOpen = this.handleModalOpen.bind(this);
