@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import {
   LineChart,
@@ -10,6 +9,8 @@ import {
   CartesianGrid,
   ResponsiveContainer
 } from 'recharts';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import {
   line2key, line2dataKey,
   formatLogValue,
@@ -191,45 +192,11 @@ class LogVisualizer extends React.Component {
 }
 
 LogVisualizer.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    pathName: PropTypes.string
-  }).isRequired,
-  results: PropTypes.objectOf(PropTypes.any).isRequired,
-  stats: PropTypes.shape({
-    logKeys: PropTypes.arrayOf(PropTypes.string),
-    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
-  projectConfig: PropTypes.shape({
-    axes: PropTypes.objectOf(PropTypes.shape({
-      axisName: PropTypes.string,
-      logKeysConfig: PropTypes.objectOf(PropTypes.shape({
-        selected: PropTypes.bool
-      }))
-    })),
-    resultsConfig: PropTypes.objectOf(PropTypes.shape({
-      hidden: PropTypes.bool
-    })),
-    lines: PropTypes.objectOf(
-      PropTypes.shape({
-        resultId: PropTypes.number,
-        logKey: PropTypes.string,
-        config: PropTypes.shape({
-          color: PropTypes.string,
-          isVisible: PropTypes.bool
-        })
-      })
-    )
-  }).isRequired,
-  globalConfig: PropTypes.shape({
-    chartSize: PropTypes.shape({
-      width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      aspect: PropTypes.number.isRequired
-    }),
-    isResultNameAlignRight: PropTypes.bool
-  }).isRequired
+  project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results.isRequired,
+  stats: uiPropTypes.stats.isRequired,
+  projectConfig: uiPropTypes.projectConfig.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired
 };
 
 LogVisualizer.defaultProps = {

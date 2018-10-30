@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'reactstrap';
 
+import * as uiPropTypes from '../../store/uiPropTypes';
 import {
   getRelativeResultPathName,
   displayResultNameFull
@@ -73,17 +74,8 @@ class ResultName extends React.Component {
 }
 
 ResultName.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string
-  }).isRequired,
-  result: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string,
-    name: PropTypes.string,
-    args: PropTypes.arrayOf(PropTypes.any),
-    logs: PropTypes.arrayOf(PropTypes.any)
-  }).isRequired,
+  project: uiPropTypes.project.isRequired,
+  result: uiPropTypes.result.isRequired,
   isResultNameAlignRight: PropTypes.bool,
   onResultUpdate: PropTypes.func.isRequired
 };

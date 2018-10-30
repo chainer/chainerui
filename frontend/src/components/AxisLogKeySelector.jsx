@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import AxisLogKeySelectorRow from './AxisLogKeySelectorRow';
 
 
@@ -42,16 +44,9 @@ class AxisLogKeySelector extends React.Component {
 
 
 AxisLogKeySelector.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  axisConfig: PropTypes.shape({
-    axisName: PropTypes.string,
-    logKeys: PropTypes.objectOf(PropTypes.shape({
-      selected: PropTypes.bool
-    }))
-  }).isRequired,
-  stats: PropTypes.shape({
-    logKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
+  projectId: uiPropTypes.projectId.isRequired,
+  axisConfig: uiPropTypes.axisConfig.isRequired,
+  stats: uiPropTypes.stats.isRequired,
   onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
 };
 

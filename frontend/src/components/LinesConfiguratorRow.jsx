@@ -4,6 +4,8 @@ import {
   Row, Col,
   FormGroup, Label, Input
 } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import TruncatedResultName from './TruncatedResultName';
 import { line2key } from '../utils';
 
@@ -80,24 +82,9 @@ class LinesConfiguratorRow extends React.Component {
 }
 
 LinesConfiguratorRow.propTypes = {
-  line: PropTypes.shape({
-    resultId: PropTypes.number,
-    logKey: PropTypes.string,
-    config: PropTypes.shape({
-      isVisible: PropTypes.bool
-    })
-  }).isRequired,
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    pathName: PropTypes.string
-  }).isRequired,
-  result: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string,
-    args: PropTypes.arrayOf(PropTypes.any),
-    logs: PropTypes.arrayOf(PropTypes.any)
-  }).isRequired,
+  line: uiPropTypes.line.isRequired,
+  project: uiPropTypes.project.isRequired,
+  result: uiPropTypes.result.isRequired,
   isResultNameAlignRight: PropTypes.bool,
   onEditClick: PropTypes.func,
   onVisibilityUpdate: PropTypes.func

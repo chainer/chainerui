@@ -4,6 +4,8 @@ import {
   Button,
   Modal, ModalHeader, ModalFooter, ModalBody
 } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import AxesConfigurator from './AxesConfigurator';
 
 
@@ -83,24 +85,11 @@ class SideBar extends React.Component {
 }
 
 SideBar.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string
-  }).isRequired,
-  results: PropTypes.objectOf(PropTypes.any).isRequired,
-  stats: PropTypes.shape({
-    logKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
-  projectConfig: PropTypes.shape({
-    axes: PropTypes.shape({
-      xAxis: PropTypes.any,
-      yLeftAxis: PropTypes.any,
-      yRightAxis: PropTypes.any
-    })
-  }).isRequired,
-  globalConfig: PropTypes.shape({
-    isResultNameAlignRight: PropTypes.bool
-  }).isRequired,
+  project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results.isRequired,
+  stats: uiPropTypes.stats.isRequired,
+  projectConfig: uiPropTypes.projectConfig.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired,
   onProjectConfigReset: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleUpdate: PropTypes.func.isRequired,

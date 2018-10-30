@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import * as uiPropTypes from '../../store/uiPropTypes';
 import { responseStatusToIcon } from '../../utils';
 import SnapshotTakeForm from './SnapshotTakeForm';
 import StopForm from './StopForm';
@@ -92,13 +94,9 @@ const Commands = (props) => {
 };
 
 Commands.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  resultId: PropTypes.number.isRequired,
-  commands: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    body: PropTypes.string
-  })).isRequired,
+  projectId: uiPropTypes.projectId.isRequired,
+  resultId: uiPropTypes.resultId.isRequired,
+  commands: uiPropTypes.commands.isRequired,
   onCommandSubmit: PropTypes.func.isRequired
 };
 

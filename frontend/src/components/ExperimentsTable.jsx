@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 
+import * as uiPropTypes from '../store/uiPropTypes';
 import {
   argValue2string,
   getLastLogDict,
@@ -154,33 +155,11 @@ const ExperimentsTable = (props) => {
 };
 
 ExperimentsTable.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string
-  }).isRequired,
-  results: PropTypes.objectOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      pathName: PropTypes.string,
-      args: PropTypes.arrayOf(PropTypes.any),
-      logs: PropTypes.arrayOf(PropTypes.any)
-    })
-  ),
-  projectConfig: PropTypes.shape({
-    resultsConfig: PropTypes.objectOf(PropTypes.shape({
-      hidden: PropTypes.bool
-    })),
-    tableState: PropTypes.shape({
-      expanded: PropTypes.any
-    }).isRequired
-  }).isRequired,
-  globalConfig: PropTypes.shape({
-    isResultNameAlignRight: PropTypes.bool
-  }).isRequired,
-  stats: PropTypes.shape({
-    argKeys: PropTypes.arrayOf(PropTypes.string),
-    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
+  project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results,
+  projectConfig: uiPropTypes.projectConfig.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired,
+  stats: uiPropTypes.stats.isRequired,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
   onCommandSubmit: PropTypes.func.isRequired,

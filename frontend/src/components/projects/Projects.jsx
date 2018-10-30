@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import * as uiPropTypes from '../../store/uiPropTypes';
 import ProjectRow from './ProjectRow';
 
 
@@ -45,13 +47,7 @@ const Projects = (props) => {
 };
 
 Projects.propTypes = {
-  projects: PropTypes.objectOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-      pathName: PropTypes.string
-    })
-  ),
+  projects: uiPropTypes.projects,
   onProjectUpdate: PropTypes.func.isRequired,
   onProjectDelete: PropTypes.func.isRequired
 };

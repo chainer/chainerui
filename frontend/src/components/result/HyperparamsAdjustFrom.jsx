@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {
   FormGroup, Label, Input
 } from 'reactstrap';
+
+import * as uiPropTypes from '../../store/uiPropTypes';
 import CommandFormBase from './CommandFormBase';
 
 
@@ -121,13 +123,9 @@ class HyperparamsAdjustForm extends React.Component {
 }
 
 HyperparamsAdjustForm.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  resultId: PropTypes.number.isRequired,
-  commands: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    body: PropTypes.string
-  })).isRequired,
+  projectId: uiPropTypes.projectId.isRequired,
+  resultId: uiPropTypes.resultId.isRequired,
+  commands: uiPropTypes.commands.isRequired,
   onCommandSubmit: PropTypes.func.isRequired
 };
 
