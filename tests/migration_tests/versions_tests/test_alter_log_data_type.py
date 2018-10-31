@@ -63,7 +63,7 @@ class TestUpgrade(unittest.TestCase):
             assert len(rows) == 2
             log1 = rows[0]
             assert len(log1) == 3
-            data1 = msgpack.unpackb(log1[2], encoding='utf-8')
+            data1 = msgpack.unpackb(log1[2], raw=False)
             assert len(data1) == 3
             assert data1['epoch'] == 1
             assert data1['iterations'] == 1
