@@ -5,10 +5,10 @@ import ReactTable from 'react-table';
 const AssetsTable = (props) => {
   const { assets } = props;
 
-  const trainInfoKeys = assets.map((asset) => Object.keys(asset.train_info)).flatten();
+  const trainInfoKeys = assets.map((asset) => Object.keys(asset.train_info)).flat();
   const uniqueTrainInfoKeys = [...new Set(trainInfoKeys)];
 
-  const contentKeys = assets.map((asset) => asset.contents.map((content) => content.tag)).flatten();
+  const contentKeys = assets.map((asset) => asset.contents.map((content) => content.tag)).flat();
   const uniqueContentKeys = [...new Set(contentKeys)];
 
   const trainInfoColumns = uniqueTrainInfoKeys.map((k) => ({
