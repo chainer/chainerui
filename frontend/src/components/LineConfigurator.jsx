@@ -13,8 +13,8 @@ const LOG_KEY_NONE = '';
 
 
 class LineConfigurator extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.handleResultChange = this.handleResultChange.bind(this);
     this.handleLogKeyChange = this.handleLogKeyChange.bind(this);

@@ -1,5 +1,5 @@
 import path from 'path';
-import { lineColorGenerator } from '../utils';
+import { lineColorGenerator } from './color';
 
 export * from './color';
 export * from './command.jsx';

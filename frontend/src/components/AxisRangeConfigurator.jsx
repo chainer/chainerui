@@ -6,8 +6,8 @@ import * as uiPropTypes from '../store/uiPropTypes';
 
 
 class AxisRangeConfigurator extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.handleRangeTypeChange = this.handleRangeTypeChange.bind(this);
     this.handleNumberChange = this.handleNumberChange.bind(this);
