@@ -41,6 +41,11 @@
   overflow: auto;
 }
 
+.plot-hidden {
+  position: absolute;
+  left: -9999px;
+}
+
 .ReactTable {
   display: table;
 }

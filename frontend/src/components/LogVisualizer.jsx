@@ -135,7 +135,52 @@ class LogVisualizer extends React.Component {
 
     return (
       <div className="log-visualizer-root">
-        <div className="d-flex" ref={this.chartRef}>
+        <div className="d-flex plot-hidden" ref={this.chartRef}>
+          <ResponsiveContainer
+            width={chartSize.width}
+            height={chartSize.height}
+            aspect={chartSize.aspect}
+          >
+            <LineChart data={data}>
+              <XAxis
+                type="number"
+                dataKey={xAxisKey}
+                scale={xAxis.scale}
+                domain={getDomain(xAxis)}
+                allowDataOverflow
+              />
+              <YAxis
+                yAxisId="yLeftAxis"
+                orientation="left"
+                scale={yLeftAxis.scale}
+                domain={getDomain(yLeftAxis)}
+                tickFormatter={formatLogValue()}
+                allowDataOverflow
+              />
+              <YAxis
+                yAxisId="yRightAxis"
+                orientation="right"
+                scale={yRightAxis.scale}
+                domain={getDomain(yRightAxis)}
+                tickFormatter={formatLogValue()}
+                allowDataOverflow
+              />
+              <CartesianGrid strokeDasharray="3 3" />
+              {lineElems.yLeftAxis}
+              {lineElems.yRightAxis}
+            </LineChart>
+          </ResponsiveContainer>
+          <div>
+            <LogVisualizerLegend
+              project={project}
+              results={results}
+              lines={axisLines}
+              maxHeight={chartSize.height}
+              isResultNameAlignRight={isResultNameAlignRight}
+            />
+          </div>
+        </div>
+        <div className="d-flex">
           <ResponsiveContainer
             width={chartSize.width}
             height={chartSize.height}
