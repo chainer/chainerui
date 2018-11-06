@@ -7,7 +7,8 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Tooltip
 } from 'recharts';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -22,6 +23,7 @@ import {
   downloadChartAsPng
 } from '../utils';
 import LogVisualizerLegend from './LogVisualizerLegend';
+import LogVisualizerTooltip from './LogVisualizerTooltip';
 
 
 const getDomain = (axisConfig = {}) => {
@@ -168,6 +170,7 @@ class LogVisualizer extends React.Component {
               <CartesianGrid strokeDasharray="3 3" />
               {lineElems.yLeftAxis}
               {lineElems.yRightAxis}
+              <Tooltip content={<LogVisualizerTooltip xAxisKey={xAxisKey} />} />
             </LineChart>
           </ResponsiveContainer>
           <div>
