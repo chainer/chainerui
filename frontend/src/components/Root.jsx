@@ -14,8 +14,8 @@ const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
 
 class Root extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       rehydrated: false
     };

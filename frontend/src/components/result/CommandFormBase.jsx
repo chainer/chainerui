@@ -19,8 +19,8 @@ const initialState = {
 };
 
 class CommandFormBase extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.openConfirmationModal = this.openConfirmationModal.bind(this);
     this.closeConfirmationModal = this.closeConfirmationModal.bind(this);
