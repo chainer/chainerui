@@ -1,9 +1,9 @@
 from collections import OrderedDict
-import importlib
 import json
 import os
 from string import Template
 import subprocess
+import sys
 import unittest
 
 
@@ -48,8 +48,15 @@ def _get_example_logs():
 
 
 def _get_render_module(script_path):
-    return importlib.machinery.SourceFileLoader(
-        'render', script_path).load_module()
+    if sys.version_info.major == 2:
+        import imp
+        return imp.load_source('render', script_path)
+
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('render', script_path)
+    render = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(render)
+    return render
 
 
 @unittest.skipUnless(_check_flake8(), 'flake8 is not installed')
@@ -67,7 +74,7 @@ def test_download(func_dir):
 
 
 @unittest.skipUnless(_check_matplotlib(), 'matplotlib is not installed')
-def test_render(func_dir):
+def test_render_full(func_dir):
     script_path = _get_script_path(func_dir, _get_example_logs())
     render = _get_render_module(script_path)
 
