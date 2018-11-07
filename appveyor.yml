@@ -3,15 +3,19 @@ environment:
 
   matrix:
     - PYTHON: "C:\\Python27-x64"
+      PYTHON_VER: "2.7"
     - PYTHON: "C:\\Python35-x64"
+      PYTHON_VER: "3.5"
     - PYTHON: "C:\\Python36-x64"
+      PYTHON_VER: "3.6"
 
 install:
   - set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
   - python --version
   - pip --version
 
-  - pip install -U pytest pytest-cov mock
+  - if %PYTHON_VER%==2.7 (pip install mock importlib)
+  - pip install -U pytest pytest-cov
   - pip install Pillow matplotlib
 
   # Update Node.js

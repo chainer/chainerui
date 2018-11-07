@@ -16,7 +16,7 @@ before_install:
   - pip install autopep8 hacking
   - pip install -U pytest pytest-cov coveralls
   - pip install Pillow matplotlib
-  - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then pip install mock; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then pip install mock importlib; fi
   - npm install -g npm@6
   - npm -v
 
