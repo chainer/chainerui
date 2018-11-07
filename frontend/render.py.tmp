@@ -31,13 +31,17 @@ def render(logs):
     # get all log data and format them to fit plotting
     shaped_logs = shape(logs['data'])
     # filter by selected result IDs
-    selected_logs = {i: shaped_logs[i] for i in selected_result}
+    selected_logs = {
+        i: shaped_logs[i] for i in selected_result if i in shaped_logs}
     if len(selected_logs) == 0:
         print('no selected results')
         return
 
     # get x array selected by 'selected_x', find max length x array
     x = numpy.array(get_x_value(selected_logs, selected_result, selected_x))
+    if len(x) == 0:
+        print('no x values')
+        return
 
     # set base plotting configuration
     f = plt.figure()
@@ -76,11 +80,14 @@ def render(logs):
             ax1.grid()
             lgd = ax1.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     else:
-        # only right axis is set, not handle both axes have no value
+        # only right axis is set
         ax1.yaxis.tick_right()
         ax1.yaxis.set_ticks_position('right')
         ax1.grid()
         plot(ax1, x, selected_logs, selected_yr, '.')
+        if not ax1.has_data():
+            print('no data to plot')
+            return
         lgd = ax1.legend(bbox_to_anchor=(1.1, 1), loc=2, borderaxespad=0.)
 
     f.savefig('log_chart.png', bbox_extra_artists=(lgd,), bbox_inches='tight')
@@ -144,6 +151,10 @@ ${rendered_log}
     return log_str
 
 
-if __name__ == '__main__':
+def main():
     logs = json.loads(download(), object_pairs_hook=OrderedDict)
     render(logs)
+
+
+if __name__ == '__main__':
+    main()
