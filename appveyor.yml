@@ -14,7 +14,7 @@ install:
   - python --version
   - pip --version
 
-  - if %PYTHON_VER%==2.7 (pip install mock importlib)
+  - if %PYTHON_VER%==2.7 (pip install mock)
   - pip install -U pytest pytest-cov
   - pip install Pillow matplotlib
 
