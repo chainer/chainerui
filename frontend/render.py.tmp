@@ -1,0 +1,149 @@
+from collections import OrderedDict
+import json
+import os
+
+
+def render(logs):
+    try:
+        import matplotlib
+    except (ImportError, TypeError):
+        print('matplotlib is not installed on your environment, '
+              'Please install matplotlib to plot figures.\n\n'
+              '  $$ pip install matplotlib\n')
+        return
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    import numpy
+
+    # get selected keys and line configuration set on web UI
+    config = logs['config']
+    selected_x = config['xAxis']
+    if not selected_x:
+        print('no selected x axis')
+        return
+    selected_yl = config['yLeftAxis']
+    selected_yr = config['yRightAxis']
+    if not selected_yl and not selected_yr:
+        print('no selected log key, neither left nor right axis')
+        return
+    selected_result = [str(i) for i in config['resultIds']]
+
+    # get all log data and format them to fit plotting
+    shaped_logs = shape(logs['data'])
+    # filter by selected result IDs
+    selected_logs = {i: shaped_logs[i] for i in selected_result}
+    if len(selected_logs) == 0:
+        print('no selected results')
+        return
+
+    # get x array selected by 'selected_x', find max length x array
+    x = numpy.array(get_x_value(selected_logs, selected_result, selected_x))
+
+    # set base plotting configuration
+    f = plt.figure()
+    ax1 = f.add_subplot(111)
+    ax1.set_xlabel(selected_x)
+    lgd = None
+
+    # plot x & y function, y arrays are selected by 'selected_y'
+    def plot(axis, x, ys, selected_y, marker):
+        for log in ys.values():
+            for k in selected_y:
+                if k not in log:
+                    continue
+                y = numpy.array(log[k])
+                label = '{} {}'.format(log['_name'], k)
+                axis.plot(x[:len(y)], y, marker=marker, label=label)
+
+    # plot left|right y array
+    plot(ax1, x, selected_logs, selected_yl, 'x')
+    if ax1.has_data():
+        both = len(selected_yr) > 0
+        if both:
+            ax2 = ax1.twinx()
+            plot(ax2, x, selected_logs, selected_yr, '.')
+            if ax2.has_data():
+                # both axes are set
+                h1, l1 = ax1.get_legend_handles_labels()
+                h2, l2 = ax2.get_legend_handles_labels()
+                lgd = ax1.legend(
+                    h1+h2, l1+l2, bbox_to_anchor=(1.1, 1), loc=2,
+                    borderaxespad=0.)
+            else:
+                both = False
+        if not both:
+            # only left axis is set
+            ax1.grid()
+            lgd = ax1.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    else:
+        # only right axis is set, not handle both axes have no value
+        ax1.yaxis.tick_right()
+        ax1.yaxis.set_ticks_position('right')
+        ax1.grid()
+        plot(ax1, x, selected_logs, selected_yr, '.')
+        lgd = ax1.legend(bbox_to_anchor=(1.1, 1), loc=2, borderaxespad=0.)
+
+    f.savefig('log_chart.png', bbox_extra_artists=(lgd,), bbox_inches='tight')
+
+    plt.close()
+
+
+def get_x_value(logs, selected_result, selected_x):
+    x_values = logs[selected_result[0]].get(selected_x, [])
+    if len(selected_result) == 1:
+        return x_values
+    for result_id in selected_result[1:]:
+        xs = logs[result_id].get(selected_x, [])
+        if len(xs) > len(x_values):
+            x_values = xs
+    return x_values
+
+
+def shape(logs):
+    """shape logs as number array
+
+    return values are
+    {
+        '<result_id>': {
+            'epoch': [1, 2, 3, 4, ...],
+            'iteration': [100, 200, 300, 400, ...],
+            'main/loss': [10.0, 5.0, 0.1, ...],
+            'main/accuracy': [1.0, 5.0, 20.0, ...],
+            '_name': '<name> or <path_name>'
+        },
+        '<result_id>': {...}
+    }
+    """
+
+    def shorten(name):
+        if len(name) <= 20:
+            return name
+        # tentatively return right path when long
+        name = name.split(os.path.sep)[-1]
+        if len(name) <= 20:
+            return name
+        return '...' + name[len(name)-17:]
+
+    shaped_logs = {}
+    for result_id, log_value in logs.items():
+        name = shorten(log_value['name'])
+        logs = log_value['log']
+        log_data = {'_name': name}
+        for l in logs:
+            for k, v in l.items():
+                log_data.setdefault(k, []).append(v)
+        shaped_logs[str(result_id)] = log_data
+    return shaped_logs
+
+
+def download():
+    log_str = """
+${rendered_log}
+"""
+
+    return log_str
+
+
+if __name__ == '__main__':
+    logs = json.loads(download(), object_pairs_hook=OrderedDict)
+    render(logs)
