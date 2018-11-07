@@ -1,18 +1,17 @@
 from mock import MagicMock
 import os
-import shutil
-import tempfile
-import unittest
 
 from chainer.optimizer import Hyperparameter
 from chainer.training import Trainer
 from chainer.training.triggers import IntervalTrigger
+import pytest
 
 from chainerui.extensions.commands_extension import _stop_training
 from chainerui.extensions.commands_extension import CommandsExtension
 from chainerui.utils.command_item import CommandItem
 from chainerui.utils.commands_state import CommandsState
 from chainerui.utils.commands_state import JobStatus
+from tests.conftest import TempDirTestCase
 
 
 class _MockTrainer(Trainer):
@@ -42,18 +41,10 @@ class _MockTrainer(Trainer):
         pass
 
 
-class TestCommandsExtension(unittest.TestCase):
-
-    def setUp(self):
-        test_dir = tempfile.mkdtemp(prefix='chainerui_test_cmdext')
-        self._dir = test_dir
-
-    def tearDown(self):
-        if os.path.exists(self._dir):
-            shutil.rmtree(self._dir)
+class TestCommandsExtension(TempDirTestCase):
 
     def test_initialize_command_trigger(self):
-        out_path = os.path.join(self._dir, 'results')
+        out_path = os.path.join(self.dir, 'results')
         os.makedirs(out_path)
         commands_path = os.path.join(out_path, 'commands')
         open(commands_path, 'w').close()
@@ -75,15 +66,15 @@ class TestCommandsExtension(unittest.TestCase):
         target.add_receiver('f', f)
         assert 'f' in target._receivers
 
-        with self.assertRaises(ValueError) as e:
+        with pytest.raises(ValueError) as e:
             target.add_receiver(None, None)
-        assert 'not given' in str(e.exception)
-        with self.assertRaises(ValueError) as e:
+        assert 'not given' in str(e.value)
+        with pytest.raises(ValueError) as e:
             target.add_receiver('f', 0)
-        assert 'not callable' in str(e.exception)
+        assert 'not callable' in str(e.value)
 
     def test_call(self):
-        out_path = os.path.join(self._dir, 'results')
+        out_path = os.path.join(self.dir, 'results')
         os.makedirs(out_path)
         commands_path = os.path.join(out_path, 'commands')
         open(commands_path, 'w').close()
@@ -172,7 +163,7 @@ class TestCommandsExtension(unittest.TestCase):
         assert CommandsState.job_status(out_path) == JobStatus.STOPPED
 
     def test_call_invalid_request(self):
-        out_path = os.path.join(self._dir, 'results')
+        out_path = os.path.join(self.dir, 'results')
         os.makedirs(out_path)
         commands_path = os.path.join(out_path, 'commands')
         open(commands_path, 'w').close()
