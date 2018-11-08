@@ -32,7 +32,7 @@ class Log(database.BASE):
 
         log_items = []
 
-        data = msgpack.unpackb(self.data, encoding='utf-8')
+        data = msgpack.unpackb(self.data, raw=False)
         for item in data.items():
             value_to_store = (
                 None

@@ -1,23 +1,14 @@
 import json
 import os
-import shutil
-import tempfile
-import unittest
 
 from chainerui.utils import log_report
+from tests.conftest import TempDirTestCase
 
 
-class TestLogReport(unittest.TestCase):
-
-    def setUp(self):
-        self._dir = tempfile.mkdtemp()
-
-    def tearDown(self):
-        if os.path.exists(self._dir):
-            shutil.rmtree(self._dir)
+class TestLogReport(TempDirTestCase):
 
     def test_add_log_without_elapsed_time(self):
-        test_dir = os.path.join(self._dir, 'result')
+        test_dir = os.path.join(self.dir, 'result')
         target = log_report.LogReport(test_dir, {'batchsize': 100})
         assert os.path.exists(test_dir)
         assert os.path.exists(os.path.join(test_dir, 'args'))
@@ -48,7 +39,7 @@ class TestLogReport(unittest.TestCase):
         assert target_log1['elapsed_time'] > 0
 
     def test_add_log_with_elapsed_time(self):
-        test_dir = os.path.join(self._dir, 'result2')
+        test_dir = os.path.join(self.dir, 'result2')
         target = log_report.LogReport(test_dir)
         assert os.path.exists(test_dir)
         assert not os.path.exists(os.path.join(test_dir, 'args'))

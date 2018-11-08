@@ -59,7 +59,7 @@ def downgrade():
         modified_logs = [{
             'id': r[0],
             'result_id': r[1],
-            'data': json.dumps(msgpack.unpackb(r[2], encoding='utf-8'))}
+            'data': json.dumps(msgpack.unpackb(r[2], raw=False))}
             for r in results]
         op.bulk_insert(temp_log_table, modified_logs)
     op.drop_table('log')
