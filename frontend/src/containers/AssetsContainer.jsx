@@ -50,7 +50,7 @@ const mapStateToProps = (state, ownProps) => {
     fetchState,
     config
   } = state;
-  const { assets = [] } = entities;
+  const { assets } = entities;
   const globalConfig = config.global;
   return { projectId, resultId, assets, fetchState, globalConfig };
 };
@@ -58,7 +58,7 @@ const mapStateToProps = (state, ownProps) => {
 AssetsContainer.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   resultId: uiPropTypes.resultId.isRequired,
-  assets: PropTypes.arrayOf(PropTypes.any).isRequired,
+  assets: uiPropTypes.assets.isRequired,
   fetchState: uiPropTypes.fetchState.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   getResultAsset: PropTypes.func.isRequired,

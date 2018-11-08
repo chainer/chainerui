@@ -140,3 +140,8 @@ export const stats = PropTypes.shape({
   logKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   xAxisKeys: PropTypes.arrayOf(PropTypes.string).isRequired
 });
+
+export const assets = PropTypes.arrayOf(PropTypes.shape({
+  contents: PropTypes.arrayOf(PropTypes.any),
+  trainInfo: PropTypes.objectOf(PropTypes.any)
+}));
