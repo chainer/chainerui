@@ -90,7 +90,9 @@ def render(logs):
             return
         lgd = ax1.legend(bbox_to_anchor=(1.1, 1), loc=2, borderaxespad=0.)
 
-    f.savefig('log_chart.png', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    name = 'log_chart.png'
+    f.savefig(name, bbox_extra_artists=(lgd,), bbox_inches='tight')
+    print('saved plot as "{}"'.format(name))
 
     plt.close()
 

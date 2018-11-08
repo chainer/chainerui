@@ -27,8 +27,8 @@ def _check_matplotlib():
 def _get_script_path(dir, rendered_log):
     current_dir = os.path.abspath(os.path.dirname(__file__))
     assert current_dir.endswith(os.path.sep + 'tests')
-    render_tmp_path = os.path.normpath(
-        os.path.join(current_dir, '..', 'frontend', 'src', 'utils', 'render.py.tmpl'))
+    render_tmp_path = os.path.normpath(os.path.join(
+        current_dir, '..', 'frontend', 'src', 'utils', 'render.py.tmpl'))
     assert os.path.exists(render_tmp_path)
 
     with open(render_tmp_path) as f:
