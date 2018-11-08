@@ -43,7 +43,7 @@ const LogVisualizerTooltip = (props) => {
 };
 
 LogVisualizerTooltip.propTypes = {
-  xAxisKey: PropTypes.string.isRequired,
+  xAxisKey: PropTypes.string,
   // passed by reactstrap Tooltip
   label: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   // passed by reactstrap Tooltip
