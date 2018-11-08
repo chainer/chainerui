@@ -2,6 +2,7 @@ import path from 'path';
 import saveSvgAsPng from 'save-svg-as-png';
 import * as moment from 'moment';
 import { lineColorGenerator } from './color';
+import renderPyTmpl from './render.py.tmpl';
 
 export * from './color';
 export * from './command.jsx';
@@ -228,8 +229,9 @@ export const padDigits = (num, len) => {
 };
 
 export const downloadObjectAsJson = (exportObj, exportName) => {
-  const fileName = `${exportName}_${moment().format('YYYYMMDDHHmmss')}.json`;
-  const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(exportObj))}`;
+  const fileName = `${exportName}_${moment().format('YYYYMMDDHHmmss')}.py`;
+  const renderPy = renderPyTmpl.replace(/\${rendered_log}/, JSON.stringify(exportObj, null, '  '));
+  const dataStr = `data:text/plain;charset=utf-8,${encodeURIComponent(renderPy)}`;
   const downloadAnchorNode = document.createElement('a');
   downloadAnchorNode.setAttribute('href', dataStr);
   downloadAnchorNode.setAttribute('download', fileName);
