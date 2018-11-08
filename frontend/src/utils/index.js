@@ -228,7 +228,7 @@ export const padDigits = (num, len) => {
   return str;
 };
 
-export const downloadObjectAsJson = (exportObj, exportName) => {
+export const downloadObjectAsCode = (exportObj, exportName) => {
   const fileName = `${exportName}_${moment().format('YYYYMMDDHHmmss')}.py`;
   const renderPy = renderPyTmpl.replace(/\${rendered_log}/, JSON.stringify(exportObj, null, '  '));
   const dataStr = `data:text/plain;charset=utf-8,${encodeURIComponent(renderPy)}`;
