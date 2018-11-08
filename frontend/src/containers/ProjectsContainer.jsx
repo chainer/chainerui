@@ -75,10 +75,6 @@ ProjectsContainer.propTypes = {
   updateGlobalResultNameAlignment: PropTypes.func.isRequired
 };
 
-ProjectsContainer.defaultProps = {
-  projects: {}
-};
-
 export default connect(mapStateToProps, {
   getProjectList,
   updateProject,
