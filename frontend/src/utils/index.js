@@ -231,9 +231,9 @@ export const padDigits = (num, len) => {
 export const downloadObjectAsCode = (exportObj, exportName) => {
   const fileName = `${exportName}_${moment().format('YYYYMMDDHHmmss')}.py`;
   const renderPy = renderPyTmpl.replace(/\${rendered_log}/, JSON.stringify(exportObj, null, '  '));
-  const dataStr = `data:text/plain;charset=utf-8,${encodeURIComponent(renderPy)}`;
+  const blobUrl = URL.createObjectURL(new Blob([renderPy], { type: 'text/plain' }));
   const downloadAnchorNode = document.createElement('a');
-  downloadAnchorNode.setAttribute('href', dataStr);
+  downloadAnchorNode.setAttribute('href', blobUrl);
   downloadAnchorNode.setAttribute('download', fileName);
   document.body.appendChild(downloadAnchorNode); // required for firefox
   downloadAnchorNode.click();
