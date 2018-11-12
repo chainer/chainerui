@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { CHART_DOWNLOAD_STATUS } from '../constants';
 
 export const projectId = PropTypes.number;
 
@@ -145,3 +146,14 @@ export const assets = PropTypes.arrayOf(PropTypes.shape({
   contents: PropTypes.arrayOf(PropTypes.any),
   trainInfo: PropTypes.objectOf(PropTypes.any)
 }));
+
+
+export const projectStatus = PropTypes.shape({
+  chartDownloadStatus: PropTypes.oneOf(Object.values(CHART_DOWNLOAD_STATUS))
+});
+
+export const projectsStatus = PropTypes.objectOf(projectStatus);
+
+export const status = PropTypes.shape({
+  projectsStatus
+});
