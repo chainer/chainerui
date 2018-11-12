@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import {
   LineChart,
@@ -22,6 +23,7 @@ import {
   downloadObjectAsJson,
   downloadChartAsPng
 } from '../utils';
+import { CHART_DOWNLOAD_STATUS } from '../constants';
 import LogVisualizerLegend from './LogVisualizerLegend';
 import LogVisualizerTooltip from './LogVisualizerTooltip';
 
@@ -69,6 +71,18 @@ class LogVisualizer extends React.Component {
     this.handleClickDownloadPNG = this.handleClickDownloadPNG.bind(this);
   }
 
+  componentDidUpdate() {
+    const { project, projectStatus, onChartDownloadStatusUpdate } = this.props;
+    if (projectStatus.chartDownloadStatus === CHART_DOWNLOAD_STATUS.REQUESTED) {
+      onChartDownloadStatusUpdate(project.id, CHART_DOWNLOAD_STATUS.CONVERTING);
+      const exportName = getUrlSafeProjectNameFull(project);
+      // eslint-disable-next-line react/no-find-dom-node
+      downloadChartAsPng(ReactDOM.findDOMNode(this.chart), exportName).then(() => {
+        onChartDownloadStatusUpdate(project.id, CHART_DOWNLOAD_STATUS.NONE);
+      });
+    }
+  }
+
   chartRef(element) {
     this.chart = element;
   }
@@ -81,16 +95,17 @@ class LogVisualizer extends React.Component {
   }
 
   handleClickDownloadPNG() {
-    const { project } = this.props;
-    const exportName = getUrlSafeProjectNameFull(project);
-    // eslint-disable-next-line react/no-find-dom-node
-    downloadChartAsPng(ReactDOM.findDOMNode(this.chart), exportName);
+    const { project, projectStatus, onChartDownloadStatusUpdate } = this.props;
+    if (projectStatus.chartDownloadStatus === CHART_DOWNLOAD_STATUS.NONE) {
+      onChartDownloadStatusUpdate(project.id, CHART_DOWNLOAD_STATUS.REQUESTED);
+    }
   }
 
   render() {
     const {
       project,
       results,
+      projectStatus,
       projectConfig,
       globalConfig,
       stats
@@ -134,9 +149,9 @@ class LogVisualizer extends React.Component {
     });
 
     const { chartSize, isResultNameAlignRight } = globalConfig;
-
-    return (
-      <div className="log-visualizer-root">
+    // TODO: split these components into a separated component
+    const tempHiddenPlot =
+      (projectStatus.chartDownloadStatus !== CHART_DOWNLOAD_STATUS.NONE) ? (
         <div className="d-flex plot-hidden" ref={this.chartRef}>
           <ResponsiveContainer
             width={chartSize.width}
@@ -182,6 +197,11 @@ class LogVisualizer extends React.Component {
             />
           </div>
         </div>
+      ) : null;
+
+    return (
+      <div className="log-visualizer-root">
+        {tempHiddenPlot}
         <div className="d-flex">
           <ResponsiveContainer
             width={chartSize.width}
@@ -242,9 +262,11 @@ class LogVisualizer extends React.Component {
 LogVisualizer.propTypes = {
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
+  projectStatus: uiPropTypes.projectStatus.isRequired,
   stats: uiPropTypes.stats.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
-  globalConfig: uiPropTypes.globalConfig.isRequired
+  globalConfig: uiPropTypes.globalConfig.isRequired,
+  onChartDownloadStatusUpdate: PropTypes.func.isRequired
 };
 
 export default LogVisualizer;
