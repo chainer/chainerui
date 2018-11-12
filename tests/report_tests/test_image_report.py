@@ -113,6 +113,17 @@ def test_report_hwc_hsv(func_dir):
 
 @unittest.skipUnless(
         image_report.check_available(), 'Pillow is not installed')
+def test_report_bhw_uint8(func_dir):
+    img = np.zeros(8*5*10, dtype=np.uint8).reshape((8, 5, 10))
+    filename, created_at = image_report.report(img, func_dir, 'test')
+    assert filename.startswith('test_')
+    path = os.path.join(func_dir, filename)
+    assert os.path.exists(path)
+    assert created_at is not None
+
+
+@unittest.skipUnless(
+        image_report.check_available(), 'Pillow is not installed')
 def test_report_hw(func_dir):
     img = np.zeros(5*10, dtype=np.float32).reshape((5, 10))
     filename, created_at = image_report.report(
