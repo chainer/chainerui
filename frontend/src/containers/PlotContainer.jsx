@@ -27,7 +27,7 @@ import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigur
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
-import { defaultConfig, defaultProjectConfig, keyOptions } from '../constants';
+import { defaultProjectConfig, keyOptions } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
@@ -140,12 +140,6 @@ class PlotContainer extends React.Component {
 }
 
 const mapEntitiesToStats = (entities) => {
-  const axes = {
-    xAxis: {},
-    yLeftAxis: {},
-    yRightAxis: {}
-  };
-
   const { results = {} } = entities;
   const argKeySet = {};
   const logKeySet = {};
@@ -162,7 +156,7 @@ const mapEntitiesToStats = (entities) => {
   const logKeys = Object.keys(logKeySet).sort();
   const xAxisKeys = keyOptions.filter((key) => key in logKeySet);
 
-  return { axes, argKeys, logKeys, xAxisKeys };
+  return { argKeys, logKeys, xAxisKeys };
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -170,7 +164,7 @@ const mapStateToProps = (state, ownProps) => {
   const {
     entities,
     fetchState,
-    config = defaultConfig
+    config
   } = state;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId] || { id: projectId };
@@ -216,9 +210,6 @@ PlotContainer.propTypes = {
   updateAxisScaleRangeNumber: PropTypes.func.isRequired,
   updateTableExpanded: PropTypes.func.isRequired,
   updateTableColumnsVisibility: PropTypes.func.isRequired
-};
-
-PlotContainer.defaultProps = {
 };
 
 export default connect(mapStateToProps, {

@@ -71,7 +71,7 @@ class LineConfigurator extends React.Component {
   handleResetColorClick() {
     const { line, results, stats, onChange } = this.props;
     const { config } = line;
-    const { logKeys = [] } = stats;
+    const { logKeys } = stats;
     onChange({
       ...line,
       config: {
@@ -82,7 +82,7 @@ class LineConfigurator extends React.Component {
   }
 
   render() {
-    const { project, results, line = {}, isResultNameAlignRight } = this.props;
+    const { project, results, line, isResultNameAlignRight } = this.props;
     const { resultId = RESULT_NONE, logKey = LOG_KEY_NONE, config = {} } = line;
     const result = results[resultId] || {};
     const { color, isVisible } = config;
@@ -152,14 +152,12 @@ LineConfigurator.propTypes = {
   results: uiPropTypes.results.isRequired,
   stats: uiPropTypes.stats.isRequired,
   line: uiPropTypes.line,
-  isResultNameAlignRight: PropTypes.bool,
-  onChange: PropTypes.func
+  isResultNameAlignRight: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired
 };
 
 LineConfigurator.defaultProps = {
-  line: {},
-  isResultNameAlignRight: false,
-  onChange: () => {}
+  line: {}
 };
 
 export default LineConfigurator;

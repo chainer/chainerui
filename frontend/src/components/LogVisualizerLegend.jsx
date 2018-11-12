@@ -56,16 +56,9 @@ const LogVisualizerLegend = (props) => {
 LogVisualizerLegend.propTypes = {
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
-  lines: PropTypes.objectOf(PropTypes.any),
+  lines: PropTypes.objectOf(PropTypes.any).isRequired,
   maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  isResultNameAlignRight: PropTypes.bool
-};
-
-LogVisualizerLegend.defaultProps = {
-  xAxisKey: '',
-  isResultNameAlignRight: false,
-  label: undefined,
-  payload: []
+  isResultNameAlignRight: PropTypes.bool.isRequired
 };
 
 export default LogVisualizerLegend;

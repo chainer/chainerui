@@ -1,6 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 
 const AssetsTable = (props) => {
   const { assets } = props;
@@ -63,14 +64,7 @@ const AssetsTable = (props) => {
 };
 
 AssetsTable.propTypes = {
-  assets: PropTypes.arrayOf(PropTypes.shape({
-    contents: PropTypes.arrayOf(PropTypes.any),
-    trainInfo: PropTypes.objectOf(PropTypes.any)
-  })).isRequired
-};
-
-AssetsTable.defaultProps = {
-  assets: []
+  assets: uiPropTypes.assets.isRequired
 };
 
 export default AssetsTable;

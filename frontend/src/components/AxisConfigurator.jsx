@@ -74,14 +74,15 @@ class AxisConfigurator extends React.Component {
 AxisConfigurator.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   axisConfig: uiPropTypes.axisConfig.isRequired,
+  onChangeScale: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ]),
-  onChangeScale: PropTypes.func.isRequired,
-  onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
-  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired
+  ])
 };
+
 AxisConfigurator.defaultProps = {
   children: null
 };

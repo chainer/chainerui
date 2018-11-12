@@ -27,7 +27,7 @@ class PollingStatus extends React.Component {
   }
 
   render() {
-    const { pollingKey, fetchState = {}, globalConfig = {} } = this.props;
+    const { pollingKey, fetchState, globalConfig } = this.props;
     const { isTooltipOpen } = this.state;
 
     let colorClass;

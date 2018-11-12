@@ -148,17 +148,9 @@ class ProjectRow extends React.Component {
 }
 
 ProjectRow.propTypes = {
-  project: uiPropTypes.project,
+  project: uiPropTypes.project.isRequired,
   onProjectUpdate: PropTypes.func.isRequired,
   onProjectDelete: PropTypes.func.isRequired
-};
-
-ProjectRow.defaultProps = {
-  project: {
-    id: undefined,
-    name: undefined,
-    pathName: undefined
-  }
 };
 
 export default ProjectRow;

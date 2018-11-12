@@ -18,7 +18,7 @@ export const logs = PropTypes.arrayOf(PropTypes.shape({
   logItems: PropTypes.arrayOf(PropTypes.shape({
     logId: PropTypes.number,
     key: PropTypes.string.isRequired,
-    value: PropTypes.any.isRequired
+    value: PropTypes.any
   })).isRequired
 }));
 
@@ -88,10 +88,10 @@ export const globalConfig = PropTypes.shape({
     width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     aspect: PropTypes.number.isRequired
-  }),
-  pollingRate: PropTypes.number,
-  logsLimit: PropTypes.number,
-  isResultNameAlignRight: PropTypes.bool
+  }).isRequired,
+  pollingRate: PropTypes.number.isRequired,
+  logsLimit: PropTypes.number.isRequired,
+  isResultNameAlignRight: PropTypes.bool.isRequired
 });
 
 export const resultConfig = PropTypes.shape({
@@ -131,13 +131,17 @@ export const projectConfig = PropTypes.shape({
     hiddenLogKeys: PropTypes.arrayOf(PropTypes.string),
     hiddenArgKeys: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  resultsConfig,
+  resultsConfig: resultsConfig.isRequired,
   lines: lines.isRequired
 });
 
 export const stats = PropTypes.shape({
-  axes: PropTypes.objectOf(PropTypes.object),
   argKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   logKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   xAxisKeys: PropTypes.arrayOf(PropTypes.string).isRequired
 });
+
+export const assets = PropTypes.arrayOf(PropTypes.shape({
+  contents: PropTypes.arrayOf(PropTypes.any),
+  trainInfo: PropTypes.objectOf(PropTypes.any)
+}));
