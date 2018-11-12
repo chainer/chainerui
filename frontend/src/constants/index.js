@@ -107,6 +107,7 @@ export const defaultProjectConfig = {
 
 export const CHART_DOWNLOAD_STATUS = {
   NONE: 'NONE',
+  REQUESTED: 'REQUESTED',
   CONVERTING: 'CONVERTING'
 };
 
