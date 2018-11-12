@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Label, Input, Collapse, Button, Col } from 'reactstrap';
 import { ChromePicker, GithubPicker } from 'react-color';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import TruncatedResultName from './TruncatedResultName';
 import { lineColorGenerator } from '../utils';
 
@@ -11,8 +13,8 @@ const LOG_KEY_NONE = '';
 
 
 class LineConfigurator extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.handleResultChange = this.handleResultChange.bind(this);
     this.handleLogKeyChange = this.handleLogKeyChange.bind(this);
@@ -69,7 +71,7 @@ class LineConfigurator extends React.Component {
   handleResetColorClick() {
     const { line, results, stats, onChange } = this.props;
     const { config } = line;
-    const { logKeys = [] } = stats;
+    const { logKeys } = stats;
     onChange({
       ...line,
       config: {
@@ -80,7 +82,7 @@ class LineConfigurator extends React.Component {
   }
 
   render() {
-    const { project, results, line = {}, isResultNameAlignRight } = this.props;
+    const { project, results, line, isResultNameAlignRight } = this.props;
     const { resultId = RESULT_NONE, logKey = LOG_KEY_NONE, config = {} } = line;
     const result = results[resultId] || {};
     const { color, isVisible } = config;
@@ -146,30 +148,16 @@ class LineConfigurator extends React.Component {
 }
 
 LineConfigurator.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string
-  }).isRequired,
-  results: PropTypes.objectOf(PropTypes.any).isRequired,
-  stats: PropTypes.shape({
-    logKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
-  line: PropTypes.shape({
-    resultId: PropTypes.number,
-    logKey: PropTypes.string,
-    config: PropTypes.shape({
-      color: PropTypes.string,
-      isVisible: PropTypes.bool
-    })
-  }),
-  isResultNameAlignRight: PropTypes.bool,
-  onChange: PropTypes.func
+  project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results.isRequired,
+  stats: uiPropTypes.stats.isRequired,
+  line: uiPropTypes.line,
+  isResultNameAlignRight: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired
 };
 
 LineConfigurator.defaultProps = {
-  line: {},
-  isResultNameAlignRight: false,
-  onChange: () => {}
+  line: {}
 };
 
 export default LineConfigurator;

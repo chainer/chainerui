@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import * as uiPropTypes from '../../store/uiPropTypes';
 import CommandFormBase from './CommandFormBase';
 
 
@@ -15,12 +17,9 @@ const SnapshotTakeForm = (props) => {
 };
 
 SnapshotTakeForm.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  resultId: PropTypes.number.isRequired,
+  projectId: uiPropTypes.projectId.isRequired,
+  resultId: uiPropTypes.resultId.isRequired,
   onCommandSubmit: PropTypes.func.isRequired
-};
-
-SnapshotTakeForm.defaultProps = {
 };
 
 export default SnapshotTakeForm;

@@ -5,6 +5,8 @@ import {
   Button, Input,
   Modal, ModalHeader, ModalFooter, ModalBody
 } from 'reactstrap';
+
+import * as uiPropTypes from '../../store/uiPropTypes';
 import {
   displayProjectName,
   displayProjectNameFull,
@@ -146,21 +148,9 @@ class ProjectRow extends React.Component {
 }
 
 ProjectRow.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    pathName: PropTypes.string
-  }),
+  project: uiPropTypes.project.isRequired,
   onProjectUpdate: PropTypes.func.isRequired,
   onProjectDelete: PropTypes.func.isRequired
-};
-
-ProjectRow.defaultProps = {
-  project: {
-    id: undefined,
-    name: undefined,
-    pathName: undefined
-  }
 };
 
 export default ProjectRow;

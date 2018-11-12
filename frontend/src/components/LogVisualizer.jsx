@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import {
   LineChart,
@@ -8,8 +7,11 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Tooltip
 } from 'recharts';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import {
   line2key, line2dataKey,
   formatLogValue,
@@ -21,6 +23,7 @@ import {
   downloadChartAsPng
 } from '../utils';
 import LogVisualizerLegend from './LogVisualizerLegend';
+import LogVisualizerTooltip from './LogVisualizerTooltip';
 
 
 const getDomain = (axisConfig = {}) => {
@@ -86,19 +89,19 @@ class LogVisualizer extends React.Component {
 
   render() {
     const {
-      project = {},
-      results = {},
-      projectConfig = {},
-      globalConfig = {},
+      project,
+      results,
+      projectConfig,
+      globalConfig,
       stats
     } = this.props;
-    const { axes, resultsConfig = {}, lines = {} } = projectConfig;
-    const { logKeys = [], xAxisKeys } = stats;
+    const { axes, resultsConfig, lines } = projectConfig;
+    const { logKeys, xAxisKeys } = stats;
     const {
       xAxis = { axisName: 'xAxis' },
       yLeftAxis = { axisName: 'yLeftAxis' },
       yRightAxis = { axisName: 'yRightAxis' }
-    } = axes || {};
+    } = axes;
     const { xAxisKey = xAxisKeys[0] } = xAxis;
     const selectedResults = getSelectedResults(results, resultsConfig);
     const selectedLogKeys = {
@@ -167,6 +170,7 @@ class LogVisualizer extends React.Component {
               <CartesianGrid strokeDasharray="3 3" />
               {lineElems.yLeftAxis}
               {lineElems.yRightAxis}
+              <Tooltip content={<LogVisualizerTooltip xAxisKey={xAxisKey} />} />
             </LineChart>
           </ResponsiveContainer>
           <div>
@@ -191,48 +195,11 @@ class LogVisualizer extends React.Component {
 }
 
 LogVisualizer.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    pathName: PropTypes.string
-  }).isRequired,
-  results: PropTypes.objectOf(PropTypes.any).isRequired,
-  stats: PropTypes.shape({
-    logKeys: PropTypes.arrayOf(PropTypes.string),
-    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
-  projectConfig: PropTypes.shape({
-    axes: PropTypes.objectOf(PropTypes.shape({
-      axisName: PropTypes.string,
-      logKeysConfig: PropTypes.objectOf(PropTypes.shape({
-        selected: PropTypes.bool
-      }))
-    })),
-    resultsConfig: PropTypes.objectOf(PropTypes.shape({
-      hidden: PropTypes.bool
-    })),
-    lines: PropTypes.objectOf(
-      PropTypes.shape({
-        resultId: PropTypes.number,
-        logKey: PropTypes.string,
-        config: PropTypes.shape({
-          color: PropTypes.string,
-          isVisible: PropTypes.bool
-        })
-      })
-    )
-  }).isRequired,
-  globalConfig: PropTypes.shape({
-    chartSize: PropTypes.shape({
-      width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      aspect: PropTypes.number.isRequired
-    }),
-    isResultNameAlignRight: PropTypes.bool
-  }).isRequired
-};
-
-LogVisualizer.defaultProps = {
+  project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results.isRequired,
+  stats: uiPropTypes.stats.isRequired,
+  projectConfig: uiPropTypes.projectConfig.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired
 };
 
 export default LogVisualizer;

@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import {
   getProject,
   getResult,
@@ -17,7 +19,6 @@ import ResultSummary from '../components/result/ResultSummary';
 import Args from '../components/result/Args';
 import Commands from '../components/result/Commands';
 import Snapshots from '../components/result/Snapshots';
-import { defaultConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 class ResultDetail extends React.Component {
@@ -106,7 +107,7 @@ const mapStateToProps = (state, ownProps) => {
   const {
     entities,
     fetchState,
-    config = defaultConfig
+    config
   } = state;
   const globalConfig = config.global;
   const { projects = {}, results = {} } = entities;
@@ -116,24 +117,12 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 ResultDetail.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  resultId: PropTypes.number.isRequired,
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string,
-    name: PropTypes.string
-  }),
-  result: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string,
-    name: PropTypes.string,
-    args: PropTypes.arrayOf(PropTypes.any),
-    logs: PropTypes.arrayOf(PropTypes.any)
-  }),
-  fetchState: PropTypes.shape({
-    resultList: PropTypes.string
-  }).isRequired,
-  globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
+  projectId: uiPropTypes.projectId.isRequired,
+  resultId: uiPropTypes.resultId.isRequired,
+  project: uiPropTypes.project,
+  result: uiPropTypes.result,
+  fetchState: uiPropTypes.fetchState.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired,
   getProject: PropTypes.func.isRequired,
   getResult: PropTypes.func.isRequired,
   createCommand: PropTypes.func.isRequired,

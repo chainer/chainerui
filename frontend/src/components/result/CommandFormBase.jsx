@@ -19,8 +19,8 @@ const initialState = {
 };
 
 class CommandFormBase extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.openConfirmationModal = this.openConfirmationModal.bind(this);
     this.closeConfirmationModal = this.closeConfirmationModal.bind(this);
@@ -125,23 +125,23 @@ class CommandFormBase extends React.Component {
 CommandFormBase.propTypes = {
   title: PropTypes.string.isRequired,
   buttonLabel: PropTypes.string.isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]),
   needConfirmation: PropTypes.bool,
   confirmationTitle: PropTypes.string,
   confirmationMessage: PropTypes.node,
   freezeTime: PropTypes.number,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
 };
 
 CommandFormBase.defaultProps = {
-  children: null,
   needConfirmation: false,
   confirmationTitle: '',
   confirmationMessage: 'Are you sure to submit this command?',
-  freezeTime: 1000
+  freezeTime: 1000,
+  children: null
 };
 
 export default CommandFormBase;

@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import {
   getProject,
   getResultList, updateResult, clearResultList,
@@ -25,7 +27,7 @@ import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigur
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
-import { defaultConfig, defaultProjectConfig, keyOptions } from '../constants';
+import { defaultProjectConfig, keyOptions } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
@@ -138,12 +140,6 @@ class PlotContainer extends React.Component {
 }
 
 const mapEntitiesToStats = (entities) => {
-  const axes = {
-    xAxis: {},
-    yLeftAxis: {},
-    yRightAxis: {}
-  };
-
   const { results = {} } = entities;
   const argKeySet = {};
   const logKeySet = {};
@@ -160,7 +156,7 @@ const mapEntitiesToStats = (entities) => {
   const logKeys = Object.keys(logKeySet).sort();
   const xAxisKeys = keyOptions.filter((key) => key in logKeySet);
 
-  return { axes, argKeys, logKeys, xAxisKeys };
+  return { argKeys, logKeys, xAxisKeys };
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -168,7 +164,7 @@ const mapStateToProps = (state, ownProps) => {
   const {
     entities,
     fetchState,
-    config = defaultConfig
+    config
   } = state;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId] || { id: projectId };
@@ -188,34 +184,13 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 PlotContainer.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    pathName: PropTypes.string
-  }).isRequired,
-  results: PropTypes.objectOf(PropTypes.any).isRequired,
-  fetchState: PropTypes.shape({
-    resultList: PropTypes.string
-  }).isRequired,
-  projectConfig: PropTypes.shape({
-    axes: PropTypes.objectOf(PropTypes.any),
-    resultsConfig: PropTypes.objectOf(PropTypes.any),
-    global: PropTypes.objectOf(PropTypes.any),
-    tableState: PropTypes.objectOf(PropTypes.any)
-  }).isRequired,
-  globalConfig: PropTypes.shape({
-    pollingRate: PropTypes.number,
-    chartSize: PropTypes.objectOf(PropTypes.any),
-    logsLimit: PropTypes.number,
-    isResultNameAlignRight: PropTypes.bool
-  }).isRequired,
-  stats: PropTypes.shape({
-    axes: PropTypes.objectOf(PropTypes.any),
-    argKeys: PropTypes.arrayOf(PropTypes.string),
-    logKeys: PropTypes.arrayOf(PropTypes.string),
-    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
+  projectId: uiPropTypes.projectId.isRequired,
+  project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results.isRequired,
+  fetchState: uiPropTypes.fetchState.isRequired,
+  projectConfig: uiPropTypes.projectConfig.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired,
+  stats: uiPropTypes.stats.isRequired,
   getProject: PropTypes.func.isRequired,
   getResultList: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
@@ -235,9 +210,6 @@ PlotContainer.propTypes = {
   updateAxisScaleRangeNumber: PropTypes.func.isRequired,
   updateTableExpanded: PropTypes.func.isRequired,
   updateTableColumnsVisibility: PropTypes.func.isRequired
-};
-
-PlotContainer.defaultProps = {
 };
 
 export default connect(mapStateToProps, {

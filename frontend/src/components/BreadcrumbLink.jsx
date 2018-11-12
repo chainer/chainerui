@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, IndexLink } from 'react-router';
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import TruncatedResultName from './TruncatedResultName';
 import {
   displayProjectName,
@@ -51,18 +53,9 @@ const BreadcrumbLink = (props) => {
 
 BreadcrumbLink.propTypes = {
   length: PropTypes.number.isRequired,
-  globalConfig: PropTypes.shape({
-    isResultNameAlignRight: PropTypes.bool
-  }).isRequired,
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string
-  }),
-  result: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    pathName: PropTypes.string
-  })
+  globalConfig: uiPropTypes.globalConfig.isRequired,
+  project: uiPropTypes.project,
+  result: uiPropTypes.result
 };
 
 BreadcrumbLink.defaultProps = {

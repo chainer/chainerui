@@ -20,9 +20,7 @@ def _make_new_directory(base):
     # already created, so create another directory with sequential ID
     seq_id = -1
     new_dir = base
-    while True:
-        if not os.path.exists(new_dir):
-            break
+    while os.path.exists(new_dir):
         seq_id += 1
         new_dir = '{}_{:d}'.format(base, seq_id)
     os.makedirs(new_dir)

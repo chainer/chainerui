@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 
+import * as uiPropTypes from '../store/uiPropTypes';
 import {
   argValue2string,
   getLastLogDict,
@@ -17,14 +18,14 @@ const emptyStr = '-';
 const ExperimentsTable = (props) => {
   const {
     project,
-    results = {}, stats,
+    results, stats,
     projectConfig,
     globalConfig,
     onResultsConfigSelectUpdate, onResultUpdate, onCommandSubmit,
     onTableExpandedUpdate
   } = props;
   const { argKeys, logKeys } = stats;
-  const { resultsConfig = {}, tableState = {} } = projectConfig;
+  const { resultsConfig, tableState } = projectConfig;
 
   const resultKeys = Object.keys(results);
   const resultCount = resultKeys.length;
@@ -154,43 +155,15 @@ const ExperimentsTable = (props) => {
 };
 
 ExperimentsTable.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string
-  }).isRequired,
-  results: PropTypes.objectOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      pathName: PropTypes.string,
-      args: PropTypes.arrayOf(PropTypes.any),
-      logs: PropTypes.arrayOf(PropTypes.any)
-    })
-  ),
-  projectConfig: PropTypes.shape({
-    resultsConfig: PropTypes.objectOf(PropTypes.shape({
-      hidden: PropTypes.bool
-    })),
-    tableState: PropTypes.shape({
-      expanded: PropTypes.any
-    }).isRequired
-  }).isRequired,
-  globalConfig: PropTypes.shape({
-    isResultNameAlignRight: PropTypes.bool
-  }).isRequired,
-  stats: PropTypes.shape({
-    argKeys: PropTypes.arrayOf(PropTypes.string),
-    xAxisKeys: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
+  project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results.isRequired,
+  projectConfig: uiPropTypes.projectConfig.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired,
+  stats: uiPropTypes.stats.isRequired,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
   onCommandSubmit: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired
-};
-ExperimentsTable.defaultProps = {
-  results: {},
-  stats: {
-    argKeys: []
-  }
 };
 
 export default ExperimentsTable;

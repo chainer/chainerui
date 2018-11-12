@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import TruncatedResultName from './TruncatedResultName';
 import {
   line2dataKey
@@ -34,7 +36,7 @@ const renderItems = (lines, axisName, project, results, isResultNameAlignRight) 
   })
 );
 
-const LogVisualizerTooltip = (props) => {
+const LogVisualizerLegend = (props) => {
   const {
     project, results, lines, maxHeight, isResultNameAlignRight
   } = props;
@@ -51,30 +53,13 @@ const LogVisualizerTooltip = (props) => {
   );
 };
 
-LogVisualizerTooltip.propTypes = {
-  project: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    pathName: PropTypes.string
-  }).isRequired,
-  results: PropTypes.objectOf(PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string,
-    name: PropTypes.string,
-    args: PropTypes.arrayOf(PropTypes.any),
-    logs: PropTypes.arrayOf(PropTypes.any)
-  })).isRequired,
-  lines: PropTypes.objectOf(PropTypes.any),
+LogVisualizerLegend.propTypes = {
+  project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results.isRequired,
+  lines: PropTypes.objectOf(PropTypes.any).isRequired,
   maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  isResultNameAlignRight: PropTypes.bool
+  isResultNameAlignRight: PropTypes.bool.isRequired
 };
 
-LogVisualizerTooltip.defaultProps = {
-  xAxisKey: '',
-  isResultNameAlignRight: false,
-  label: undefined,
-  payload: []
-};
-
-export default LogVisualizerTooltip;
+export default LogVisualizerLegend;
 

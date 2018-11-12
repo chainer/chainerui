@@ -354,13 +354,14 @@ const projectsConfig = (state = {}, action) => {
 };
 
 
-const defaultGlobaState = {
+const defaultGlobalState = {
   pollingRate: pollingOptions[1].value,
   chartSize: chartSizeOptions[0],
-  logsLimit: logsLimitOptions[0].value
+  logsLimit: logsLimitOptions[0].value,
+  isResultNameAlignRight: false
 };
 
-const global = (state = defaultGlobaState, action) => {
+const global = (state = defaultGlobalState, action) => {
   const { pollingRate, chartSize, logsLimit, isResultNameAlignRight } = action;
   switch (action.type) {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
@@ -395,7 +396,7 @@ const config = combineReducers({
 });
 
 
-const currentStoreVersion = 20180727.0;
+const currentStoreVersion = 20181023.0;
 
 const persistConfig = {
   key: 'config',
