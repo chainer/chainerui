@@ -76,12 +76,8 @@ class ResultName extends React.Component {
 ResultName.propTypes = {
   project: uiPropTypes.project.isRequired,
   result: uiPropTypes.result.isRequired,
-  isResultNameAlignRight: PropTypes.bool,
+  isResultNameAlignRight: PropTypes.bool.isRequired,
   onResultUpdate: PropTypes.func.isRequired
-};
-
-ResultName.defaultProps = {
-  isResultNameAlignRight: false
 };
 
 export default ResultName;

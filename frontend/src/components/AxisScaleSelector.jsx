@@ -22,12 +22,11 @@ const AxisScaleSelector = (props) => {
 
 AxisScaleSelector.propTypes = {
   scale: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func.isRequired
 };
 
 AxisScaleSelector.defaultProps = {
-  scale: '',
-  onChange: () => {}
+  scale: ''
 };
 
 export default AxisScaleSelector;

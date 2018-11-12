@@ -22,8 +22,5 @@ SnapshotTakeForm.propTypes = {
   onCommandSubmit: PropTypes.func.isRequired
 };
 
-SnapshotTakeForm.defaultProps = {
-};
-
 export default SnapshotTakeForm;
 

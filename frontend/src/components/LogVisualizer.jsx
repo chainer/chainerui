@@ -89,19 +89,19 @@ class LogVisualizer extends React.Component {
 
   render() {
     const {
-      project = {},
-      results = {},
-      projectConfig = {},
-      globalConfig = {},
+      project,
+      results,
+      projectConfig,
+      globalConfig,
       stats
     } = this.props;
-    const { axes, resultsConfig = {}, lines = {} } = projectConfig;
-    const { logKeys = [], xAxisKeys } = stats;
+    const { axes, resultsConfig, lines } = projectConfig;
+    const { logKeys, xAxisKeys } = stats;
     const {
       xAxis = { axisName: 'xAxis' },
       yLeftAxis = { axisName: 'yLeftAxis' },
       yRightAxis = { axisName: 'yRightAxis' }
-    } = axes || {};
+    } = axes;
     const { xAxisKey = xAxisKeys[0] } = xAxis;
     const selectedResults = getSelectedResults(results, resultsConfig);
     const selectedLogKeys = {
@@ -200,9 +200,6 @@ LogVisualizer.propTypes = {
   stats: uiPropTypes.stats.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired
-};
-
-LogVisualizer.defaultProps = {
 };
 
 export default LogVisualizer;

@@ -64,12 +64,9 @@ class ExperimentsTableConfigurator extends React.Component {
   }
 
   render() {
-    const { stats = {}, projectConfig } = this.props;
+    const { stats, projectConfig } = this.props;
+    const { logKeys, argKeys } = stats;
     const { tableState } = projectConfig;
-    const {
-      logKeys = [],
-      argKeys = []
-    } = stats;
     const {
       hiddenLogKeys = [],
       hiddenArgKeys = []
@@ -137,7 +134,5 @@ ExperimentsTableConfigurator.propTypes = {
   stats: uiPropTypes.stats.isRequired,
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired
 };
-
-ExperimentsTableConfigurator.defaultProps = {};
 
 export default ExperimentsTableConfigurator;

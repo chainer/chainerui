@@ -19,7 +19,6 @@ import ResultSummary from '../components/result/ResultSummary';
 import Args from '../components/result/Args';
 import Commands from '../components/result/Commands';
 import Snapshots from '../components/result/Snapshots';
-import { defaultConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 class ResultDetail extends React.Component {
@@ -108,7 +107,7 @@ const mapStateToProps = (state, ownProps) => {
   const {
     entities,
     fetchState,
-    config = defaultConfig
+    config
   } = state;
   const globalConfig = config.global;
   const { projects = {}, results = {} } = entities;
