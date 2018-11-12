@@ -563,7 +563,7 @@ def test_get_assets(func_dir, project, app):
             }
         }
     ]
-    with open(os.path.join(path, '.chainerui_images'), 'w') as f:
+    with open(os.path.join(path, '.chainerui_assets'), 'w') as f:
         json.dump(image_info, f)
     open(os.path.join(path, 'iter_600_61b3a8fa.png'), 'w') .close()
     open(os.path.join(path, 'iter_600_c15c042b.png'), 'w') .close()
