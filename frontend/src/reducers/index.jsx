@@ -159,18 +159,30 @@ const fetchState = (state = {}, action) => {
 
 const projectsStatus = (state = {}, action) => {
   const { projectId } = action;
-
-  if (projectId) {
-    const projectStatus = state[projectId] || defaultProjectStatus;
-    return {
-      ...state,
-      [projectId]: {
-        ...projectStatus
-      }
-    };
+  if (!projectId) {
+    return state;
   }
 
-  return state;
+  const projectStatus = state[projectId] || defaultProjectStatus;
+  switch (action.type) {
+    case ActionTypes.CHART_DOWNLOAD_STATUS_UPDATE: {
+      const { chartDownloadStatus } = action;
+      return {
+        ...state,
+        [projectId]: {
+          ...projectStatus,
+          chartDownloadStatus
+        }
+      };
+    }
+    default:
+      return {
+        ...state,
+        [projectId]: {
+          ...projectStatus
+        }
+      };
+  }
 };
 
 const status = combineReducers({
