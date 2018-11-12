@@ -22,11 +22,13 @@ def db_url(func_dir):
 
 def test_server_debug(db_url):
     args = app.create_parser().parse_args(
-        ['--db', db_url, 'server', '-H', 'test.domain', '-p', '5001', '-d'])
+        ['--db', db_url, '--db-echo', 'server', '-H', 'test.domain', '-p',
+         '5001', '-d'])
     assert args.host == 'test.domain'
     assert args.port == 5001
     assert args.debug
     assert args.db == db_url
+    assert args.db_echo
 
     mock_app = MagicMock()
     mock_app_creator = MagicMock(return_value=mock_app)
@@ -50,6 +52,7 @@ def test_server_production(db_url):
     assert args.port == 5001
     assert not args.debug
     assert args.db == db_url
+    assert not args.db_echo
 
     mock_app = MagicMock()
     mock_app_creator = MagicMock(return_value=mock_app)
