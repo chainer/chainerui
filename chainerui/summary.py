@@ -59,8 +59,13 @@ class _Reporter(object):
         self.count += 1
 
     def save(self):
+        cached = False
+        if self.images:
+            self.value['images'] = self.images
+            cached = True
+        if not cached:
+            return
         self.value['timestamp'] = datetime.datetime.now().isoformat()
-        self.value['images'] = self.images
         _chainerui_asset_observer.add(self.value)
         _chainerui_asset_observer.save(self.out)
 

@@ -116,3 +116,13 @@ def test_summay_reporter(func_dir, clear_cache):
     saved_filename5 = metas2[1]['images']['with_test_2']
     assert saved_filename5.startswith('with_test_2_')
     assert saved_filename5.endswith('.png')
+
+
+@unittest.skipUnless(
+        image_report.check_available(), 'Pillow is not installed')
+def test_summay_reporter_empty(func_dir, clear_cache):
+    with summary.reporter(func_dir, epoch=10):
+        pass
+
+    meta_filepath = os.path.join(func_dir, '.chainerui_assets')
+    assert not os.path.exists(meta_filepath)
