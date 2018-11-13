@@ -1,6 +1,5 @@
 import path from 'path';
 import { lineColorGenerator } from './color';
-import renderPyTmpl from './render.py.tmpl';
 
 export * from './color';
 export * from './command.jsx';
