@@ -157,6 +157,14 @@ const fetchState = (state = {}, action) => {
   }
 };
 
+
+const resultsStatus = (state = {}, action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
+
 const projectsStatus = (state = {}, action) => {
   const { projectId } = action;
   if (!projectId) {
@@ -179,7 +187,8 @@ const projectsStatus = (state = {}, action) => {
       return {
         ...state,
         [projectId]: {
-          ...projectStatus
+          ...projectStatus,
+          resultsStatus: resultsStatus(projectStatus.resultsStatus, action)
         }
       };
   }

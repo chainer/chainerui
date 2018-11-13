@@ -147,9 +147,13 @@ export const assets = PropTypes.arrayOf(PropTypes.shape({
   trainInfo: PropTypes.objectOf(PropTypes.any)
 }));
 
+export const resultStatus = PropTypes.shape({});
+
+export const resultsStatus = PropTypes.objectOf(resultStatus);
 
 export const projectStatus = PropTypes.shape({
-  chartDownloadStatus: PropTypes.oneOf(Object.values(CHART_DOWNLOAD_STATUS))
+  chartDownloadStatus: PropTypes.oneOf(Object.values(CHART_DOWNLOAD_STATUS)),
+  resultsStatus
 });
 
 export const projectsStatus = PropTypes.objectOf(projectStatus);
