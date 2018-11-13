@@ -41,7 +41,7 @@ script:
   - chainerui server -p 5051 &
   - sleep 4
   - curl -f http://127.0.0.1:5051/
-  - CHAINERUI_ENV=test pytest --cov=chainerui
+  - pytest --cov=chainerui
 
 after_success:
   - if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then COVERALLS_TOKEN=$COVERALLS_TOKEN coveralls; fi
