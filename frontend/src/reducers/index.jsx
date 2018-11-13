@@ -213,7 +213,7 @@ const projectsStatusReducer = (state = {}, action) => {
   }
 };
 
-const stats = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, action) => {
+const statsReducer = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, action) => {
   switch (action.type) {
     case ActionTypes.RESULT_LIST_SUCCESS:
       if (action.response && action.response.results) {
@@ -251,7 +251,7 @@ const stats = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, action) => {
 
 const statusReducer = combineReducers({
   projectsStatus: projectsStatusReducer,
-  stats
+  stats: statsReducer
 });
 
 
