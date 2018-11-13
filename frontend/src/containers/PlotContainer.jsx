@@ -28,7 +28,7 @@ import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigur
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
-import { defaultProjectStatus, defaultProjectConfig, keyOptions } from '../constants';
+import { defaultProjectStatus, defaultProjectConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
@@ -143,26 +143,6 @@ class PlotContainer extends React.Component {
   }
 }
 
-const mapEntitiesToStats = (entities) => {
-  const { results = {} } = entities;
-  const argKeySet = {};
-  const logKeySet = {};
-  Object.keys(results).forEach((resultId) => {
-    const result = results[resultId];
-    result.args.forEach((arg) => { argKeySet[arg.key] = true; });
-    result.logs.forEach((log) => {
-      log.logItems.forEach((logItem) => {
-        logKeySet[logItem.key] = true;
-      });
-    });
-  });
-  const argKeys = Object.keys(argKeySet);
-  const logKeys = Object.keys(logKeySet).sort();
-  const xAxisKeys = keyOptions.filter((key) => key in logKeySet);
-
-  return { argKeys, logKeys, xAxisKeys };
-};
-
 const mapStateToProps = (state, ownProps) => {
   const projectId = Number(ownProps.params.projectId);
   const {
@@ -176,7 +156,7 @@ const mapStateToProps = (state, ownProps) => {
   const projectStatus = status.projectsStatus[projectId] || defaultProjectStatus;
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
   const globalConfig = config.global;
-  const stats = mapEntitiesToStats(entities);
+  const { stats } = status;
 
   return {
     projectId,
