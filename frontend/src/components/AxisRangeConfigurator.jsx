@@ -110,8 +110,5 @@ AxisRangeConfigurator.propTypes = {
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired
 };
 
-AxisRangeConfigurator.defaultProps = {
-};
-
 export default AxisRangeConfigurator;
 

@@ -100,8 +100,5 @@ Commands.propTypes = {
   onCommandSubmit: PropTypes.func.isRequired
 };
 
-Commands.defaultProps = {
-};
-
 export default Commands;
 

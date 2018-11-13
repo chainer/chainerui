@@ -4,7 +4,7 @@ import { persistReducer } from 'redux-persist';
 import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig } from '../constants';
+import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, defaultProjectStatus } from '../constants';
 
 
 const projectsReducer = (state = {}, action) => {
@@ -156,6 +156,38 @@ const fetchState = (state = {}, action) => {
       return state;
   }
 };
+
+const projectsStatus = (state = {}, action) => {
+  const { projectId } = action;
+  if (!projectId) {
+    return state;
+  }
+
+  const projectStatus = state[projectId] || defaultProjectStatus;
+  switch (action.type) {
+    case ActionTypes.CHART_DOWNLOAD_STATUS_UPDATE: {
+      const { chartDownloadStatus } = action;
+      return {
+        ...state,
+        [projectId]: {
+          ...projectStatus,
+          chartDownloadStatus
+        }
+      };
+    }
+    default:
+      return {
+        ...state,
+        [projectId]: {
+          ...projectStatus
+        }
+      };
+  }
+};
+
+const status = combineReducers({
+  projectsStatus
+});
 
 
 const axes = (state = defaultAxisConfig, action) => {
@@ -354,13 +386,14 @@ const projectsConfig = (state = {}, action) => {
 };
 
 
-const defaultGlobaState = {
+const defaultGlobalState = {
   pollingRate: pollingOptions[1].value,
   chartSize: chartSizeOptions[0],
-  logsLimit: logsLimitOptions[0].value
+  logsLimit: logsLimitOptions[0].value,
+  isResultNameAlignRight: false
 };
 
-const global = (state = defaultGlobaState, action) => {
+const global = (state = defaultGlobalState, action) => {
   const { pollingRate, chartSize, logsLimit, isResultNameAlignRight } = action;
   switch (action.type) {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
@@ -395,7 +428,7 @@ const config = combineReducers({
 });
 
 
-const currentStoreVersion = 20180727.0;
+const currentStoreVersion = 20181023.0;
 
 const persistConfig = {
   key: 'config',
@@ -417,6 +450,7 @@ const rootReducer = combineReducers({
   entities,
   requests: requestsReducer,
   fetchState,
+  status,
   config: persistReducer(persistConfig, config),
   routing: routerReducer
 });

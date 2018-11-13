@@ -129,8 +129,5 @@ HyperparamsAdjustForm.propTypes = {
   onCommandSubmit: PropTypes.func.isRequired
 };
 
-HyperparamsAdjustForm.defaultProps = {
-};
-
 export default HyperparamsAdjustForm;
 

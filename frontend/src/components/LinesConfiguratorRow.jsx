@@ -85,15 +85,9 @@ LinesConfiguratorRow.propTypes = {
   line: uiPropTypes.line.isRequired,
   project: uiPropTypes.project.isRequired,
   result: uiPropTypes.result.isRequired,
-  isResultNameAlignRight: PropTypes.bool,
-  onEditClick: PropTypes.func,
-  onVisibilityUpdate: PropTypes.func
-};
-
-LinesConfiguratorRow.defaultProps = {
-  isResultNameAlignRight: false,
-  onEditClick: () => {},
-  onVisibilityUpdate: () => {}
+  isResultNameAlignRight: PropTypes.bool.isRequired,
+  onEditClick: PropTypes.func.isRequired,
+  onVisibilityUpdate: PropTypes.func.isRequired
 };
 
 export default LinesConfiguratorRow;

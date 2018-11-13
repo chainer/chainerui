@@ -1,11 +1,10 @@
 import path from 'path';
-import saveSvgAsPng from 'save-svg-as-png';
-import * as moment from 'moment';
 import { lineColorGenerator } from './color';
 import renderPyTmpl from './render.py.tmpl';
 
 export * from './color';
 export * from './command.jsx';
+export * from './download';
 export * from './polling';
 export * from './url';
 
@@ -226,21 +225,4 @@ export const padDigits = (num, len) => {
     str = `0${str}`;
   }
   return str;
-};
-
-export const downloadObjectAsCode = (exportObj, exportName) => {
-  const fileName = `${exportName}_${moment().format('YYYYMMDDHHmmss')}.py`;
-  const renderPy = renderPyTmpl.replace(/\${rendered_log}/, JSON.stringify(exportObj, null, '  '));
-  const blobUrl = URL.createObjectURL(new Blob([renderPy], { type: 'text/plain' }));
-  const downloadAnchorNode = document.createElement('a');
-  downloadAnchorNode.setAttribute('href', blobUrl);
-  downloadAnchorNode.setAttribute('download', fileName);
-  document.body.appendChild(downloadAnchorNode); // required for firefox
-  downloadAnchorNode.click();
-  downloadAnchorNode.remove();
-};
-
-export const downloadChartAsPng = (chartDOMNode, exportName) => {
-  const fileName = `${exportName}_${moment().format('YYYYMMDDHHmmss')}.png`;
-  saveSvgAsPng.saveSvgAsPng(chartDOMNode.getElementsByTagName('svg')[0], fileName);
 };

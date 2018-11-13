@@ -7,12 +7,12 @@ import * as uiPropTypes from '../store/uiPropTypes';
 import {
   getResultAsset,
   updateGlobalPollingRate,
-  updateGlobalChartSize
+  updateGlobalChartSize,
+  updateGlobalLogsLimit,
+  updateGlobalResultNameAlignment
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
-import Assets from '../components/assets/AssetList';
-import { defaultConfig } from '../constants';
-
+import AssetsTable from '../components/AssetsTable';
 
 class AssetsContainer extends React.Component {
   componentDidMount() {
@@ -29,11 +29,13 @@ class AssetsContainer extends React.Component {
         <NavigationBar
           fetchState={fetchState}
           globalConfig={globalConfig}
+          onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
+          onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
-        <Container fluid>
-          <Assets assets={assets || []} />
+        <Container>
+          <AssetsTable assets={assets} />
         </Container>
       </div>
     );
@@ -46,9 +48,9 @@ const mapStateToProps = (state, ownProps) => {
   const {
     entities,
     fetchState,
-    config = defaultConfig
+    config
   } = state;
-  const { assets = [] } = entities;
+  const { assets } = entities;
   const globalConfig = config.global;
   return { projectId, resultId, assets, fetchState, globalConfig };
 };
@@ -56,16 +58,20 @@ const mapStateToProps = (state, ownProps) => {
 AssetsContainer.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   resultId: uiPropTypes.resultId.isRequired,
-  assets: PropTypes.objectOf(PropTypes.any).isRequired,
+  assets: uiPropTypes.assets.isRequired,
   fetchState: uiPropTypes.fetchState.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   getResultAsset: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
-  updateGlobalChartSize: PropTypes.func.isRequired
+  updateGlobalChartSize: PropTypes.func.isRequired,
+  updateGlobalResultNameAlignment: PropTypes.func.isRequired,
+  updateGlobalLogsLimit: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, {
   getResultAsset,
   updateGlobalPollingRate,
-  updateGlobalChartSize
+  updateGlobalChartSize,
+  updateGlobalLogsLimit,
+  updateGlobalResultNameAlignment
 })(AssetsContainer);

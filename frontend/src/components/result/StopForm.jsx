@@ -24,7 +24,4 @@ StopForm.propTypes = {
   onCommandSubmit: PropTypes.func.isRequired
 };
 
-StopForm.defaultProps = {
-};
-
 export default StopForm;

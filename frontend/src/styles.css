@@ -41,6 +41,15 @@
   overflow: auto;
 }
 
+.log-visualizer-tooltip {
+  max-width: 300px;
+}
+
+.plot-hidden {
+  position: absolute;
+  left: -9999px;
+}
+
 .ReactTable {
   display: table;
 }

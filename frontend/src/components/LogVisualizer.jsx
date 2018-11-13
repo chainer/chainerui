@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import {
   LineChart,
@@ -7,7 +8,8 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Tooltip
 } from 'recharts';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -22,7 +24,9 @@ import {
   downloadObjectAsCode,
   downloadChartAsPng
 } from '../utils';
+import { CHART_DOWNLOAD_STATUS } from '../constants';
 import LogVisualizerLegend from './LogVisualizerLegend';
+import LogVisualizerTooltip from './LogVisualizerTooltip';
 
 
 const getDomain = (axisConfig = {}) => {
@@ -68,6 +72,18 @@ class LogVisualizer extends React.Component {
     this.handleClickDownloadPNG = this.handleClickDownloadPNG.bind(this);
   }
 
+  componentDidUpdate() {
+    const { project, projectStatus, onChartDownloadStatusUpdate } = this.props;
+    if (projectStatus.chartDownloadStatus === CHART_DOWNLOAD_STATUS.REQUESTED) {
+      onChartDownloadStatusUpdate(project.id, CHART_DOWNLOAD_STATUS.CONVERTING);
+      const exportName = getUrlSafeProjectNameFull(project);
+      // eslint-disable-next-line react/no-find-dom-node
+      downloadChartAsPng(ReactDOM.findDOMNode(this.chart), exportName).then(() => {
+        onChartDownloadStatusUpdate(project.id, CHART_DOWNLOAD_STATUS.NONE);
+      });
+    }
+  }
+
   chartRef(element) {
     this.chart = element;
   }
@@ -80,27 +96,28 @@ class LogVisualizer extends React.Component {
   }
 
   handleClickDownloadPNG() {
-    const { project } = this.props;
-    const exportName = getUrlSafeProjectNameFull(project);
-    // eslint-disable-next-line react/no-find-dom-node
-    downloadChartAsPng(ReactDOM.findDOMNode(this.chart), exportName);
+    const { project, projectStatus, onChartDownloadStatusUpdate } = this.props;
+    if (projectStatus.chartDownloadStatus === CHART_DOWNLOAD_STATUS.NONE) {
+      onChartDownloadStatusUpdate(project.id, CHART_DOWNLOAD_STATUS.REQUESTED);
+    }
   }
 
   render() {
     const {
-      project = {},
-      results = {},
-      projectConfig = {},
-      globalConfig = {},
+      project,
+      results,
+      projectStatus,
+      projectConfig,
+      globalConfig,
       stats
     } = this.props;
-    const { axes, resultsConfig = {}, lines = {} } = projectConfig;
-    const { logKeys = [], xAxisKeys } = stats;
+    const { axes, resultsConfig, lines } = projectConfig;
+    const { logKeys, xAxisKeys } = stats;
     const {
       xAxis = { axisName: 'xAxis' },
       yLeftAxis = { axisName: 'yLeftAxis' },
       yRightAxis = { axisName: 'yRightAxis' }
-    } = axes || {};
+    } = axes;
     const { xAxisKey = xAxisKeys[0] } = xAxis;
     const selectedResults = getSelectedResults(results, resultsConfig);
     const selectedLogKeys = {
@@ -133,16 +150,16 @@ class LogVisualizer extends React.Component {
     });
 
     const { chartSize, isResultNameAlignRight } = globalConfig;
-
-    return (
-      <div className="log-visualizer-root">
-        <div className="d-flex">
+    // TODO: split these components into a separated component
+    const tempHiddenPlot =
+      (projectStatus.chartDownloadStatus !== CHART_DOWNLOAD_STATUS.NONE) ? (
+        <div className="d-flex plot-hidden" ref={this.chartRef}>
           <ResponsiveContainer
             width={chartSize.width}
             height={chartSize.height}
             aspect={chartSize.aspect}
           >
-            <LineChart data={data} ref={this.chartRef}>
+            <LineChart data={data}>
               <XAxis
                 type="number"
                 dataKey={xAxisKey}
@@ -181,6 +198,57 @@ class LogVisualizer extends React.Component {
             />
           </div>
         </div>
+      ) : null;
+
+    return (
+      <div className="log-visualizer-root">
+        {tempHiddenPlot}
+        <div className="d-flex">
+          <ResponsiveContainer
+            width={chartSize.width}
+            height={chartSize.height}
+            aspect={chartSize.aspect}
+          >
+            <LineChart data={data}>
+              <XAxis
+                type="number"
+                dataKey={xAxisKey}
+                scale={xAxis.scale}
+                domain={getDomain(xAxis)}
+                allowDataOverflow
+              />
+              <YAxis
+                yAxisId="yLeftAxis"
+                orientation="left"
+                scale={yLeftAxis.scale}
+                domain={getDomain(yLeftAxis)}
+                tickFormatter={formatLogValue()}
+                allowDataOverflow
+              />
+              <YAxis
+                yAxisId="yRightAxis"
+                orientation="right"
+                scale={yRightAxis.scale}
+                domain={getDomain(yRightAxis)}
+                tickFormatter={formatLogValue()}
+                allowDataOverflow
+              />
+              <CartesianGrid strokeDasharray="3 3" />
+              {lineElems.yLeftAxis}
+              {lineElems.yRightAxis}
+              <Tooltip content={<LogVisualizerTooltip xAxisKey={xAxisKey} />} />
+            </LineChart>
+          </ResponsiveContainer>
+          <div>
+            <LogVisualizerLegend
+              project={project}
+              results={results}
+              lines={axisLines}
+              maxHeight={chartSize.height}
+              isResultNameAlignRight={isResultNameAlignRight}
+            />
+          </div>
+        </div>
         <Button size="sm" className="m-1" onClick={this.handleClickDownloadCode}>
           <span className="mx-1 oi oi-data-transfer-download" />code
         </Button>
@@ -195,12 +263,11 @@ class LogVisualizer extends React.Component {
 LogVisualizer.propTypes = {
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
+  projectStatus: uiPropTypes.projectStatus.isRequired,
   stats: uiPropTypes.stats.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
-  globalConfig: uiPropTypes.globalConfig.isRequired
-};
-
-LogVisualizer.defaultProps = {
+  globalConfig: uiPropTypes.globalConfig.isRequired,
+  onChartDownloadStatusUpdate: PropTypes.func.isRequired
 };
 
 export default LogVisualizer;
