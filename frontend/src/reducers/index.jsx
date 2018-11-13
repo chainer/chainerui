@@ -48,11 +48,16 @@ const resultsReducer = (state = {}, action) => {
     case ActionTypes.RESULT_LIST_SUCCESS:
       if (action.response && action.response.results) {
         const resultList = action.response.results;
+        const resultIds = resultList.map((result) => result.id);
+        let modified = Object.keys(state).length !== resultIds.length;
         const results = {};
         resultList.forEach((result) => {
-          results[result.id] = result;
+          const oldResult = state[result.id] || {};
+          const resultModified = oldResult.logModifiedAt !== result.logModifiedAt;
+          results[result.id] = resultModified ? result : oldResult;
+          modified = modified || resultModified;
         });
-        return results;
+        return modified ? results : state;
       }
       return state;
     case ActionTypes.RESULT_SUCCESS:
