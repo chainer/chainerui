@@ -47,9 +47,9 @@ const resultsReducer = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.RESULT_LIST_SUCCESS:
       if (action.response && action.response.results) {
-        const resultsList = action.response.results;
+        const resultList = action.response.results;
         const results = {};
-        resultsList.forEach((result) => {
+        resultList.forEach((result) => {
           results[result.id] = result;
         });
         return results;
