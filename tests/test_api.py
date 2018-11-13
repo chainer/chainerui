@@ -4,13 +4,9 @@ import os
 import pytest
 from six import string_types
 
-from chainerui import CHAINERUI_ENV
-from chainerui import create_app
-from chainerui import db
 from chainerui.models.project import Project
 from chainerui.utils.commands_state import CommandsState
 from tests.helpers import assert_json_api
-from tests.helpers import NotInTestEnvironmentException
 
 
 def _setup_test_project(root_path):
@@ -136,44 +132,14 @@ def _setup_test_project(root_path):
     open(os.path.join(path, 'snapshot_iter_2400'), 'w').close()
 
 
-def _setup_test_db(project_path, project_name):
-    db.upgrade()
-
-    # insert test data
-    Project.create(project_path, project_name)
-
-
-@pytest.fixture(autouse=True, scope='module')
-def temp_db():
-    if not CHAINERUI_ENV == 'test':
-        raise NotInTestEnvironmentException(
-            'set environment variable CHAINERUI_ENV=test '
-            'when you run this test'
-        )
-    db.init_db()
-
-
 @pytest.fixture(autouse=True, scope='function')
-def project(func_dir):
-    db.setup(test_mode=True)
-    db.upgrade()
-
+def project(func_dir, func_db):
     project_path = os.path.join(func_dir, 'test_project')
     _setup_test_project(project_path)
     project_name = 'my-project'
     Project.create(project_path, project_name)
 
-    yield(project_path, project_name)
-
-    db.session.remove()
-    db.remove_db()
-
-
-@pytest.fixture(autouse=True, scope='function')
-def app(func_dir):
-    app = create_app()
-    app.testing = True
-    return app.test_client()
+    return project_path, project_name
 
 
 def _assert_test_project(project, path, name):
