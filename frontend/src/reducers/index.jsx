@@ -42,6 +42,22 @@ const projectsReducer = (state = {}, action) => {
   }
 };
 
+const mergeResult = (result, oldResult) => {
+  const newResult = { ...result };
+  ['args', 'commands', 'snapshots'].forEach((k) => {
+    const data = oldResult[k];
+    if (data && data.length === newResult[k].length) {
+      newResult[k] = data; // eslint-disable-line no-param-reassign
+    }
+  });
+  if (oldResult.logs && oldResult.logs.length === newResult.logs.length) {
+    if (oldResult.logModifiedAt === newResult.logModifiedAt) {
+      newResult.logs = oldResult.logs; // eslint-disable-line no-param-reassign
+    }
+  }
+  const modified = Object.keys(newResult).some((k) => newResult[k] !== oldResult[k]);
+  return modified ? newResult : oldResult;
+};
 
 const resultsReducer = (state = {}, action) => {
   switch (action.type) {
@@ -53,8 +69,9 @@ const resultsReducer = (state = {}, action) => {
         const results = {};
         resultList.forEach((result) => {
           const oldResult = state[result.id] || {};
-          const resultModified = oldResult.logModifiedAt !== result.logModifiedAt;
-          results[result.id] = resultModified ? result : oldResult;
+          const newResult = mergeResult(result, oldResult);
+          const resultModified = oldResult !== newResult;
+          results[result.id] = newResult;
           modified = modified || resultModified;
         });
         return modified ? results : state;
