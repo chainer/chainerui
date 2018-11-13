@@ -4,7 +4,7 @@ import { persistReducer } from 'redux-persist';
 import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig } from '../constants';
+import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, defaultProjectStatus } from '../constants';
 
 
 const projectsReducer = (state = {}, action) => {
@@ -156,6 +156,38 @@ const fetchState = (state = {}, action) => {
       return state;
   }
 };
+
+const projectsStatus = (state = {}, action) => {
+  const { projectId } = action;
+  if (!projectId) {
+    return state;
+  }
+
+  const projectStatus = state[projectId] || defaultProjectStatus;
+  switch (action.type) {
+    case ActionTypes.CHART_DOWNLOAD_STATUS_UPDATE: {
+      const { chartDownloadStatus } = action;
+      return {
+        ...state,
+        [projectId]: {
+          ...projectStatus,
+          chartDownloadStatus
+        }
+      };
+    }
+    default:
+      return {
+        ...state,
+        [projectId]: {
+          ...projectStatus
+        }
+      };
+  }
+};
+
+const status = combineReducers({
+  projectsStatus
+});
 
 
 const axes = (state = defaultAxisConfig, action) => {
@@ -418,6 +450,7 @@ const rootReducer = combineReducers({
   entities,
   requests: requestsReducer,
   fetchState,
+  status,
   config: persistReducer(persistConfig, config),
   routing: routerReducer
 });

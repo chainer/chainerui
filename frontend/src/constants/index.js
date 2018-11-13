@@ -105,6 +105,16 @@ export const defaultProjectConfig = {
   tableState: {}
 };
 
+export const CHART_DOWNLOAD_STATUS = {
+  NONE: 'NONE',
+  REQUESTED: 'REQUESTED',
+  CONVERTING: 'CONVERTING'
+};
+
+export const defaultProjectStatus = {
+  chartDownloadStatus: CHART_DOWNLOAD_STATUS.NONE
+};
+
 export const keyOptions = ['epoch', 'iteration', 'episode', 'step', 'elapsed_time'];
 
 export const SCHEDULE_NOW = 'scheduleNow';
