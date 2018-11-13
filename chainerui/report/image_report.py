@@ -1,12 +1,13 @@
 import datetime
-import hashlib
 import os
-import time
 import warnings
 
 import chainer
 from chainer import cuda
 import numpy
+
+from chainerui.report.utils import get_hash
+from chainerui.report.utils import get_unixtime
 
 try:
     from PIL import Image  # NOQA
@@ -36,9 +37,8 @@ def report(images, out, name, ch_axis=1, row=0, mode=None, batched=True):
         stuck_image = _get_stuck_image(images, ch_axis)
 
     now = datetime.datetime.now()
-    # ts = now.timestamp(), but Python2.7 does not support the method.
-    ts = time.mktime(now.timetuple()) + now.microsecond/1e6
-    filename = '{}_{}.png'.format(name, _get_hash('{}'.format(ts)))
+    ts = get_unixtime(now)
+    filename = '{}_{}.png'.format(name, get_hash('{}'.format(ts)))
     filepath = os.path.join(out, filename)
     _save_image(_normalize_8bit(stuck_image), filepath, mode=mode)
 
@@ -88,10 +88,6 @@ def _move_ch_to_last(x, axis):
         return x
     rolled_ax = numpy.append(numpy.delete(numpy.arange(x.ndim), axis), axis)
     return x.transpose(rolled_ax)
-
-
-def _get_hash(key):
-    return hashlib.md5(key.encode('utf-8')).hexdigest()[:12]
 
 
 def _normalize_8bit(array):
