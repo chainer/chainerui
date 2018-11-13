@@ -36,6 +36,7 @@ class _Reporter(object):
         self.value = kwargs
 
         self.images = {}
+        self.audios = {}
         self.count = 0
 
     def image(self, images, name=None, ch_axis=1, row=0, mode=None,
@@ -58,10 +59,31 @@ class _Reporter(object):
 
         self.count += 1
 
+    def audio(self, audio, sample_rate, name=None):
+        from chainerui.report.audio_report import check_available
+        if not check_available():
+            return
+        from chainerui.report.audio_report import report as _audio
+
+        col_name = name
+        if col_name is None:
+            col_name = 'audio_{:d}'.format(self.count)
+        if self.prefix is not None:
+            col_name = self.prefix + col_name
+        if col_name in self.audio:
+            col_name += '_{:d}'.format(self.count)
+        filename, _ = _audio(audio, sample_rate, self.out, col_name)
+        self.audios[col_name] = filename
+
+        self.count += 1
+
     def save(self):
         cached = False
         if self.images:
             self.value['images'] = self.images
+            cached = True
+        if self.audios:
+            self.value['audio'] = self.audios
             cached = True
         if not cached:
             return
@@ -79,6 +101,7 @@ def reporter(out, prefix=None, **kwargs):
     provides the following methods.
 
     * ``image``: almost same as :func:`~chainerui.summary.image`
+    * ``audio``: almost same as :func:`~chainerui.summary.audio`
 
     Example of how to set several assets::
 
@@ -88,7 +111,9 @@ def reporter(out, prefix=None, **kwargs):
        >>> with reporter(out, epoch=1, iteration=10) as r:
        >>>     r.image(image_array1)
        >>>     r.image(image_array2)
-       >>> # image_array1 and image_array2 are reported to the server
+       >>>     r.audio(audio_array, 44100)
+       >>> # image_array1 and image_array2 are visualized on a browser
+       >>> # audio_array can be listened on a browser
 
     Arguments:
         out (str): name of output path.
@@ -107,7 +132,7 @@ def image(images, out, name=None, ch_axis=1, row=0, mode=None, batched=True,
     """summary images to visualize.
 
     An array of images is converted as image format (PNG format on default),
-    saved to output directory, and report to the ChainerUI server. The images
+    saved to output directory, and reported to the ChainerUI server. The images
     are saved every called this function. The images will be shown on `assets`
     endpoint vertically. If need to aggregate images in row, use
     :func:`~chainerui.summary.reporter`.
@@ -186,5 +211,57 @@ def image(images, out, name=None, ch_axis=1, row=0, mode=None, batched=True,
     value = kwargs
     value['timestamp'] = created_at.isoformat()
     value['images'] = {col_name: filename}
+    _chainerui_asset_observer.add(value)
+    _chainerui_asset_observer.save(out)
+
+
+def audio(audio, sample_rate, out, name=None, **kwargs):
+    """summary audio files to listen on a browser.
+
+    An sampled array is converted as WAV audio file, saved to output directory,
+    and reported to the ChainerUI server. The audio file is saved every called
+    this function. The audio file will be listened on `assets` endpoint
+    vertically. If need to aggregate audio files in row, use
+    :func:`~chainerui.summary.reporter`.
+
+    Example of how to set arguments::
+
+       >>> from chainerui import summary
+       >>> out = '/path/to/output'
+       >>> rate = 44100
+       >>>
+       >>> summary.audio(sampled_array, rate, out, name='test')
+       >>> # sampled_array can be listened on a browser.
+
+    Add description about the audio file::
+
+       >>> summary.image(
+       >>>     sampled_array, rate, out, name='test', epoch=1, iteration=100)
+       >>> # 'epoch' and 'iteration' column will be shown.
+
+    Args:
+        audio (:class:`numpy.ndarray` or :class:`cupy.ndarray` or
+            `chainer.Variable`): sampled wave array.
+        sample_rate (int): sampling rate.
+        out (str): name of output path.
+        name (str): name of image. set as column name. when not setting,
+            assigned ``'image'``.
+        **kwargs (dict): key-value pair to show as description. regardless of
+            empty or not, timestamp on created the image is added.
+    """
+
+    from chainerui.report.audio_report import check_available
+    if not check_available():
+        return
+    from chainerui.report.audio_report import report as _audio
+
+    col_name = name
+    if col_name is None:
+        col_name = 'audio'
+    filename, created_at = _audio(audio, sample_rate, out, name)
+
+    value = kwargs
+    value['timestamp'] = created_at.isoformat()
+    value['audios'] = {col_name: filename}
     _chainerui_asset_observer.add(value)
     _chainerui_asset_observer.save(out)
