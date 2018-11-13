@@ -50,8 +50,5 @@ AxisLogKeySelector.propTypes = {
   onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
 };
 
-AxisLogKeySelector.defaultProps = {
-};
-
 export default AxisLogKeySelector;
 

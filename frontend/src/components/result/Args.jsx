@@ -27,8 +27,5 @@ Args.propTypes = {
   args: uiPropTypes.args.isRequired
 };
 
-Args.defaultProps = {
-};
-
 export default Args;
 

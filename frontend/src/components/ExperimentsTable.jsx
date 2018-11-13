@@ -18,14 +18,14 @@ const emptyStr = '-';
 const ExperimentsTable = (props) => {
   const {
     project,
-    results = {}, stats,
+    results, stats,
     projectConfig,
     globalConfig,
     onResultsConfigSelectUpdate, onResultUpdate, onCommandSubmit,
     onTableExpandedUpdate
   } = props;
   const { argKeys, logKeys } = stats;
-  const { resultsConfig = {}, tableState = {} } = projectConfig;
+  const { resultsConfig, tableState } = projectConfig;
 
   const resultKeys = Object.keys(results);
   const resultCount = resultKeys.length;
@@ -156,7 +156,7 @@ const ExperimentsTable = (props) => {
 
 ExperimentsTable.propTypes = {
   project: uiPropTypes.project.isRequired,
-  results: uiPropTypes.results,
+  results: uiPropTypes.results.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   stats: uiPropTypes.stats.isRequired,
@@ -164,12 +164,6 @@ ExperimentsTable.propTypes = {
   onResultUpdate: PropTypes.func.isRequired,
   onCommandSubmit: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired
-};
-ExperimentsTable.defaultProps = {
-  results: {},
-  stats: {
-    argKeys: []
-  }
 };
 
 export default ExperimentsTable;

@@ -19,7 +19,8 @@ import {
   updateAxisScaleRangeType, updateAxisScaleRangeNumber,
   createCommand,
   updateTableExpanded,
-  updateTableColumnsVisibility
+  updateTableColumnsVisibility,
+  updateChartDownloadStatus
 } from '../actions';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
@@ -27,7 +28,7 @@ import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigur
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
-import { defaultConfig, defaultProjectConfig, keyOptions } from '../constants';
+import { defaultProjectStatus, defaultProjectConfig, keyOptions } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
@@ -66,6 +67,7 @@ class PlotContainer extends React.Component {
     const {
       project,
       results,
+      projectStatus,
       fetchState,
       projectConfig,
       globalConfig,
@@ -110,9 +112,11 @@ class PlotContainer extends React.Component {
               <LogVisualizer
                 project={project}
                 results={results}
+                projectStatus={projectStatus}
                 stats={stats}
                 projectConfig={projectConfig}
                 globalConfig={globalConfig}
+                onChartDownloadStatusUpdate={this.props.updateChartDownloadStatus}
               />
               <ExperimentsTable
                 project={project}
@@ -140,12 +144,6 @@ class PlotContainer extends React.Component {
 }
 
 const mapEntitiesToStats = (entities) => {
-  const axes = {
-    xAxis: {},
-    yLeftAxis: {},
-    yRightAxis: {}
-  };
-
   const { results = {} } = entities;
   const argKeySet = {};
   const logKeySet = {};
@@ -162,7 +160,7 @@ const mapEntitiesToStats = (entities) => {
   const logKeys = Object.keys(logKeySet).sort();
   const xAxisKeys = keyOptions.filter((key) => key in logKeySet);
 
-  return { axes, argKeys, logKeys, xAxisKeys };
+  return { argKeys, logKeys, xAxisKeys };
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -170,10 +168,12 @@ const mapStateToProps = (state, ownProps) => {
   const {
     entities,
     fetchState,
-    config = defaultConfig
+    status,
+    config
   } = state;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId] || { id: projectId };
+  const projectStatus = status.projectsStatus[projectId] || defaultProjectStatus;
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
   const globalConfig = config.global;
   const stats = mapEntitiesToStats(entities);
@@ -183,6 +183,7 @@ const mapStateToProps = (state, ownProps) => {
     project,
     results,
     fetchState,
+    projectStatus,
     projectConfig,
     globalConfig,
     stats
@@ -194,6 +195,7 @@ PlotContainer.propTypes = {
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
   fetchState: uiPropTypes.fetchState.isRequired,
+  projectStatus: uiPropTypes.projectStatus.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   stats: uiPropTypes.stats.isRequired,
@@ -215,10 +217,8 @@ PlotContainer.propTypes = {
   updateAxisScaleRangeType: PropTypes.func.isRequired,
   updateAxisScaleRangeNumber: PropTypes.func.isRequired,
   updateTableExpanded: PropTypes.func.isRequired,
-  updateTableColumnsVisibility: PropTypes.func.isRequired
-};
-
-PlotContainer.defaultProps = {
+  updateTableColumnsVisibility: PropTypes.func.isRequired,
+  updateChartDownloadStatus: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, {
@@ -240,5 +240,6 @@ export default connect(mapStateToProps, {
   updateAxisScaleRangeType,
   updateAxisScaleRangeNumber,
   updateTableExpanded,
-  updateTableColumnsVisibility
+  updateTableColumnsVisibility,
+  updateChartDownloadStatus
 })(PlotContainer);

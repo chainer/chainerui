@@ -74,7 +74,7 @@ class NavigationBar extends React.Component {
     const logsLimitOptionElems = createLogsLimitOptionElems(logsLimitOptions);
     const {
       pollingRate,
-      chartSize = {},
+      chartSize,
       logsLimit,
       isResultNameAlignRight
     } = this.props.globalConfig;

@@ -6,19 +6,12 @@ import os
 import signal
 
 from chainerui import _version
-from chainerui import CHAINERUI_ENV
 from chainerui import create_app
 from chainerui import db
 from chainerui import logger
 from chainerui.logging import set_loglevel
 from chainerui.models.project import Project
 from chainerui.utils import db_revision
-
-
-def _setup_db(db_url):
-    test_mode = CHAINERUI_ENV == 'test'
-    echo = CHAINERUI_ENV == 'development'
-    return db.setup(url=db_url, test_mode=test_mode, echo=echo)
 
 
 def _check_db_revision():
@@ -57,7 +50,7 @@ def _show_banner_debug(app, listener):
 
 def server_handler(args):
     """server_handler."""
-    if not _setup_db(args.db):
+    if not db.setup(url=args.db, echo=args.db_echo):
         return
     if not _check_db_revision():
         return
@@ -105,7 +98,7 @@ def db_handler(args):
             db.init_db()
         return
 
-    if not _setup_db(args.db):
+    if not db.setup(url=args.db, echo=args.db_echo):
         return
 
     if args.type == 'status':
@@ -126,7 +119,7 @@ def db_handler(args):
 
 def project_create_handler(args):
     """project_create_handler."""
-    if not _setup_db(args.db):
+    if not db.setup(url=args.db, echo=args.db_echo):
         return
     if not _check_db_revision():
         return
@@ -150,6 +143,9 @@ def create_parser():
     parser.add_argument(
         '--db', help='database resource address',
         default=os.getenv('CHAINERUI_DB_URL', default=None))
+    parser.add_argument(
+        '--db-echo', help='enable database enginge logging',
+        action='store_true')
     subparsers = parser.add_subparsers()
 
     # chainerui server

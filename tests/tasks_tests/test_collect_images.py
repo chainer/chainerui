@@ -4,28 +4,12 @@ import os
 
 import pytest
 
-from chainerui import CHAINERUI_ENV
-from chainerui import db
 from chainerui.models.result import Result
 from chainerui.tasks import collect_images
-from tests.helpers import NotInTestEnvironmentException
-
-
-@pytest.fixture(autouse=True, scope='module')
-def temp_db():
-    if not CHAINERUI_ENV == 'test':
-        raise NotInTestEnvironmentException(
-            'set environment variable CHAINERUI_ENV=test '
-            'when you run this test'
-        )
-    db.init_db()
 
 
 @pytest.fixture(autouse=True, scope='function')
-def result_path(func_dir):
-    db.setup(test_mode=True)
-    db.upgrade()
-
+def result_path(func_dir, func_db):
     info_path = os.path.join(func_dir, '.chainerui_assets')
 
     with open(os.path.join(func_dir, 'img1_1.png'), 'w') as f:
@@ -56,10 +40,7 @@ def result_path(func_dir):
     with open(info_path, 'w') as f:
         json.dump(test_data, f)
 
-    yield(func_dir)
-
-    db.session.remove()
-    db.remove_db()
+    return func_dir
 
 
 def _get_dummy_result(path):

@@ -57,7 +57,7 @@ const mapStateToProps = (state) => {
     fetchState,
     config
   } = state;
-  const { projects = {} } = entities;
+  const { projects } = entities;
   const globalConfig = config.global;
   return { projects, fetchState, globalConfig };
 };
