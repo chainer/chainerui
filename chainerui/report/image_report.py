@@ -1,6 +1,7 @@
 import datetime
 import hashlib
 import os
+import time
 import warnings
 
 import chainer
@@ -35,8 +36,9 @@ def report(images, out, name, ch_axis=1, row=0, mode=None, batched=True):
         stuck_image = _get_stuck_image(images, ch_axis)
 
     now = datetime.datetime.now()
-    filename = '{}_{}.png'.format(
-        name, _get_hash('{}'.format(now.timestamp())))
+    # ts = now.timestamp(), but Python2.7 does not support the method.
+    ts = time.mktime(now.timetuple()) + now.microsecond/1e6
+    filename = '{}_{}.png'.format(name, _get_hash('{}'.format(ts)))
     filepath = os.path.join(out, filename)
     _save_image(_normalize_8bit(stuck_image), filepath, mode=mode)
 

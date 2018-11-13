@@ -15,7 +15,7 @@ def clear_cache():
     summary._chainerui_asset_observer.cache = []
 
 
-@unittest.skipUnless(image_report.check_available(), 'Pillow is not installed')
+@unittest.skipUnless(image_report._available, 'Pillow is not installed')
 def test_summay_image(func_dir):
     img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
     summary.image(img, func_dir, epoch=10)
@@ -52,7 +52,7 @@ def test_summay_image(func_dir):
     assert saved_filename2.endswith('.png')
 
 
-@unittest.skipUnless(image_report.check_available(), 'Pillow is not installed')
+@unittest.skipUnless(image_report._available, 'Pillow is not installed')
 def test_summay_reporter(func_dir):
     img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
     img2 = np.copy(img)
@@ -116,7 +116,7 @@ def test_summay_reporter(func_dir):
     assert saved_filename5.endswith('.png')
 
 
-@unittest.skipUnless(image_report.check_available(), 'Pillow is not installed')
+@unittest.skipUnless(image_report._available, 'Pillow is not installed')
 def test_summay_reporter_empty(func_dir):
     with summary.reporter(func_dir, epoch=10):
         pass
