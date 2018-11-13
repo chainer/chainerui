@@ -18,10 +18,15 @@ const emptyStr = '-';
 const ExperimentsTable = (props) => {
   const {
     project,
-    results, stats,
+    results,
+    resultsStatus,
+    stats,
     projectConfig,
     globalConfig,
-    onResultsConfigSelectUpdate, onResultUpdate, onCommandSubmit,
+    onResultsConfigSelectUpdate,
+    onResultUpdate,
+    onResultSelect,
+    onCommandSubmit,
     onTableExpandedUpdate
   } = props;
   const { argKeys, logKeys } = stats;
@@ -150,6 +155,19 @@ const ExperimentsTable = (props) => {
           onCommandSubmit={onCommandSubmit}
         />
       )}
+      getTrProps={(state, rowInfo) => {
+        const resultId = rowInfo && rowInfo.original.id;
+        const resultStatus = resultsStatus[resultId] || {};
+        return {
+          className: resultStatus.selected ? 'result-highlight' : null,
+          onMouseEnter: () => {
+            onResultSelect(project.id, resultId, true);
+          },
+          onMouseLeave: () => {
+            onResultSelect(project.id, resultId, false);
+          }
+        };
+      }}
     />
   );
 };
@@ -157,13 +175,19 @@ const ExperimentsTable = (props) => {
 ExperimentsTable.propTypes = {
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
+  resultsStatus: uiPropTypes.resultsStatus,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   stats: uiPropTypes.stats.isRequired,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
+  onResultSelect: PropTypes.func.isRequired,
   onCommandSubmit: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired
+};
+
+ExperimentsTable.defaultProps = {
+  resultsStatus: {}
 };
 
 export default ExperimentsTable;

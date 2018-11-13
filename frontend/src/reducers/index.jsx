@@ -124,14 +124,14 @@ const assetsReducer = (state = [], action) => {
 };
 
 
-const entities = combineReducers({
+const entitiesReducer = combineReducers({
   projects: projectsReducer,
   results: resultsReducer,
   assets: assetsReducer
 });
 
 
-const fetchState = (state = {}, action) => {
+const fetchStateReducer = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.RESULT_LIST_REQUEST:
     case ActionTypes.RESULT_LIST_SUCCESS:
@@ -162,7 +162,29 @@ const fetchState = (state = {}, action) => {
   }
 };
 
-const projectsStatus = (state = {}, action) => {
+
+const resultsStatusReducer = (state = {}, action) => {
+  const { resultId } = action;
+  const resultStatus = state[resultId] || {};
+
+  switch (action.type) {
+    case ActionTypes.RESULT_SELECT_UPDATE:
+      if (resultId == null) {
+        return state;
+      }
+      return {
+        ...state,
+        [Number(resultId)]: {
+          ...resultStatus,
+          selected: action.selected
+        }
+      };
+    default:
+      return state;
+  }
+};
+
+const projectsStatusReducer = (state = {}, action) => {
   const { projectId } = action;
   if (!projectId) {
     return state;
@@ -184,7 +206,8 @@ const projectsStatus = (state = {}, action) => {
       return {
         ...state,
         [projectId]: {
-          ...projectStatus
+          ...projectStatus,
+          resultsStatus: resultsStatusReducer(projectStatus.resultsStatus, action)
         }
       };
   }
@@ -226,13 +249,13 @@ const stats = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, action) => {
   }
 };
 
-const status = combineReducers({
-  projectsStatus,
+const statusReducer = combineReducers({
+  projectsStatus: projectsStatusReducer,
   stats
 });
 
 
-const axes = (state = defaultAxisConfig, action) => {
+const axesConfigReducer = (state = defaultAxisConfig, action) => {
   const {
     axisName,
     logKey,
@@ -315,7 +338,7 @@ const axes = (state = defaultAxisConfig, action) => {
 };
 
 
-const resultsConfigWithoutResult = (state, resultId) => {
+const resultsConfigWithoutResultReducer = (state, resultId) => {
   if (!Number.isInteger(resultId)) {
     return state;
   }
@@ -329,7 +352,7 @@ const resultsConfigWithoutResult = (state, resultId) => {
   return newState;
 };
 
-const resultsConfig = (state = {}, action) => {
+const resultsConfigReducer = (state = {}, action) => {
   const { resultId } = action;
   const resultConfig = state[resultId] || {};
   switch (action.type) {
@@ -348,19 +371,19 @@ const resultsConfig = (state = {}, action) => {
       if (action.response && action.response.result) {
         const { result } = action.response;
         if (result.isUnregistered) {
-          return resultsConfigWithoutResult(state, result.id);
+          return resultsConfigWithoutResultReducer(state, result.id);
         }
       }
       return state;
     case ActionTypes.RESULT_DELETE_SUCCESS:
-      return resultsConfigWithoutResult(state, resultId);
+      return resultsConfigWithoutResultReducer(state, resultId);
     default:
       return state;
   }
 };
 
 
-const lines = (state = {}, action) => {
+const linesConfigReducer = (state = {}, action) => {
   const { line, lineKey } = action;
   switch (action.type) {
     case ActionTypes.LINES_CONFIG_LINE_UPDATE:
@@ -376,7 +399,7 @@ const lines = (state = {}, action) => {
   }
 };
 
-const tableState = (state = {}, action) => {
+const tableStateReducer = (state = {}, action) => {
   const {
     expanded = {},
     hiddenLogKeys = [],
@@ -400,7 +423,7 @@ const tableState = (state = {}, action) => {
 };
 
 
-const projectsConfig = (state = {}, action) => {
+const projectsConfigReducer = (state = {}, action) => {
   const { projectId } = action;
 
   if (projectId) {
@@ -416,10 +439,10 @@ const projectsConfig = (state = {}, action) => {
     return {
       ...state,
       [projectId]: {
-        axes: axes(projectConfig.axes, action),
-        resultsConfig: resultsConfig(projectConfig.resultsConfig, action),
-        lines: lines(projectConfig.lines, action),
-        tableState: tableState(projectConfig.tableState, action)
+        axes: axesConfigReducer(projectConfig.axes, action),
+        resultsConfig: resultsConfigReducer(projectConfig.resultsConfig, action),
+        lines: linesConfigReducer(projectConfig.lines, action),
+        tableState: tableStateReducer(projectConfig.tableState, action)
       }
     };
   }
@@ -435,7 +458,7 @@ const defaultGlobalState = {
   isResultNameAlignRight: false
 };
 
-const global = (state = defaultGlobalState, action) => {
+const globalConfigReducer = (state = defaultGlobalState, action) => {
   const { pollingRate, chartSize, logsLimit, isResultNameAlignRight } = action;
   switch (action.type) {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
@@ -464,9 +487,9 @@ const global = (state = defaultGlobalState, action) => {
 };
 
 
-const config = combineReducers({
-  projectsConfig,
-  global
+const configReducer = combineReducers({
+  projectsConfig: projectsConfigReducer,
+  global: globalConfigReducer
 });
 
 
@@ -489,11 +512,11 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  entities,
+  entities: entitiesReducer,
   requests: requestsReducer,
-  fetchState,
-  status,
-  config: persistReducer(persistConfig, config),
+  fetchState: fetchStateReducer,
+  status: statusReducer,
+  config: persistReducer(persistConfig, configReducer),
   routing: routerReducer
 });
 
