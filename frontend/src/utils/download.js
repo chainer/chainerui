@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import html2canvas from 'html2canvas';
+import renderPyTmpl from './render.py.tmpl';
 
 export const generateDownloadFileName = (exportName, ext) => (
   `${exportName}_${moment().format('YYYYMMDDHHmmss')}.${ext}`
@@ -14,10 +15,11 @@ export const downloadFile = (fileName, dataURL) => {
   downloadAnchorNode.remove();
 };
 
-export const downloadObjectAsJson = (exportObj, exportName) => {
-  const fileName = generateDownloadFileName(exportName, 'json');
-  const dataURL = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(exportObj))}`;
-  downloadFile(fileName, dataURL);
+export const downloadObjectAsCode = (exportObj, exportName) => {
+  const fileName = generateDownloadFileName(exportName, 'py');
+  const renderPy = renderPyTmpl.replace(/\${rendered_log}/, JSON.stringify(exportObj, null, '  '));
+  const blobUrl = URL.createObjectURL(new Blob([renderPy], { type: 'text/plain' }));
+  downloadFile(fileName, blobUrl);
 };
 
 export const downloadChartAsPng = async (chartDOMNode, exportName) => {

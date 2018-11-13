@@ -18,9 +18,10 @@ import {
   formatLogValue,
   getSelectedResults, getSelectedLogKeys,
   getLogData,
+  getPlotLogData,
   createLine,
   getUrlSafeProjectNameFull,
-  downloadObjectAsJson,
+  downloadObjectAsCode,
   downloadChartAsPng
 } from '../utils';
 import { CHART_DOWNLOAD_STATUS } from '../constants';
@@ -50,7 +51,7 @@ class LogVisualizer extends React.Component {
     this.chart = null;
 
     this.chartRef = this.chartRef.bind(this);
-    this.handleClickDownloadJSON = this.handleClickDownloadJSON.bind(this);
+    this.handleClickDownloadCode = this.handleClickDownloadCode.bind(this);
     this.handleClickDownloadPNG = this.handleClickDownloadPNG.bind(this);
   }
 
@@ -70,11 +71,11 @@ class LogVisualizer extends React.Component {
     this.chart = element;
   }
 
-  handleClickDownloadJSON() {
+  handleClickDownloadCode() {
     const { project, results, stats, projectConfig } = this.props;
-    const data = getLogData(results, stats, projectConfig);
+    const data = getPlotLogData(results, stats, projectConfig);
     const exportName = getUrlSafeProjectNameFull(project);
-    downloadObjectAsJson(data, exportName);
+    downloadObjectAsCode(data, exportName);
   }
 
   handleClickDownloadPNG() {
@@ -274,8 +275,8 @@ class LogVisualizer extends React.Component {
             />
           </div>
         </div>
-        <Button size="sm" className="m-1" onClick={this.handleClickDownloadJSON}>
-          <span className="mx-1 oi oi-data-transfer-download" />json
+        <Button size="sm" className="m-1" onClick={this.handleClickDownloadCode}>
+          <span className="mx-1 oi oi-data-transfer-download" />code
         </Button>
         <Button size="sm" className="m-1" onClick={this.handleClickDownloadPNG}>
           <span className="mx-1 oi oi-data-transfer-download" />png
