@@ -4,7 +4,7 @@ import { persistReducer } from 'redux-persist';
 import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, defaultProjectStatus } from '../constants';
+import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, defaultProjectStatus, keyOptions } from '../constants';
 
 
 const projectsReducer = (state = {}, action) => {
@@ -190,8 +190,45 @@ const projectsStatus = (state = {}, action) => {
   }
 };
 
+const stats = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, action) => {
+  switch (action.type) {
+    case ActionTypes.RESULT_LIST_SUCCESS:
+      if (action.response && action.response.results) {
+        const resultsList = action.response.results;
+        const argKeySet = {};
+        const logKeySet = {};
+        resultsList.forEach((result) => {
+          result.args.forEach((arg) => { argKeySet[arg.key] = true; });
+          result.logs.forEach((log) => {
+            log.logItems.forEach((logItem) => {
+              logKeySet[logItem.key] = true;
+            });
+          });
+        });
+        const newStats = {
+          argKeys: Object.keys(argKeySet),
+          logKeys: Object.keys(logKeySet).sort(),
+          xAxisKeys: keyOptions.filter((key) => key in logKeySet)
+        };
+        Object.keys(newStats).forEach((key) => {
+          if (`${newStats[key]}` === `${state[key]}`) {
+            newStats[key] = state[key];
+          }
+        });
+        if (Object.keys(newStats).some((k) => newStats[k] !== state[k])) {
+          return newStats;
+        }
+        return state;
+      }
+      return state;
+    default:
+      return state;
+  }
+};
+
 const status = combineReducers({
-  projectsStatus
+  projectsStatus,
+  stats
 });
 
 
