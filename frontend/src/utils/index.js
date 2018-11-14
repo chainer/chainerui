@@ -176,6 +176,48 @@ export const getLogData = (results, stats, projectConfig) => {
   return data;
 };
 
+export const getPlotLogData = (results, stats, projectConfig) => {
+  const { axes, resultsConfig = {} } = projectConfig;
+  const { xAxisKeys } = stats;
+  const {
+    xAxis = { axisName: 'xAxis' },
+    yLeftAxis = { axisName: 'yLeftAxis' },
+    yRightAxis = { axisName: 'yRightAxis' }
+  } = axes || {};
+  const { xAxisKey = xAxisKeys[0] } = xAxis;
+
+  const selectedResults = getSelectedResults(results, resultsConfig);
+  const selectedLogKeys = {
+    yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
+    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
+  };
+  const plotConfig = {
+    xAxis: xAxisKey,
+    yLeftAxis: selectedLogKeys.yLeftAxis,
+    yRightAxis: selectedLogKeys.yRightAxis,
+    resultIds: selectedResults
+  };
+
+  const allData = {};
+  Object.keys(results).forEach((resultId) => {
+    const result = results[resultId];
+    const logs = result.logs || [];
+    const allLogs = logs.map((log) => {
+      const logDict = {};
+      log.logItems.forEach((logItem) => {
+        logDict[logItem.key] = logItem.value;
+      });
+      return logDict;
+    });
+    allData[result.id] = {
+      log: allLogs,
+      name: result.name || result.pathName
+    };
+  });
+
+  return { data: allData, config: plotConfig };
+};
+
 export const padDigits = (num, len) => {
   let str = `${num}`;
   while (str.length < len) {
