@@ -40,7 +40,6 @@ class Command(database.BASE):
         else:
             response = json.loads(self.response)
 
-        print(self)
         return {
             'id': self.id,
             'name': self.name,

@@ -41,7 +41,6 @@ class ResultAPI(MethodView):
             for result in results:
                 crawl_result(result, commit=False)
             rs = [r.serialize_with_sampled_logs(logs_limit) for r in results]
-            [print(r['commands']) for r in rs]
             db.session.commit()
 
             return jsonify({'results': rs})
