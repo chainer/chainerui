@@ -9,11 +9,11 @@ from chainerui.models.bindata import Bindata
 from chainerui import summary
 
 
-def collect_images(result, assets, force=False):
-    """collect images from meta file
+def collect_assets(result, assets, force=False):
+    """collect assets from meta file
 
-    Collecting images only when the metafile is updated. If number of images
-    are decreased, assets are reset and re-collect the images.
+    Collecting assets only when the metafile is updated. If number of assets
+    are decreased, assets are reset and re-collect the assets.
     """
     path_name = result.path_name
     info_path = os.path.join(path_name, summary.CHAINERUI_ASSETS_METAFILE_NAME)
