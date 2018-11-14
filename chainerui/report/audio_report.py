@@ -9,25 +9,36 @@ from chainerui.report.utils import get_hash
 from chainerui.report.utils import get_unixtime
 
 
-try:
-    import scipy.io.wavfile
+_write_wav = None
 
-    def scipy_write_wav(out, data, rate):
-        return scipy.io.wavfile.write(out, rate, data)
 
-    _write_wav = scipy_write_wav
-except (ImportError, TypeError):
+def _set_wav_writer():
+    writer = None
+    try:
+        import scipy.io.wavfile
+
+        def scipy_write_wav(out, data, rate):
+            return scipy.io.wavfile.write(out, rate, data)
+
+        writer = scipy_write_wav
+    except (ImportError, TypeError):
+        pass
+
+    if not writer:
+        return writer
     try:
         import librosa.output
 
         def librosa_write_wav(out, data, rate):
             return librosa.output.write_wav(out, data, rate)
 
-        _write_wav = librosa_write_wav
+        writer = librosa_write_wav
     except (ImportError, TypeError):
-        _write_wav = None
+        pass
+    return writer
 
 
+_write_wav = _set_wav_writer()
 _available = _write_wav is not None
 
 

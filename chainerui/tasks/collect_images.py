@@ -6,6 +6,7 @@ import os
 from chainerui import db
 from chainerui.models.asset import Asset
 from chainerui.models.bindata import Bindata
+from chainerui import summary
 
 
 def collect_images(result, assets, force=False):
@@ -15,7 +16,7 @@ def collect_images(result, assets, force=False):
     are decreased, assets are reset and re-collect the images.
     """
     path_name = result.path_name
-    info_path = os.path.join(path_name, '.chainerui_assets')
+    info_path = os.path.join(path_name, summary.CHAINERUI_ASSETS_METAFILE_NAME)
     start_idx = len(assets)
     if not os.path.isfile(info_path):
         return assets

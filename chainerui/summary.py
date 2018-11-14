@@ -7,11 +7,14 @@ import shutil
 from chainerui.utils import tempdir
 
 
+CHAINERUI_ASSETS_METAFILE_NAME = '.chainerui_assets'
+
+
 class _Summary(object):
 
     def __init__(self):
         self.cache = []
-        self.filename = '.chainerui_assets'
+        self.filename = CHAINERUI_ASSETS_METAFILE_NAME
 
     def add(self, value):
         self.cache.append(value)
@@ -46,13 +49,7 @@ class _Reporter(object):
             return
         from chainerui.report.image_report import report as _image
 
-        col_name = name
-        if col_name is None:
-            col_name = 'image_{:d}'.format(self.count)
-        if self.prefix is not None:
-            col_name = self.prefix + col_name
-        if col_name in self.images:
-            col_name += '_{:d}'.format(self.count)
+        col_name = self.get_col_name(name, 'image')
         filename, _ = _image(
             images, self.out, col_name, ch_axis, row, mode, batched)
         self.images[col_name] = filename
@@ -65,17 +62,19 @@ class _Reporter(object):
             return
         from chainerui.report.audio_report import report as _audio
 
-        col_name = name
-        if col_name is None:
-            col_name = 'audio_{:d}'.format(self.count)
-        if self.prefix is not None:
-            col_name = self.prefix + col_name
-        if col_name in self.audio:
-            col_name += '_{:d}'.format(self.count)
+        col_name = self.get_col_name(name, 'audio')
         filename, _ = _audio(audio, sample_rate, self.out, col_name)
         self.audios[col_name] = filename
 
         self.count += 1
+
+    def get_col_name(self, name, media_type):
+        col_name = name
+        if col_name is None:
+            col_name = '{}_{:d}'.format(media_type, self.count)
+        if self.prefix is not None:
+            col_name = self.prefix + col_name
+        return col_name
 
     def save(self):
         cached = False
@@ -83,7 +82,7 @@ class _Reporter(object):
             self.value['images'] = self.images
             cached = True
         if self.audios:
-            self.value['audio'] = self.audios
+            self.value['audios'] = self.audios
             cached = True
         if not cached:
             return
@@ -258,7 +257,7 @@ def audio(audio, sample_rate, out, name=None, **kwargs):
     col_name = name
     if col_name is None:
         col_name = 'audio'
-    filename, created_at = _audio(audio, sample_rate, out, name)
+    filename, created_at = _audio(audio, sample_rate, out, col_name)
 
     value = kwargs
     value['timestamp'] = created_at.isoformat()

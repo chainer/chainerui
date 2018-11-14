@@ -5,6 +5,7 @@ import pytest
 from six import string_types
 
 from chainerui.models.project import Project
+from chainerui import summary
 from chainerui.utils.commands_state import CommandsState
 from tests.helpers import assert_json_api
 
@@ -529,7 +530,8 @@ def test_get_assets(func_dir, project, app):
             }
         }
     ]
-    with open(os.path.join(path, '.chainerui_assets'), 'w') as f:
+    with open(os.path.join(
+            path, summary.CHAINERUI_ASSETS_METAFILE_NAME), 'w') as f:
         json.dump(image_info, f)
     open(os.path.join(path, 'iter_600_61b3a8fa.png'), 'w') .close()
     open(os.path.join(path, 'iter_600_c15c042b.png'), 'w') .close()
