@@ -4,7 +4,7 @@ import { persistReducer } from 'redux-persist';
 import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, defaultProjectStatus } from '../constants';
+import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, defaultProjectStatus, keyOptions } from '../constants';
 
 
 const projectsReducer = (state = {}, action) => {
@@ -42,17 +42,39 @@ const projectsReducer = (state = {}, action) => {
   }
 };
 
+const mergeResult = (result, oldResult) => {
+  const newResult = { ...result };
+  ['args', 'commands', 'snapshots'].forEach((k) => {
+    const data = oldResult[k];
+    if (data && data.length === newResult[k].length) {
+      newResult[k] = data; // eslint-disable-line no-param-reassign
+    }
+  });
+  if (oldResult.logs && oldResult.logs.length === newResult.logs.length) {
+    if (oldResult.logModifiedAt === newResult.logModifiedAt) {
+      newResult.logs = oldResult.logs; // eslint-disable-line no-param-reassign
+    }
+  }
+  const modified = Object.keys(newResult).some((k) => newResult[k] !== oldResult[k]);
+  return modified ? newResult : oldResult;
+};
 
 const resultsReducer = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.RESULT_LIST_SUCCESS:
       if (action.response && action.response.results) {
         const resultList = action.response.results;
+        const resultIds = resultList.map((result) => result.id);
+        let modified = Object.keys(state).length !== resultIds.length;
         const results = {};
         resultList.forEach((result) => {
-          results[result.id] = result;
+          const oldResult = state[result.id] || {};
+          const newResult = mergeResult(result, oldResult);
+          const resultModified = oldResult !== newResult;
+          results[result.id] = newResult;
+          modified = modified || resultModified;
         });
-        return results;
+        return modified ? results : state;
       }
       return state;
     case ActionTypes.RESULT_SUCCESS:
@@ -208,8 +230,45 @@ const projectsStatusReducer = (state = {}, action) => {
   }
 };
 
+const statsReducer = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, action) => {
+  switch (action.type) {
+    case ActionTypes.RESULT_LIST_SUCCESS:
+      if (action.response && action.response.results) {
+        const resultsList = action.response.results;
+        const argKeySet = {};
+        const logKeySet = {};
+        resultsList.forEach((result) => {
+          result.args.forEach((arg) => { argKeySet[arg.key] = true; });
+          result.logs.forEach((log) => {
+            log.logItems.forEach((logItem) => {
+              logKeySet[logItem.key] = true;
+            });
+          });
+        });
+        const newStats = {
+          argKeys: Object.keys(argKeySet),
+          logKeys: Object.keys(logKeySet).sort(),
+          xAxisKeys: keyOptions.filter((key) => key in logKeySet)
+        };
+        Object.keys(newStats).forEach((key) => {
+          if (`${newStats[key]}` === `${state[key]}`) {
+            newStats[key] = state[key];
+          }
+        });
+        if (Object.keys(newStats).some((k) => newStats[k] !== state[k])) {
+          return newStats;
+        }
+        return state;
+      }
+      return state;
+    default:
+      return state;
+  }
+};
+
 const statusReducer = combineReducers({
-  projectsStatus: projectsStatusReducer
+  projectsStatus: projectsStatusReducer,
+  stats: statsReducer
 });
 
 
