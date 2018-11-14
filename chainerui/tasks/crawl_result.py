@@ -94,6 +94,7 @@ def crawl_result(result, force=False, commit=True):
     # registered commands can be get response, so need to update
     current_cmd_idx = len(result.commands)
     if len(crawled_result['commands']) < current_cmd_idx:
+        current_cmd_idx = 0
         result.commands = []
         result.snapshots = []
     for cmd in crawled_result['commands'][current_cmd_idx:]:
