@@ -23,6 +23,9 @@ class Command(database.BASE):
         self.request = json.dumps(request, indent=4)
         self.response = json.dumps(response, indent=4)
 
+    def update(self, response=None):
+        self.response = json.dumps(response, indent=4)
+
     def __repr__(self):
         return '<Command id: %r />' % (self.id)
 
@@ -39,7 +42,6 @@ class Command(database.BASE):
             response = None
         else:
             response = json.loads(self.response)
-
         return {
             'id': self.id,
             'name': self.name,

@@ -90,18 +90,29 @@ def crawl_result(result, force=False, commit=True):
     if result.args is None:
         result.args = Argument(json.dumps(crawled_result['args']))
 
-    result.commands = []
-    result.snapshots = []
-
-    for cmd in crawled_result['commands']:
+    # commands list includes new commands and already registered commands.
+    # registered commands can be get response, so need to update
+    current_cmd_idx = len(result.commands)
+    if len(crawled_result['commands']) < current_cmd_idx:
+        result.commands = []
+        result.snapshots = []
+    for cmd in crawled_result['commands'][current_cmd_idx:]:
         result.commands.append(Command(**cmd))
+    for i, cmd in enumerate(crawled_result['commands'][:current_cmd_idx]):
+        result.commands[i].update(cmd.get('response', None))
 
-    for snapshot in crawled_result['snapshots']:
+    # snapshots file list are sorted but not natural order, for example,
+    # 'iter_900' set latter than 'iter_1000', so need to check the file
+    # is registered or not.
+    registered_snapshot_keys = [ss.iteration for ss in result.snapshots]
+    for i, snapshot in enumerate(crawled_result['snapshots']):
         number_str = snapshot.split('snapshot_iter_')[1]
-        if is_numberable(number_str):
-            result.snapshots.append(
-                Snapshot(snapshot, int(number_str))
-            )
+        if not is_numberable(number_str):
+            continue
+        number = int(number_str)
+        if number in registered_snapshot_keys:
+            continue
+        result.snapshots.append(Snapshot(snapshot, number))
 
     result.updated_at = datetime.datetime.now()
     if commit:
