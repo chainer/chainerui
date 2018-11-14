@@ -34,11 +34,12 @@ def collect_images(result, assets, force=False):
         assets = []
 
     for base_info in info_list[start_idx:]:
-        image_path = base_info.pop('images')
+        asset_path = base_info.pop('images', {})
+        asset_path.update(base_info.pop('audios', {}))
         asset = Asset.create(
             result_id=result.id, summary=base_info,
             file_modified_at=file_modified_at)
-        for key, path in image_path.items():
+        for key, path in asset_path.items():
             with open(os.path.join(path_name, path), 'rb') as f:
                 data = f.read()
             content = Bindata(
