@@ -94,7 +94,8 @@ Save log chart
 
 .. image:: ../../images/chart_save.png
 
-Save log chart as PNG or JSON, download will be started.
+* ``PNG``: Save log chart as PNG
+* ``Code``: Download Python script. Run the downloaded script then get a chart image using Matplotlib. Lines plotted or not are followed by configuration on Web UI. The script has all log data as JSON.
 
 .. _ui_edit_line:
 
