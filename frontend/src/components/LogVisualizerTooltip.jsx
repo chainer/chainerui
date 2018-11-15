@@ -5,12 +5,13 @@ import {
 } from '../utils';
 
 
-const renderItems = (payload, formatter) => (
+const renderItems = (payload, formatter, anySelected) => (
   payload.filter((entry) => entry.value != null && entry.strokeOpacity !== '0').map((entry) => {
-    const { dataKey, color, value } = entry;
+    const { dataKey, color, value, strokeOpacity } = entry;
+    const unSelected = !anySelected || strokeOpacity < 1;
     return (
       <li
-        className="list-group-item py-0"
+        className={`list-group-item py-0 ${unSelected ? '' : 'result-highlight'}`}
         key={dataKey}
         style={{ borderLeft: `3px solid ${color}` }}
       >
@@ -21,7 +22,7 @@ const renderItems = (payload, formatter) => (
 );
 
 const LogVisualizerTooltip = (props) => {
-  const { xAxisKey, label, payload } = props;
+  const { xAxisKey, label, payload, anySelected } = props;
 
   if (!payload || payload.length === 0) {
     return null;
@@ -36,7 +37,7 @@ const LogVisualizerTooltip = (props) => {
         <h6 className="cart-title my-2">{labelFormatter(label)}</h6>
       </div>
       <ul className="list-group list-group-flush small">
-        {renderItems(payload, formatter)}
+        {renderItems(payload, formatter, anySelected)}
       </ul>
     </div>
   );
@@ -44,6 +45,7 @@ const LogVisualizerTooltip = (props) => {
 
 LogVisualizerTooltip.propTypes = {
   xAxisKey: PropTypes.string,
+  anySelected: PropTypes.bool.isRequired,
   // passed by reactstrap Tooltip
   label: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   // passed by reactstrap Tooltip

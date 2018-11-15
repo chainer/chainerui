@@ -260,7 +260,9 @@ class LogVisualizer extends React.Component {
               />
               <CartesianGrid strokeDasharray="3 3" />
               {lineElems}
-              <Tooltip content={<LogVisualizerTooltip xAxisKey={xAxisKey} />} />
+              <Tooltip
+                content={<LogVisualizerTooltip xAxisKey={xAxisKey} anySelected={anySelected} />}
+              />
             </LineChart>
           </ResponsiveContainer>
           <div>
