@@ -281,7 +281,7 @@ const axesConfigReducer = (state = defaultAxisConfig, action) => {
     rangeType = 'auto',
     isMin, rangeNumber
   } = action;
-  const axisConfig = state[axisName] || { axisName };
+  const axisConfig = state[axisName] || {};
   const { logKeysConfig = {}, scaleRange = {} } = axisConfig;
   const idx = isMin ? 0 : 1;
   const rangeConfig = scaleRange[scale] || {};

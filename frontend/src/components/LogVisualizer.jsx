@@ -99,9 +99,9 @@ class LogVisualizer extends React.Component {
     const { axes, resultsConfig, lines } = projectConfig;
     const { logKeys, xAxisKeys } = stats;
     const {
-      xAxis = { axisName: 'xAxis' },
-      yLeftAxis = { axisName: 'yLeftAxis' },
-      yRightAxis = { axisName: 'yRightAxis' }
+      xAxis = {},
+      yLeftAxis = {},
+      yRightAxis = {}
     } = axes;
     const { xAxisKey = xAxisKeys[0] } = xAxis;
     const selectedResults = getSelectedResults(results, resultsConfig);

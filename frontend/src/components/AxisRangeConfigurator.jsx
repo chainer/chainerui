@@ -14,14 +14,18 @@ class AxisRangeConfigurator extends React.Component {
   }
 
   handleRangeTypeChange(e) {
-    const { projectId, axisConfig, isMin, onAxisConfigScaleRangeTypeUpdate } = this.props;
-    const { axisName, scale = 'linear' } = axisConfig;
+    const {
+      projectId, axisName, axisConfig, isMin, onAxisConfigScaleRangeTypeUpdate
+    } = this.props;
+    const { scale = 'linear' } = axisConfig;
     onAxisConfigScaleRangeTypeUpdate(projectId, axisName, scale, isMin, e.target.value);
   }
 
   handleNumberChange(e) {
-    const { projectId, axisConfig, isMin, onAxisConfigScaleRangeNumberUpdate } = this.props;
-    const { axisName, scale = 'linear' } = axisConfig;
+    const {
+      projectId, axisName, axisConfig, isMin, onAxisConfigScaleRangeNumberUpdate
+    } = this.props;
+    const { scale = 'linear' } = axisConfig;
 
     let rangeNumber = null;
     if (e.target.value) {
@@ -104,6 +108,7 @@ class AxisRangeConfigurator extends React.Component {
 
 AxisRangeConfigurator.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
+  axisName: uiPropTypes.axisName.isRequired,
   axisConfig: uiPropTypes.axisConfig.isRequired,
   isMin: PropTypes.bool.isRequired,
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
