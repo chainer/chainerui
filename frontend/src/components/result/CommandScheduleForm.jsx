@@ -6,9 +6,9 @@ import {
 import { SCHEDULE_NOW, SCHEDULE_CUSTOM } from '../../constants';
 
 
-class SnapshotTakeForm extends React.Component {
-  constructor() {
-    super();
+class CommandScheduleForm extends React.Component {
+  constructor(props) {
+    super(props);
 
     this.handleScheduleTypeChange = this.handleScheduleTypeChange.bind(this);
     this.handleScheduleValueChange = this.handleScheduleValueChange.bind(this);
@@ -85,7 +85,7 @@ class SnapshotTakeForm extends React.Component {
   }
 }
 
-SnapshotTakeForm.propTypes = {
+CommandScheduleForm.propTypes = {
   scheduleType: PropTypes.oneOf([SCHEDULE_NOW, SCHEDULE_CUSTOM]).isRequired,
   schedule: PropTypes.shape({
     value: PropTypes.number,
@@ -95,8 +95,5 @@ SnapshotTakeForm.propTypes = {
   onScheduleChange: PropTypes.func.isRequired
 };
 
-SnapshotTakeForm.defaultProps = {
-};
-
-export default SnapshotTakeForm;
+export default CommandScheduleForm;
 

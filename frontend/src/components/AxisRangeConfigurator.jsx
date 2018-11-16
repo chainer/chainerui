@@ -2,10 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Col, Label, Input } from 'reactstrap';
 
+import * as uiPropTypes from '../store/uiPropTypes';
+
 
 class AxisRangeConfigurator extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.handleRangeTypeChange = this.handleRangeTypeChange.bind(this);
     this.handleNumberChange = this.handleNumberChange.bind(this);
@@ -101,23 +103,11 @@ class AxisRangeConfigurator extends React.Component {
 }
 
 AxisRangeConfigurator.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  axisConfig: PropTypes.shape({
-    axisName: PropTypes.string.isRequired,
-    scale: PropTypes.string,
-    scaleRange: PropTypes.objectOf(
-      PropTypes.shape({
-        rangeTypes: PropTypes.arrayOf(PropTypes.string),
-        range: PropTypes.arrayOf(PropTypes.number)
-      })
-    )
-  }).isRequired,
+  projectId: uiPropTypes.projectId.isRequired,
+  axisConfig: uiPropTypes.axisConfig.isRequired,
   isMin: PropTypes.bool.isRequired,
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired
-};
-
-AxisRangeConfigurator.defaultProps = {
 };
 
 export default AxisRangeConfigurator;

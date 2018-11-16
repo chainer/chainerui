@@ -41,6 +41,15 @@
   overflow: auto;
 }
 
+.log-visualizer-tooltip {
+  max-width: 300px;
+}
+
+.plot-hidden {
+  position: absolute;
+  left: -9999px;
+}
+
 .ReactTable {
   display: table;
 }
@@ -49,4 +58,8 @@
   width: 100%;
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+.result-highlight {
+  background-color: #fffbcc;
 }

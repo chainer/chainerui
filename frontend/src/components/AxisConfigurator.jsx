@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Collapse } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import AxisScaleSelector from './AxisScaleSelector';
 import AxisRangeConfigurator from './AxisRangeConfigurator';
 
@@ -70,25 +72,17 @@ class AxisConfigurator extends React.Component {
 }
 
 AxisConfigurator.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  axisConfig: PropTypes.shape({
-    axisName: PropTypes.string.isRequired,
-    scale: PropTypes.string,
-    scaleRange: PropTypes.objectOf(
-      PropTypes.shape({
-        rangeTypes: PropTypes.arrayOf(PropTypes.string),
-        range: PropTypes.arrayOf(PropTypes.number)
-      })
-    )
-  }).isRequired,
+  projectId: uiPropTypes.projectId.isRequired,
+  axisConfig: uiPropTypes.axisConfig.isRequired,
+  onChangeScale: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
+  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ]),
-  onChangeScale: PropTypes.func.isRequired,
-  onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
-  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired
+  ])
 };
+
 AxisConfigurator.defaultProps = {
   children: null
 };

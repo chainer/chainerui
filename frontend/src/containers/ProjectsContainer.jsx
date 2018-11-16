@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Row, Col } from 'reactstrap';
+
+import * as uiPropTypes from '../store/uiPropTypes';
 import {
   getProjectList, updateProject, deleteProject,
   updateGlobalPollingRate,
@@ -55,17 +57,15 @@ const mapStateToProps = (state) => {
     fetchState,
     config
   } = state;
-  const { projects = {} } = entities;
+  const { projects } = entities;
   const globalConfig = config.global;
   return { projects, fetchState, globalConfig };
 };
 
 ProjectsContainer.propTypes = {
-  projects: PropTypes.objectOf(PropTypes.any).isRequired,
-  fetchState: PropTypes.shape({
-    resultList: PropTypes.string
-  }).isRequired,
-  globalConfig: PropTypes.objectOf(PropTypes.any).isRequired,
+  projects: uiPropTypes.projects.isRequired,
+  fetchState: uiPropTypes.fetchState.isRequired,
+  globalConfig: uiPropTypes.globalConfig.isRequired,
   getProjectList: PropTypes.func.isRequired,
   updateProject: PropTypes.func.isRequired,
   deleteProject: PropTypes.func.isRequired,

@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup, Label, Input } from 'reactstrap';
 
+import * as uiPropTypes from '../store/uiPropTypes';
+
 
 class AxisLogKeySelectorRow extends React.Component {
   constructor(props) {
@@ -33,9 +35,7 @@ class AxisLogKeySelectorRow extends React.Component {
 
 AxisLogKeySelectorRow.propTypes = {
   logKey: PropTypes.string.isRequired,
-  logKeyConfig: PropTypes.shape({
-    selected: PropTypes.bool
-  }),
+  logKeyConfig: uiPropTypes.logKeyConfig,
   onLogKeySelectToggle: PropTypes.func.isRequired
 };
 

@@ -106,6 +106,10 @@ module.exports = {
             name: '[name].[ext]'
           }
         }
+      },
+      {
+        test: /\.tmpl$/,
+        use: 'raw-loader'
       }
     ]
   },

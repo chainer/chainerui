@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
+import * as uiPropTypes from '../../store/uiPropTypes';
 
 
 const createSnapshotRowElems = (snapshots) => snapshots.sort((a, b) =>
@@ -35,13 +36,7 @@ const Snapshots = (props) => {
 };
 
 Snapshots.propTypes = {
-  snapshots: PropTypes.arrayOf(PropTypes.shape({
-    iteration: PropTypes.number,
-    name: PropTypes.string
-  })).isRequired
-};
-
-Snapshots.defaultProps = {
+  snapshots: uiPropTypes.snapshots.isRequired
 };
 
 export default Snapshots;

@@ -1,8 +1,6 @@
 import json
 from mock import MagicMock
 import os
-import shutil
-import tempfile
 import unittest
 import warnings
 
@@ -11,18 +9,10 @@ import numpy as np
 from chainerui.extensions import image_reporter_extension
 from chainerui.extensions.image_reporter_extension import ImageReport
 from chainerui import summary
+from tests.conftest import TempDirTestCase
 
 
-class TestImageReport(unittest.TestCase):
-
-    def setUp(self):
-        test_dir = tempfile.mkdtemp(prefix='chainerui_test_imgreport')
-        self._dir = test_dir
-
-    def tearDown(self):
-        summary.chainerui_image_observer.observation = {}
-        if os.path.exists(self._dir):
-            shutil.rmtree(self._dir)
+class TestImageReport(TempDirTestCase):
 
     def _make_trainer_mock(self, epoch, iteration):
         updater = MagicMock()
@@ -30,7 +20,7 @@ class TestImageReport(unittest.TestCase):
         updater.epoch_detail = epoch
         updater.iteration = iteration
         trainer = MagicMock()
-        trainer.out = self._dir
+        trainer.out = self.dir
         trainer.updater = updater
         return trainer
 
@@ -99,20 +89,20 @@ class TestImageReport(unittest.TestCase):
         target(trainer)
         assert len(target._infos) == 1
         png1_name = 'iter_100_%s.png' % target._get_hash('name1')
-        png1_path = os.path.join(self._dir, png1_name)
+        png1_path = os.path.join(self.dir, png1_name)
         assert os.path.exists(png1_path)
         loaded_img1 = Image.open(png1_path)
         expected_img1 = Image.fromarray(img1, mode='HSV').convert('RGB')
         assert self._equal_image(loaded_img1, expected_img1)
         png2_name = 'iter_100_%s.png' % target._get_hash('name2')
-        png2_path = os.path.join(self._dir, png2_name)
+        png2_path = os.path.join(self.dir, png2_name)
         assert os.path.exists(png2_path)
         loaded_img2 = Image.open(png2_path)
         expected_img2 = Image.fromarray(img2)
         assert self._equal_image(loaded_img2, expected_img2)
 
         # confirm metadata
-        info_path = os.path.join(self._dir, target._info_name)
+        info_path = os.path.join(self.dir, target._info_name)
         assert os.path.exists(info_path)
         with open(info_path, 'r') as f:
             info = json.load(f)
@@ -148,13 +138,13 @@ class TestImageReport(unittest.TestCase):
         target(trainer)
         assert len(target._infos) == 2
         png3_name = 'iter_200_%s.png' % target._get_hash('name1')
-        png3_path = os.path.join(self._dir, png3_name)
+        png3_path = os.path.join(self.dir, png3_name)
         assert os.path.exists(png3_path)
         loaded_img3 = Image.open(png3_path)
         expected_img3 = Image.fromarray(target._normalize_8bit(img3))
         assert self._equal_image(loaded_img3, expected_img3)
         png4_name = 'iter_200_%s.png' % target._get_hash('name2')
-        png4_path = os.path.join(self._dir, png4_name)
+        png4_path = os.path.join(self.dir, png4_name)
         assert os.path.exists(png4_path)
         loaded_img4 = Image.open(png4_path)
         expected_img4 = Image.fromarray(img2)
@@ -194,7 +184,7 @@ class TestImageReport(unittest.TestCase):
         target(trainer)
         assert len(target._infos) == 1
         png_name = 'iter_10_%s.png' % target._get_hash('test')
-        png_path = os.path.join(self._dir, png_name)
+        png_path = os.path.join(self.dir, png_name)
         assert os.path.exists(png_path)
         loaded_img = Image.open(png_path)
         expected_img = Image.fromarray(

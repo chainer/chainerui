@@ -15,7 +15,7 @@ sudo: false
 before_install:
   - pip install autopep8 hacking
   - pip install -U pytest pytest-cov coveralls
-  - pip install Pillow
+  - pip install Pillow matplotlib
   - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then pip install mock; fi
   - npm install -g npm@6
   - npm -v
@@ -27,8 +27,15 @@ install:
   - pip install -e .
 
 script:
+  # python style check
   - flake8
   - autopep8 -r . --global-config .pep8 --diff | tee check_autopep8
+  - test ! -s check_autopep8
+  # frontend style check
+  - pushd frontend
+  - npm run lint
+  - popd
+  # chainerui install test
   - chainerui db create
   - chainerui db upgrade
   - chainerui server -p 5051 &

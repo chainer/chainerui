@@ -1,10 +1,9 @@
 import path from 'path';
-import saveSvgAsPng from 'save-svg-as-png';
-import * as moment from 'moment';
-import { lineColorGenerator } from '../utils';
+import { lineColorGenerator } from './color';
 
 export * from './color';
 export * from './command.jsx';
+export * from './download';
 export * from './polling';
 export * from './url';
 
@@ -177,26 +176,52 @@ export const getLogData = (results, stats, projectConfig) => {
   return data;
 };
 
+export const getPlotLogData = (results, stats, projectConfig) => {
+  const { axes, resultsConfig = {} } = projectConfig;
+  const { xAxisKeys } = stats;
+  const {
+    xAxis = { axisName: 'xAxis' },
+    yLeftAxis = { axisName: 'yLeftAxis' },
+    yRightAxis = { axisName: 'yRightAxis' }
+  } = axes || {};
+  const { xAxisKey = xAxisKeys[0] } = xAxis;
+
+  const selectedResults = getSelectedResults(results, resultsConfig);
+  const selectedLogKeys = {
+    yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
+    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
+  };
+  const plotConfig = {
+    xAxis: xAxisKey,
+    yLeftAxis: selectedLogKeys.yLeftAxis,
+    yRightAxis: selectedLogKeys.yRightAxis,
+    resultIds: selectedResults
+  };
+
+  const allData = {};
+  Object.keys(results).forEach((resultId) => {
+    const result = results[resultId];
+    const logs = result.logs || [];
+    const allLogs = logs.map((log) => {
+      const logDict = {};
+      log.logItems.forEach((logItem) => {
+        logDict[logItem.key] = logItem.value;
+      });
+      return logDict;
+    });
+    allData[result.id] = {
+      log: allLogs,
+      name: result.name || result.pathName
+    };
+  });
+
+  return { data: allData, config: plotConfig };
+};
+
 export const padDigits = (num, len) => {
   let str = `${num}`;
   while (str.length < len) {
     str = `0${str}`;
   }
   return str;
-};
-
-export const downloadObjectAsJson = (exportObj, exportName) => {
-  const fileName = `${exportName}_${moment().format('YYYYMMDDHHmmss')}.json`;
-  const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(exportObj))}`;
-  const downloadAnchorNode = document.createElement('a');
-  downloadAnchorNode.setAttribute('href', dataStr);
-  downloadAnchorNode.setAttribute('download', fileName);
-  document.body.appendChild(downloadAnchorNode); // required for firefox
-  downloadAnchorNode.click();
-  downloadAnchorNode.remove();
-};
-
-export const downloadChartAsPng = (chartDOMNode, exportName) => {
-  const fileName = `${exportName}_${moment().format('YYYYMMDDHHmmss')}.png`;
-  saveSvgAsPng.saveSvgAsPng(chartDOMNode.getElementsByTagName('svg')[0], fileName);
 };

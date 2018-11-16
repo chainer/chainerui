@@ -6,7 +6,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/chainer/chainerui/badge.svg)](https://coveralls.io/github/chainer/chainerui)
 [![Documentation Status](https://readthedocs.org/projects/chainerui/badge/?version=latest)](http://chainerui.readthedocs.io/en/latest/?badge=latest)
 
-![training_captures](https://user-images.githubusercontent.com/414255/34244148-637e6630-e667-11e7-8a6b-9a857fa806bc.gif)
+![training_captures](docs/images/project_training_animation.gif)
 
 ChainerUI is a visualization and management tool for [Chainer](https://github.com/chainer/chainer).
 
@@ -64,10 +64,11 @@ Get Docker container from [DockerHub](https://hub.docker.com/r/chainer/chainerui
 ```sh
 $ git clone https://github.com/chainer/chainerui.git
 $ cd chainerui
-$
+
 $ # replace tag to the latest version number
 $ docker pull chainer/chainerui:v0.4.0
 $ docker run -d -p 5000:5000 -v $PWD:/projects --name chainerui chainer/chainerui:v0.4.0
+
 $ # then ChainerUI server is running
 $ # create project via HTTP
 $ curl http://localhost:5000/api/v1/projects -X POST -H "Content-Type: application/json" -d '{"project":{"name":"example-project","path_name":"/projects/examples"}}'

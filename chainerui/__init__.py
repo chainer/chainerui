@@ -18,9 +18,6 @@ from chainerui.logging import logger
 __version__ = _version.__version__
 
 
-CHAINERUI_ENV = os.getenv('CHAINERUI_ENV', 'production')
-
-
 def create_app():
     """create_app."""
 

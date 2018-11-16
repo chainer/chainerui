@@ -89,8 +89,8 @@ def get_test_result(path_name):
     (7, range(7)),
     (100, range(7)),
 ])
-def test_sampled_logs(tmpdir, logs_limit, expected_indices):
-    result = get_test_result(str(tmpdir))
+def test_sampled_logs(func_dir, logs_limit, expected_indices):
+    result = get_test_result(str(func_dir))
     logs = result.logs
     sampled_logs = result.sampled_logs(logs_limit)
     assert len(sampled_logs) == len(expected_indices)

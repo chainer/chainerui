@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Button } from 'reactstrap';
 
+import * as uiPropTypes from '../../store/uiPropTypes';
 import SnapshotTakeForm from '../result/SnapshotTakeForm';
 import StopForm from '../result/StopForm';
 import UnregisterButton from './UnregisterButton';
-
 import {
   urlForResultDetail
 } from '../../utils';
@@ -62,20 +62,11 @@ const SubComponent = (props) => {
 };
 
 SubComponent.propTypes = {
-  original: PropTypes.shape({
-    id: PropTypes.number
-  }),
-  project: PropTypes.shape({
-    id: PropTypes.number
-  }),
+  original: uiPropTypes.result.isRequired,
+  project: uiPropTypes.project.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
   onResultUnregistered: PropTypes.func.isRequired,
   onCommandSubmit: PropTypes.func.isRequired
-};
-
-SubComponent.defaultProps = {
-  original: {},
-  project: {}
 };
 
 export default SubComponent;

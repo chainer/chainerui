@@ -36,13 +36,12 @@ class Database(object):
                 pass
             else:
                 raise
-        print('DB_FILE_PATH:', db_dir)
+        print('DB file path:', db_dir)
 
-    def setup(self, url=None, test_mode=False, echo=False):
+    def setup(self, url=None, echo=False):
         if url is None:
             db_dir = self._sqlite_default_db_dir()
-            db_file_name = 'chainerui_test.db' if test_mode else 'chainerui.db'
-            db_path = os.path.join(db_dir, db_file_name)
+            db_path = os.path.join(db_dir, 'chainerui.db')
             self._sqlite_db_file_path = db_path
             url = 'sqlite:///' + db_path
         else:

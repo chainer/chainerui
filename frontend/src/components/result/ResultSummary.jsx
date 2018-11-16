@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
+import * as uiPropTypes from '../../store/uiPropTypes';
 import { getLastLogDict } from '../../utils';
 import { keyOptions } from '../../constants';
 
@@ -35,16 +36,7 @@ const ResultSummary = (props) => {
 };
 
 ResultSummary.propTypes = {
-  result: PropTypes.shape({
-    id: PropTypes.number,
-    pathName: PropTypes.string,
-    name: PropTypes.string,
-    args: PropTypes.arrayOf(PropTypes.any),
-    logs: PropTypes.arrayOf(PropTypes.any)
-  }).isRequired
-};
-
-ResultSummary.defaultProps = {
+  result: uiPropTypes.result.isRequired
 };
 
 export default ResultSummary;

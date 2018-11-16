@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
+import * as uiPropTypes from '../../store/uiPropTypes';
 import { argValue2string } from '../../utils';
 
 
@@ -23,14 +24,7 @@ const Args = (props) => {
 };
 
 Args.propTypes = {
-  args: PropTypes.arrayOf(PropTypes.shape({
-    resultId: PropTypes.number,
-    key: PropTypes.string,
-    value: PropTypes.any
-  })).isRequired
-};
-
-Args.defaultProps = {
+  args: uiPropTypes.args.isRequired
 };
 
 export default Args;

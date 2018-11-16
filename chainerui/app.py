@@ -6,7 +6,6 @@ import os
 import signal
 
 from chainerui import _version
-from chainerui import CHAINERUI_ENV
 from chainerui import create_app
 from chainerui import db
 from chainerui import logger
@@ -15,20 +14,13 @@ from chainerui.models.project import Project
 from chainerui.utils import db_revision
 
 
-def _setup_db(db_url):
-    test_mode = CHAINERUI_ENV == 'test'
-    echo = CHAINERUI_ENV == 'development'
-    return db.setup(url=db_url, test_mode=test_mode, echo=echo)
-
-
 def _check_db_revision():
     if not db_revision.check_current_db_revision():
-        command = 'upgrade'
+        command = '\'chainerui db upgrade\''
         if db_revision.current_db_revision() is None:
-            command = 'setup'
-        msg = 'The current DB schema version is not supported, ' +\
-            'please %s DB' % command
-        print(msg)
+            command = 'both \'chainerui db create\' and ' + command
+        print('The current DB schema version is not supported.')
+        print('Please run {} command before.'.format(command))
         return False
     return True
 
@@ -58,7 +50,7 @@ def _show_banner_debug(app, listener):
 
 def server_handler(args):
     """server_handler."""
-    if not _setup_db(args.db):
+    if not db.setup(url=args.db, echo=args.db_echo):
         return
     if not _check_db_revision():
         return
@@ -106,12 +98,12 @@ def db_handler(args):
             db.init_db()
         return
 
-    if not _setup_db(args.db):
+    if not db.setup(url=args.db, echo=args.db_echo):
         return
 
     if args.type == 'status':
         current_rev = db_revision.current_db_revision()
-        print('current_rev', current_rev)
+        print('The current DB schema version:', current_rev)
 
     if args.type == 'upgrade':
         db.upgrade()
@@ -127,7 +119,7 @@ def db_handler(args):
 
 def project_create_handler(args):
     """project_create_handler."""
-    if not _setup_db(args.db):
+    if not db.setup(url=args.db, echo=args.db_echo):
         return
     if not _check_db_revision():
         return
@@ -141,7 +133,7 @@ def project_create_handler(args):
     if project is None:
         project = Project.create(project_path, project_name)
     else:
-        print('Pathname already registered.')
+        print("Path '{}' has already registered.".format(project.path_name))
 
 
 def create_parser():
@@ -151,6 +143,9 @@ def create_parser():
     parser.add_argument(
         '--db', help='database resource address',
         default=os.getenv('CHAINERUI_DB_URL', default=None))
+    parser.add_argument(
+        '--db-echo', help='enable database enginge logging',
+        action='store_true')
     subparsers = parser.add_subparsers()
 
     # chainerui server
