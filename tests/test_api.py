@@ -132,7 +132,7 @@ def _setup_test_project(root_path):
     open(os.path.join(path, 'snapshot_iter_2400'), 'w').close()
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(autouse=True, scope='function')
 def project(func_dir, func_db):
     project_path = os.path.join(func_dir, 'test_project')
     _setup_test_project(project_path)
@@ -250,6 +250,7 @@ def test_put_project(project, app):
             'name': 'new-name',
         }
     }
+
     resp = app.put(
         '/api/v1/projects/1', data=json.dumps(request_json),
         content_type='application/json')
@@ -462,7 +463,7 @@ def test_delete_result(project, app):
 
 
 # POST /api/v1/projects/<int:project_id>/results/<int:result_id>/logs
-def test_post_log(project, app):
+def test_post_log(app):
     # success
     test_time = os.path.getmtime(os.path.abspath(__file__))
     request_json = {
@@ -532,7 +533,7 @@ def test_post_log(project, app):
 
 
 # POST /api/v1/projects/<int:project_id>/results/<int:result_id>/args
-def test_post_argument(project, app):
+def test_post_argument(app):
     # success
     request_json = {'argument': {'key': 'value'}}
     resp = app.post(
@@ -571,13 +572,14 @@ def test_post_argument(project, app):
 
 
 # POST /api/v1/projects/<int:project_id>/results/<int:result_id>/commands,
-def test_post_result_command(func_dir, project, app):
+def test_post_result_command(func_dir, app):
     project2_path = os.path.join(func_dir, 'test_project2')
     result_path = os.path.join(project2_path, '10003')
     os.makedirs(result_path)
     with open(os.path.join(result_path, 'log'), 'w') as f:
         json.dump([], f)
     Project.create(project2_path, 'command-test-project')
+
     request_jsons = [
         {
             'name': 'adjust_hyperparams',
@@ -715,7 +717,7 @@ def test_post_result_command(func_dir, project, app):
 
 
 # GET /api/v1/projects/<int:project_id>/results/<int:id>/assets
-def test_get_assets(func_dir, project, app):
+def test_get_assets(func_dir, app):
     project3_path = os.path.join(func_dir, 'test_project3')
     path = os.path.join(project3_path, '10004')
     os.makedirs(path)
