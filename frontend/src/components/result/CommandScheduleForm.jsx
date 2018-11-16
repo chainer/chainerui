@@ -4,7 +4,9 @@ import { Input } from 'reactstrap';
 
 import { SCHEDULE_NOW, SCHEDULE_CUSTOM } from '../../constants';
 import Check from '../FormControl/Check';
+import Select from '../FormControl/Select';
 
+const SCHEDULE_KEYS = ['epoch', 'iteration'];
 
 class CommandScheduleForm extends React.Component {
   constructor(props) {
@@ -67,16 +69,13 @@ class CommandScheduleForm extends React.Component {
             value={schedule.value}
             onChange={this.handleScheduleValueChange}
           />
-          <Input
-            type="select"
+          <Select
             bsSize="sm"
             disabled={scheduleType !== SCHEDULE_CUSTOM}
             value={schedule.key}
             onChange={this.handleScheduleKeyChange}
-          >
-            <option value="epoch">epoch</option>
-            <option value="iteration">iteration</option>
-          </Input>
+            values={SCHEDULE_KEYS}
+          />
         </Check>
       </div>
     );
@@ -87,7 +86,7 @@ CommandScheduleForm.propTypes = {
   scheduleType: PropTypes.oneOf([SCHEDULE_NOW, SCHEDULE_CUSTOM]).isRequired,
   schedule: PropTypes.shape({
     value: PropTypes.number,
-    key: PropTypes.oneOf(['epoch', 'iteration'])
+    key: PropTypes.oneOf(SCHEDULE_KEYS)
   }).isRequired,
   onScheduleTypeChange: PropTypes.func.isRequired,
   onScheduleChange: PropTypes.func.isRequired

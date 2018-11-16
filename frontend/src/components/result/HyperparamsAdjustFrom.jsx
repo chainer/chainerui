@@ -5,6 +5,7 @@ import {
 } from 'reactstrap';
 
 import * as uiPropTypes from '../../store/uiPropTypes';
+import Select from '../FormControl/Select';
 import CommandFormBase from './CommandFormBase';
 
 
@@ -75,14 +76,12 @@ class HyperparamsAdjustForm extends React.Component {
             optimizer
           </Label>
           <div className="col-sm-6">
-            <Input
-              type="select"
+            <Select
               id="hyperparams-adjust-from-optimizer"
               value={optimizer}
               onChange={this.handleOptimizerChange}
-            >
-              <option value="MomentumSGD">MomentumSGD</option>
-            </Input>
+              values={['MomentumSGD']}
+            />
           </div>
         </FormGroup>
         <FormGroup className="row mb-2">
