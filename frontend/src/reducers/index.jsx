@@ -271,17 +271,15 @@ const statusReducer = combineReducers({
 });
 
 
-const axesConfigReducer = (state = defaultAxisConfig, action) => {
+const axisConfigReducer = (state = {}, action) => {
   const {
-    axisName,
     logKey,
     scale = 'linear',
     xAxisKey,
     rangeType = 'auto',
     isMin, rangeNumber
   } = action;
-  const axisConfig = state[axisName] || {};
-  const { logKeysConfig = {}, scaleRange = {} } = axisConfig;
+  const { logKeysConfig = {}, scaleRange = {} } = state;
   const idx = isMin ? 0 : 1;
   const rangeConfig = scaleRange[scale] || {};
   const { rangeTypes = [], range = [] } = rangeConfig;
@@ -290,44 +288,32 @@ const axesConfigReducer = (state = defaultAxisConfig, action) => {
     case ActionTypes.AXIS_CONFIG_SCALE_UPDATE:
       return {
         ...state,
-        [axisName]: {
-          ...axisConfig,
-          scale
-        }
+        scale
       };
     case ActionTypes.AXIS_CONFIG_X_KEY_UPDATE:
       return {
         ...state,
-        [axisName]: {
-          ...axisConfig,
-          xAxisKey
-        }
+        xAxisKey
       };
     case ActionTypes.AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE:
       return {
         ...state,
-        [axisName]: {
-          ...axisConfig,
-          scaleRange: {
-            ...scaleRange,
-            [scale]: {
-              rangeTypes: Object.assign([], rangeTypes, { [idx]: rangeType }),
-              range
-            }
+        scaleRange: {
+          ...scaleRange,
+          [scale]: {
+            rangeTypes: Object.assign([], rangeTypes, { [idx]: rangeType }),
+            range
           }
         }
       };
     case ActionTypes.AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE:
       return {
         ...state,
-        [axisName]: {
-          ...axisConfig,
-          scaleRange: {
-            ...scaleRange,
-            [scale]: {
-              rangeTypes,
-              range: Object.assign([], range, { [idx]: rangeNumber })
-            }
+        scaleRange: {
+          ...scaleRange,
+          [scale]: {
+            rangeTypes,
+            range: Object.assign([], range, { [idx]: rangeNumber })
           }
         }
       };
@@ -335,22 +321,30 @@ const axesConfigReducer = (state = defaultAxisConfig, action) => {
       const logKeyConfig = logKeysConfig[logKey] || {};
       return {
         ...state,
-        [axisName]: {
-          ...axisConfig,
-          logKeysConfig: {
-            ...logKeysConfig,
-            [logKey]: {
-              ...logKeyConfig,
-              selected: !logKeyConfig.selected
-            }
+        logKeysConfig: {
+          ...logKeysConfig,
+          [logKey]: {
+            ...logKeyConfig,
+            selected: !logKeyConfig.selected
           }
-
         }
       };
     }
     default:
       return state;
   }
+};
+
+const axesConfigReducer = (state = defaultAxisConfig, action) => {
+  const { axisName } = action;
+  if (axisName) {
+    return {
+      ...state,
+      [axisName]: axisConfigReducer(state[axisName], action)
+    };
+  }
+
+  return state;
 };
 
 
