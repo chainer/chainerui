@@ -94,7 +94,7 @@ class NavigationBar extends React.Component {
           <PopoverBody className="popover-body">
             <Form>
               <FormGroup>
-                <Label for="global-config-polling-rate">Results polling rate</Label><br />
+                <Label htmlFor="global-config-polling-rate">Results polling rate</Label>
                 <Select
                   id="global-config-polling-rate"
                   onChange={this.handleChangePollingRate}
@@ -104,7 +104,7 @@ class NavigationBar extends React.Component {
               </FormGroup>
 
               <FormGroup>
-                <Label for="global-config-chart-size">Chart size</Label><br />
+                <Label htmlFor="global-config-chart-size">Chart size</Label>
                 <Select
                   id="global-config-chart-size"
                   value={chartSize.id}
@@ -114,7 +114,7 @@ class NavigationBar extends React.Component {
               </FormGroup>
 
               <FormGroup>
-                <Label for="global-config-logs-limit">Max log count</Label>
+                <Label htmlFor="global-config-logs-limit">Max log count</Label>
                 <Select
                   id="global-config-logs-limit"
                   value={logsLimit}

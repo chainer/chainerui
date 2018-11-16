@@ -128,7 +128,7 @@ class LineConfigurator extends React.Component {
             <Button onClick={this.handleResetColorClick} size="sm" className="m-2">Reset color</Button>
           </FormGroup>
           <FormGroup row>
-            <Label for="line-configurator-select-visibility" className="col-sm-2">visibility</Label>
+            <Label htmlFor="line-configurator-select-visibility" className="col-sm-2">visibility</Label>
             <Col sm={{ size: 10 }}>
               <Check
                 type="checkbox"
