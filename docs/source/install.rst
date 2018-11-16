@@ -69,7 +69,7 @@ Get Docker container from `DockerHub <https://hub.docker.com/r/chainer/chainerui
 
   $ git clone https://github.com/chainer/chainerui.git
   $ cd chainerui
-  $
+
   $ # replace tag to the latest version number
   $ docker pull chainer/chainerui:v0.4.0
   $ docker run -d -p 5000:5000 -v $PWD:/projects --name chainerui chainer/chainerui:v0.4.0
