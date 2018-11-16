@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Label, Input, Collapse, Button, Col } from 'reactstrap';
+import { Form, FormGroup, Label, Collapse, Button, Col } from 'reactstrap';
 import { ChromePicker, GithubPicker } from 'react-color';
 
 import * as uiPropTypes from '../store/uiPropTypes';
+import Check from './FormControl/Check';
 import TruncatedResultName from './TruncatedResultName';
 import { lineColorGenerator } from '../utils';
 
@@ -129,16 +130,12 @@ class LineConfigurator extends React.Component {
           <FormGroup row>
             <Label for="line-configurator-select-visibility" className="col-sm-2">visibility</Label>
             <Col sm={{ size: 10 }}>
-              <FormGroup check>
-                <Label check>
-                  <Input
-                    type="checkbox"
-                    id="line-configurator-select-visibility"
-                    checked={isVisible}
-                    onChange={this.handleVisibilityChange}
-                  />&nbsp;
-                </Label>
-              </FormGroup>
+              <Check
+                type="checkbox"
+                id="line-configurator-select-visibility"
+                checked={isVisible}
+                onChange={this.handleVisibilityChange}
+              />
             </Col>
           </FormGroup>
         </Form>

@@ -6,13 +6,12 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  FormGroup,
-  Label,
-  Input,
   Form
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
+import Check from './FormControl/Check';
+
 
 class ExperimentsTableConfigurator extends React.Component {
   constructor(props) {
@@ -87,34 +86,26 @@ class ExperimentsTableConfigurator extends React.Component {
               <legend>Log Keys</legend>
               {
                 logKeys.map((l) => (
-                  <FormGroup check key={`logKey.${l}`}>
-                    <Label check className="form-check-label-break-word">
-                      <Input
-                        type="checkbox"
-                        name={l}
-                        checked={!hiddenLogKeys.find((vk) => vk === l)}
-                        onChange={(e) => this.handleChange('logKey', e)}
-                      />
-                      {` ${l}`}
-                    </Label>
-                  </FormGroup>
+                  <Check
+                    key={`logKey.${l}`}
+                    type="checkbox"
+                    name={l}
+                    checked={!hiddenLogKeys.find((vk) => vk === l)}
+                    onChange={(e) => this.handleChange('logKey', e)}
+                  >{l}</Check>
                 ))
               }
               <hr />
               <legend>Arg Keys</legend>
               {
                 argKeys.map((a) => (
-                  <FormGroup check key={`argKey.${a}`}>
-                    <Label check className="form-check-label-break-word">
-                      <Input
-                        type="checkbox"
-                        name={a}
-                        checked={!hiddenArgKeys.find((va) => va === a)}
-                        onChange={(e) => this.handleChange('argKey', e)}
-                      />
-                      {` ${a}`}
-                    </Label>
-                  </FormGroup>
+                  <Check
+                    key={`argKey.${a}`}
+                    type="checkbox"
+                    name={a}
+                    checked={!hiddenArgKeys.find((va) => va === a)}
+                    onChange={(e) => this.handleChange('argKey', e)}
+                  >{a}</Check>
                 ))
               }
             </Form>
