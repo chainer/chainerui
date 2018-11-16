@@ -167,11 +167,7 @@ const fetchStateReducer = (state = {}, action) => {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
     case LOCATION_CHANGE:
       if (action.pollingRate === 0) {
-        return {
-          ...state,
-          resultList: undefined,
-          result: undefined
-        };
+        return {};
       }
       return state;
     default:
