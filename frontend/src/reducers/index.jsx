@@ -4,7 +4,7 @@ import { persistReducer } from 'redux-persist';
 import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, defaultProjectStatus, keyOptions } from '../constants';
+import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, CHART_DOWNLOAD_STATUS, keyOptions } from '../constants';
 
 
 const projectsReducer = (state = {}, action) => {
@@ -176,17 +176,27 @@ const fetchStateReducer = (state = {}, action) => {
 };
 
 
-const resultStatusReducer = (state = {}, action) => {
+const chartDownloadStatusReducer = (state = CHART_DOWNLOAD_STATUS.NONE, action) => {
   switch (action.type) {
-    case ActionTypes.RESULT_SELECT_UPDATE:
-      return {
-        ...state,
-        selected: action.selected
-      };
+    case ActionTypes.CHART_DOWNLOAD_STATUS_UPDATE:
+      return action.chartDownloadStatus;
     default:
       return state;
   }
 };
+
+const resultSelectedReducer = (state = false, action) => {
+  switch (action.type) {
+    case ActionTypes.RESULT_SELECT_UPDATE:
+      return action.selected;
+    default:
+      return state;
+  }
+};
+
+const resultStatusReducer = combineReducers({
+  selected: resultSelectedReducer
+});
 
 const resultsStatusReducer = (state = {}, action) => {
   const { resultId } = action;
@@ -200,22 +210,10 @@ const resultsStatusReducer = (state = {}, action) => {
   return state;
 };
 
-const projectStatusReducer = (state = defaultProjectStatus, action) => {
-  switch (action.type) {
-    case ActionTypes.CHART_DOWNLOAD_STATUS_UPDATE: {
-      const { chartDownloadStatus } = action;
-      return {
-        ...state,
-        chartDownloadStatus
-      };
-    }
-    default:
-      return {
-        ...state,
-        resultsStatus: resultsStatusReducer(state.resultsStatus, action)
-      };
-  }
-};
+const projectStatusReducer = combineReducers({
+  chartDownloadStatus: chartDownloadStatusReducer,
+  resultsStatus: resultsStatusReducer
+});
 
 const projectsStatusReducer = (state = {}, action) => {
   const { projectId } = action;
