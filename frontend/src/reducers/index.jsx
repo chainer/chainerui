@@ -176,25 +176,28 @@ const fetchStateReducer = (state = {}, action) => {
 };
 
 
-const resultsStatusReducer = (state = {}, action) => {
-  const { resultId } = action;
-  const resultStatus = state[resultId] || {};
-
+const resultStatusReducer = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.RESULT_SELECT_UPDATE:
-      if (resultId == null) {
-        return state;
-      }
       return {
         ...state,
-        [Number(resultId)]: {
-          ...resultStatus,
-          selected: action.selected
-        }
+        selected: action.selected
       };
     default:
       return state;
   }
+};
+
+const resultsStatusReducer = (state = {}, action) => {
+  const { resultId } = action;
+  if (resultId) {
+    return {
+      ...state,
+      [resultId]: resultStatusReducer(state[resultId], action)
+    };
+  }
+
+  return state;
 };
 
 const projectsStatusReducer = (state = {}, action) => {
