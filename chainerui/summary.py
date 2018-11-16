@@ -50,8 +50,6 @@ class _Reporter(object):
             col_name = 'image_{:d}'.format(self.count)
         if self.prefix is not None:
             col_name = self.prefix + col_name
-        if col_name in self.images:
-            col_name += '_{:d}'.format(self.count)
         filename, _ = _image(
             images, self.out, col_name, ch_axis, row, mode, batched)
         self.images[col_name] = filename
@@ -72,10 +70,10 @@ class _Reporter(object):
 
 @contextlib.contextmanager
 def reporter(out, prefix=None, **kwargs):
-    """summary media assets to visualize.
+    """Summary media assets to visualize.
 
     ``reporter`` function collects media assets by the ``with`` statement and
-    aggregate in a row to visualize. This function returns an object which
+    aggregates in a row to visualize. This function returns an object which
     provides the following methods.
 
     * ``image``: almost same as :func:`~chainerui.summary.image`
@@ -88,7 +86,7 @@ def reporter(out, prefix=None, **kwargs):
        >>> with reporter(out, epoch=1, iteration=10) as r:
        >>>     r.image(image_array1)
        >>>     r.image(image_array2)
-       >>> # image_array1 and image_array2 are reported to the server
+       >>> # image_array1 and image_array2 will be shown in a row.
 
     Arguments:
         out (str): name of output path.
@@ -104,15 +102,15 @@ def reporter(out, prefix=None, **kwargs):
 
 def image(images, out, name=None, ch_axis=1, row=0, mode=None, batched=True,
           **kwargs):
-    """summary images to visualize.
+    """Summary images to visualize.
 
-    An array of images is converted as image format (PNG format on default),
-    saved to output directory, and report to the ChainerUI server. The images
-    are saved every called this function. The images will be shown on `assets`
-    endpoint vertically. If need to aggregate images in row, use
+    Array of images are converted as image format (PNG format on default),
+    saved to output directory, and reported to the ChainerUI server.
+    The images are saved every called this function. The images will be shown
+    on `assets` endpoint vertically. If need to aggregate images in a row, use
     :func:`~chainerui.summary.reporter`.
 
-    Example of how to set arguments::
+    Examples of how to set arguments::
 
        >>> from chainerui import summary
        >>> out = '/path/to/output'
