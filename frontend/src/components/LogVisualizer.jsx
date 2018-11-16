@@ -163,6 +163,7 @@ class LogVisualizer extends React.Component {
             connectNulls
             isAnimationActive={false}
             dot={false}
+            activeDot={false}
             key={`${line2dataKey(line, axisName)}-events`}
             onMouseEnter={() => {
               onResultSelect(project.id, resultId, logKey);
