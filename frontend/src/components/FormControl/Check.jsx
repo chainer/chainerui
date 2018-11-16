@@ -11,7 +11,7 @@ const Check = ({ children, ...props }) => (
 );
 
 Check.propTypes = {
-  children: PropTypes.string
+  children: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 };
 
 Check.defaultProps = {

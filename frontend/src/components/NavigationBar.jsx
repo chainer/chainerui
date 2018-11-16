@@ -4,11 +4,12 @@ import {
   Container,
   Collapse, Navbar, NavbarBrand,
   Popover, PopoverHeader, PopoverBody,
-  Form, FormGroup, Label, Input,
+  Form, FormGroup, Label,
   Button
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
+import Check from './FormControl/Check';
 import PollingStatus from './PollingStatus';
 import { chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION } from '../constants';
 
@@ -144,30 +145,24 @@ class NavigationBar extends React.Component {
 
               <FormGroup tag="fieldset">
                 <Label>Result name alignment</Label>
-                <FormGroup check>
-                  <Label check>
-                    <Input
-                      type="radio"
-                      name={RESULT_NAME_ALIGN_LEFT}
-                      checked={!isResultNameAlignRight}
-                      onChange={this.handleResultNameAlignmentChange}
-                    />
-                    <span className="mx-1 oi oi-align-left" />
-                    Align left
-                  </Label>
-                </FormGroup>
-                <FormGroup check>
-                  <Label check>
-                    <Input
-                      type="radio"
-                      name={RESULT_NAME_ALIGN_RIGHT}
-                      checked={!!isResultNameAlignRight}
-                      onChange={this.handleResultNameAlignmentChange}
-                    />
-                    <span className="mx-1 oi oi-align-right" />
-                    Align right
-                  </Label>
-                </FormGroup>
+                <Check
+                  type="radio"
+                  name={RESULT_NAME_ALIGN_LEFT}
+                  checked={!isResultNameAlignRight}
+                  onChange={this.handleResultNameAlignmentChange}
+                >
+                  <span className="mx-1 oi oi-align-left" />
+                  Align left
+                </Check>
+                <Check
+                  type="radio"
+                  name={RESULT_NAME_ALIGN_RIGHT}
+                  checked={!!isResultNameAlignRight}
+                  onChange={this.handleResultNameAlignmentChange}
+                >
+                  <span className="mx-1 oi oi-align-right" />
+                  Align right
+                </Check>
               </FormGroup>
             </Form>
             <p className="my-0"><small>ChainerUI {CHAINERUI_VERSION}</small></p>
