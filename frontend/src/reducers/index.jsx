@@ -438,29 +438,28 @@ const tableStateReducer = (state = {}, action) => {
   }
 };
 
+const projectConfigReducer = combineReducers({
+  axes: axesConfigReducer,
+  resultsConfig: resultsConfigReducer,
+  lines: linesConfigReducer,
+  tableState: tableStateReducer
+});
 
 const projectsConfigReducer = (state = {}, action) => {
   const { projectId } = action;
-
   if (projectId) {
-    let projectConfig;
     switch (action.type) {
       case ActionTypes.PROJECT_CONFIG_RESET:
-        projectConfig = {};
-        break;
+        return {
+          ...state,
+          [projectId]: projectConfigReducer(undefined, action)
+        };
       default:
-        projectConfig = state[projectId] || {};
+        return {
+          ...state,
+          [projectId]: projectConfigReducer(state[projectId], action)
+        };
     }
-
-    return {
-      ...state,
-      [projectId]: {
-        axes: axesConfigReducer(projectConfig.axes, action),
-        resultsConfig: resultsConfigReducer(projectConfig.resultsConfig, action),
-        lines: linesConfigReducer(projectConfig.lines, action),
-        tableState: tableStateReducer(projectConfig.tableState, action)
-      }
-    };
   }
 
   return state;
