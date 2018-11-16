@@ -217,9 +217,11 @@ class LogVisualizer extends React.Component {
             <LogVisualizerLegend
               project={project}
               results={results}
+              resultsStatus={resultsStatus}
               lines={axisLines}
               maxHeight={chartSize.height}
               isResultNameAlignRight={isResultNameAlignRight}
+              onResultSelect={onResultSelect}
             />
           </div>
         </div>
