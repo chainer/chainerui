@@ -35,7 +35,6 @@ build_script:
   - curl -f http://127.0.0.1:5051/
 
 test_script:
-  - set CHAINERUI_ENV=test
   - pytest --cov=chainerui
 
 on_finish:
