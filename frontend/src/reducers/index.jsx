@@ -200,33 +200,33 @@ const resultsStatusReducer = (state = {}, action) => {
   return state;
 };
 
-const projectsStatusReducer = (state = {}, action) => {
-  const { projectId } = action;
-  if (!projectId) {
-    return state;
-  }
-
-  const projectStatus = state[projectId] || defaultProjectStatus;
+const projectStatusReducer = (state = defaultProjectStatus, action) => {
   switch (action.type) {
     case ActionTypes.CHART_DOWNLOAD_STATUS_UPDATE: {
       const { chartDownloadStatus } = action;
       return {
         ...state,
-        [projectId]: {
-          ...projectStatus,
-          chartDownloadStatus
-        }
+        chartDownloadStatus
       };
     }
     default:
       return {
         ...state,
-        [projectId]: {
-          ...projectStatus,
-          resultsStatus: resultsStatusReducer(projectStatus.resultsStatus, action)
-        }
+        resultsStatus: resultsStatusReducer(state.resultsStatus, action)
       };
   }
+};
+
+const projectsStatusReducer = (state = {}, action) => {
+  const { projectId } = action;
+  if (projectId) {
+    return {
+      ...state,
+      [projectId]: projectStatusReducer(state[projectId], action)
+    };
+  }
+
+  return state;
 };
 
 const statsReducer = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, action) => {
