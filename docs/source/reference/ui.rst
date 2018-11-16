@@ -87,6 +87,18 @@ Show training logs and experimental conditions.
     * Along with axis settings and selected checkboxes, log keys like ``main/loss`` are also cached on browser storage. The reset button restores cached key, too.
 
 
+.. _ui_highlight:
+
+Highlighting
+~~~~~~~~~~~~
+
+.. figure:: ../../images/project_highlight_animation.gif
+
+   This animation is captured on **v0.7.0**
+
+Result table and a log chart are linked each other. A selected result is highlighting for emphasis.
+
+
 .. _ui_save_log_chart:
 
 Save log chart
