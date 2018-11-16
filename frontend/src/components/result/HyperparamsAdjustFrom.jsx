@@ -71,7 +71,7 @@ class HyperparamsAdjustForm extends React.Component {
         buttonLabel="Adjust"
         onSubmit={this.handleSubmit}
       >
-        <FormGroup className="row">
+        <FormGroup row className="mt-2">
           <Label htmlFor="hyperparams-adjust-form-optimizer" className="col-sm-6 col-form-label">
             optimizer
           </Label>
@@ -84,7 +84,7 @@ class HyperparamsAdjustForm extends React.Component {
             />
           </div>
         </FormGroup>
-        <FormGroup className="row mb-2">
+        <FormGroup row>
           <Label htmlFor="hyperparams-adjust-form-lr" className="col-sm-6 col-form-label">
             lr
             {lastHyperparam.lr == null ? '' : ` (last value: ${lastHyperparam.lr})`}
@@ -100,7 +100,7 @@ class HyperparamsAdjustForm extends React.Component {
             />
           </div>
         </FormGroup>
-        <FormGroup className="row mb-2">
+        <FormGroup row className="mb-0">
           <Label htmlFor="hyperparams-adjust-form-momentum" className="col-sm-6 col-form-label">
             momentum
             {lastHyperparam.momentum == null ? '' : ` (last value: ${lastHyperparam.momentum})`}
