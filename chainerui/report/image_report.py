@@ -8,13 +8,18 @@ import chainer
 from chainer import cuda
 import numpy
 
-try:
-    from PIL import Image  # NOQA
 
-    _available = True
+def _setup_image_module():
+    try:
+        from PIL import Image  # NOQA
+        return Image
 
-except (ImportError, TypeError):
-    _available = False
+    except (ImportError, TypeError):
+        return None
+
+
+_Image = _setup_image_module()
+_available = _Image is not None
 
 
 def check_available():
@@ -102,6 +107,6 @@ def _normalize_8bit(array):
 
 def _save_image(img, name, ext='PNG', mode=None):
     if mode is None:
-        Image.fromarray(img).save(name, format=ext)
+        _Image.fromarray(img).save(name, format=ext)
     elif mode.lower() == 'hsv':
-        Image.fromarray(img, mode='HSV').convert('RGB').save(name, format=ext)
+        _Image.fromarray(img, mode='HSV').convert('RGB').save(name, format=ext)

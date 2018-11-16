@@ -1,4 +1,6 @@
 import json
+from mock import MagicMock
+from mock import patch
 import os
 import unittest
 
@@ -52,8 +54,16 @@ def test_summary_image(func_dir):
     assert saved_filename2.endswith('.png')
 
 
+def test_summary_image_unavailable(func_dir):
+    mock_checker = MagicMock(return_value=False)
+    with patch('chainerui.report.image_report.check_available', mock_checker):
+        summary.image(np.zeros(10), func_dir)
+
+    assert not os.path.exists(os.path.join(func_dir, '.chainerui_assets'))
+
+
 @unittest.skipUnless(image_report._available, 'Pillow is not installed')
-def test_summary_reporter(func_dir):
+def test_reporter(func_dir):
     img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
     img2 = np.copy(img)
 
@@ -105,9 +115,18 @@ def test_summary_reporter(func_dir):
 
 
 @unittest.skipUnless(image_report._available, 'Pillow is not installed')
-def test_summary_reporter_empty(func_dir):
+def test_reporter_empty(func_dir):
     with summary.reporter(func_dir, epoch=10):
         pass
 
     meta_filepath = os.path.join(func_dir, '.chainerui_assets')
     assert not os.path.exists(meta_filepath)
+
+
+def test_reporter_image_unavailable(func_dir):
+    mock_checker = MagicMock(return_value=False)
+    with patch('chainerui.report.image_report.check_available', mock_checker):
+        with summary.reporter(func_dir) as r:
+            r.image(np.zeros(10))
+
+    assert not os.path.exists(os.path.join(func_dir, '.chainerui_assets'))

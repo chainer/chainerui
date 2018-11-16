@@ -5,25 +5,38 @@ import warnings
 import chainer
 import numpy as np
 import pytest
+import six
 
 from chainerui.report import image_report
 
 
+@unittest.skipUnless(image_report._available, 'Pillow is not installed')
 def test_available():
-    try:
-        import PIL  # NOQA
-        available = True
-    except (ImportError, TypeError):
-        available = False
-
     with warnings.catch_warnings(record=True) as w:
-        assert image_report.check_available() == available
-
-    # It shows warning only when Pillow is not available
-    if available:
+        assert image_report.check_available()
         assert len(w) == 0
+
+
+def test_available_not_installed():
+    import sys
+    is_installed = 'PIL' in sys.modules
+
+    def check_available():
+        with warnings.catch_warnings(record=True) as w:
+            assert not image_report.check_available()
+            assert len(w) == 1
+
+    if is_installed:
+        pil = sys.modules['PIL']
+        try:
+            sys.modules['PIL'] = ImportError()
+            six.moves.reload_module(image_report)
+            check_available()
+        finally:
+            sys.modules['PIL'] = pil
+            six.moves.reload_module(image_report)
     else:
-        assert len(w) == 1
+        check_available()
 
 
 def test_report_error(func_dir):
