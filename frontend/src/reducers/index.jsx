@@ -7,6 +7,26 @@ import * as ActionTypes from '../actions';
 import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, CHART_DOWNLOAD_STATUS, keyOptions } from '../constants';
 
 
+const updatePartialState = (state, action, keyId, fn) => {
+  const partialState = fn(state[keyId], action);
+  if (state[keyId] !== partialState) {
+    return {
+      ...state,
+      [keyId]: partialState
+    };
+  }
+  return state;
+};
+
+const removePartialState = (state, keyId) => {
+  if (keyId in state) {
+    const newState = { ...state };
+    delete newState[keyId];
+    return state;
+  }
+  return state;
+};
+
 const projectsReducer = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.PROJECT_LIST_SUCCESS:
@@ -32,9 +52,7 @@ const projectsReducer = (state = {}, action) => {
     case ActionTypes.PROJECT_DELETE_SUCCESS:
       if (action.response && action.response.project) {
         const { project } = action.response;
-        const newProjects = { ...state };
-        delete newProjects[project.id];
-        return newProjects;
+        return removePartialState(state, project.id);
       }
       return state;
     default:
@@ -89,27 +107,24 @@ const resultsReducer = (state = {}, action) => {
     case ActionTypes.RESULT_UPDATE_SUCCESS:
       if (action.response && action.response.result) {
         const { result } = action.response;
-        const newResults = { ...state };
         if (result.isUnregistered) {
-          delete newResults[result.id];
-        } else {
-          newResults[result.id] = result;
+          return removePartialState(state, result.id);
         }
-        return newResults;
+        return {
+          ...state,
+          [result.id]: result
+        };
       }
       return state;
     case ActionTypes.RESULT_DELETE_SUCCESS:
       if (action.response && action.response.result) {
         const { result } = action.response;
-        const newResults = { ...state };
-        delete newResults[result.id];
-        return newResults;
+        return removePartialState(state, result.id);
       }
       return state;
     case ActionTypes.COMMAND_CREATE_SUCCESS:
       if (action.response && action.response.commands) {
         const result = state[action.body.resultId];
-
         return {
           ...state,
           [action.body.resultId]: {
@@ -201,10 +216,7 @@ const resultStatusReducer = combineReducers({
 const resultsStatusReducer = (state = {}, action) => {
   const { resultId } = action;
   if (resultId) {
-    return {
-      ...state,
-      [resultId]: resultStatusReducer(state[resultId], action)
-    };
+    return updatePartialState(state, action, resultId, resultStatusReducer);
   }
 
   return state;
@@ -218,10 +230,7 @@ const projectStatusReducer = combineReducers({
 const projectsStatusReducer = (state = {}, action) => {
   const { projectId } = action;
   if (projectId) {
-    return {
-      ...state,
-      [projectId]: projectStatusReducer(state[projectId], action)
-    };
+    return updatePartialState(state, action, projectId, projectStatusReducer);
   }
 
   return state;
@@ -336,29 +345,12 @@ const axisConfigReducer = (state = {}, action) => {
 const axesConfigReducer = (state = defaultAxisConfig, action) => {
   const { axisName } = action;
   if (axisName) {
-    return {
-      ...state,
-      [axisName]: axisConfigReducer(state[axisName], action)
-    };
+    return updatePartialState(state, action, axisName, axisConfigReducer);
   }
 
   return state;
 };
 
-
-const resultsConfigWithoutResultReducer = (state, resultId) => {
-  if (!Number.isInteger(resultId)) {
-    return state;
-  }
-  const newState = {};
-  Object.keys(state).forEach((id) => {
-    if (Number(id) === resultId) {
-      return;
-    }
-    newState[id] = state[id];
-  });
-  return newState;
-};
 
 const resultsConfigReducer = (state = {}, action) => {
   const { resultId } = action;
@@ -379,12 +371,12 @@ const resultsConfigReducer = (state = {}, action) => {
       if (action.response && action.response.result) {
         const { result } = action.response;
         if (result.isUnregistered) {
-          return resultsConfigWithoutResultReducer(state, result.id);
+          return removePartialState(state, result.id);
         }
       }
       return state;
     case ActionTypes.RESULT_DELETE_SUCCESS:
-      return resultsConfigWithoutResultReducer(state, resultId);
+      return removePartialState(state, resultId);
     default:
       return state;
   }
@@ -442,15 +434,11 @@ const projectsConfigReducer = (state = {}, action) => {
   if (projectId) {
     switch (action.type) {
       case ActionTypes.PROJECT_CONFIG_RESET:
-        return {
-          ...state,
-          [projectId]: projectConfigReducer(undefined, action)
-        };
+        return updatePartialState(
+          state, action, projectId, () => projectConfigReducer(undefined, action)
+        );
       default:
-        return {
-          ...state,
-          [projectId]: projectConfigReducer(state[projectId], action)
-        };
+        return updatePartialState(state, action, projectId, projectConfigReducer);
     }
   }
 
