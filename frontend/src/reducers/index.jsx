@@ -370,19 +370,19 @@ const resultsConfigWithoutResultReducer = (state, resultId) => {
 
 const resultsConfigReducer = (state = {}, action) => {
   const { resultId } = action;
-  const resultConfig = state[resultId] || {};
   switch (action.type) {
     case ActionTypes.RESULTS_CONFIG_SELECT_UPDATE:
-      if (resultId == null) {
-        return state;
+      if (resultId) {
+        const resultConfig = state[resultId] || {};
+        return {
+          ...state,
+          [resultId]: {
+            ...resultConfig,
+            hidden: action.hidden
+          }
+        };
       }
-      return {
-        ...state,
-        [Number(resultId)]: {
-          ...resultConfig,
-          hidden: action.hidden
-        }
-      };
+      return state;
     case ActionTypes.RESULT_UPDATE_SUCCESS:
       if (action.response && action.response.result) {
         const { result } = action.response;
