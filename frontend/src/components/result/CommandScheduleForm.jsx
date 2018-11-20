@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  FormGroup, Label, Input
-} from 'reactstrap';
-import { SCHEDULE_NOW, SCHEDULE_CUSTOM } from '../../constants';
+import { Input } from 'reactstrap';
 
+import { SCHEDULE_NOW, SCHEDULE_CUSTOM } from '../../constants';
+import Check from '../FormControl/Check';
+import Select from '../FormControl/Select';
+
+const SCHEDULE_KEYS = ['epoch', 'iteration'];
 
 class CommandScheduleForm extends React.Component {
   constructor(props) {
@@ -38,49 +40,44 @@ class CommandScheduleForm extends React.Component {
   render() {
     const { schedule, scheduleType } = this.props;
     return (
-      <FormGroup className="form-inline">
-        <FormGroup check className="form-check-inline ml-3">
-          <Label check>
-            <Input
-              type="radio"
-              name={SCHEDULE_NOW}
-              checked={scheduleType === SCHEDULE_NOW}
-              onChange={this.handleScheduleTypeChange}
-            />now
-          </Label>
-        </FormGroup>
-        <FormGroup check className="form-check-inline">
-          <Label check>
-            <Input
-              type="radio"
-              name={SCHEDULE_CUSTOM}
-              checked={scheduleType === SCHEDULE_CUSTOM}
-              onChange={this.handleScheduleTypeChange}
-            />schedule
-            <Input
-              type="number"
-              className="ml-3"
-              bsSize="sm"
-              min="0"
-              step="1"
-              placeholder={`# ${schedule.key}`}
-              disabled={scheduleType !== SCHEDULE_CUSTOM}
-              value={schedule.value}
-              onChange={this.handleScheduleValueChange}
-            />
-            <Input
-              type="select"
-              bsSize="sm"
-              disabled={scheduleType !== SCHEDULE_CUSTOM}
-              value={schedule.key}
-              onChange={this.handleScheduleKeyChange}
-            >
-              <option value="epoch">epoch</option>
-              <option value="iteration">iteration</option>
-            </Input>
-          </Label>
-        </FormGroup>
-      </FormGroup>
+      <div className="form-inline">
+        <Check
+          inline
+          type="radio"
+          name={SCHEDULE_NOW}
+          checked={scheduleType === SCHEDULE_NOW}
+          onChange={this.handleScheduleTypeChange}
+        >
+          now
+        </Check>
+        <Check
+          inline
+          type="radio"
+          name={SCHEDULE_CUSTOM}
+          checked={scheduleType === SCHEDULE_CUSTOM}
+          onChange={this.handleScheduleTypeChange}
+        >
+          schedule
+          <Input
+            type="number"
+            className="ml-3"
+            bsSize="sm"
+            min="0"
+            step="1"
+            placeholder={`# ${schedule.key}`}
+            disabled={scheduleType !== SCHEDULE_CUSTOM}
+            value={schedule.value}
+            onChange={this.handleScheduleValueChange}
+          />
+          <Select
+            bsSize="sm"
+            disabled={scheduleType !== SCHEDULE_CUSTOM}
+            value={schedule.key}
+            onChange={this.handleScheduleKeyChange}
+            values={SCHEDULE_KEYS}
+          />
+        </Check>
+      </div>
     );
   }
 }
@@ -89,7 +86,7 @@ CommandScheduleForm.propTypes = {
   scheduleType: PropTypes.oneOf([SCHEDULE_NOW, SCHEDULE_CUSTOM]).isRequired,
   schedule: PropTypes.shape({
     value: PropTypes.number,
-    key: PropTypes.oneOf(['epoch', 'iteration'])
+    key: PropTypes.oneOf(SCHEDULE_KEYS)
   }).isRequired,
   onScheduleTypeChange: PropTypes.func.isRequired,
   onScheduleChange: PropTypes.func.isRequired

@@ -4,29 +4,19 @@ import {
   Container,
   Collapse, Navbar, NavbarBrand,
   Popover, PopoverHeader, PopoverBody,
-  Form, FormGroup, Label, Input,
+  Form, FormGroup, Label,
   Button
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
+import Check from './FormControl/Check';
+import Select from './FormControl/Select';
 import PollingStatus from './PollingStatus';
 import { chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION } from '../constants';
 
 
 const RESULT_NAME_ALIGN_LEFT = 'result-name-align-left';
 const RESULT_NAME_ALIGN_RIGHT = 'result-name-align-right';
-
-const createPollingOptionElems = (options) => options.map((option) => (
-  <option key={option.id} value={option.value}>{option.name}</option>
-));
-
-const createVisualizerSizeOptionElems = (options) => options.map((option) => (
-  <option key={option.id} value={option.id}>{option.name}</option>
-));
-
-const createLogsLimitOptionElems = (options) => options.map((option) => (
-  <option key={option.id} value={option.value}>{option.name}</option>
-));
 
 class NavigationBar extends React.Component {
   constructor(props) {
@@ -69,9 +59,6 @@ class NavigationBar extends React.Component {
   }
 
   render() {
-    const pollingOptionElems = createPollingOptionElems(pollingOptions);
-    const chartSizeElems = createVisualizerSizeOptionElems(chartSizeOptions);
-    const logsLimitOptionElems = createLogsLimitOptionElems(logsLimitOptions);
     const {
       pollingRate,
       chartSize,
@@ -107,67 +94,55 @@ class NavigationBar extends React.Component {
           <PopoverBody className="popover-body">
             <Form>
               <FormGroup>
-                <Label for="global-config-polling-rate">Results polling rate</Label><br />
-                <select
-                  className="form-control"
+                <Label htmlFor="global-config-polling-rate">Results polling rate</Label>
+                <Select
                   id="global-config-polling-rate"
                   onChange={this.handleChangePollingRate}
                   value={pollingRate}
-                >
-                  {pollingOptionElems}
-                </select>
+                  options={pollingOptions}
+                />
               </FormGroup>
 
               <FormGroup>
-                <Label for="global-config-chart-size">Chart size</Label><br />
-                <select
-                  className="form-control"
+                <Label htmlFor="global-config-chart-size">Chart size</Label>
+                <Select
                   id="global-config-chart-size"
                   value={chartSize.id}
                   onChange={this.handleChangeChartSize}
-                >
-                  {chartSizeElems}
-                </select>
+                  options={chartSizeOptions}
+                />
               </FormGroup>
 
               <FormGroup>
-                <Label for="global-config-logs-limit">Max log count</Label>
-                <select
-                  className="form-control"
+                <Label htmlFor="global-config-logs-limit">Max log count</Label>
+                <Select
                   id="global-config-logs-limit"
                   value={logsLimit}
                   onChange={this.handleChangeLogsLimit}
-                >
-                  {logsLimitOptionElems}
-                </select>
+                  options={logsLimitOptions}
+                />
               </FormGroup>
 
               <FormGroup tag="fieldset">
                 <Label>Result name alignment</Label>
-                <FormGroup check>
-                  <Label check>
-                    <Input
-                      type="radio"
-                      name={RESULT_NAME_ALIGN_LEFT}
-                      checked={!isResultNameAlignRight}
-                      onChange={this.handleResultNameAlignmentChange}
-                    />
-                    <span className="mx-1 oi oi-align-left" />
-                    Align left
-                  </Label>
-                </FormGroup>
-                <FormGroup check>
-                  <Label check>
-                    <Input
-                      type="radio"
-                      name={RESULT_NAME_ALIGN_RIGHT}
-                      checked={!!isResultNameAlignRight}
-                      onChange={this.handleResultNameAlignmentChange}
-                    />
-                    <span className="mx-1 oi oi-align-right" />
-                    Align right
-                  </Label>
-                </FormGroup>
+                <Check
+                  type="radio"
+                  name={RESULT_NAME_ALIGN_LEFT}
+                  checked={!isResultNameAlignRight}
+                  onChange={this.handleResultNameAlignmentChange}
+                >
+                  <span className="mx-1 oi oi-align-left" />
+                  Align left
+                </Check>
+                <Check
+                  type="radio"
+                  name={RESULT_NAME_ALIGN_RIGHT}
+                  checked={!!isResultNameAlignRight}
+                  onChange={this.handleResultNameAlignmentChange}
+                >
+                  <span className="mx-1 oi oi-align-right" />
+                  Align right
+                </Check>
               </FormGroup>
             </Form>
             <p className="my-0"><small>ChainerUI {CHAINERUI_VERSION}</small></p>
