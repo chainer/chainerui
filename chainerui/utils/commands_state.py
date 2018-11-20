@@ -3,8 +3,6 @@ import json
 import os
 import shutil
 
-from chainer import training
-
 from chainerui.utils.command_item import CommandItem
 from chainerui.utils.tempdir import tempdir
 
@@ -30,13 +28,10 @@ class CommandsState(object):
     _default_filename = '.chainerui_commands'
 
     @classmethod
-    def run(cls, trainer):
-        # NOTE: in future, optimizer information will add to command state,
-        #       optimizer is set in trainer
-        if isinstance(trainer, training.Trainer):
-            out_path = trainer.out
-        else:
-            out_path = trainer
+    def run(cls, out_path):
+        # NOTE: in future, optimizer information set in trainer will be addded
+        #       to command sate, to customize "adjust hyperparameter" function
+        out_path = out_path
         state = cls._load(out_path, initialize=True)
         state['job_status'] = JobStatus.RUNNING
         cls._dump(out_path, state)
