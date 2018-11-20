@@ -33,11 +33,12 @@ const BreadcrumbLink = (props) => {
   if (length >= 3) {
     items.push(
       <BreadcrumbItem key="resultDetail">
-        <Link to={urlForResultDetail(project.id, result.id)} className="d-inline-block">
+        <Link to={urlForResultDetail(project.id, result.id)}>
           <TruncatedResultName
             project={project}
             result={result}
             isResultNameAlignRight={isResultNameAlignRight}
+            style={{ display: 'inline-block', width: '10em' }}
           />
         </Link>
       </BreadcrumbItem>
