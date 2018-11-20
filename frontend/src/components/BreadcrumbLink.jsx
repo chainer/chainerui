@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link, IndexLink } from 'react-router';
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
@@ -13,7 +12,7 @@ import {
 
 
 const BreadcrumbLink = (props) => {
-  const { length, globalConfig, project, result } = props;
+  const { globalConfig, project, result } = props;
   const { isResultNameAlignRight } = globalConfig;
   const items = [(
     <BreadcrumbItem key="home">
@@ -21,7 +20,7 @@ const BreadcrumbLink = (props) => {
     </BreadcrumbItem>
   )];
 
-  if (length >= 2) {
+  if (project && project.id) {
     items.push(
       <BreadcrumbItem key="plot">
         <Link to={urlForPlot(project.id)}>
@@ -30,7 +29,8 @@ const BreadcrumbLink = (props) => {
       </BreadcrumbItem>
     );
   }
-  if (length >= 3) {
+
+  if (result && result.id) {
     items.push(
       <BreadcrumbItem key="resultDetail">
         <Link to={urlForResultDetail(project.id, result.id)}>
@@ -53,7 +53,6 @@ const BreadcrumbLink = (props) => {
 };
 
 BreadcrumbLink.propTypes = {
-  length: PropTypes.number.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   project: uiPropTypes.project,
   result: uiPropTypes.result
@@ -65,4 +64,3 @@ BreadcrumbLink.defaultProps = {
 };
 
 export default BreadcrumbLink;
-
