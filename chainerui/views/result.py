@@ -40,8 +40,8 @@ class ResultAPI(MethodView):
             # have to call SELECT query again.
             for result in results:
                 crawl_result(result, commit=False)
-            rs = [r.serialize_with_sampled_logs(logs_limit) for r in results]
             db.session.commit()
+            rs = [r.serialize_with_sampled_logs(logs_limit) for r in results]
 
             return jsonify({'results': rs})
 
