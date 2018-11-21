@@ -1,17 +1,29 @@
 import json
 from mock import MagicMock
 import os
-import unittest
 import warnings
 
 import numpy as np
+import pytest
 
-from chainerui.extensions import image_reporter_extension
-from chainerui.extensions.image_reporter_extension import ImageReport
-from chainerui import summary
 from tests.conftest import TempDirTestCase
 
+try:
+    import chainer  # NOQA
+    _chainer_installed = True
+except (ImportError, TypeError):
+    _chainer_installed = False
 
+if _chainer_installed:
+    from chainerui.extensions import image_reporter_extension
+    from chainerui.extensions.image_reporter_extension import ImageReport
+    from chainerui import summary
+    _image_reporter_available = image_reporter_extension._available
+else:
+    _image_reporter_available = False
+
+
+@pytest.mark.skipif(not _chainer_installed, reason='Chainer is not installed')
 class TestImageReport(TempDirTestCase):
 
     def _make_trainer_mock(self, epoch, iteration):
@@ -50,8 +62,8 @@ class TestImageReport(TempDirTestCase):
         else:
             assert len(w) == 1
 
-    @unittest.skipUnless(
-        image_reporter_extension._available, 'Pillow is not installed')
+    @pytest.mark.skipif(not _image_reporter_available,
+                        reason='ImageReporter is not available')
     def test_call_empty(self):
         trainer = self._make_trainer_mock(0, 1)
 
@@ -66,8 +78,8 @@ class TestImageReport(TempDirTestCase):
         target(trainer)
         assert len(target._infos) == 0
 
-    @unittest.skipUnless(
-        image_reporter_extension._available, 'Pillow is not installed')
+    @pytest.mark.skipif(not _image_reporter_available,
+                        reason='ImageReporter is not available')
     def test_call_twice(self):
         from PIL import Image
 
@@ -163,8 +175,8 @@ class TestImageReport(TempDirTestCase):
         assert 'name2' in info[1]['images']
         assert info[1]['images']['name2'] == png4_name
 
-    @unittest.skipUnless(
-        image_reporter_extension._available, 'Pillow is not installed')
+    @pytest.mark.skipif(not _image_reporter_available,
+                        reason='ImageReporter is not available')
     def test_with_makefn(self):
         from PIL import Image
         trainer = self._make_trainer_mock(1, 10)

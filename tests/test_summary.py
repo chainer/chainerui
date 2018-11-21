@@ -1,11 +1,19 @@
 import unittest
 
-import chainer
 import numpy as np
 
-from chainerui import summary
+try:
+    import chainer
+    _chainer_installed = True
+
+except (ImportError, TypeError):
+    _chainer_installed = False
+
+if _chainer_installed:
+    from chainerui import summary
 
 
+@unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
 class TestImage(unittest.TestCase):
 
     def tearDown(self):
