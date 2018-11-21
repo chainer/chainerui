@@ -2,8 +2,8 @@ import datetime
 import json
 import os
 
-from chainerui import db
-from chainerui import logger
+from chainerui.database import db
+from chainerui.logging import logger
 from chainerui.models.argument import Argument
 from chainerui.models.command import Command
 from chainerui.models.log import Log

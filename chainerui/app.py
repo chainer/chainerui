@@ -6,11 +6,11 @@ import os
 import signal
 
 from chainerui import _version
-from chainerui import create_app
-from chainerui import db
-from chainerui import logger
+from chainerui.database import db
+from chainerui.logging import logger
 from chainerui.logging import set_loglevel
 from chainerui.models.project import Project
+from chainerui.server import create_app
 from chainerui.utils import db_revision
 
 
