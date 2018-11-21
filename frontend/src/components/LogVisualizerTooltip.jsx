@@ -5,21 +5,26 @@ import {
 } from '../utils';
 
 
-const renderItems = (payload, formatter, anySelected) => (
-  payload.filter((entry) => entry.value != null && entry.strokeOpacity !== '0').map((entry) => {
-    const { dataKey, color, value, strokeOpacity } = entry;
-    const unSelected = !anySelected || strokeOpacity < 1;
-    return (
-      <li
-        className={`list-group-item py-0 ${unSelected ? '' : 'result-highlight'}`}
-        key={dataKey}
-        style={{ borderLeft: `3px solid ${color}` }}
-      >
-        {formatter(value)}
-      </li>
-    );
-  })
-);
+const LogVisualizerTooltipItem = (props) => {
+  const { entry, formatter, anySelected } = props;
+  const { color, value, strokeOpacity } = entry;
+  const unSelected = !anySelected || strokeOpacity < 1;
+  return (
+    <li
+      className={`list-group-item py-0 ${unSelected ? '' : 'result-highlight'}`}
+      style={{ borderLeft: `3px solid ${color}` }}
+    >
+      {formatter(value)}
+    </li>
+  );
+};
+
+LogVisualizerTooltipItem.propTypes = {
+  entry: PropTypes.any.isRequired, // eslint-disable-line react/forbid-prop-types
+  formatter: PropTypes.func.isRequired,
+  anySelected: PropTypes.bool.isRequired
+};
+
 
 const LogVisualizerTooltip = (props) => {
   const { xAxisKey, label, payload, anySelected } = props;
@@ -30,6 +35,7 @@ const LogVisualizerTooltip = (props) => {
 
   const labelFormatter = formatLogTooltipLabel(xAxisKey);
   const formatter = formatLogValue();
+  const entries = payload.filter((entry) => entry.value != null && entry.strokeOpacity !== '0');
 
   return (
     <div className="log-visualizer-tooltip card">
@@ -37,7 +43,14 @@ const LogVisualizerTooltip = (props) => {
         <h6 className="cart-title my-2">{labelFormatter(label)}</h6>
       </div>
       <ul className="list-group list-group-flush small">
-        {renderItems(payload, formatter, anySelected)}
+        {entries.map((entry) => (
+          <LogVisualizerTooltipItem
+            key={entry.dataKey}
+            entry={entry}
+            formatter={formatter}
+            anySelected={anySelected}
+          />
+        ))}
       </ul>
     </div>
   );
