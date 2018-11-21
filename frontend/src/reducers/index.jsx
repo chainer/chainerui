@@ -4,8 +4,28 @@ import { persistReducer } from 'redux-persist';
 import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, defaultProjectStatus, keyOptions } from '../constants';
+import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, CHART_DOWNLOAD_STATUS, keyOptions } from '../constants';
 
+
+const updatePartialState = (state, action, keyId, fn) => {
+  const partialState = fn(state[keyId], action);
+  if (state[keyId] !== partialState) {
+    return {
+      ...state,
+      [keyId]: partialState
+    };
+  }
+  return state;
+};
+
+const removePartialState = (state, keyId) => {
+  if (keyId in state) {
+    const newState = { ...state };
+    delete newState[keyId];
+    return state;
+  }
+  return state;
+};
 
 const projectsReducer = (state = {}, action) => {
   switch (action.type) {
@@ -32,9 +52,7 @@ const projectsReducer = (state = {}, action) => {
     case ActionTypes.PROJECT_DELETE_SUCCESS:
       if (action.response && action.response.project) {
         const { project } = action.response;
-        const newProjects = { ...state };
-        delete newProjects[project.id];
-        return newProjects;
+        return removePartialState(state, project.id);
       }
       return state;
     default:
@@ -89,27 +107,24 @@ const resultsReducer = (state = {}, action) => {
     case ActionTypes.RESULT_UPDATE_SUCCESS:
       if (action.response && action.response.result) {
         const { result } = action.response;
-        const newResults = { ...state };
         if (result.isUnregistered) {
-          delete newResults[result.id];
-        } else {
-          newResults[result.id] = result;
+          return removePartialState(state, result.id);
         }
-        return newResults;
+        return {
+          ...state,
+          [result.id]: result
+        };
       }
       return state;
     case ActionTypes.RESULT_DELETE_SUCCESS:
       if (action.response && action.response.result) {
         const { result } = action.response;
-        const newResults = { ...state };
-        delete newResults[result.id];
-        return newResults;
+        return removePartialState(state, result.id);
       }
       return state;
     case ActionTypes.COMMAND_CREATE_SUCCESS:
       if (action.response && action.response.commands) {
         const result = state[action.body.resultId];
-
         return {
           ...state,
           [action.body.resultId]: {
@@ -167,11 +182,7 @@ const fetchStateReducer = (state = {}, action) => {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
     case LOCATION_CHANGE:
       if (action.pollingRate === 0) {
-        return {
-          ...state,
-          resultList: undefined,
-          result: undefined
-        };
+        return {};
       }
       return state;
     default:
@@ -179,55 +190,50 @@ const fetchStateReducer = (state = {}, action) => {
   }
 };
 
+
+const chartDownloadStatusReducer = (state = CHART_DOWNLOAD_STATUS.NONE, action) => {
+  switch (action.type) {
+    case ActionTypes.CHART_DOWNLOAD_STATUS_UPDATE:
+      return action.chartDownloadStatus;
+    default:
+      return state;
+  }
+};
+
+const resultSelectedReducer = (state = false, action) => {
+  switch (action.type) {
+    case ActionTypes.RESULT_SELECT_UPDATE:
+      return action.selected;
+    default:
+      return state;
+  }
+};
+
+const resultStatusReducer = combineReducers({
+  selected: resultSelectedReducer
+});
 
 const resultsStatusReducer = (state = {}, action) => {
   const { resultId } = action;
-  const resultStatus = state[resultId] || {};
-
-  switch (action.type) {
-    case ActionTypes.RESULT_SELECT_UPDATE:
-      if (resultId == null) {
-        return state;
-      }
-      return {
-        ...state,
-        [Number(resultId)]: {
-          ...resultStatus,
-          selected: action.selected
-        }
-      };
-    default:
-      return state;
+  if (resultId) {
+    return updatePartialState(state, action, resultId, resultStatusReducer);
   }
+
+  return state;
 };
+
+const projectStatusReducer = combineReducers({
+  chartDownloadStatus: chartDownloadStatusReducer,
+  resultsStatus: resultsStatusReducer
+});
 
 const projectsStatusReducer = (state = {}, action) => {
   const { projectId } = action;
-  if (!projectId) {
-    return state;
+  if (projectId) {
+    return updatePartialState(state, action, projectId, projectStatusReducer);
   }
 
-  const projectStatus = state[projectId] || defaultProjectStatus;
-  switch (action.type) {
-    case ActionTypes.CHART_DOWNLOAD_STATUS_UPDATE: {
-      const { chartDownloadStatus } = action;
-      return {
-        ...state,
-        [projectId]: {
-          ...projectStatus,
-          chartDownloadStatus
-        }
-      };
-    }
-    default:
-      return {
-        ...state,
-        [projectId]: {
-          ...projectStatus,
-          resultsStatus: resultsStatusReducer(projectStatus.resultsStatus, action)
-        }
-      };
-  }
+  return state;
 };
 
 const statsReducer = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, action) => {
@@ -272,17 +278,15 @@ const statusReducer = combineReducers({
 });
 
 
-const axesConfigReducer = (state = defaultAxisConfig, action) => {
+const axisConfigReducer = (state = {}, action) => {
   const {
-    axisName,
     logKey,
     scale = 'linear',
     xAxisKey,
     rangeType = 'auto',
     isMin, rangeNumber
   } = action;
-  const axisConfig = state[axisName] || {};
-  const { logKeysConfig = {}, scaleRange = {} } = axisConfig;
+  const { logKeysConfig = {}, scaleRange = {} } = state;
   const idx = isMin ? 0 : 1;
   const rangeConfig = scaleRange[scale] || {};
   const { rangeTypes = [], range = [] } = rangeConfig;
@@ -291,44 +295,32 @@ const axesConfigReducer = (state = defaultAxisConfig, action) => {
     case ActionTypes.AXIS_CONFIG_SCALE_UPDATE:
       return {
         ...state,
-        [axisName]: {
-          ...axisConfig,
-          scale
-        }
+        scale
       };
     case ActionTypes.AXIS_CONFIG_X_KEY_UPDATE:
       return {
         ...state,
-        [axisName]: {
-          ...axisConfig,
-          xAxisKey
-        }
+        xAxisKey
       };
     case ActionTypes.AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE:
       return {
         ...state,
-        [axisName]: {
-          ...axisConfig,
-          scaleRange: {
-            ...scaleRange,
-            [scale]: {
-              rangeTypes: Object.assign([], rangeTypes, { [idx]: rangeType }),
-              range
-            }
+        scaleRange: {
+          ...scaleRange,
+          [scale]: {
+            rangeTypes: Object.assign([], rangeTypes, { [idx]: rangeType }),
+            range
           }
         }
       };
     case ActionTypes.AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE:
       return {
         ...state,
-        [axisName]: {
-          ...axisConfig,
-          scaleRange: {
-            ...scaleRange,
-            [scale]: {
-              rangeTypes,
-              range: Object.assign([], range, { [idx]: rangeNumber })
-            }
+        scaleRange: {
+          ...scaleRange,
+          [scale]: {
+            rangeTypes,
+            range: Object.assign([], range, { [idx]: rangeNumber })
           }
         }
       };
@@ -336,16 +328,12 @@ const axesConfigReducer = (state = defaultAxisConfig, action) => {
       const logKeyConfig = logKeysConfig[logKey] || {};
       return {
         ...state,
-        [axisName]: {
-          ...axisConfig,
-          logKeysConfig: {
-            ...logKeysConfig,
-            [logKey]: {
-              ...logKeyConfig,
-              selected: !logKeyConfig.selected
-            }
+        logKeysConfig: {
+          ...logKeysConfig,
+          [logKey]: {
+            ...logKeyConfig,
+            selected: !logKeyConfig.selected
           }
-
         }
       };
     }
@@ -354,46 +342,41 @@ const axesConfigReducer = (state = defaultAxisConfig, action) => {
   }
 };
 
-
-const resultsConfigWithoutResultReducer = (state, resultId) => {
-  if (!Number.isInteger(resultId)) {
-    return state;
+const axesConfigReducer = (state = defaultAxisConfig, action) => {
+  const { axisName } = action;
+  if (axisName) {
+    return updatePartialState(state, action, axisName, axisConfigReducer);
   }
-  const newState = {};
-  Object.keys(state).forEach((id) => {
-    if (Number(id) === resultId) {
-      return;
-    }
-    newState[id] = state[id];
-  });
-  return newState;
+
+  return state;
 };
+
 
 const resultsConfigReducer = (state = {}, action) => {
   const { resultId } = action;
-  const resultConfig = state[resultId] || {};
   switch (action.type) {
     case ActionTypes.RESULTS_CONFIG_SELECT_UPDATE:
-      if (resultId == null) {
-        return state;
+      if (resultId) {
+        const resultConfig = state[resultId] || {};
+        return {
+          ...state,
+          [resultId]: {
+            ...resultConfig,
+            hidden: action.hidden
+          }
+        };
       }
-      return {
-        ...state,
-        [Number(resultId)]: {
-          ...resultConfig,
-          hidden: action.hidden
-        }
-      };
+      return state;
     case ActionTypes.RESULT_UPDATE_SUCCESS:
       if (action.response && action.response.result) {
         const { result } = action.response;
         if (result.isUnregistered) {
-          return resultsConfigWithoutResultReducer(state, result.id);
+          return removePartialState(state, result.id);
         }
       }
       return state;
     case ActionTypes.RESULT_DELETE_SUCCESS:
-      return resultsConfigWithoutResultReducer(state, resultId);
+      return removePartialState(state, resultId);
     default:
       return state;
   }
@@ -439,29 +422,24 @@ const tableStateReducer = (state = {}, action) => {
   }
 };
 
+const projectConfigReducer = combineReducers({
+  axes: axesConfigReducer,
+  resultsConfig: resultsConfigReducer,
+  lines: linesConfigReducer,
+  tableState: tableStateReducer
+});
 
 const projectsConfigReducer = (state = {}, action) => {
   const { projectId } = action;
-
   if (projectId) {
-    let projectConfig;
     switch (action.type) {
       case ActionTypes.PROJECT_CONFIG_RESET:
-        projectConfig = {};
-        break;
+        return updatePartialState(
+          state, action, projectId, () => projectConfigReducer(undefined, action)
+        );
       default:
-        projectConfig = state[projectId] || {};
+        return updatePartialState(state, action, projectId, projectConfigReducer);
     }
-
-    return {
-      ...state,
-      [projectId]: {
-        axes: axesConfigReducer(projectConfig.axes, action),
-        resultsConfig: resultsConfigReducer(projectConfig.resultsConfig, action),
-        lines: linesConfigReducer(projectConfig.lines, action),
-        tableState: tableStateReducer(projectConfig.tableState, action)
-      }
-    };
   }
 
   return state;
