@@ -67,3 +67,7 @@
 .recharts-active-dot {
   pointer-events: none;
 }
+
+.recharts-tooltip-wrapper {
+  z-index: 10000;
+}
