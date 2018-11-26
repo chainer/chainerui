@@ -46,6 +46,7 @@
 }
 
 .plot-hidden {
+  min-width: 800px;
   position: absolute;
   left: -9999px;
 }
