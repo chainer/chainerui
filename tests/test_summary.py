@@ -98,9 +98,8 @@ def test_summary_image(func_dir):
 
 @unittest.skipUnless(audio_report._available, 'Audio module is not installed')
 def test_summary_audio(func_dir):
-    data = np.random.uniform(-1, 1, 44100)
-    audio = (data/np.max(np.abs(data)) * 32767).astype(np.int16)
-    summary.audio(audio, 44100, out=func_dir, epoch=10)
+    audio = np.random.uniform(-1, 1, 16000)
+    summary.audio(audio, 16000, out=func_dir, epoch=10)
 
     meta_filepath = os.path.join(
         func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
@@ -118,7 +117,7 @@ def test_summary_audio(func_dir):
     assert saved_filename.startswith('audio_')
     assert saved_filename.endswith('.wav')
 
-    summary.audio(audio, 44100, out=func_dir, epoch=20)
+    summary.audio(audio, 16000, out=func_dir, epoch=20)
     with open(meta_filepath, 'r') as f:
         metas2 = json.load(f)
     assert len(metas2) == 2
@@ -137,15 +136,14 @@ def test_summary_audio(func_dir):
 def test_summary_reporter_mix(func_dir):
     img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
     img2 = np.copy(img)
-    data = np.random.uniform(-1, 1, 44100)
-    audio = (data/np.max(np.abs(data)) * 32767).astype(np.int16)
+    audio = np.random.uniform(-1, 1, 16000)
     audio2 = np.copy(audio)
 
     with summary.reporter(prefix='with_', out=func_dir, epoch=10) as r:
         r.image(img)
         r.image(img2, 'test_image')
-        r.audio(audio, 44100)
-        r.audio(audio2, 44100, 'test_audio')
+        r.audio(audio, 16000)
+        r.audio(audio2, 16000, 'test_audio')
 
     meta_filepath = os.path.join(
         func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
