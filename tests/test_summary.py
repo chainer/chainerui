@@ -1,6 +1,9 @@
 import json
+from mock import MagicMock
+from mock import patch
 import os
 import unittest
+import warnings
 
 import numpy as np
 import pytest
@@ -13,13 +16,50 @@ from chainerui import summary
 @pytest.fixture(autouse=True, scope='function')
 def clear_cache():
     yield
+    summary._chainerui_asset_observer.out = None
     summary._chainerui_asset_observer.cache = []
+
+
+def test_summary_set_out_with_warning_image(func_dir):
+    summary._chainerui_asset_observer.default_output_path = func_dir
+    meta_filepath = os.path.join(
+        func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter('always')
+        img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
+        summary.image(img)
+        assert len(w) == 1
+        assert os.path.exists(meta_filepath)
+
+        summary.set_out(func_dir)
+        summary.image(img)
+        assert len(w) == 1
+
+
+def test_summary_set_out_reporter_image(func_dir):
+    summary._chainerui_asset_observer.default_output_path = func_dir
+    meta_filepath = os.path.join(
+        func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter('always')
+        img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
+        with summary.reporter() as r:
+            r.image(img)
+        assert len(w) == 1
+        assert os.path.exists(meta_filepath)
+
+        summary.set_out(func_dir)
+        with summary.reporter() as r:
+            r.image(img)
+        assert len(w) == 1
 
 
 @unittest.skipUnless(image_report._available, 'Pillow is not installed')
 def test_summary_image(func_dir):
     img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
-    summary.image(img, func_dir, epoch=10)
+    summary.image(img, out=func_dir, epoch=10)
 
     meta_filepath = os.path.join(
         func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
@@ -38,7 +78,7 @@ def test_summary_image(func_dir):
     assert saved_filename.endswith('.png')
 
     img2 = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
-    summary.image(img2, func_dir, 'test', epoch=20)
+    summary.image(img2, 'test', out=func_dir, epoch=20)
 
     with open(meta_filepath, 'r') as f:
         metas2 = json.load(f)
@@ -58,7 +98,7 @@ def test_summary_image(func_dir):
 def test_summary_audio(func_dir):
     data = np.random.uniform(-1, 1, 44100)
     audio = (data/np.max(np.abs(data)) * 32767).astype(np.int16)
-    summary.audio(audio, 44100, func_dir, epoch=10)
+    summary.audio(audio, 44100, out=func_dir, epoch=10)
 
     meta_filepath = os.path.join(
         func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
@@ -76,7 +116,7 @@ def test_summary_audio(func_dir):
     assert saved_filename.startswith('audio_')
     assert saved_filename.endswith('.wav')
 
-    summary.audio(audio, 44100, func_dir, epoch=20)
+    summary.audio(audio, 44100, out=func_dir, epoch=20)
     with open(meta_filepath, 'r') as f:
         metas2 = json.load(f)
     assert len(metas2) == 2
@@ -99,7 +139,7 @@ def test_summary_reporter_mix(func_dir):
     audio = (data/np.max(np.abs(data)) * 32767).astype(np.int16)
     audio2 = np.copy(audio)
 
-    with summary.reporter(func_dir, prefix='with_', epoch=10) as r:
+    with summary.reporter(prefix='with_', out=func_dir, epoch=10) as r:
         r.image(img)
         r.image(img2, 'test_image')
         r.audio(audio, 44100)
@@ -125,20 +165,20 @@ def test_summary_reporter_mix(func_dir):
     assert saved_filename1.startswith('with_test_image')
     assert saved_filename1.endswith('.png')
     assert 'with_audio_2' in metas[0]['audios']
-    saved_filename = metas[0]['audios']['with_audio_2']
-    assert saved_filename.startswith('with_audio_2')
-    assert saved_filename.endswith('.wav')
+    saved_filename3 = metas[0]['audios']['with_audio_2']
+    assert saved_filename3.startswith('with_audio_2')
+    assert saved_filename3.endswith('.wav')
     assert 'with_test_audio' in metas[0]['audios']
-    saved_filename1 = metas[0]['audios']['with_test_audio']
-    assert saved_filename1.startswith('with_test_audio')
-    assert saved_filename1.endswith('.wav')
+    saved_filename4 = metas[0]['audios']['with_test_audio']
+    assert saved_filename4.startswith('with_test_audio')
+    assert saved_filename4.endswith('.wav')
 
     img3 = np.copy(img)
     img4 = np.copy(img)
     audio3 = np.copy(audio)
     audio4 = np.copy(audio)
 
-    with summary.reporter(func_dir, prefix='with_', epoch=20) as r:
+    with summary.reporter(prefix='with_', out=func_dir, epoch=20) as r:
         r.image(img3)
         r.image(img4, 'test_image')
         r.audio(audio3, 44100)
@@ -160,19 +200,36 @@ def test_summary_reporter_mix(func_dir):
     assert saved_filename1.startswith('with_test_image')
     assert saved_filename1.endswith('.png')
     assert 'with_audio_2' in metas2[1]['audios']
-    saved_filename = metas2[1]['audios']['with_audio_2']
-    assert saved_filename.startswith('with_audio_2')
-    assert saved_filename.endswith('.wav')
+    saved_filename2 = metas2[1]['audios']['with_audio_2']
+    assert saved_filename2.startswith('with_audio_2')
+    assert saved_filename2.endswith('.wav')
     assert 'with_test_audio' in metas2[1]['audios']
-    saved_filename1 = metas2[1]['audios']['with_test_audio']
-    assert saved_filename1.startswith('with_test_audio')
-    assert saved_filename1.endswith('.wav')
+    saved_filename3 = metas2[1]['audios']['with_test_audio']
+    assert saved_filename3.startswith('with_test_audio')
+    assert saved_filename3.endswith('.wav')
 
 
 def test_summary_reporter_empty(func_dir):
-    with summary.reporter(func_dir, epoch=10):
+    with summary.reporter(out=func_dir, epoch=10):
         pass
 
     meta_filepath = os.path.join(
         func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
     assert not os.path.exists(meta_filepath)
+
+
+def test_summary_image_unavailable(func_dir):
+    mock_checker = MagicMock(return_value=False)
+    with patch('chainerui.report.image_report.check_available', mock_checker):
+        summary.image(np.zeros(10), out=func_dir)
+
+    assert not os.path.exists(os.path.join(func_dir, '.chainerui_assets'))
+
+
+def test_reporter_image_unavailable(func_dir):
+    mock_checker = MagicMock(return_value=False)
+    with patch('chainerui.report.image_report.check_available', mock_checker):
+        with summary.reporter(out=func_dir) as r:
+            r.image(np.zeros(10))
+
+    assert not os.path.exists(os.path.join(func_dir, '.chainerui_assets'))

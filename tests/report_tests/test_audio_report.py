@@ -8,7 +8,7 @@ import numpy as np
 from chainerui.report import audio_report
 
 
-def test_abailable():
+def test_available():
     def is_scipy_installed():
         try:
             import scipy  # NOQA
