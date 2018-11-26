@@ -19,6 +19,7 @@ def clear_cache():
     summary._chainerui_asset_observer.cache = []
 
 
+@unittest.skipUnless(image_report._available, 'Pillow is not installed')
 def test_summary_set_out_with_warning_image(func_dir):
     summary._chainerui_asset_observer.default_output_path = func_dir
     meta_filepath = os.path.join(func_dir, '.chainerui_assets')
@@ -35,6 +36,7 @@ def test_summary_set_out_with_warning_image(func_dir):
         assert len(w) == 1
 
 
+@unittest.skipUnless(image_report._available, 'Pillow is not installed')
 def test_summary_set_out_reporter_image(func_dir):
     summary._chainerui_asset_observer.default_output_path = func_dir
     meta_filepath = os.path.join(func_dir, '.chainerui_assets')
