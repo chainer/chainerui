@@ -520,21 +520,25 @@ def test_get_assets(func_dir, project, app):
     project3_path = os.path.join(func_dir, 'test_project3')
     path = os.path.join(project3_path, '10004')
     os.makedirs(path)
-    image_info = [
+    assets_info = [
         {
             "epoch": 1,
             "iteration": 600,
             "images": {
                 "train": "iter_600_61b3a8fa.png",
                 "train_reconstructed": "iter_600_c15c042b.jpg",
-            }
+            },
+            "audios": {
+                "sampling": "audio_0_755e0f8b17cd.wav",
+            },
         }
     ]
     with open(os.path.join(
             path, summary.CHAINERUI_ASSETS_METAFILE_NAME), 'w') as f:
-        json.dump(image_info, f)
+        json.dump(assets_info, f)
     open(os.path.join(path, 'iter_600_61b3a8fa.png'), 'w') .close()
     open(os.path.join(path, 'iter_600_c15c042b.jpg'), 'w') .close()
+    open(os.path.join(path, 'audio_0_755e0f8b17cd.wav'), 'w') .close()
     with open(os.path.join(path, 'log'), 'w') as f:
         json.dump([], f)
     Project.create(project3_path, 'assets-test-project')
@@ -545,7 +549,7 @@ def test_get_assets(func_dir, project, app):
     assert 'assets' in data
     assert len(data['assets']) == 1
     assert 'contents' in data['assets'][0]
-    assert len(data['assets'][0]['contents']) == 2
+    assert len(data['assets'][0]['contents']) == 3
     assert 'train_info' in data['assets'][0]
 
     # invalid project ID
@@ -575,8 +579,11 @@ def test_get_assets(func_dir, project, app):
     resource_url_jpg = url + '/2'
     resp = app.get(resource_url_jpg)
     assert resp.status_code == 200
+    resource_url_wav = url + '/3'
+    resp = app.get(resource_url_wav)
+    assert resp.status_code == 200
 
-    resource_url = url + '/3'
+    resource_url = url + '/4'
     resp = app.get(resource_url)
     data = assert_json_api(resp, 404)
     assert len(data) == 2
