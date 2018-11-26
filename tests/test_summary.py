@@ -20,6 +20,7 @@ def clear_cache():
     summary._chainerui_asset_observer.cache = []
 
 
+@unittest.skipUnless(image_report._available, 'Pillow is not installed')
 def test_summary_set_out_with_warning_image(func_dir):
     summary._chainerui_asset_observer.default_output_path = func_dir
     meta_filepath = os.path.join(
@@ -37,6 +38,7 @@ def test_summary_set_out_with_warning_image(func_dir):
         assert len(w) == 1
 
 
+@unittest.skipUnless(image_report._available, 'Pillow is not installed')
 def test_summary_set_out_reporter_image(func_dir):
     summary._chainerui_asset_observer.default_output_path = func_dir
     meta_filepath = os.path.join(
@@ -223,7 +225,17 @@ def test_summary_image_unavailable(func_dir):
     with patch('chainerui.report.image_report.check_available', mock_checker):
         summary.image(np.zeros(10), out=func_dir)
 
-    assert not os.path.exists(os.path.join(func_dir, '.chainerui_assets'))
+    assert not os.path.exists(
+        os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME))
+
+
+def test_summary_audio_unavailable(func_dir):
+    mock_checker = MagicMock(return_value=False)
+    with patch('chainerui.report.audio_report.check_available', mock_checker):
+        summary.audio(np.zeros(10), 40, out=func_dir)
+
+    assert not os.path.exists(
+        os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME))
 
 
 def test_reporter_image_unavailable(func_dir):
@@ -232,4 +244,15 @@ def test_reporter_image_unavailable(func_dir):
         with summary.reporter(out=func_dir) as r:
             r.image(np.zeros(10))
 
-    assert not os.path.exists(os.path.join(func_dir, '.chainerui_assets'))
+    assert not os.path.exists(
+        os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME))
+
+
+def test_reporter_audio_unavailable(func_dir):
+    mock_checker = MagicMock(return_value=False)
+    with patch('chainerui.report.audio_report.check_available', mock_checker):
+        with summary.reporter(out=func_dir) as r:
+            r.audio(np.zeros(10), 40)
+
+    assert not os.path.exists(
+        os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME))

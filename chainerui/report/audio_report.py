@@ -15,22 +15,22 @@ _write_wav = None
 def _set_wav_writer():
     writer = None
     try:
-        import scipy.io.wavfile
+        from scipy.io.wavfile import write
 
         def scipy_write_wav(out, data, rate):
-            return scipy.io.wavfile.write(out, rate, data)
+            return write(out, rate, data)
 
         writer = scipy_write_wav
     except (ImportError, TypeError):
         pass
-
-    if not writer:
+    if writer is not None:
         return writer
+
     try:
-        import librosa.output
+        from librosa.output import write_wav
 
         def librosa_write_wav(out, data, rate):
-            return librosa.output.write_wav(out, data, rate)
+            return write_wav(out, data, rate)
 
         writer = librosa_write_wav
     except (ImportError, TypeError):

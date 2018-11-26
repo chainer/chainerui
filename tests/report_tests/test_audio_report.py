@@ -4,35 +4,41 @@ import warnings
 
 import chainer
 import numpy as np
+import six
 
 from chainerui.report import audio_report
 
 
+@unittest.skipUnless(audio_report._available, 'Audio module is not installed')
 def test_available():
-    def is_scipy_installed():
-        try:
-            import scipy  # NOQA
-
-            return True
-        except (ImportError, TypeError):
-            return False
-
-    def is_librosa_installed():
-        try:
-            import librosa  # NOQA
-
-            return True
-        except (ImportError, TypeError):
-            return False
-
-    available = is_scipy_installed() or is_librosa_installed()
     with warnings.catch_warnings(record=True) as w:
-        assert audio_report.check_available() == available
-
-    if available:
+        assert audio_report.check_available()
         assert len(w) == 0
+
+
+def test_available_not_scipy_installed():
+    import sys
+    is_installed = 'scipy' in sys.modules or 'librosa' in sys.modules
+
+    def check_available():
+        with warnings.catch_warnings(record=True) as w:
+            assert not audio_report.check_available()
+            assert len(w) == 1
+
+    if is_installed:
+        scipy = sys.modules.get('scipy.io.wavfile', None)
+        librosa = sys.modules.get('librosa.output', None)
+        try:
+            sys.modules['scipy.io.wavfile'] = ImportError()
+            sys.modules['librosa.output'] = ImportError()
+            six.moves.reload_module(audio_report)
+            check_available()
+        finally:
+            sys.modules['scipy.io.wavfile'] = scipy
+            sys.modules['librosa.output'] = librosa
+            six.moves.reload_module(audio_report)
     else:
-        assert len(w) == 1
+        check_available()
 
 
 @unittest.skipUnless(audio_report._available, 'Audio module is not installed')
