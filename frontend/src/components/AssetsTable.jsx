@@ -3,6 +3,8 @@ import ReactTable from 'react-table';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 
+import TableConfigurator from './TableConfigurator';
+
 const AssetsTable = (props) => {
   const { assets } = props;
 
@@ -52,14 +54,29 @@ const AssetsTable = (props) => {
     }
   ];
 
+  console.log({ columns });
+
+  const columnHeaders = columns.map((c) => ({
+    Header: c.Header,
+    columns: c.columns.map((sc) => sc.Header)
+  }));
+
+  console.log({ columnHeaders });
+
   return (
-    <ReactTable
-      style={{ width: '100%' }}
-      data={assets}
-      columns={columns}
-      showPagination={false}
-      minRows={3}
-    />
+    <div>
+      <ReactTable
+        style={{ width: '100%' }}
+        data={assets}
+        columns={columns}
+        showPagination={false}
+        minRows={3}
+      />
+
+      <TableConfigurator
+        columnHeaders={columnHeaders}
+      />
+    </div>
   );
 };
 
