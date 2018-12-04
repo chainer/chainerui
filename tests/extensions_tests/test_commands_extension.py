@@ -1,47 +1,60 @@
 from mock import MagicMock
 import os
 
-from chainer.optimizer import Hyperparameter
-from chainer.training import Trainer
-from chainer.training.triggers import IntervalTrigger
 import pytest
 
-from chainerui.extensions.commands_extension import _stop_training
-from chainerui.extensions.commands_extension import CommandsExtension
-from chainerui.utils.command_item import CommandItem
-from chainerui.utils.commands_state import CommandsState
-from chainerui.utils.commands_state import JobStatus
 from tests.conftest import TempDirTestCase
 
+try:
+    from chainer.optimizer import Hyperparameter
+    from chainer.training import Trainer
+    from chainer.training.triggers import IntervalTrigger
 
-class _MockTrainer(Trainer):
-    def __init__(self, out_path, stop_trigger=IntervalTrigger(100, 'epoch'),
-                 updater=None):
-        self.out = out_path
-        self.stop_trigger = stop_trigger
+    _chainer_installed = True
+except (ImportError, TypeError):
+    _chainer_installed = False
 
-        hyperparam = Hyperparameter()
-        hyperparam.lr = 0.005
-        optimizer = MagicMock()
-        optimizer.__class__.__name__ = 'MomentumSGD'
-        optimizer.hyperparam = hyperparam
-
-        if updater is None:
-            updater = MagicMock()
-            updater.epoch = 0
-            updater.iteration = 0
-            updater.get_optimizer.return_value = optimizer
-        self.updater = updater
-
-    @property
-    def elapsed_time(self):
-        return 0
-
-    def serialize(self, serializer):
-        pass
+if _chainer_installed:
+    from chainerui.extensions.commands_extension import _stop_training
+    from chainerui.extensions.commands_extension import CommandsExtension
+    from chainerui.utils.command_item import CommandItem
+    from chainerui.utils.commands_state import CommandsState
+    from chainerui.utils.commands_state import JobStatus
 
 
+@pytest.mark.skipif(not _chainer_installed, reason='Chainer is not installed')
 class TestCommandsExtension(TempDirTestCase):
+
+    def _get_mock_trainer(self, out_path, trigger=None, updater=None):
+        class _MockTrainer(Trainer):
+            def __init__(
+                self, out_path, stop_trigger=IntervalTrigger(100, 'epoch'),
+                    updater=None):
+
+                self.out = out_path
+                self.stop_trigger = stop_trigger
+
+                hyperparam = Hyperparameter()
+                hyperparam.lr = 0.005
+                optimizer = MagicMock()
+                optimizer.__class__.__name__ = 'MomentumSGD'
+                optimizer.hyperparam = hyperparam
+
+                if updater is None:
+                    updater = MagicMock()
+                    updater.epoch = 0
+                    updater.iteration = 0
+                    updater.get_optimizer.return_value = optimizer
+                self.updater = updater
+
+            @property
+            def elapsed_time(self):
+                return 0
+
+            def serialize(self, serializer):
+                pass
+
+        return _MockTrainer(out_path, trigger, updater)
 
     def test_initialize_command_trigger(self):
         out_path = os.path.join(self.dir, 'results')
@@ -52,7 +65,7 @@ class TestCommandsExtension(TempDirTestCase):
 
         target = CommandsExtension()
         trigger = MagicMock()
-        trainer = _MockTrainer(out_path, trigger)
+        trainer = self._get_mock_trainer(out_path, trigger)
         target.initialize(trainer)
         assert not trainer.stop_trigger._loop_stop
         _stop_training(trainer, None)
@@ -82,7 +95,7 @@ class TestCommandsExtension(TempDirTestCase):
 
         # initialize
         target = CommandsExtension(trigger=(1, 'iteration'))
-        trainer = _MockTrainer(out_path)
+        trainer = self._get_mock_trainer(out_path)
         target.initialize(trainer)
         assert not trainer.stop_trigger._loop_stop
         assert not os.path.isfile(commands_path)
@@ -178,7 +191,7 @@ class TestCommandsExtension(TempDirTestCase):
         updater.epoch = 1
         updater.iteration = 1
         updater.get_optimizer.return_value = optimizer
-        trainer = _MockTrainer(out_path, updater=updater)
+        trainer = self._get_mock_trainer(out_path, updater=updater)
         target.initialize(trainer)
 
         # setup invalid command

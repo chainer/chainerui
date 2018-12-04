@@ -8,8 +8,19 @@ import warnings
 import numpy as np
 import pytest
 
-from chainerui.report import image_report
 from chainerui import summary
+
+try:
+    import chainer  # NOQA
+    _chainer_installed = True
+except (ImportError, TypeError):
+    _chainer_installed = False
+
+if _chainer_installed:
+    from chainerui.report import image_report
+    _image_reporter_available = image_report._available
+else:
+    _image_reporter_available = False
 
 
 @pytest.fixture(autouse=True, scope='function')
@@ -19,7 +30,8 @@ def clear_cache():
     summary._chainerui_asset_observer.cache = []
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_summary_set_out_with_warning_image(func_dir):
     summary._chainerui_asset_observer.default_output_path = func_dir
     meta_filepath = os.path.join(func_dir, '.chainerui_assets')
@@ -36,7 +48,8 @@ def test_summary_set_out_with_warning_image(func_dir):
         assert len(w) == 1
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_summary_set_out_reporter_image(func_dir):
     summary._chainerui_asset_observer.default_output_path = func_dir
     meta_filepath = os.path.join(func_dir, '.chainerui_assets')
@@ -55,7 +68,8 @@ def test_summary_set_out_reporter_image(func_dir):
         assert len(w) == 1
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_summary_image(func_dir):
     img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
     summary.image(img, out=func_dir, epoch=10)
@@ -92,6 +106,7 @@ def test_summary_image(func_dir):
     assert saved_filename2.endswith('.png')
 
 
+@unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
 def test_summary_image_unavailable(func_dir):
     mock_checker = MagicMock(return_value=False)
     with patch('chainerui.report.image_report.check_available', mock_checker):
@@ -100,7 +115,8 @@ def test_summary_image_unavailable(func_dir):
     assert not os.path.exists(os.path.join(func_dir, '.chainerui_assets'))
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_reporter(func_dir):
     img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
     img2 = np.copy(img)
@@ -152,7 +168,8 @@ def test_reporter(func_dir):
     assert saved_filename4.endswith('.png')
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_reporter_empty(func_dir):
     with summary.reporter(out=func_dir, epoch=10):
         pass
@@ -161,6 +178,7 @@ def test_reporter_empty(func_dir):
     assert not os.path.exists(meta_filepath)
 
 
+@unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
 def test_reporter_image_unavailable(func_dir):
     mock_checker = MagicMock(return_value=False)
     with patch('chainerui.report.image_report.check_available', mock_checker):
