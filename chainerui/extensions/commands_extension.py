@@ -126,7 +126,7 @@ class CommandsExtension(extension.Extension):
     def initialize(self, trainer):
         self._out = trainer.out
         CommandItem.remove_commands_file(trainer.out)
-        CommandsState.run(trainer)
+        CommandsState.run(trainer.out)
         if isinstance(trainer.stop_trigger, IntervalTrigger):
             trainer.stop_trigger = _CommandIntervalTrigger(
                 trainer.stop_trigger)

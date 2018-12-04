@@ -8,9 +8,23 @@ import warnings
 import numpy as np
 import pytest
 
-from chainerui.report import audio_report
-from chainerui.report import image_report
 from chainerui import summary
+
+
+try:
+    import chainer  # NOQA
+    _chainer_installed = True
+except (ImportError, TypeError):
+    _chainer_installed = False
+
+if _chainer_installed:
+    from chainerui.report import audio_report
+    from chainerui.report import image_report
+    _audio_reporter_available = audio_report._available
+    _image_reporter_available = image_report._available
+else:
+    _audio_reporter_available = False
+    _image_reporter_available = False
 
 
 @pytest.fixture(autouse=True, scope='function')
@@ -20,7 +34,8 @@ def clear_cache():
     summary._chainerui_asset_observer.cache = []
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_summary_set_out_with_warning_image(func_dir):
     summary._chainerui_asset_observer.default_output_path = func_dir
     meta_filepath = os.path.join(
@@ -38,7 +53,8 @@ def test_summary_set_out_with_warning_image(func_dir):
         assert len(w) == 1
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_summary_set_out_reporter_image(func_dir):
     summary._chainerui_asset_observer.default_output_path = func_dir
     meta_filepath = os.path.join(
@@ -58,7 +74,8 @@ def test_summary_set_out_reporter_image(func_dir):
         assert len(w) == 1
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_summary_image(func_dir):
     img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
     summary.image(img, out=func_dir, epoch=10)
@@ -96,7 +113,7 @@ def test_summary_image(func_dir):
     assert saved_filename2.endswith('.png')
 
 
-@unittest.skipUnless(audio_report._available, 'Audio module is not installed')
+@unittest.skipUnless(_audio_reporter_available, 'Audio module is not installed')
 def test_summary_audio(func_dir):
     audio = np.random.uniform(-1, 1, 16000)
     summary.audio(audio, 16000, out=func_dir, epoch=10)
@@ -131,8 +148,8 @@ def test_summary_audio(func_dir):
     assert saved_filename.endswith('.wav')
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
-@unittest.skipUnless(audio_report._available, 'Audio module is not installed')
+@unittest.skipUnless(_image_reporter_available, 'Image reporter is not available')
+@unittest.skipUnless(_audio_reporter_available, 'Audio module is not installed')
 def test_summary_reporter_mix(func_dir):
     img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
     img2 = np.copy(img)

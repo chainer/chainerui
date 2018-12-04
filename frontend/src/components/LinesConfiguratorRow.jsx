@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Row, Col,
-  FormGroup, Label, Input
-} from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
+import Check from './FormControl/Check';
 import TruncatedResultName from './TruncatedResultName';
 import { line2key } from '../utils';
 
@@ -53,15 +51,11 @@ class LinesConfiguratorRow extends React.Component {
       >
         <Row>
           <Col xs="3" lg="2">
-            <FormGroup check>
-              <Label check>
-                <Input
-                  type="checkbox"
-                  checked={isVisible}
-                  onChange={this.handleLineVisibilityUpdate}
-                />&nbsp;
-              </Label>
-            </FormGroup>
+            <Check
+              type="checkbox"
+              checked={isVisible}
+              onChange={this.handleLineVisibilityUpdate}
+            />
           </Col>
           <Col xs="9" lg="5" className="text-truncate">
             <a href="" className="text-dark d-block" onClick={this.handleEditClick}>

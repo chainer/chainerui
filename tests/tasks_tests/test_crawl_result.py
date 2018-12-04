@@ -4,14 +4,17 @@ import os
 
 import pytest
 
+from chainerui.models.command import Command
+from chainerui.models.log import Log
 from chainerui.models.result import Result
+from chainerui.models.snapshot import Snapshot
 from chainerui.tasks.crawl_result import _check_log_updated
+from chainerui.tasks.crawl_result import crawl_result
 from chainerui.tasks.crawl_result import load_result_json
 
 
 @pytest.fixture(autouse=True, scope='function')
 def result_path(func_dir):
-    path = func_dir
     log = [
         {
             "main/loss": 0.1933198869228363,
@@ -32,17 +35,26 @@ def result_path(func_dir):
             "validation/main/accuracy": 0.975399911403656
         }
     ]
-    with open(os.path.join(path, 'log'), 'w') as f:
+    with open(os.path.join(func_dir, 'log'), 'w') as f:
         json.dump(log, f)
 
-    with open(os.path.join(path, 'log.txt'), 'w') as f:
+    with open(os.path.join(func_dir, 'log.txt'), 'w') as f:
         f.write('json')
 
-    return path
+    open(os.path.join(func_dir, 'snapshot_iter_100'), 'w').close()
+    open(os.path.join(func_dir, 'snapshot_iter_invalid'), 'w').close()
+
+    commands = [
+        {
+            "name": "take_snapshot"
+        }
+    ]
+    with open(os.path.join(func_dir, 'commands'), 'w') as f:
+        json.dump(commands, f)
 
 
-def test_check_log_updated(result_path):
-    result = Result(path_name=result_path)
+def test_check_log_updated(func_dir):
+    result = Result(path_name=func_dir)
     assert _check_log_updated(result)
     assert result.log_modified_at is not None
     # NOTE: getmtime precision is rough, so back 0.1s on purpose
@@ -50,7 +62,7 @@ def test_check_log_updated(result_path):
         milliseconds=100)
     result.log_modified_at = modified_at
 
-    with open(os.path.join(result_path, 'log'), 'r') as f:
+    with open(os.path.join(func_dir, 'log'), 'r') as f:
         logs = json.load(f)
     logs.append({
         "main/loss": 0.04882155358791351,
@@ -61,7 +73,7 @@ def test_check_log_updated(result_path):
         "main/accuracy": 0.9839146733283997,
         "validation/main/accuracy": 0.9726001620292664
     })
-    with open(os.path.join(result_path, 'log'), 'w') as f:
+    with open(os.path.join(func_dir, 'log'), 'w') as f:
         json.dump(logs, f)
     assert _check_log_updated(result)
     assert result.log_modified_at != modified_at
@@ -70,13 +82,36 @@ def test_check_log_updated(result_path):
     assert not _check_log_updated(result)
     assert result.log_modified_at == modified_at
 
-    os.remove(os.path.join(result_path, 'log'))
+    os.remove(os.path.join(func_dir, 'log'))
     assert not _check_log_updated(result)
 
 
-def test_load_result_json_with_correct_file(result_path):
-    assert len(load_result_json(result_path, 'log')) > 0
+def test_load_result_json_with_correct_file(func_dir):
+    assert len(load_result_json(func_dir, 'log')) > 0
 
 
-def test_load_result_json_with_incorrect_file(result_path):
-    assert len(load_result_json(result_path, 'log.txt')) == 0
+def test_load_result_json_with_incorrect_file(func_dir):
+    assert len(load_result_json(func_dir, 'log.txt')) == 0
+
+
+def test_crawl_result_reset(func_dir):
+    # basic test is checked on 'test_api.py', so this test checks only
+    # reset logic.
+    result = Result(func_dir)
+    result.updated_at = datetime.datetime.now()
+    result.logs = [Log({'loss': 0.5}), Log({'loss': 0.2}), Log({'loss': 0.01})]
+    result.commands = [Command('take_sanpshot'), Command('stop')]
+    result.snapshots = [
+        Snapshot('snapshot_iter_10', 10), Snapshot('snapshot_iter_11', 11)]
+
+    actual = crawl_result(result, force=True, commit=False)
+    assert len(actual.logs) == 2
+    assert len(actual.commands) == 1
+    assert len(actual.snapshots) == 1
+
+    open(os.path.join(func_dir, 'snapshot_iter_200'), 'w').close()
+
+    actual2 = crawl_result(actual, force=True, commit=False)
+    assert len(actual2.logs) == 2
+    assert len(actual2.commands) == 1
+    assert len(actual2.snapshots) == 2

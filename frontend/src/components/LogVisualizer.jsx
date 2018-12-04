@@ -99,9 +99,9 @@ class LogVisualizer extends React.Component {
     const { axes, resultsConfig, lines } = projectConfig;
     const { logKeys, xAxisKeys } = stats;
     const {
-      xAxis = { axisName: 'xAxis' },
-      yLeftAxis = { axisName: 'yLeftAxis' },
-      yRightAxis = { axisName: 'yRightAxis' }
+      xAxis = {},
+      yLeftAxis = {},
+      yRightAxis = {}
     } = axes;
     const { xAxisKey = xAxisKeys[0] } = xAxis;
     const selectedResults = getSelectedResults(results, resultsConfig);
@@ -163,6 +163,7 @@ class LogVisualizer extends React.Component {
             connectNulls
             isAnimationActive={false}
             dot={false}
+            activeDot={false}
             key={`${line2dataKey(line, axisName)}-events`}
             onMouseEnter={() => {
               onResultSelect(project.id, resultId, logKey);
@@ -217,9 +218,11 @@ class LogVisualizer extends React.Component {
             <LogVisualizerLegend
               project={project}
               results={results}
+              resultsStatus={resultsStatus}
               lines={axisLines}
               maxHeight={chartSize.height}
               isResultNameAlignRight={isResultNameAlignRight}
+              onResultSelect={onResultSelect}
             />
           </div>
         </div>
@@ -260,7 +263,9 @@ class LogVisualizer extends React.Component {
               />
               <CartesianGrid strokeDasharray="3 3" />
               {lineElems}
-              <Tooltip content={<LogVisualizerTooltip xAxisKey={xAxisKey} />} />
+              <Tooltip
+                content={<LogVisualizerTooltip xAxisKey={xAxisKey} anySelected={anySelected} />}
+              />
             </LineChart>
           </ResponsiveContainer>
           <div>

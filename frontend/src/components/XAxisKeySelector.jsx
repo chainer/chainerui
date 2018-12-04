@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import * as uiPropTypes from '../store/uiPropTypes';
+import Select from './FormControl/Select';
 
 
 const XAxisKeySelector = (props) => {
@@ -10,12 +11,12 @@ const XAxisKeySelector = (props) => {
   const handleChangeXAxisKey = (e) => {
     onChange(projectId, e.target.value);
   };
-
-  const options = xAxisKeys.map((key) => (<option value={key} key={key}>{key}</option>));
   return (
-    <select id="x-axis-key-selector-select" className="form-control" value={value} onChange={handleChangeXAxisKey}>
-      {options}
-    </select>
+    <Select
+      value={value}
+      onChange={handleChangeXAxisKey}
+      values={xAxisKeys}
+    />
   );
 };
 

@@ -2,21 +2,32 @@ import os
 import unittest
 import warnings
 
-import chainer
 import numpy as np
 import pytest
 import six
 
-from chainerui.report import image_report
+try:
+    import chainer  # NOQA
+    _chainer_installed = True
+except (ImportError, TypeError):
+    _chainer_installed = False
+
+if _chainer_installed:
+    from chainerui.report import image_report
+    _image_reporter_available = image_report._available
+else:
+    _image_reporter_available = False
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_available():
     with warnings.catch_warnings(record=True) as w:
         assert image_report.check_available()
         assert len(w) == 0
 
 
+@unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
 def test_available_not_installed():
     import sys
     is_installed = 'PIL' in sys.modules
@@ -39,6 +50,7 @@ def test_available_not_installed():
         check_available()
 
 
+@unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
 def test_report_error(func_dir):
     img = np.zeros(10)
     with pytest.raises(ValueError) as e:
@@ -46,6 +58,7 @@ def test_report_error(func_dir):
     assert 'must be 2 or 3' in str(e.value)
 
 
+@unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
 def test_report_error_batch(func_dir):
     img = np.zeros(10).reshape(2, 5)
     with pytest.raises(ValueError) as e:
@@ -53,7 +66,8 @@ def test_report_error_batch(func_dir):
     assert 'must be 3 or 4' in str(e.value)
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_report_bchw_row0(func_dir):
     img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
     filename, created_at = image_report.report(img, func_dir, 'test')
@@ -63,7 +77,8 @@ def test_report_bchw_row0(func_dir):
     assert created_at is not None
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_report_bchw_row2(func_dir):
     img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
     filename, created_at = image_report.report(img, func_dir, 'test', row=2)
@@ -73,7 +88,8 @@ def test_report_bchw_row2(func_dir):
     assert created_at is not None
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_report_bhwc_row0(func_dir):
     img = np.zeros(10*5*5*3, dtype=np.float32).reshape((10, 5, 5, 3))
     filename, created_at = image_report.report(
@@ -84,7 +100,8 @@ def test_report_bhwc_row0(func_dir):
     assert created_at is not None
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_report_bhwc_row2(func_dir):
     img = np.zeros(10*5*5*3, dtype=np.float32).reshape((10, 5, 5, 3))
     filename, created_at = image_report.report(
@@ -95,7 +112,8 @@ def test_report_bhwc_row2(func_dir):
     assert created_at is not None
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_report_chw_chainer_variable(func_dir):
     img = np.zeros(3*5*5, dtype=np.float32).reshape((3, 5, 5))
     img = chainer.Variable(img)
@@ -107,7 +125,8 @@ def test_report_chw_chainer_variable(func_dir):
     assert created_at is not None
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_report_hwc_hsv(func_dir):
     img = np.zeros(5*5*3, dtype=np.float32).reshape((5, 5, 3))
     filename, created_at = image_report.report(
@@ -118,7 +137,8 @@ def test_report_hwc_hsv(func_dir):
     assert created_at is not None
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_report_bhw_uint8(func_dir):
     img = np.zeros(8*5*10, dtype=np.uint8).reshape((8, 5, 10))
     filename, created_at = image_report.report(img, func_dir, 'test')
@@ -128,7 +148,8 @@ def test_report_bhw_uint8(func_dir):
     assert created_at is not None
 
 
-@unittest.skipUnless(image_report._available, 'Pillow is not installed')
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
 def test_report_hw(func_dir):
     img = np.zeros(5*10, dtype=np.float32).reshape((5, 10))
     filename, created_at = image_report.report(

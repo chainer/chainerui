@@ -89,7 +89,6 @@ export const logsLimitOptions = [
 
 export const defaultAxisConfig = {
   yLeftAxis: {
-    axisName: 'yLeftAxis',
     logKeysConfig: {
       'main/loss': {
         selected: true

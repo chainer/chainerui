@@ -3,7 +3,7 @@ import datetime
 import json
 import os
 
-from chainerui import db
+from chainerui.database import db
 from chainerui.models.asset import Asset
 from chainerui.models.bindata import Bindata
 from chainerui import summary

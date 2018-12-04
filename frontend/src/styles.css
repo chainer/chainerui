@@ -63,3 +63,11 @@
 .result-highlight {
   background-color: #fffbcc;
 }
+
+.recharts-active-dot {
+  pointer-events: none;
+}
+
+.recharts-tooltip-wrapper {
+  z-index: 10000;
+}

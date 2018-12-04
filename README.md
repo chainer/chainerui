@@ -100,7 +100,7 @@ Any contribution to ChainerUI is welcome!
 Install "pytest" package and run test
 
 ```sh
-$ CHAINERUI_ENV=test pytest
+$ pytest
 ```
 
 ### Build client side JS

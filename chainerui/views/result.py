@@ -2,7 +2,7 @@ from flask import jsonify
 from flask import request
 from flask.views import MethodView
 
-from chainerui import db
+from chainerui.database import db
 from chainerui.models.project import Project
 from chainerui.models.result import Result
 from chainerui.tasks import collect_results
@@ -40,8 +40,8 @@ class ResultAPI(MethodView):
             # have to call SELECT query again.
             for result in results:
                 crawl_result(result, commit=False)
-            rs = [r.serialize_with_sampled_logs(logs_limit) for r in results]
             db.session.commit()
+            rs = [r.serialize_with_sampled_logs(logs_limit) for r in results]
 
             return jsonify({'results': rs})
 

@@ -110,7 +110,6 @@ const logKeysConfig = PropTypes.objectOf(logKeyConfig);
 export const axisName = PropTypes.string;
 
 export const axisConfig = PropTypes.shape({
-  axisName: axisName.isRequired,
   logKeysConfig,
   scale: PropTypes.string,
   scaleRange: PropTypes.objectOf(PropTypes.shape({
