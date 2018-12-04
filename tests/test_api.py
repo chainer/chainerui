@@ -525,14 +525,14 @@ def test_get_assets(func_dir, project, app):
             "iteration": 600,
             "images": {
                 "train": "iter_600_61b3a8fa.png",
-                "train_reconstructed": "iter_600_c15c042b.png",
+                "train_reconstructed": "iter_600_c15c042b.jpg",
             }
         }
     ]
-    with open(os.path.join(path, '.chainerui_images'), 'w') as f:
+    with open(os.path.join(path, '.chainerui_assets'), 'w') as f:
         json.dump(image_info, f)
     open(os.path.join(path, 'iter_600_61b3a8fa.png'), 'w') .close()
-    open(os.path.join(path, 'iter_600_c15c042b.png'), 'w') .close()
+    open(os.path.join(path, 'iter_600_c15c042b.jpg'), 'w') .close()
     with open(os.path.join(path, 'log'), 'w') as f:
         json.dump([], f)
     Project.create(project3_path, 'assets-test-project')
@@ -567,8 +567,11 @@ def test_get_assets(func_dir, project, app):
     assert len(data['assets']) == 0
 
     # resource check
-    resource_url = url + '/1'
-    resp = app.get(resource_url)
+    resource_url_png = url + '/1'
+    resp = app.get(resource_url_png)
+    assert resp.status_code == 200
+    resource_url_jpg = url + '/2'
+    resp = app.get(resource_url_jpg)
     assert resp.status_code == 200
 
     resource_url = url + '/3'

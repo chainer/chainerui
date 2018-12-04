@@ -10,7 +10,7 @@ from chainerui.tasks import collect_images
 
 @pytest.fixture(autouse=True, scope='function')
 def result_path(func_dir, func_db):
-    info_path = os.path.join(func_dir, '.chainerui_images')
+    info_path = os.path.join(func_dir, '.chainerui_assets')
 
     with open(os.path.join(func_dir, 'img1_1.png'), 'w') as f:
         f.write('text')
@@ -50,7 +50,7 @@ def _get_dummy_result(path):
 
 
 def test_collect_images_no_meta(result_path):
-    os.remove(os.path.join(result_path, '.chainerui_images'))
+    os.remove(os.path.join(result_path, '.chainerui_assets'))
     result = _get_dummy_result(result_path)
 
     actual_list = collect_images.collect_images(result, [])
@@ -97,7 +97,7 @@ def test_collect_images_no_updated(result_path):
 
 
 def test_collect_images_updated(result_path):
-    info_path = os.path.join(result_path, '.chainerui_images')
+    info_path = os.path.join(result_path, '.chainerui_assets')
     result = _get_dummy_result(result_path)
     first_assets = collect_images.collect_images(result, [])
     assert len(first_assets) == 2
@@ -133,7 +133,7 @@ def test_collect_images_updated(result_path):
 
 
 def test_collect_images_new_meta(result_path):
-    info_path = os.path.join(result_path, '.chainerui_images')
+    info_path = os.path.join(result_path, '.chainerui_assets')
     result = _get_dummy_result(result_path)
     first_assets = collect_images.collect_images(result, [])
     assert len(first_assets) == 2
