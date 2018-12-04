@@ -20,8 +20,7 @@ class AxisConfigurator extends React.Component {
   }
 
   handleChangeScale(scale) {
-    const { projectId, axisConfig } = this.props;
-    const { axisName } = axisConfig;
+    const { projectId, axisName } = this.props;
     this.props.onChangeScale(projectId, axisName, scale);
   }
 
@@ -34,10 +33,11 @@ class AxisConfigurator extends React.Component {
   render() {
     const {
       projectId,
+      axisName,
       axisConfig,
       onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
     } = this.props;
-    const { axisName, scale } = axisConfig;
+    const { scale } = axisConfig;
 
     return (
       <div className="axis-configurator card">
@@ -51,6 +51,7 @@ class AxisConfigurator extends React.Component {
           <Collapse isOpen={this.state.showRangeConfig}>
             <AxisRangeConfigurator
               projectId={projectId}
+              axisName={axisName}
               axisConfig={axisConfig}
               isMin={false}
               onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
@@ -58,6 +59,7 @@ class AxisConfigurator extends React.Component {
             />
             <AxisRangeConfigurator
               projectId={projectId}
+              axisName={axisName}
               axisConfig={axisConfig}
               isMin
               onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
@@ -73,6 +75,7 @@ class AxisConfigurator extends React.Component {
 
 AxisConfigurator.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
+  axisName: uiPropTypes.axisName.isRequired,
   axisConfig: uiPropTypes.axisConfig.isRequired,
   onChangeScale: PropTypes.func.isRequired,
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,

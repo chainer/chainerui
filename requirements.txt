@@ -3,6 +3,5 @@ msgpack>=0.5.6
 Flask>=1.0.2
 sqlalchemy>=1.1.18
 alembic>=1.0.0
-chainer>=3.0.0
 gevent>=1.2.2
 structlog>=18.2.0

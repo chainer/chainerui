@@ -1,11 +1,21 @@
 import json
 import os
 import shutil
-
-from chainer.training.trainer import _get_time
+import time
 
 from chainerui.utils.save_args import save_args
 from chainerui.utils.tempdir import tempdir
+
+
+# Select the best-resolution timer function
+# copied from chainer.training.trainer
+try:
+    _get_time = time.perf_counter
+except AttributeError:
+    if os.name == 'nt':
+        _get_time = time.clock
+    else:
+        _get_time = time.time
 
 
 class LogReport(object):

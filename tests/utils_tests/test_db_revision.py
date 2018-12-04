@@ -1,6 +1,6 @@
 from alembic.command import upgrade
 
-from chainerui import db
+from chainerui.database import db
 from chainerui.utils.db_revision import check_current_db_revision
 
 

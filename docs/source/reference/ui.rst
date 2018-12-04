@@ -87,6 +87,18 @@ Show training logs and experimental conditions.
     * Along with axis settings and selected checkboxes, log keys like ``main/loss`` are also cached on browser storage. The reset button restores cached key, too.
 
 
+.. _ui_highlight:
+
+Highlighting
+~~~~~~~~~~~~
+
+.. figure:: ../../images/project_highlight_animation.gif
+
+   This animation is captured on **v0.7.0**
+
+Result table and a log chart are linked each other. A selected result is highlighting for emphasis.
+
+
 .. _ui_save_log_chart:
 
 Save log chart
@@ -94,7 +106,8 @@ Save log chart
 
 .. image:: ../../images/chart_save.png
 
-Save log chart as PNG or JSON, download will be started.
+* ``PNG``: Save log chart as PNG
+* ``Code``: Download Python script. Run the downloaded script then get a chart image using Matplotlib. Lines plotted or not are followed by configuration on Web UI. The script has all log data as JSON.
 
 .. _ui_edit_line:
 
