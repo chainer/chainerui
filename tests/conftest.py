@@ -4,8 +4,8 @@ import tempfile
 
 import pytest
 
-from chainerui import create_app
-from chainerui import db
+from chainerui.database import db
+from chainerui.server import create_app
 
 
 @pytest.fixture(scope='session')

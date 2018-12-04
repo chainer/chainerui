@@ -1,133 +1,188 @@
+import json
+from mock import MagicMock
+from mock import patch
+import os
 import unittest
+import warnings
 
 import numpy as np
+import pytest
+
+from chainerui import summary
 
 try:
-    import chainer
+    import chainer  # NOQA
     _chainer_installed = True
-
 except (ImportError, TypeError):
     _chainer_installed = False
 
 if _chainer_installed:
-    from chainerui import summary
+    from chainerui.report import image_report
+    _image_reporter_available = image_report._available
+else:
+    _image_reporter_available = False
+
+
+@pytest.fixture(autouse=True, scope='function')
+def clear_cache():
+    yield
+    summary._chainerui_asset_observer.out = None
+    summary._chainerui_asset_observer.cache = []
+
+
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
+def test_summary_set_out_with_warning_image(func_dir):
+    summary._chainerui_asset_observer.default_output_path = func_dir
+    meta_filepath = os.path.join(func_dir, '.chainerui_assets')
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter('always')
+        img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
+        summary.image(img)
+        assert len(w) == 1
+        assert os.path.exists(meta_filepath)
+
+        summary.set_out(func_dir)
+        summary.image(img)
+        assert len(w) == 1
+
+
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
+def test_summary_set_out_reporter_image(func_dir):
+    summary._chainerui_asset_observer.default_output_path = func_dir
+    meta_filepath = os.path.join(func_dir, '.chainerui_assets')
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter('always')
+        img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
+        with summary.reporter() as r:
+            r.image(img)
+        assert len(w) == 1
+        assert os.path.exists(meta_filepath)
+
+        summary.set_out(func_dir)
+        with summary.reporter() as r:
+            r.image(img)
+        assert len(w) == 1
+
+
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
+def test_summary_image(func_dir):
+    img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
+    summary.image(img, out=func_dir, epoch=10)
+
+    meta_filepath = os.path.join(func_dir, '.chainerui_assets')
+    assert os.path.exists(meta_filepath)
+
+    with open(meta_filepath, 'r') as f:
+        metas = json.load(f)
+    assert len(metas) == 1
+    assert 'timestamp' in metas[0]
+    assert 'epoch' in metas[0]
+    assert metas[0]['epoch'] == 10
+    assert 'images' in metas[0]
+    assert 'image' in metas[0]['images']
+    saved_filename = metas[0]['images']['image']
+    assert saved_filename.startswith('image_')
+    assert saved_filename.endswith('.png')
+
+    img2 = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
+    summary.image(img2, 'test', out=func_dir, epoch=20)
+
+    with open(meta_filepath, 'r') as f:
+        metas2 = json.load(f)
+    assert len(metas2) == 2
+    assert 'timestamp' in metas2[1]
+    assert 'epoch' in metas2[1]
+    assert metas2[1]['epoch'] == 20
+    assert 'images' in metas2[1]
+    assert 'test' in metas2[1]['images']
+    saved_filename2 = metas2[1]['images']['test']
+    assert saved_filename != saved_filename2
+    assert saved_filename2.startswith('test_')
+    assert saved_filename2.endswith('.png')
 
 
 @unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
-class TestImage(unittest.TestCase):
+def test_summary_image_unavailable(func_dir):
+    mock_checker = MagicMock(return_value=False)
+    with patch('chainerui.report.image_report.check_available', mock_checker):
+        summary.image(np.zeros(10), out=func_dir)
 
-    def tearDown(self):
-        summary.chainerui_image_observer.observation = {}
+    assert not os.path.exists(os.path.join(func_dir, '.chainerui_assets'))
 
-    def test_image_error(self):
-        img = np.zeros(10)
-        with self.assertRaises(ValueError) as e:
-            summary.image(img, 'test', batched=False)
-        assert 'must be 2 or 3' in str(e.exception)
 
-        img = np.zeros(10).reshape(2, 5)
-        with self.assertRaises(ValueError) as e:
-            summary.image(img, 'test')
-        assert 'must be 3 or 4' in str(e.exception)
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
+def test_reporter(func_dir):
+    img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
+    img2 = np.copy(img)
 
-    def test_image_bchw(self):
-        observer = summary.chainerui_image_observer
+    with summary.reporter(prefix='with_', out=func_dir, epoch=10) as r:
+        r.image(img)
+        r.image(img2, 'test')
 
-        # unstuck
-        img = np.zeros(10*3*5*5).reshape((10, 3, 5, 5))
-        summary.image(img, 'test')
-        assert len(observer.observation) == 1
-        key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
-        assert key in observer.observation
-        expected_img = np.zeros(10*3*5*5).reshape((50, 5, 3))
-        assert np.allclose(observer.observation[key]['image'], expected_img)
+    meta_filepath = os.path.join(func_dir, '.chainerui_assets')
+    assert os.path.exists(meta_filepath)
 
-        # stuck, overwrite
-        img2 = np.zeros(10*3*5*5).reshape((10, 3, 5, 5))
-        img2[0, 0, 0, 0] = 10
-        summary.image(img2, 'test', row=2)
-        assert len(observer.observation) == 1
-        expected_img2 = np.zeros(10*3*5*5).reshape((10, 25, 3))
-        expected_img2[0, 0, 0] = 10
-        assert np.allclose(observer.observation[key]['image'], expected_img2)
+    with open(meta_filepath, 'r') as f:
+        metas = json.load(f)
+    assert len(metas) == 1
+    assert 'timestamp' in metas[0]
+    assert 'epoch' in metas[0]
+    assert metas[0]['epoch'] == 10
+    assert 'images' in metas[0]
+    assert 'with_image_0' in metas[0]['images']
+    saved_filename = metas[0]['images']['with_image_0']
+    assert saved_filename.startswith('with_image_0')
+    assert saved_filename.endswith('.png')
+    assert 'with_test' in metas[0]['images']
+    saved_filename1 = metas[0]['images']['with_test']
+    assert saved_filename1.startswith('with_test_')
+    assert saved_filename1.endswith('.png')
 
-    def test_image_bhwc(self):
-        observer = summary.chainerui_image_observer
+    img3 = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
+    img4 = np.copy(img3)
 
-        # unstuck
-        img = np.zeros(10*5*5*3).reshape((10, 5, 5, 3))
-        summary.image(img, 'test', ch_axis=-1)
-        assert len(observer.observation) == 1
-        key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
-        assert key in observer.observation
-        expected_img = np.zeros(10*3*5*5).reshape((50, 5, 3))
-        assert np.allclose(observer.observation[key]['image'], expected_img)
+    with summary.reporter(prefix='with_', out=func_dir, epoch=20) as r:
+        r.image(img3)
+        r.image(img4, 'test')
 
-        # stuck
-        img2 = np.zeros(10*5*5*3).reshape((10, 5, 5, 3))
-        img2[0, 0, 0, 0] = 10
-        summary.image(img2, 'test2', ch_axis=-1, row=2)
-        assert len(observer.observation) == 2
-        key2 = summary.CHAINERUI_IMAGE_PREFIX+'/test2'
-        assert key2 in observer.observation
-        expected_img2 = np.zeros(10*5*5*3).reshape((10, 25, 3))
-        expected_img2[0, 0, 0] = 10
-        assert np.allclose(observer.observation[key2]['image'], expected_img2)
+    with open(meta_filepath, 'r') as f:
+        metas2 = json.load(f)
+    assert len(metas2) == 2
+    assert 'timestamp' in metas2[1]
+    assert 'epoch' in metas2[1]
+    assert metas2[1]['epoch'] == 20
+    assert 'images' in metas2[1]
+    assert 'with_image_0' in metas2[1]['images']
+    saved_filename3 = metas2[1]['images']['with_image_0']
+    assert saved_filename3.startswith('with_image_0')
+    assert saved_filename3.endswith('.png')
+    assert 'with_test' in metas2[1]['images']
+    saved_filename4 = metas2[1]['images']['with_test']
+    assert saved_filename4.startswith('with_test_')
+    assert saved_filename4.endswith('.png')
 
-    def test_image_bhw_no_name(self):
-        observer = summary.chainerui_image_observer
 
-        # unstuck
-        img = np.zeros(10*5*5).reshape((10, 5, 5))
-        summary.image(img)
-        assert len(observer.observation) == 1
-        key = summary.CHAINERUI_IMAGE_PREFIX+'/0'
-        assert key in observer.observation
-        expected_img = np.zeros(10*5*5).reshape((50, 5))
-        assert np.allclose(observer.observation[key]['image'], expected_img)
+@unittest.skipUnless(_image_reporter_available,
+                     'Image reporter is not available')
+def test_reporter_empty(func_dir):
+    with summary.reporter(out=func_dir, epoch=10):
+        pass
 
-        # stuck
-        img2 = np.zeros(10*5*5).reshape((10, 5, 5))
-        img2[0, 0, 0] = 10
-        summary.image(img2, row=2)
-        assert len(observer.observation) == 1
-        expected_img2 = np.zeros(10*5*5).reshape((10, 25))
-        expected_img2[0, 0] = 10
-        assert np.allclose(observer.observation[key]['image'], expected_img2)
+    meta_filepath = os.path.join(func_dir, '.chainerui_assets')
+    assert not os.path.exists(meta_filepath)
 
-    def test_image_chw(self):
-        observer = summary.chainerui_image_observer
 
-        img = np.zeros(3*5*5).reshape((3, 5, 5))
-        img = chainer.Variable(img)
-        summary.image(img, 'test', ch_axis=0, batched=False)
-        assert len(observer.observation) == 1
-        key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
-        assert key in observer.observation
-        expected_img = np.zeros(5*5*3).reshape((5, 5, 3))
-        assert np.allclose(observer.observation[key]['image'], expected_img)
-        assert 'mode' not in observer.observation[key]
+@unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
+def test_reporter_image_unavailable(func_dir):
+    mock_checker = MagicMock(return_value=False)
+    with patch('chainerui.report.image_report.check_available', mock_checker):
+        with summary.reporter(out=func_dir) as r:
+            r.image(np.zeros(10))
 
-    def test_image_hwc_hsv(self):
-        observer = summary.chainerui_image_observer
-
-        img = np.zeros(5*5*3).reshape((5, 5, 3))
-        img = chainer.Variable(img)
-        summary.image(img, 'test', batched=False, ch_axis=-1, mode='HSV')
-        assert len(observer.observation) == 1
-        key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
-        assert key in observer.observation
-        assert np.allclose(observer.observation[key]['image'], img.data)
-        assert 'mode' in observer.observation[key]
-        assert observer.observation[key]['mode'] == 'hsv'
-
-    def test_image_hw(self):
-        observer = summary.chainerui_image_observer
-
-        img = np.zeros(5*10).reshape((5, 10))
-        img = chainer.Variable(img)
-        summary.image(img, 'test', batched=False)
-        assert len(observer.observation) == 1
-        key = summary.CHAINERUI_IMAGE_PREFIX+'/test'
-        assert key in observer.observation
-        assert np.allclose(observer.observation[key]['image'], img.data)
+    assert not os.path.exists(os.path.join(func_dir, '.chainerui_assets'))
