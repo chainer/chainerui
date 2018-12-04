@@ -140,7 +140,7 @@ def set_out(path):
     Summary module requires output directory. Once set output path using this
     function, summary module shares the path.
 
-    Arguments:
+    Args:
         path (str): directory path of output.
     """
 
@@ -172,7 +172,7 @@ def reporter(prefix=None, out=None, **kwargs):
        >>> # image_array1 and image_array2 are visualized on a browser
        >>> # audio_array can be listened on a browser
 
-    Arguments:
+    Args:
         prefix (str): prefix of column name.
         out (str): directory path of output.
         **kwargs (dict): key-value pair to show as description. regardless of
@@ -199,7 +199,7 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
        >>> from chainerui import summary
        >>> summary.set_out('/path/to/log')  # same as 'log' file directory
        >>>
-       >>> x.shape  # = [Batchsize, Channel, Hight, Width]
+       >>> x.shape  # = [Batchsize, Channel, Height, Width]
        (10, 3, 5, 5)
        >>> summary.image(x, name='test')  # images are tiled as 1x10
        >>> summary.image(x, name='test', row=5)  # images are tiled as 2x5
