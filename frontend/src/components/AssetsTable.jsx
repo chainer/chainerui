@@ -30,6 +30,9 @@ const AssetsTable = (props) => {
     Cell: (p) => {
       const { original } = p;
       const selectedContent = original.contents.find((content) => content.tag === k);
+      if (selectedContent == null) {
+        return null;
+      }
       if (selectedContent.name.endsWith('.wav')) {
         return (
           <audio
