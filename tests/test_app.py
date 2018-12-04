@@ -3,7 +3,7 @@ from mock import patch
 import os
 
 from chainerui import app
-from chainerui import db
+from chainerui.database import db
 from chainerui.models.project import Project
 
 

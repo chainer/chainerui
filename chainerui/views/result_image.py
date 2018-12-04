@@ -4,7 +4,7 @@ from flask import jsonify
 from flask import send_file
 from flask.views import MethodView
 
-from chainerui import db
+from chainerui.database import db
 from chainerui.models.asset import Asset
 from chainerui.models.bindata import Bindata
 from chainerui.models.project import Project

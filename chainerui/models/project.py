@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import String
 
 from chainerui import database
-from chainerui import db
+from chainerui.database import db
 from chainerui.tasks.collect_results import collect_results
 
 
