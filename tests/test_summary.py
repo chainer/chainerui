@@ -233,6 +233,7 @@ def test_summary_reporter_empty(func_dir):
     assert not os.path.exists(meta_filepath)
 
 
+@unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
 def test_summary_image_unavailable(func_dir):
     mock_checker = MagicMock(return_value=False)
     with patch('chainerui.report.image_report.check_available', mock_checker):
@@ -242,6 +243,7 @@ def test_summary_image_unavailable(func_dir):
         os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME))
 
 
+@unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
 def test_summary_audio_unavailable(func_dir):
     mock_checker = MagicMock(return_value=False)
     with patch('chainerui.report.audio_report.check_available', mock_checker):
@@ -251,6 +253,7 @@ def test_summary_audio_unavailable(func_dir):
         os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME))
 
 
+@unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
 def test_reporter_image_unavailable(func_dir):
     mock_checker = MagicMock(return_value=False)
     with patch('chainerui.report.image_report.check_available', mock_checker):
@@ -261,6 +264,7 @@ def test_reporter_image_unavailable(func_dir):
         os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME))
 
 
+@unittest.skipUnless(_chainer_installed, 'Chainer is not installed')
 def test_reporter_audio_unavailable(func_dir):
     mock_checker = MagicMock(return_value=False)
     with patch('chainerui.report.audio_report.check_available', mock_checker):
