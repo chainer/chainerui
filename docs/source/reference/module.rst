@@ -11,6 +11,8 @@ Trainer extensions
 .. autoclass:: chainerui.extensions.CommandsExtension
 
 
+.. _module_summary:
+
 Asset summaries
 ---------------
 

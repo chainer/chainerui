@@ -202,7 +202,7 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
        >>> x.shape  # = [Batchsize, Channel, Height, Width]
        (10, 3, 5, 5)
        >>> summary.image(x, name='test')  # images are tiled as 1x10
-       >>> summary.image(x, name='test', row=5)  # images are tiled as 2x5
+       >>> summary.image(x, name='test', row=2)  # images are tiled as 2x5
        >>>
        >>> x.shape  # = [C, H, W]
        (3, 5, 5)
@@ -212,7 +212,7 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
        >>> x.shape  # = [B, H, W, C]
        (10, 5, 5, 3)
        >>> # need to set channel axis explicitly
-       >>> summary.image(x, name='test', ch_axis=-1, row=5)
+       >>> summary.image(x, name='test', ch_axis=-1, row=2)
        >>>
        >>> x.shape  # = [H, W, C]
        (5, 5, 3)
@@ -222,7 +222,7 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
        >>> x.shape  # = [B, H, W], grayscale images
        (10, 5, 5)
        >>> summary.image(x, name='test')  # image are tiled as 1x10
-       >>> summary.image(x, name='test', row=5)  # image are tiled as 2x5
+       >>> summary.image(x, name='test', row=2)  # image are tiled as 2x5
        >>>
        >>> x.shape  # = [H, W], a grayscale image
        (5, 5)

@@ -73,13 +73,13 @@ Training log
 
 .. image:: ../images/chart_with_y_sample.png
 
-ChainerUI plots training log values read from  the ``log`` files and shows the training job. The ``log`` file is a JSON file created by `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension or :ref:`chainerui's LogReport <module_log_report>`, which is registered automatically and created under the project path. If ``log`` files are updated, the chart and results table are also updated continuously.
+ChainerUI plots training log values read from  the ``log`` files and shows the training job. The ``log`` file is a JSON file created by `LogReport <https://docs.chainer.org/en/stable/reference/generated/chainer.training.extensions.LogReport.html>`__ extension or :ref:`chainerui's LogReport <module_log_report>`, which is registered automatically and created under the project path. If ``log`` files are updated, the chart and results table are also updated continuously.
 
 .. note::
 
    ``epoch``, ``iteration``, ``episode``, ``step`` and ``elapsed_time`` are assumed as x-axis. X-axis of a chart is selected by ``xAxis`` pane.
 
-   * `LogReport <https://docs.chainer.org/en/v3/reference/generated/chainer.training.extensions.LogReport.html>`__ extension sets ``epoch``, ``iteration`` and ``elapsed_time`` automatically.
+   * `LogReport <https://docs.chainer.org/en/stable/reference/generated/chainer.training.extensions.LogReport.html>`__ extension sets ``epoch``, ``iteration`` and ``elapsed_time`` automatically.
    * :ref:`chainerui's LogReport <module_log_report>` sets ``elapsed_time`` automatically. Other x-axis keys have to be set manually if necessary.
 
 .. note::
