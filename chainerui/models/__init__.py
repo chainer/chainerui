@@ -1,4 +1,6 @@
 from chainerui.models.argument import Argument  # NOQA
+from chainerui.models.asset import Asset  # NOQA
+from chainerui.models.bindata import Bindata  # NOQA
 from chainerui.models.command import Command  # NOQA
 from chainerui.models.log import Log  # NOQA
 from chainerui.models.project import Project  # NOQA
