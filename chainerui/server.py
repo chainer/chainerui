@@ -92,7 +92,7 @@ def create_app():
     from chainerui.views.project import ProjectAPI
     from chainerui.views.result import ResultAPI
     from chainerui.views.result_command import ResultCommandAPI
-    from chainerui.views.result_image import ResultAssetAPI
+    from chainerui.views.result_asset import ResultAssetAPI
 
     project_resource = ProjectAPI.as_view('project_resource')
     result_resource = ResultAPI.as_view('result_resource')
