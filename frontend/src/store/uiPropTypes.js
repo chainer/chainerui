@@ -60,6 +60,7 @@ export const result = PropTypes.shape({
   id: resultId,
   pathName: PropTypes.string,
   name: PropTypes.string,
+  group: PropTypes.string,
   isUnregistered: PropTypes.bool,
   logs,
   args,

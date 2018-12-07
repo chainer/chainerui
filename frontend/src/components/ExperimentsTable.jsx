@@ -43,6 +43,11 @@ const ExperimentsTable = (props) => {
       onResultsConfigSelectUpdate(project.id, resultId, !evt.target.checked);
     });
   };
+  const handleGroupedResultsConfigSelectChange = (groupedResultKeys) => (evt) => {
+    groupedResultKeys.forEach((resultId) => {
+      onResultsConfigSelectUpdate(project.id, resultId, !evt.target.checked);
+    });
+  };
 
   const defaultStyle = {
     textAlign: 'right'
@@ -54,37 +59,9 @@ const ExperimentsTable = (props) => {
     hiddenLogKeys = [],
     hiddenArgKeys = []
   } = tableState;
+  const isGrouped = resultList.some((r) => (r.group && r.group !== ''));
 
-  const logs = logKeys.map((logKey) => ({
-    Header: logKey,
-    id: `logKey${logKey}`,
-    accessor: (p) => {
-      const lastLogDict = getLastLogDict(p);
-      if (logKey === 'elapsed_time') {
-        return lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2);
-      }
-      return lastLogDict[logKey];
-    },
-    style: defaultStyle,
-    show: !hiddenLogKeys.find((k) => k === logKey)
-  }));
-
-  const argsList = argKeys.map((argKey) => ({
-    Header: argKey,
-    id: argKey,
-    accessor: (p) => {
-      const { args } = p;
-      const argDict = {};
-      args.forEach((arg) => {
-        argDict[arg.key] = arg.value;
-      });
-      return argValue2string(argDict[argKey]);
-    },
-    style: defaultStyle,
-    show: !hiddenArgKeys.find((k) => k === argKey)
-  }));
-
-  const columns = [
+  const nameColumns = [
     {
       Header: <input
         type="checkbox"
@@ -94,6 +71,9 @@ const ExperimentsTable = (props) => {
       />,
       Cell: (p) => {
         const { original } = p;
+        if (!original) {
+          return {};
+        }
         const { id } = original;
         return (<ToggleResult
           project={project}
@@ -104,7 +84,23 @@ const ExperimentsTable = (props) => {
       },
       className: 'text-center',
       sortable: false,
-      minWidth: 40
+      minWidth: 40,
+      Aggregated: (row) => {
+        const groupedResultKeys = row.subRows.map((r) => {
+          const { _original } = r;
+          return _original.id;
+        });
+        const groupedVisibleResultCount = groupedResultKeys.filter(
+          (resultId) => !(resultsConfig[resultId] || {}).hidden).length;
+        const isGroupedPartialSelect = groupedVisibleResultCount > 0 &&
+          visibleResultCount < groupedResultKeys.length;
+        return <input
+          type="checkbox"
+          checked={groupedVisibleResultCount > 0}
+          style={{ opacity: isGroupedPartialSelect ? 0.5 : 1 }}
+          onChange={handleGroupedResultsConfigSelectChange(groupedResultKeys)}
+        />;
+      }
     },
     {
       Header: 'name',
@@ -119,6 +115,51 @@ const ExperimentsTable = (props) => {
         />);
       },
       minWidth: 250
+    }
+  ];
+  if (isGrouped) {
+    nameColumns.unshift({
+      Header: '',
+      accessor: 'group'
+    });
+  }
+  const groupedKey = isGrouped ? ['group'] : [];
+
+  const logs = logKeys.map((logKey) => ({
+    Header: logKey,
+    id: `logKey${logKey}`,
+    accessor: (p) => {
+      const lastLogDict = getLastLogDict(p);
+      if (logKey === 'elapsed_time') {
+        return lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2);
+      }
+      return lastLogDict[logKey];
+    },
+    style: defaultStyle,
+    show: !hiddenLogKeys.find((k) => k === logKey),
+    aggregate: () => ''
+  }));
+
+  const argsList = argKeys.map((argKey) => ({
+    Header: argKey,
+    id: argKey,
+    accessor: (p) => {
+      const { args } = p;
+      const argDict = {};
+      args.forEach((arg) => {
+        argDict[arg.key] = arg.value;
+      });
+      return argValue2string(argDict[argKey]);
+    },
+    style: defaultStyle,
+    show: !hiddenArgKeys.find((k) => k === argKey),
+    aggregate: () => ''
+  }));
+
+  const columns = [
+    {
+      Header: ' ', // To prevent from showing "Pivoted" on default (=''), set space on purpose.
+      columns: nameColumns
     },
     {
       Header: 'last logs',
@@ -145,6 +186,7 @@ const ExperimentsTable = (props) => {
           id: 'result_id'
         }
       ]}
+      pivotBy={groupedKey}
       freezeWhenExpanded={expanded === {}}
       SubComponent={(p) => (
         <SubComponent
@@ -156,6 +198,9 @@ const ExperimentsTable = (props) => {
         />
       )}
       getTrProps={(state, rowInfo) => {
+        if (rowInfo && !rowInfo.original) {
+          return {};
+        }
         const resultId = rowInfo && rowInfo.original.id;
         const resultStatus = resultsStatus[resultId] || {};
         return {
