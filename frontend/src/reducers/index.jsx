@@ -375,6 +375,31 @@ const resultsConfigReducer = (state = {}, action) => {
         }
       }
       return state;
+    case ActionTypes.ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE:
+      console.log(111);
+      if (resultId) {
+        const {
+          hiddenTrainInfoKeys = [],
+          hiddenArgKeys = []
+        } = action;
+        const resultConfig = state[resultId] || {};
+        // const currentAssetsTableState = state[resultId].assetsTableState || {};
+        const { assetsTableState = {} } = state[resultId];
+        return {
+          ...state,
+          [resultId]: {
+            ...resultConfig,
+            assetsTableState: {
+              ...assetsTableState,
+              hiddenKeysForEveryHeader: [
+                hiddenTrainInfoKeys,
+                hiddenArgKeys
+              ]
+            }
+          }
+        };
+      }
+      return state;
     case ActionTypes.RESULT_DELETE_SUCCESS:
       return removePartialState(state, resultId);
     default:
@@ -421,6 +446,17 @@ const tableStateReducer = (state = {}, action) => {
       return state;
   }
 };
+
+// const assetsConfigReducer = (state = {}, action) => {
+//   const {assets} = action;
+
+//   switch (action.type) {
+//     case ActionTypes.;
+//       return {
+
+//       }
+//   }
+// }
 
 const projectConfigReducer = combineReducers({
   axes: axesConfigReducer,

@@ -9,7 +9,8 @@ import {
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateGlobalLogsLimit,
-  updateGlobalResultNameAlignment
+  updateGlobalResultNameAlignment,
+  updateAssetsTableColumnsVisibility
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import AssetsTable from '../components/AssetsTable';
@@ -18,12 +19,33 @@ class AssetsContainer extends React.Component {
   componentDidMount() {
     const { projectId, resultId } = this.props;
     this.props.getResultAsset(projectId, resultId);
+    this.handleAssetsTableColumnsVisibilityUpdate =
+      this.handleAssetsTableColumnsVisibilityUpdate.bind(this);
+  }
+
+  handleAssetsTableColumnsVisibilityUpdate(hiddenTrainInfoKeys, hiddenContentsKeys) {
+    const {
+      projectId,
+      resultId
+    } = this.props;
+    console.log({ hiddenTrainInfoKeys });
+    console.log({ hiddenContentsKeys });
+    this.props.updateAssetsTableColumnsVisibility(
+      projectId,
+      resultId,
+      hiddenTrainInfoKeys,
+      hiddenContentsKeys
+    );
   }
 
   render() {
     const {
-      assets, globalConfig, fetchState
+      assets, globalConfig, fetchState, resultConfig
     } = this.props;
+    const {
+      assetsTableState
+    } = resultConfig;
+    console.log({ assetsTableState });
     return (
       <div>
         <NavigationBar
@@ -35,7 +57,11 @@ class AssetsContainer extends React.Component {
           onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
         />
         <Container>
-          <AssetsTable assets={assets} />
+          <AssetsTable
+            assets={assets}
+            tableState={assetsTableState}
+            onAssetsTableColumnsVisibilityUpdate={this.handleAssetsTableColumnsVisibilityUpdate}
+          />
         </Container>
       </div>
     );
@@ -43,6 +69,7 @@ class AssetsContainer extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log({ state });
   const projectId = Number(ownProps.params.projectId);
   const resultId = Number(ownProps.params.resultId);
   const {
@@ -51,8 +78,12 @@ const mapStateToProps = (state, ownProps) => {
     config
   } = state;
   const { assets } = entities;
+  console.log({ config });
   const globalConfig = config.global;
-  return { projectId, resultId, assets, fetchState, globalConfig };
+  const projectConfig = config.projectsConfig[projectId] || {};
+  console.log({ projectConfig });
+  const resultConfig = projectConfig.resultsConfig[resultId] || {};
+  return { projectId, resultId, assets, fetchState, globalConfig, resultConfig };
 };
 
 AssetsContainer.propTypes = {
@@ -61,11 +92,15 @@ AssetsContainer.propTypes = {
   assets: uiPropTypes.assets.isRequired,
   fetchState: uiPropTypes.fetchState.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
+  resultConfig: PropTypes.objectOf({
+    assetsTableState: PropTypes.any
+  }).isRequired,
   getResultAsset: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired,
-  updateGlobalLogsLimit: PropTypes.func.isRequired
+  updateGlobalLogsLimit: PropTypes.func.isRequired,
+  updateAssetsTableColumnsVisibility: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, {
@@ -73,5 +108,6 @@ export default connect(mapStateToProps, {
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateGlobalLogsLimit,
-  updateGlobalResultNameAlignment
+  updateGlobalResultNameAlignment,
+  updateAssetsTableColumnsVisibility
 })(AssetsContainer);

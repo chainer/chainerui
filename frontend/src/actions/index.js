@@ -264,6 +264,17 @@ export const updateTableColumnsVisibility = (projectId, hiddenLogKeys, hiddenArg
   hiddenArgKeys
 });
 
+export const ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
+export const updateAssetsTableColumnsVisibility = (
+  projectId, resultId, hiddenTrainInfoKeys, hiddenContentsKeys
+) => ({
+  type: ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
+  projectId,
+  resultId,
+  hiddenTrainInfoKeys,
+  hiddenContentsKeys
+});
+
 // global config
 
 export const GLOBAL_CONFIG_POLLING_RATE_UPDATE = 'GLOBAL_CONFIG_POLLING_RATE_UPDATE';

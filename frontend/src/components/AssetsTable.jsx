@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactTable from 'react-table';
 
+import PropTypes from 'prop-types';
 import * as uiPropTypes from '../store/uiPropTypes';
 
 import TableConfigurator from './TableConfigurator';
 
 const AssetsTable = (props) => {
-  const { assets } = props;
+  const { assets, onAssetsTableColumnsVisibilityUpdate, tableState } = props;
 
   const trainInfoKeys = assets.map((asset) => Object.keys(asset.train_info)).flat();
   const uniqueTrainInfoKeys = [...new Set(trainInfoKeys)];
@@ -63,6 +64,8 @@ const AssetsTable = (props) => {
 
   console.log({ columnHeaders });
 
+  const { hiddenKeysForEveryHeader } = tableState;
+
   return (
     <div>
       <ReactTable
@@ -75,13 +78,19 @@ const AssetsTable = (props) => {
 
       <TableConfigurator
         columnHeaders={columnHeaders}
+        hiddenKeysForEveryHeader={hiddenKeysForEveryHeader}
+        onTableColumnsVisibilityUpdate={onAssetsTableColumnsVisibilityUpdate}
       />
     </div>
   );
 };
 
 AssetsTable.propTypes = {
-  assets: uiPropTypes.assets.isRequired
+  assets: uiPropTypes.assets.isRequired,
+  tableState: PropTypes.objectOf({
+    hiddenKeysForEveryHeader: PropTypes.any
+  }).isRequired,
+  onAssetsTableColumnsVisibilityUpdate: PropTypes.func.isRequired
 };
 
 export default AssetsTable;
