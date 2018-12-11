@@ -376,7 +376,6 @@ const resultsConfigReducer = (state = {}, action) => {
       }
       return state;
     case ActionTypes.ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE:
-      console.log(111);
       if (resultId) {
         const {
           hiddenTrainInfoKeys = [],
