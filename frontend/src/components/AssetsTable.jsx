@@ -8,6 +8,7 @@ import TableConfigurator from './TableConfigurator';
 
 const AssetsTable = (props) => {
   const { assets, onAssetsTableColumnsVisibilityUpdate, tableState } = props;
+  const { hiddenKeysForEveryHeader } = tableState;
 
   const trainInfoKeys = assets.map((asset) => Object.keys(asset.train_info)).flat();
   const uniqueTrainInfoKeys = [...new Set(trainInfoKeys)];
@@ -22,7 +23,8 @@ const AssetsTable = (props) => {
     accessor: (p) => {
       const trainInfo = p.train_info;
       return trainInfo[k];
-    }
+    },
+    show: !hiddenKeysForEveryHeader[0].find((hk) => hk === k)
   }));
 
   const contentColumns = uniqueContentKeys.map((k) => ({
@@ -41,7 +43,8 @@ const AssetsTable = (props) => {
           height="auto"
         />
       );
-    }
+    },
+    show: !hiddenKeysForEveryHeader[1].find((hk) => hk === k)
   }));
 
   const columns = [
@@ -64,7 +67,7 @@ const AssetsTable = (props) => {
 
   console.log({ columnHeaders });
 
-  const { hiddenKeysForEveryHeader } = tableState;
+
 
   return (
     <div>

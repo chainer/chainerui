@@ -380,10 +380,9 @@ const resultsConfigReducer = (state = {}, action) => {
       if (resultId) {
         const {
           hiddenTrainInfoKeys = [],
-          hiddenArgKeys = []
+          hiddenContentsKeys = []
         } = action;
         const resultConfig = state[resultId] || {};
-        // const currentAssetsTableState = state[resultId].assetsTableState || {};
         const { assetsTableState = {} } = state[resultId];
         return {
           ...state,
@@ -393,7 +392,7 @@ const resultsConfigReducer = (state = {}, action) => {
               ...assetsTableState,
               hiddenKeysForEveryHeader: [
                 hiddenTrainInfoKeys,
-                hiddenArgKeys
+                hiddenContentsKeys
               ]
             }
           }
