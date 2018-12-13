@@ -6,16 +6,17 @@ import os
 from chainerui.database import db
 from chainerui.models.asset import Asset
 from chainerui.models.bindata import Bindata
+from chainerui import summary
 
 
-def collect_images(result, assets, force=False):
-    """collect images from meta file
+def collect_assets(result, assets, force=False):
+    """collect assets from meta file
 
-    Collecting images only when the metafile is updated. If number of images
-    are decreased, assets are reset and re-collect the images.
+    Collecting assets only when the metafile is updated. If number of assets
+    are decreased, assets are reset and re-collect the assets.
     """
     path_name = result.path_name
-    info_path = os.path.join(path_name, '.chainerui_assets')
+    info_path = os.path.join(path_name, summary.CHAINERUI_ASSETS_METAFILE_NAME)
     start_idx = len(assets)
     if not os.path.isfile(info_path):
         return assets
@@ -33,11 +34,12 @@ def collect_images(result, assets, force=False):
         assets = []
 
     for base_info in info_list[start_idx:]:
-        image_path = base_info.pop('images')
+        asset_path = base_info.pop('images', {})
+        asset_path.update(base_info.pop('audios', {}))
         asset = Asset.create(
             result_id=result.id, summary=base_info,
             file_modified_at=file_modified_at)
-        for key, path in image_path.items():
+        for key, path in asset_path.items():
             with open(os.path.join(path_name, path), 'rb') as f:
                 data = f.read()
             content = Bindata(
