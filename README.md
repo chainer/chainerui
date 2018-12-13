@@ -6,7 +6,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/chainer/chainerui/badge.svg)](https://coveralls.io/github/chainer/chainerui)
 [![Documentation Status](https://readthedocs.org/projects/chainerui/badge/?version=latest)](http://chainerui.readthedocs.io/en/latest/?badge=latest)
 
-![training_captures](docs/images/project_training_animation.gif)
+![training_captures](https://raw.githubusercontent.com/chainer/chainerui/master/docs/images/project_training_animation.gif)
 
 ChainerUI is a visualization and management tool for [Chainer](https://github.com/chainer/chainer).
 
@@ -87,7 +87,7 @@ ChainerUI is supported by the latest stable version of the following browsers.
 
 ## License
 
-[MIT License](LICENSE)
+MIT License (see `LICENSE` file).
 
 ## Contribution
 

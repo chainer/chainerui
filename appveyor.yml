@@ -12,7 +12,7 @@ install:
   - pip --version
 
   - pip install -U pytest pytest-cov mock
-  - pip install Pillow matplotlib chainer
+  - pip install Pillow matplotlib scipy chainer
 
   # Update Node.js
   - ps: Install-Product node $env:nodejs_version
