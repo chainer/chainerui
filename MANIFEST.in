@@ -1,3 +1,5 @@
 include chainerui/templates/*
 include chainerui/static/**/*
 include requirements.txt
+include README.md
+include LICENSE
