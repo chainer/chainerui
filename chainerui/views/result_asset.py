@@ -5,7 +5,6 @@ from flask import send_file
 from flask.views import MethodView
 
 from chainerui.database import db
-from chainerui.models.asset import Asset
 from chainerui.models.bindata import Bindata
 from chainerui.models.project import Project
 from chainerui.models.result import Result
@@ -37,13 +36,8 @@ class ResultAssetAPI(MethodView):
             }), 404
 
         if content_id is None:
-            assets = db.session.query(Asset).\
-                filter_by(result_id=result_id).\
-                order_by(Asset.id).all()
-            if assets is None:
-                assets = []
-            assets = collect_assets(result, assets)
-            assets_response = [asset.serialize for asset in assets]
+            collect_assets(result)
+            assets_response = [asset.serialize for asset in result.assets]
             for asset in assets_response:
                 for content in asset['contents']:
                     content['uri'] = self._make_content_uri(

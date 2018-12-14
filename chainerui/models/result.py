@@ -28,6 +28,7 @@ class Result(database.BASE):
     )
     commands = relationship('Command', cascade='all, delete-orphan')
     snapshots = relationship('Snapshot', cascade='all, delete-orphan')
+    assets = relationship('Asset', cascade='all, delete-orphan')
     log_modified_at = Column(DateTime, default=None)
     created_at = Column(DateTime, default=datetime.datetime.now())
     updated_at = Column(

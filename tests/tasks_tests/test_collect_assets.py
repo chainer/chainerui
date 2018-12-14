@@ -57,13 +57,14 @@ def test_collect_assets_no_meta(func_dir):
     os.remove(os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME))
     result = _get_dummy_result(func_dir)
 
-    actual_list = collect_assets.collect_assets(result, [])
-    assert len(actual_list) == 0
+    collect_assets.collect_assets(result)
+    assert len(result.assets) == 0
 
 
 def test_collect_assets(func_dir):
     result = _get_dummy_result(func_dir)
-    actual_list = collect_assets.collect_assets(result, [])
+    collect_assets.collect_assets(result)
+    actual_list = result.assets
 
     assert len(actual_list) == 2
     actual_img1 = actual_list[0]
@@ -96,17 +97,19 @@ def test_collect_assets(func_dir):
 
 def test_collect_assets_no_updated(func_dir):
     result = _get_dummy_result(func_dir)
-    first_assets = collect_assets.collect_assets(result, [])
+    collect_assets.collect_assets(result)
+    first_assets = result.assets
     assert len(first_assets) == 2
 
-    second_assets = collect_assets.collect_assets(result, first_assets)
-    assert first_assets == second_assets
+    collect_assets.collect_assets(result, first_assets)
+    assert first_assets == result.assets
 
 
 def test_collect_assets_updated(func_dir):
     info_path = os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
     result = _get_dummy_result(func_dir)
-    first_assets = collect_assets.collect_assets(result, [])
+    collect_assets.collect_assets(result)
+    first_assets = result.assets
     assert len(first_assets) == 2
 
     with open(os.path.join(func_dir, 'img1_3.png'), 'w') as f:
@@ -124,7 +127,8 @@ def test_collect_assets_updated(func_dir):
     with open(info_path, 'w') as f:
         json.dump(meta, f)
 
-    second_assets = collect_assets.collect_assets(result, first_assets)
+    collect_assets.collect_assets(result)
+    second_assets = result.assets
     assert len(second_assets) == 3
 
     actual_img3 = second_assets[2]
@@ -142,7 +146,8 @@ def test_collect_assets_updated(func_dir):
 def test_collect_assets_new_meta(func_dir):
     info_path = os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
     result = _get_dummy_result(func_dir)
-    first_assets = collect_assets.collect_assets(result, [])
+    collect_assets.collect_assets(result)
+    first_assets = result.assets
     assert len(first_assets) == 2
 
     test_data = [
@@ -157,7 +162,8 @@ def test_collect_assets_new_meta(func_dir):
     ]
     with open(info_path, 'w') as f:
         json.dump(test_data, f)
-    second_assets = collect_assets.collect_assets(result, first_assets)
+    collect_assets.collect_assets(result)
+    second_assets = result.assets
     assert len(second_assets) == 1
     actual_img1 = second_assets[0]
     assert len(actual_img1.content_list) == 2
