@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container } from 'reactstrap';
+import { Link } from 'react-router';
+import { Container, Button } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import {
@@ -19,7 +20,7 @@ import ResultSummary from '../components/result/ResultSummary';
 import Args from '../components/result/Args';
 import Commands from '../components/result/Commands';
 import Snapshots from '../components/result/Snapshots';
-import { startPolling, stopPolling } from '../utils';
+import { startPolling, stopPolling, urlForResultDetail } from '../utils';
 
 class ResultDetail extends React.Component {
   componentDidMount() {
@@ -71,6 +72,13 @@ class ResultDetail extends React.Component {
             project={project}
             result={result}
           />
+          <Button
+            tag={Link}
+            to={`${urlForResultDetail(projectId, result.id)}/assets`}
+            color="primary"
+          >
+            Assets
+          </Button>
           <div className="row">
             <div className="col-sm-6 p-2">
               <ResultSummary result={result} />
