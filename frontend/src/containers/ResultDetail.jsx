@@ -19,6 +19,7 @@ import ResultSummary from '../components/result/ResultSummary';
 import Args from '../components/result/Args';
 import Commands from '../components/result/Commands';
 import Snapshots from '../components/result/Snapshots';
+import Assets from '../components/result/Assets';
 import { startPolling, stopPolling } from '../utils';
 
 class ResultDetail extends React.Component {
@@ -92,6 +93,12 @@ class ResultDetail extends React.Component {
             </div>
             <div className="col-sm-6 p-2">
               <Snapshots snapshots={result.snapshots || []} />
+            </div>
+            <div className="col-sm-6 p-2">
+              <Assets
+                projectId={projectId}
+                resultId={result.id}
+              />
             </div>
           </div>
         </Container>
