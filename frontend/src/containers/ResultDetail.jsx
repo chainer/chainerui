@@ -92,13 +92,15 @@ class ResultDetail extends React.Component {
               }
             </div>
             <div className="col-sm-6 p-2">
-              <Snapshots snapshots={result.snapshots || []} />
-            </div>
-            <div className="col-sm-6 p-2">
-              <Assets
-                projectId={projectId}
-                resultId={result.id}
-              />
+              <div className="mb-2">
+                <Snapshots snapshots={result.snapshots || []} />
+              </div>
+              <div className="mb-2">
+                <Assets
+                  projectId={projectId}
+                  resultId={result.id}
+                />
+              </div>
             </div>
           </div>
         </Container>
