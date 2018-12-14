@@ -158,7 +158,7 @@ A example without ``Trainer`` code, from a short extract of the `MNIST custom lo
 Experimental conditions
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: ../images/result_table_condition_sample.png
+.. image:: ../images/result_table.png
 
 ChainerUI shows the training job with experimental conditions read from the ``args`` file. ``args`` file is a JSON file, which includes key-value pairs. See :ref:`save_args <module_save_args>`, util function to dump command line arguments or dictionaries to ``args`` file.
 
@@ -201,10 +201,9 @@ ChainerUI supports operating a training loop with :ref:`CommandsExtension <modul
 * Adjusting the hyperparameters of an optimizer
 * Stopping the training loop
 
-Operation buttons are in result table row, click ``▼`` button, or in :ref:`result page <ui_result_page>`, click ``Detail`` button in expanded row.
+Operation buttons are in result table row, click ``▼`` button to expand, or in :ref:`result page <ui_result_page>`, click ``Detail`` button.
 
-.. figure:: ../images/result_table_collapsable_row.gif
-   :scale: 30%
+.. figure:: ../images/result_table_expand_row_operation_block.png
 
    expand table row to show sub components.
 

@@ -5,7 +5,7 @@ Visualize assets
 
 ChainerUI provides ``/assets`` endpoint from v0.8.0 to visualize media assets such image or audio. Basically by using :ref:`module_summary` module, functions convert ``ndarray`` to the specified media type, and show them on a web browser. Assets page can be seen from ``assets`` button on :ref:`result table <ui_training_job_table>` or :ref:`result detail <ui_result_page>`.
 
-TODO: flow page, result row to assets page
+.. image:: ../images/assets/asset_page_flow.png
 
 .. note::
 
