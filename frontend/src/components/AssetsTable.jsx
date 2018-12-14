@@ -30,14 +30,27 @@ const AssetsTable = (props) => {
     Cell: (p) => {
       const { original } = p;
       const selectedContent = original.contents.find((content) => content.tag === k);
-      return (
-        <img
-          src={selectedContent.uri}
-          alt={selectedContent.tag}
-          width="80%"
-          height="auto"
-        />
-      );
+      if (selectedContent == null) {
+        return null;
+      }
+      if (selectedContent.name.endsWith('.wav')) {
+        return (
+          <audio
+            src={selectedContent.uri}
+            alt={selectedContent.tag}
+            controls
+          />
+        );
+      } else {
+        return (
+          <img
+            src={selectedContent.uri}
+            alt={selectedContent.tag}
+            width="80%"
+            height="auto"
+          />
+        );
+      }
     }
   }));
 

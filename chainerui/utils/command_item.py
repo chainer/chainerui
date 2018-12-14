@@ -3,7 +3,6 @@ import json
 import os
 import shutil
 
-from chainerui.models.command import Command
 from chainerui.utils.is_jsonable import is_jsonable
 from chainerui.utils.tempdir import tempdir
 
@@ -154,10 +153,3 @@ class CommandItem(object):
             'request': self._request,
             'response': self._response
         }
-
-    def to_model(self):
-        return Command(
-            name=self._name,
-            request=self._request,
-            response=self._response
-        )

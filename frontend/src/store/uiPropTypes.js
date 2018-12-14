@@ -84,12 +84,14 @@ export const line = PropTypes.shape({
 
 export const lines = PropTypes.objectOf(line);
 
+export const chartSize = PropTypes.shape({
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  aspect: PropTypes.number.isRequired
+});
+
 export const globalConfig = PropTypes.shape({
-  chartSize: PropTypes.shape({
-    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    aspect: PropTypes.number.isRequired
-  }).isRequired,
+  chartSize: chartSize.isRequired,
   pollingRate: PropTypes.number.isRequired,
   logsLimit: PropTypes.number.isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired
@@ -110,7 +112,6 @@ const logKeysConfig = PropTypes.objectOf(logKeyConfig);
 export const axisName = PropTypes.string;
 
 export const axisConfig = PropTypes.shape({
-  axisName: axisName.isRequired,
   logKeysConfig,
   scale: PropTypes.string,
   scaleRange: PropTypes.objectOf(PropTypes.shape({

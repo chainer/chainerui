@@ -22,15 +22,16 @@ const AxesConfigurator = (props) => {
     onAxisConfigLogKeySelectToggle
   } = props;
   const {
-    xAxis = { axisName: 'xAxis' },
-    yLeftAxis = { axisName: 'yLeftAxis' },
-    yRightAxis = { axisName: 'yRightAxis' }
+    xAxis = {},
+    yLeftAxis = {},
+    yRightAxis = {}
   } = projectConfig.axes;
 
   return (
     <div className="axes-configurator">
       <AxisConfigurator
         projectId={project.id}
+        axisName="yLeftAxis"
         axisConfig={yLeftAxis}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
@@ -38,6 +39,7 @@ const AxesConfigurator = (props) => {
       >
         <AxisLogKeySelector
           projectId={project.id}
+          axisName="yLeftAxis"
           axisConfig={yLeftAxis}
           stats={stats}
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
@@ -54,6 +56,7 @@ const AxesConfigurator = (props) => {
       </AxisConfigurator>
       <AxisConfigurator
         projectId={project.id}
+        axisName="yRightAxis"
         axisConfig={yRightAxis}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
@@ -61,6 +64,7 @@ const AxesConfigurator = (props) => {
       >
         <AxisLogKeySelector
           projectId={project.id}
+          axisName="yRightAxis"
           axisConfig={yRightAxis}
           stats={stats}
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
@@ -77,6 +81,7 @@ const AxesConfigurator = (props) => {
       </AxisConfigurator>
       <AxisConfigurator
         projectId={project.id}
+        axisName="xAxis"
         axisConfig={xAxis}
         onChangeScale={onAxisConfigScaleUpdate}
         onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}

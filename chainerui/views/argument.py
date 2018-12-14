@@ -4,7 +4,7 @@ from flask import jsonify
 from flask import request
 from flask.views import MethodView
 
-from chainerui import db
+from chainerui.database import db
 from chainerui.models.argument import Argument
 from chainerui.models.project import Project
 from chainerui.models.result import Result

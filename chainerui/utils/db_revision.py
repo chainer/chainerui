@@ -2,7 +2,7 @@ from alembic.command import revision
 from alembic.migration import MigrationContext
 from alembic.script import ScriptDirectory
 
-from chainerui import db
+from chainerui.database import db
 
 
 def current_db_revision():

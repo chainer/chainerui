@@ -1,7 +1,7 @@
 import datetime
 import os
 
-from chainerui import db
+from chainerui.database import db
 from chainerui.models.result import Result
 
 

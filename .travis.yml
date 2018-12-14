@@ -15,7 +15,7 @@ sudo: false
 before_install:
   - pip install autopep8 hacking
   - pip install -U pytest pytest-cov coveralls
-  - pip install Pillow matplotlib
+  - pip install Pillow matplotlib scipy chainer
   - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then pip install mock; fi
   - npm install -g npm@6
   - npm -v
@@ -41,7 +41,7 @@ script:
   - chainerui server -p 5051 &
   - sleep 4
   - curl -f http://127.0.0.1:5051/
-  - CHAINERUI_ENV=test pytest --cov=chainerui
+  - pytest --cov=chainerui
 
 after_success:
   - if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then COVERALLS_TOKEN=$COVERALLS_TOKEN coveralls; fi

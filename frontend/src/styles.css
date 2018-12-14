@@ -46,6 +46,7 @@
 }
 
 .plot-hidden {
+  min-width: 800px;
   position: absolute;
   left: -9999px;
 }
@@ -62,4 +63,12 @@
 
 .result-highlight {
   background-color: #fffbcc;
+}
+
+.recharts-active-dot {
+  pointer-events: none;
+}
+
+.recharts-tooltip-wrapper {
+  z-index: 10000;
 }

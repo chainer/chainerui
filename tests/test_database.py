@@ -14,13 +14,13 @@ class TestDataBase(TempDirTestCase):
         yield
 
         # db module is global, required initialize after testing
-        from chainerui import db
+        from chainerui.database import db
         if db._session is not None:
             db.session.remove()
         db.remove_db()
 
     def test_init_db_duplicated(self):
-        from chainerui import db
+        from chainerui.database import db
 
         chainerui_db_dir = os.path.join(self.dir, 'db')
         db.init_db()
@@ -31,7 +31,7 @@ class TestDataBase(TempDirTestCase):
         assert os.path.exists(chainerui_db_dir)
 
     def test_setup_default_db(self):
-        from chainerui import db
+        from chainerui.database import db
         db.init_db()
         assert db.setup(url=None)
 
@@ -43,7 +43,7 @@ class TestDataBase(TempDirTestCase):
         assert db.alembic_config is not None
 
     def test_setup_external_db_file(self):
-        from chainerui import db
+        from chainerui.database import db
         db_dir = os.path.join(self.dir, 'exdb')
         os.makedirs(db_dir)
         db_url = 'sqlite:///' + os.path.join(db_dir, 'sqlite.db')
@@ -63,7 +63,7 @@ class TestDataBase(TempDirTestCase):
         except (ImportError, TypeError):
             pass
 
-        from chainerui import db
+        from chainerui.database import db
         db_url = 'firebird+fdb://user:password@host:3050/path/to/db'
         assert not db.setup(url=db_url)
 
@@ -82,7 +82,7 @@ class TestDataBase(TempDirTestCase):
         assert 'migration configuration' in str(e.value)
 
     def test_setup_not_init_error(self):
-        from chainerui import db
+        from chainerui.database import db
         assert not db.setup(url=None)
 
         assert not db._initialized
@@ -100,7 +100,7 @@ class TestDataBase(TempDirTestCase):
         assert 'migration configuration' in str(e.value)
 
     def test_setup_connection_error(self):
-        from chainerui import db
+        from chainerui.database import db
         db_dir = os.path.join(self.dir, 'not_exist')
         db_url = 'sqlite:///' + os.path.join(db_dir, 'sqlite.db')
         assert not db.setup(url=db_url)

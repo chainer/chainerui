@@ -24,6 +24,8 @@ setup(
     name='chainerui',
     version=__version__,  # NOQA
     description='ChainerUI: User Interface for Chainer',
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     install_requires=required,
     package_data={
         'chainerui': [

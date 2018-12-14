@@ -87,6 +87,18 @@ Show training logs and experimental conditions.
     * Along with axis settings and selected checkboxes, log keys like ``main/loss`` are also cached on browser storage. The reset button restores cached key, too.
 
 
+.. _ui_highlight:
+
+Highlighting
+~~~~~~~~~~~~
+
+.. figure:: ../../images/project_highlight_animation.gif
+
+   This animation is captured on **v0.7.0**
+
+Result table and a log chart are linked each other. A selected result is highlighting for emphasis.
+
+
 .. _ui_save_log_chart:
 
 Save log chart
@@ -94,7 +106,8 @@ Save log chart
 
 .. image:: ../../images/chart_save.png
 
-Save log chart as PNG or JSON, download will be started.
+* ``PNG``: Save log chart as PNG
+* ``Code``: Download Python script. Run the downloaded script then get a chart image using Matplotlib. Lines plotted or not are followed by configuration on Web UI. The script has all log data as JSON.
 
 .. _ui_edit_line:
 
@@ -111,17 +124,21 @@ Show detail information about the line, and enable to change the line color. To 
 Training job table
 ~~~~~~~~~~~~~~~~~~
 
-.. image:: ../../images/result_table_condition_sample.png
+.. image:: ../../images/result_table.png
 
 .. figure:: ../../images/result_table_expand_row.png
 
-   expanded the first row to show sub components.
+   expanded the second row to show sub components.
 
 The training job table shows brief log information and experimental conditions. Job names are set to the directory name by default. The name can be edit directly on the table. To unregister a result, click ``Unregister`` button in the expanded row. Expanded row has some operation buttons. These buttons operate similarly to buttons in :ref:`Commands pane <ui_result_page_commands>`.
 
 .. note::
 
    [Known problem] Once a result is unregistered, a result with the same name cannot be restored on the result table. This will be fixed in future.
+
+* ``Table Settings``: Customize visibility of table columns
+
+.. image:: ../../images/result_table_setting.png
 
 
 .. _ui_result_page:

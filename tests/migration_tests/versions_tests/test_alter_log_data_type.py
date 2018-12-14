@@ -6,7 +6,7 @@ import sqlite3
 import alembic
 import msgpack
 
-from chainerui import db
+from chainerui.database import db
 from chainerui.migration.versions import e3db52a480f8_alter_log_data_type as target  # NOQA
 
 

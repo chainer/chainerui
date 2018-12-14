@@ -12,7 +12,7 @@ install:
   - pip --version
 
   - pip install -U pytest pytest-cov mock
-  - pip install Pillow matplotlib
+  - pip install Pillow matplotlib scipy chainer
 
   # Update Node.js
   - ps: Install-Product node $env:nodejs_version
@@ -35,7 +35,6 @@ build_script:
   - curl -f http://127.0.0.1:5051/
 
 test_script:
-  - set CHAINERUI_ENV=test
   - pytest --cov=chainerui
 
 on_finish:

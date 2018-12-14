@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Select from './FormControl/Select';
+
 
 const scaleOptions = ['linear', 'log'];
 
@@ -9,14 +11,12 @@ const AxisScaleSelector = (props) => {
   const handleChangeAxisKey = (e) => {
     onChange(e.target.value);
   };
-
-  const options = scaleOptions.map((scaleKey) => (
-    <option value={scaleKey} key={scaleKey}>{scaleKey}</option>
-  ));
   return (
-    <select id="axis-scale-selector-select" className="form-control" value={scale} onChange={handleChangeAxisKey}>
-      {options}
-    </select>
+    <Select
+      value={scale}
+      onChange={handleChangeAxisKey}
+      values={scaleOptions}
+    />
   );
 };
 

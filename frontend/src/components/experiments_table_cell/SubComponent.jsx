@@ -27,9 +27,17 @@ const SubComponent = (props) => {
           tag={Link}
           to={urlForResultDetail(project.id, id)}
           color="primary"
-          className="mb-2"
+          className="mb-2 mr-2"
         >
           Detail
+        </Button>
+        <Button
+          tag={Link}
+          to={`${urlForResultDetail(project.id, id)}/assets`}
+          color="primary"
+          className="mb-2 mr-2"
+        >
+          Assets
         </Button>
 
         <div className="mb-2">
