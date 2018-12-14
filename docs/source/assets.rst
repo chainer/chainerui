@@ -46,7 +46,7 @@ There are 2 ways to show assets on a web browser. First, use ``summary`` module 
 .. code-block:: python
 
   summary.image(images[0:5])
-  summary.image(images[5:10)
+  summary.image(images[5:10])
   summary.audio(audio, 16000)
 
 .. image:: ../images/assets/call_directly_default.png
