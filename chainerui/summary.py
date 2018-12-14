@@ -58,6 +58,25 @@ class _Reporter(object):
 
     def image(self, images, name=None, ch_axis=1, row=0, mode=None,
               batched=True):
+        """Summary images to visualize.
+
+        Args:
+            images (:class:`numpy.ndarray` or :class:`cupy.ndarray` or \
+                :class:`chainer.Variable`): batch of images. If Number of
+                dimension is 3 (or 2 when set `batched=False`), the pixels
+                assume as black and white image.
+            name (str): name of image. set as column name. when not setting,
+                assigned ``'image'`` + sequential number.
+            ch_axis (int): index number of channel dimension. set 1 by default.
+                if the images don't have channel axis, this parameter is
+                ignored.
+            row (int): row size to visualize batched images. when set 0,
+                show on unstuck. if images set only one image, the row size
+                will be ignored.
+            mode (str): if the images are not RGB or RGBA space, set their
+                color space code. ChainerUI supports 'HSV'.
+            batched (bool): if the image is not batched, set ``False``.
+        """
         from chainerui.report.image_report import check_available
         if not check_available():
             return
@@ -71,6 +90,16 @@ class _Reporter(object):
         self.count += 1
 
     def audio(self, audio, sample_rate, name=None):
+        """Summary audio to listen on web browser.
+
+        Args:
+            audio (:class:`numpy.ndarray` or :class:`cupy.ndarray` or \
+                :class:`chainer.Variable`): sampled wave array.
+            sample_rate (int): sampling rate.
+            name (str): name of image. set as column name. when not setting,
+                assigned ``'audio'`` + sequential number.
+        """
+
         from chainerui.report.audio_report import check_available
         if not check_available():
             return
@@ -106,6 +135,15 @@ class _Reporter(object):
 
 
 def set_out(path):
+    """Set output path.
+
+    Summary module requires output directory. Once set output path using this
+    function, summary module shares the path.
+
+    Args:
+        path (str): directory path of output.
+    """
+
     _chainerui_asset_observer.out = path
 
 
@@ -114,11 +152,13 @@ def reporter(prefix=None, out=None, **kwargs):
     """Summary media assets to visualize.
 
     ``reporter`` function collects media assets by the ``with`` statement and
-    aggregates in a row to visualize. This function returns an object which
+    aggregates in same row to visualize. This function returns an object which
     provides the following methods.
 
-    * ``image``: almost same as :func:`~chainerui.summary.image`
-    * ``audio``: almost same as :func:`~chainerui.summary.audio`
+    * :meth:`~chainerui.summary._Reporter.image`: collect images. almost same \
+        as :func:`~chainerui.summary.image`
+    * :meth:`~chainerui.summary._Reporter.audio`: collect audio. almost same \
+        as :func:`~chainerui.summary.audio`
 
     Example of how to set several assets::
 
@@ -132,7 +172,7 @@ def reporter(prefix=None, out=None, **kwargs):
        >>> # image_array1 and image_array2 are visualized on a browser
        >>> # audio_array can be listened on a browser
 
-    Arguments:
+    Args:
         prefix (str): prefix of column name.
         out (str): directory path of output.
         **kwargs (dict): key-value pair to show as description. regardless of
@@ -159,10 +199,10 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
        >>> from chainerui import summary
        >>> summary.set_out('/path/to/log')  # same as 'log' file directory
        >>>
-       >>> x.shape  # = [Batchsize, Channel, Hight, Width]
+       >>> x.shape  # = [Batchsize, Channel, Height, Width]
        (10, 3, 5, 5)
        >>> summary.image(x, name='test')  # images are tiled as 1x10
-       >>> summary.image(x, name='test', row=5)  # images are tiled as 2x5
+       >>> summary.image(x, name='test', row=2)  # images are tiled as 2x5
        >>>
        >>> x.shape  # = [C, H, W]
        (3, 5, 5)
@@ -172,7 +212,7 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
        >>> x.shape  # = [B, H, W, C]
        (10, 5, 5, 3)
        >>> # need to set channel axis explicitly
-       >>> summary.image(x, name='test', ch_axis=-1, row=5)
+       >>> summary.image(x, name='test', ch_axis=-1, row=2)
        >>>
        >>> x.shape  # = [H, W, C]
        (5, 5, 3)
@@ -182,7 +222,7 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
        >>> x.shape  # = [B, H, W], grayscale images
        (10, 5, 5)
        >>> summary.image(x, name='test')  # image are tiled as 1x10
-       >>> summary.image(x, name='test', row=5)  # image are tiled as 2x5
+       >>> summary.image(x, name='test', row=2)  # image are tiled as 2x5
        >>>
        >>> x.shape  # = [H, W], a grayscale image
        (5, 5)
@@ -195,9 +235,9 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
        >>> # 'epoch' and 'iteration' column will be shown.
 
     Args:
-        images (:class:`numpy.ndarray` or :class:`cupy.ndarray` or
-            `chainer.Variable`): batch of images. If Number of dimension is
-            3 (or 2 when set `batched=False`), the pixels assume as
+        images (:class:`numpy.ndarray` or :class:`cupy.ndarray` or \
+            :class:`chainer.Variable`): batch of images. If Number of dimension
+            is 3 (or 2 when set `batched=False`), the pixels assume as
             black and white image.
         name (str): name of image. set as column name. when not setting,
             assigned ``'image'``.
@@ -258,11 +298,11 @@ def audio(audio, sample_rate, name=None, out=None, **kwargs):
        >>> # 'epoch' and 'iteration' column will be shown.
 
     Args:
-        audio (:class:`numpy.ndarray` or :class:`cupy.ndarray` or
-            `chainer.Variable`): sampled wave array.
+        audio (:class:`numpy.ndarray` or :class:`cupy.ndarray` or \
+            :class:`chainer.Variable`): sampled wave array.
         sample_rate (int): sampling rate.
         name (str): name of image. set as column name. when not setting,
-            assigned ``'image'``.
+            assigned ``'audio'``.
         out (str): directory path of output.
         **kwargs (dict): key-value pair to show as description. regardless of
             empty or not, timestamp on created the image is added.

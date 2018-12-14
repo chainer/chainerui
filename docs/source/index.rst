@@ -8,6 +8,7 @@ ChainerUI -- User interface for Chainer
 
    install
    getstart
+   assets
    docker
    external_db
 
