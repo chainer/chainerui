@@ -47,9 +47,10 @@ _chainerui_asset_observer = _Summary()
 
 class _Reporter(object):
 
-    def __init__(self, prefix=None, out=None, **kwargs):
+    def __init__(self, prefix=None, out=None, subdir='', **kwargs):
         self.prefix = prefix
         self.out = _chainerui_asset_observer.get_outpath(out)
+        self.subdir = subdir
         self.value = kwargs
 
         self.images = {}
@@ -57,7 +58,7 @@ class _Reporter(object):
         self.count = 0
 
     def image(self, images, name=None, ch_axis=1, row=0, mode=None,
-              batched=True):
+              batched=True, subdir=''):
         """Summary images to visualize.
 
         Args:
@@ -76,6 +77,7 @@ class _Reporter(object):
             mode (str): if the images are not RGB or RGBA space, set their
                 color space code. ChainerUI supports 'HSV'.
             batched (bool): if the image is not batched, set ``False``.
+            subdir (str): sub-directory path of output.
         """
         from chainerui.report.image_report import check_available
         if not check_available():
@@ -83,13 +85,14 @@ class _Reporter(object):
         from chainerui.report.image_report import report as _image
 
         col_name = self.get_col_name(name, 'image')
+        out_dir, rel_out_dir = self.get_subdir(subdir)
         filename, _ = _image(
-            images, self.out, col_name, ch_axis, row, mode, batched)
-        self.images[col_name] = filename
+            images, out_dir, col_name, ch_axis, row, mode, batched)
+        self.images[col_name] = os.path.join(rel_out_dir, filename)
 
         self.count += 1
 
-    def audio(self, audio, sample_rate, name=None):
+    def audio(self, audio, sample_rate, name=None, subdir=''):
         """Summary audio to listen on web browser.
 
         Args:
@@ -98,6 +101,7 @@ class _Reporter(object):
             sample_rate (int): sampling rate.
             name (str): name of image. set as column name. when not setting,
                 assigned ``'audio'`` + sequential number.
+            subdir (str): sub-directory path of output.
         """
 
         from chainerui.report.audio_report import check_available
@@ -106,8 +110,9 @@ class _Reporter(object):
         from chainerui.report.audio_report import report as _audio
 
         col_name = self.get_col_name(name, 'audio')
-        filename, _ = _audio(audio, sample_rate, self.out, col_name)
-        self.audios[col_name] = filename
+        out_dir, rel_out_dir = self.get_subdir(subdir)
+        filename, _ = _audio(audio, sample_rate, out_dir, col_name)
+        self.audios[col_name] = os.path.join(rel_out_dir, filename)
 
         self.count += 1
 
@@ -118,6 +123,13 @@ class _Reporter(object):
         if self.prefix is not None:
             col_name = self.prefix + col_name
         return col_name
+
+    def get_subdir(self, subdir):
+        rel_out_dir = os.path.join(self.subdir, subdir)
+        out_dir = os.path.join(self.out, rel_out_dir)
+        if not os.path.isdir(out_dir):
+            os.makedirs(out_dir)
+        return out_dir, rel_out_dir
 
     def save(self):
         cached = False
@@ -148,7 +160,7 @@ def set_out(path):
 
 
 @contextlib.contextmanager
-def reporter(prefix=None, out=None, **kwargs):
+def reporter(prefix=None, out=None, subdir='', **kwargs):
     """Summary media assets to visualize.
 
     ``reporter`` function collects media assets by the ``with`` statement and
@@ -175,17 +187,18 @@ def reporter(prefix=None, out=None, **kwargs):
     Args:
         prefix (str): prefix of column name.
         out (str): directory path of output.
+        subdir (str): sub-directory path of output.
         **kwargs (dict): key-value pair to show as description. regardless of
             empty or not, timestamp is added.
     """
 
-    report = _Reporter(prefix, out, **kwargs)
+    report = _Reporter(prefix, out, subdir, **kwargs)
     yield report
     report.save()
 
 
 def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
-          out=None, **kwargs):
+          out=None, subdir='', **kwargs):
     """Summary images to visualize.
 
     Array of images are converted as image format (PNG format on default),
@@ -250,6 +263,7 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
             color space code. ChainerUI supports 'HSV'.
         batched (bool): if the image is not batched, set ``False``.
         out (str): directory path of output.
+        subdir (str): sub-directory path of output.
         **kwargs (dict): key-value pair to show as description. regardless of
             empty or not, timestamp on created the image is added.
     """
@@ -259,7 +273,10 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
         return
     from chainerui.report.image_report import report as _image
 
-    out_path = _chainerui_asset_observer.get_outpath(out)
+    out_root = _chainerui_asset_observer.get_outpath(out)
+    out_path = os.path.join(out_root, subdir)
+    if not os.path.isdir(out_path):
+        os.makedirs(out_path)
     col_name = name
     if col_name is None:
         col_name = 'image'
@@ -268,12 +285,12 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
 
     value = kwargs
     value['timestamp'] = created_at.isoformat()
-    value['images'] = {col_name: filename}
+    value['images'] = {col_name: os.path.join(subdir, filename)}
     _chainerui_asset_observer.add(value)
-    _chainerui_asset_observer.save(out_path)
+    _chainerui_asset_observer.save(out_root)
 
 
-def audio(audio, sample_rate, name=None, out=None, **kwargs):
+def audio(audio, sample_rate, name=None, out=None, subdir='', **kwargs):
     """summary audio files to listen on a browser.
 
     An sampled array is converted as WAV audio file, saved to output directory,
@@ -304,6 +321,7 @@ def audio(audio, sample_rate, name=None, out=None, **kwargs):
         name (str): name of image. set as column name. when not setting,
             assigned ``'audio'``.
         out (str): directory path of output.
+        subdir (str): sub-directory path of output.
         **kwargs (dict): key-value pair to show as description. regardless of
             empty or not, timestamp on created the image is added.
     """
@@ -313,7 +331,10 @@ def audio(audio, sample_rate, name=None, out=None, **kwargs):
         return
     from chainerui.report.audio_report import report as _audio
 
-    out_path = _chainerui_asset_observer.get_outpath(out)
+    out_root = _chainerui_asset_observer.get_outpath(out)
+    out_path = os.path.join(out_root, subdir)
+    if not os.path.isdir(out_path):
+        os.makedirs(out_path)
     col_name = name
     if col_name is None:
         col_name = 'audio'
@@ -321,6 +342,6 @@ def audio(audio, sample_rate, name=None, out=None, **kwargs):
 
     value = kwargs
     value['timestamp'] = created_at.isoformat()
-    value['audios'] = {col_name: filename}
+    value['audios'] = {col_name: os.path.join(subdir, filename)}
     _chainerui_asset_observer.add(value)
-    _chainerui_asset_observer.save(out_path)
+    _chainerui_asset_observer.save(out_root)
