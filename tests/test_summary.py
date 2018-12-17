@@ -95,7 +95,7 @@ def test_summary_image(func_dir):
     assert saved_filename.endswith('.png')
 
     img2 = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
-    summary.image(img2, 'test', out=func_dir, epoch=20)
+    summary.image(img2, 'test', out=func_dir, subdir='image', epoch=20)
 
     with open(meta_filepath, 'r') as f:
         metas2 = json.load(f)
@@ -107,7 +107,7 @@ def test_summary_image(func_dir):
     assert 'test' in metas2[1]['images']
     saved_filename2 = metas2[1]['images']['test']
     assert saved_filename != saved_filename2
-    assert saved_filename2.startswith('test_')
+    assert saved_filename2.startswith(os.path.join('image', 'test_'))
     assert saved_filename2.endswith('.png')
 
 
@@ -132,7 +132,7 @@ def test_summary_audio(func_dir):
     assert saved_filename.startswith('audio_')
     assert saved_filename.endswith('.wav')
 
-    summary.audio(audio, 16000, out=func_dir, epoch=20)
+    summary.audio(audio, 16000, out=func_dir, subdir='audio', epoch=20)
     with open(meta_filepath, 'r') as f:
         metas2 = json.load(f)
     assert len(metas2) == 2
@@ -142,7 +142,7 @@ def test_summary_audio(func_dir):
     assert 'audios' in metas2[1]
     assert 'audio' in metas2[1]['audios']
     saved_filename = metas2[1]['audios']['audio']
-    assert saved_filename.startswith('audio_')
+    assert saved_filename.startswith(os.path.join('audio', 'audio_'))
     assert saved_filename.endswith('.wav')
 
 
@@ -156,9 +156,9 @@ def test_summary_reporter_mix(func_dir):
 
     with summary.reporter(prefix='with_', out=func_dir, epoch=10) as r:
         r.image(img)
-        r.image(img2, 'test_image')
+        r.image(img2, 'test_image', subdir='image')
         r.audio(audio, 16000)
-        r.audio(audio2, 16000, 'test_audio')
+        r.audio(audio2, 16000, 'test_audio', subdir='audio')
 
     meta_filepath = os.path.join(
         func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
@@ -177,7 +177,7 @@ def test_summary_reporter_mix(func_dir):
     assert saved_filename.endswith('.png')
     assert 'with_test_image' in metas[0]['images']
     saved_filename1 = metas[0]['images']['with_test_image']
-    assert saved_filename1.startswith('with_test_image')
+    assert saved_filename1.startswith(os.path.join('image', 'with_test_image'))
     assert saved_filename1.endswith('.png')
     assert 'with_audio_2' in metas[0]['audios']
     saved_filename3 = metas[0]['audios']['with_audio_2']
@@ -185,7 +185,7 @@ def test_summary_reporter_mix(func_dir):
     assert saved_filename3.endswith('.wav')
     assert 'with_test_audio' in metas[0]['audios']
     saved_filename4 = metas[0]['audios']['with_test_audio']
-    assert saved_filename4.startswith('with_test_audio')
+    assert saved_filename4.startswith(os.path.join('audio', 'with_test_audio'))
     assert saved_filename4.endswith('.wav')
 
     img3 = np.copy(img)
@@ -193,11 +193,12 @@ def test_summary_reporter_mix(func_dir):
     audio3 = np.copy(audio)
     audio4 = np.copy(audio)
 
-    with summary.reporter(prefix='with_', out=func_dir, epoch=20) as r:
+    with summary.reporter(
+            prefix='with_', out=func_dir, subdir='sub', epoch=20) as r:
         r.image(img3)
-        r.image(img4, 'test_image')
+        r.image(img4, 'test_image', subdir='image')
         r.audio(audio3, 44100)
-        r.audio(audio4, 44100, 'test_audio')
+        r.audio(audio4, 44100, 'test_audio', subdir='audio')
 
     with open(meta_filepath, 'r') as f:
         metas2 = json.load(f)
@@ -208,19 +209,21 @@ def test_summary_reporter_mix(func_dir):
     assert 'images' in metas2[1]
     assert 'with_image_0' in metas2[1]['images']
     saved_filename = metas2[1]['images']['with_image_0']
-    assert saved_filename.startswith('with_image_0')
+    assert saved_filename.startswith(os.path.join('sub', 'with_image_0'))
     assert saved_filename.endswith('.png')
     assert 'with_test_image' in metas2[1]['images']
     saved_filename1 = metas2[1]['images']['with_test_image']
-    assert saved_filename1.startswith('with_test_image')
+    assert saved_filename1.startswith(
+        os.path.join('sub', 'image', 'with_test_image'))
     assert saved_filename1.endswith('.png')
     assert 'with_audio_2' in metas2[1]['audios']
     saved_filename2 = metas2[1]['audios']['with_audio_2']
-    assert saved_filename2.startswith('with_audio_2')
+    assert saved_filename2.startswith(os.path.join('sub', 'with_audio_2'))
     assert saved_filename2.endswith('.wav')
     assert 'with_test_audio' in metas2[1]['audios']
     saved_filename3 = metas2[1]['audios']['with_test_audio']
-    assert saved_filename3.startswith('with_test_audio')
+    assert saved_filename3.startswith(os.path.join(
+        'sub', 'audio', 'with_test_audio'))
     assert saved_filename3.endswith('.wav')
 
 
