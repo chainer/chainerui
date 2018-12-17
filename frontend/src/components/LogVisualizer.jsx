@@ -72,6 +72,7 @@ class LogVisualizer extends React.Component {
       (projectStatus.chartDownloadStatus !== CHART_DOWNLOAD_STATUS.NONE) ? (
         <div className="plot-hidden" ref={this.chartRef}>
           <LogVisualizerChart
+            isDisplay={false}
             project={project}
             results={results}
             stats={stats}
@@ -88,6 +89,7 @@ class LogVisualizer extends React.Component {
       <div className="log-visualizer-root">
         {tempHiddenPlot}
         <LogVisualizerChart
+          isDisplay
           project={project}
           results={results}
           stats={stats}

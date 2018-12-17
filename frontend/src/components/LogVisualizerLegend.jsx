@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col } from 'reactstrap';
+// import { Row, Col, FormGroup, Label, Input } from 'reactstrap';
+import { Row, Col, Input, FormGroup } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import TruncatedResultName from './TruncatedResultName';
@@ -9,7 +10,9 @@ import {
 } from '../utils';
 
 const LogVisualizerLegendItem = (props) => {
-  const { project, result, resultStatus, line, isResultNameAlignRight, onResultSelect } = props;
+  const {
+    isDisplay, project, result, resultStatus, line, isResultNameAlignRight, onResultSelect
+  } = props;
   const { logKey, config } = line;
   const selected = resultStatus.selected === true || resultStatus.selected === logKey;
   return (
@@ -24,14 +27,21 @@ const LogVisualizerLegendItem = (props) => {
       }}
     >
       <Row>
-        <Col xs="6" className="text-truncate px-1">
+        { isDisplay ? (
+          <Col xs="auto" className="px-1">
+            <FormGroup check>
+              <Input type="checkbox" />
+            </FormGroup>
+          </Col>
+        ) : null}
+        <Col className="text-truncate px-1">
           <TruncatedResultName
             project={project}
             result={result}
             isResultNameAlignRight={isResultNameAlignRight}
           />
         </Col>
-        <Col xs="6" className="text-truncate px-1">
+        <Col className="text-truncate px-1">
           {logKey}
         </Col>
       </Row>
@@ -40,6 +50,7 @@ const LogVisualizerLegendItem = (props) => {
 };
 
 LogVisualizerLegendItem.propTypes = {
+  isDisplay: PropTypes.bool.isRequired,
   project: uiPropTypes.project.isRequired,
   result: uiPropTypes.result,
   resultStatus: uiPropTypes.resultStatus,
@@ -55,6 +66,7 @@ LogVisualizerLegendItem.defaultProps = {
 
 const LogVisualizerLegend = (props) => {
   const {
+    isDisplay,
     project, results, resultsStatus, lines, maxHeight, isResultNameAlignRight, onResultSelect
   } = props;
 
@@ -65,6 +77,7 @@ const LogVisualizerLegend = (props) => {
           {Object.keys(lines).flatMap((axisName) => (
             lines[axisName].map((line) => (
               <LogVisualizerLegendItem
+                isDisplay={isDisplay}
                 key={line2dataKey(line, axisName)}
                 project={project}
                 result={results[line.resultId]}
@@ -82,6 +95,7 @@ const LogVisualizerLegend = (props) => {
 };
 
 LogVisualizerLegend.propTypes = {
+  isDisplay: PropTypes.bool.isRequired,
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
   resultsStatus: uiPropTypes.resultsStatus.isRequired,

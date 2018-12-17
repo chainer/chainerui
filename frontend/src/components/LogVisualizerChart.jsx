@@ -37,6 +37,7 @@ const getDomain = (axisConfig = {}) => {
 
 const LogVisualizerChart = (props) => {
   const {
+    isDisplay,
     project,
     results,
     stats,
@@ -164,6 +165,7 @@ const LogVisualizerChart = (props) => {
       </ResponsiveContainer>
       <div>
         <LogVisualizerLegend
+          isDisplay={isDisplay}
           project={project}
           results={results}
           resultsStatus={resultsStatus}
@@ -178,6 +180,7 @@ const LogVisualizerChart = (props) => {
 };
 
 LogVisualizerChart.propTypes = {
+  isDisplay: PropTypes.bool.isRequired,
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
   stats: uiPropTypes.stats.isRequired,
