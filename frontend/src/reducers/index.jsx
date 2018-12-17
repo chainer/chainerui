@@ -445,17 +445,6 @@ const tableStateReducer = (state = {}, action) => {
   }
 };
 
-// const assetsConfigReducer = (state = {}, action) => {
-//   const {assets} = action;
-
-//   switch (action.type) {
-//     case ActionTypes.;
-//       return {
-
-//       }
-//   }
-// }
-
 const projectConfigReducer = combineReducers({
   axes: axesConfigReducer,
   resultsConfig: resultsConfigReducer,
