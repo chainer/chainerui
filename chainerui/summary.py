@@ -2,10 +2,11 @@ import contextlib
 import datetime
 import json
 import os
-import shutil
 import warnings
 
-from chainerui.utils import tempdir
+import filelock
+
+from chainerui.logging import logger
 
 
 CHAINERUI_ASSETS_METAFILE_NAME = '.chainerui_assets'
@@ -18,6 +19,7 @@ class _Summary(object):
         self.filename = CHAINERUI_ASSETS_METAFILE_NAME
         self.default_output_path = ''
         self.out = None
+        self.saved_idx = 0
 
     def add(self, value):
         self.cache.append(value)
@@ -33,13 +35,22 @@ class _Summary(object):
             return self.default_output_path
         return self.out
 
-    def save(self, out):
-        with tempdir(prefix='chainerui_', dir=out) as tempd:
-            path = os.path.join(tempd, self.filename)
-            with open(path, 'w') as f:
-                json.dump(self.cache, f, indent=4)
+    def save(self, out, timeout=5):
+        filepath = os.path.join(out, self.filename)
+        lockpath = filepath + '.lock'
 
-            shutil.move(path, os.path.join(out, self.filename))
+        try:
+            with filelock.FileLock(lockpath, timeout=timeout):
+                saved_assets_list = []
+                if os.path.isfile(filepath):
+                    with open(filepath) as f:
+                        saved_assets_list = json.load(f)
+                saved_assets_list.extend(self.cache[self.saved_idx:])
+                with open(filepath, 'w') as f:
+                    json.dump(saved_assets_list, f, indent=4)
+                self.saved_idx = len(self.cache)
+        except filelock.Timeout:
+            logger.error('Process to write asset file list is timeout')
 
 
 _chainerui_asset_observer = _Summary()

@@ -33,10 +33,11 @@ def clear_cache():
     yield
     summary._chainerui_asset_observer.out = None
     summary._chainerui_asset_observer.cache = []
+    summary._chainerui_asset_observer.saved_idx = 0
 
 
 @unittest.skipUnless(_image_report_available, 'Image report is not available')
-def test_summary_set_out_with_warning_image(func_dir):
+def test_summary_image_without_output_path(func_dir):
     summary._chainerui_asset_observer.default_output_path = func_dir
     meta_filepath = os.path.join(
         func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
@@ -54,7 +55,7 @@ def test_summary_set_out_with_warning_image(func_dir):
 
 
 @unittest.skipUnless(_image_report_available, 'Image report is not available')
-def test_summary_set_out_reporter_image(func_dir):
+def test_summary_reporter_image_without_output_path(func_dir):
     summary._chainerui_asset_observer.default_output_path = func_dir
     meta_filepath = os.path.join(
         func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
