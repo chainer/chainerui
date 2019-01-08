@@ -1,10 +1,12 @@
 import json
 from mock import MagicMock
 from mock import patch
+from multiprocessing import Process
 import os
 import unittest
 import warnings
 
+import filelock
 import numpy as np
 import pytest
 
@@ -277,3 +279,44 @@ def test_reporter_audio_unavailable(func_dir):
 
     assert not os.path.exists(
         os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME))
+
+
+@unittest.skipUnless(_image_report_available, 'Image report is not available')
+def test_summary_called_multiple_script(func_dir):
+    # This test is not enough to check that _Summary object accepts whether
+    # called by multiple scripts or not, but it's difficult to test it.
+    # By increasing lock counter with taking a file lock during this test,
+    # the meta file is shared by multiple scripts virtually, and check the
+    # asset list is appended correctly.
+    meta_filepath = os.path.join(
+        func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
+    metalock_filepath = meta_filepath + '.lock'
+
+    img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
+    summary.image(img, out=func_dir, epoch=10)
+    assert os.path.exists(meta_filepath)
+
+    try:
+        p = Process(
+            target=summary.image, args=(img,),
+            kwargs={'out': func_dir, 'epoch': 20})
+
+        with filelock.FileLock(metalock_filepath):
+            # virtually other script handles the meta file
+            # save a next image, expected to write after lock file is released
+            p.start()
+            # set dummy text, this process means added asset by other process
+            with open(meta_filepath, 'r') as f:
+                saved = json.load(f)
+                assert len(saved) == 1
+            with open(meta_filepath, 'w') as f:
+                saved.append({'dummy': 'text'})
+                json.dump(saved, f, indent=4)
+    finally:
+        p.join()
+
+    with open(meta_filepath) as f:
+        saved = json.load(f)
+        assert len(saved) == 3
+        assert saved[1].get('dummy', None) == 'text'
+        assert saved[2].get('epoch', None) == 20
