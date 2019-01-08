@@ -320,3 +320,21 @@ def test_summary_called_multiple_script(func_dir):
         assert len(saved) == 3
         assert saved[1].get('dummy', None) == 'text'
         assert saved[2].get('epoch', None) == 20
+
+
+@unittest.skipUnless(_image_report_available, 'Image report is not available')
+def test_summary_timeout(func_dir, caplog):
+    meta_filepath = os.path.join(
+        func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
+    metalock_filepath = meta_filepath + '.lock'
+
+    with filelock.FileLock(metalock_filepath):
+        img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
+        with summary.reporter(out=func_dir, timeout=0.1) as r:
+            # test process has already handled meta file,
+            # this saving process should be timeout
+            r.image(img)
+
+    assert len(caplog.records) == 1
+    assert 'is timeout' in caplog.records[0].message
+    assert not os.path.exists(meta_filepath)
