@@ -35,7 +35,7 @@ class _Summary(object):
             return self.default_output_path
         return self.out
 
-    def save(self, out, timeout=5):
+    def save(self, out, timeout):
         filepath = os.path.join(out, self.filename)
         lockpath = filepath + '.lock'
 
@@ -50,7 +50,7 @@ class _Summary(object):
                     json.dump(saved_assets_list, f, indent=4)
                 self.saved_idx = len(self.cache)
         except filelock.Timeout:
-            logger.error('Process to write asset file list is timeout')
+            logger.error('Process to write a list of assets is timeout')
 
 
 _chainerui_asset_observer = _Summary()
@@ -142,7 +142,7 @@ class _Reporter(object):
             os.makedirs(out_dir)
         return out_dir, rel_out_dir
 
-    def save(self):
+    def save(self, timeout):
         cached = False
         if self.images:
             self.value['images'] = self.images
@@ -154,7 +154,7 @@ class _Reporter(object):
             return
         self.value['timestamp'] = datetime.datetime.now().isoformat()
         _chainerui_asset_observer.add(self.value)
-        _chainerui_asset_observer.save(self.out)
+        _chainerui_asset_observer.save(self.out, timeout)
 
 
 def set_out(path):
@@ -171,7 +171,7 @@ def set_out(path):
 
 
 @contextlib.contextmanager
-def reporter(prefix=None, out=None, subdir='', **kwargs):
+def reporter(prefix=None, out=None, subdir='', timeout=5, **kwargs):
     """Summary media assets to visualize.
 
     ``reporter`` function collects media assets by the ``with`` statement and
@@ -205,11 +205,11 @@ def reporter(prefix=None, out=None, subdir='', **kwargs):
 
     report = _Reporter(prefix, out, subdir, **kwargs)
     yield report
-    report.save()
+    report.save(timeout)
 
 
 def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
-          out=None, subdir='', **kwargs):
+          out=None, subdir='', timeout=5, **kwargs):
     """Summary images to visualize.
 
     Array of images are converted as image format (PNG format on default),
@@ -298,10 +298,11 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
     value['timestamp'] = created_at.isoformat()
     value['images'] = {col_name: os.path.join(subdir, filename)}
     _chainerui_asset_observer.add(value)
-    _chainerui_asset_observer.save(out_root)
+    _chainerui_asset_observer.save(out_root, timeout)
 
 
-def audio(audio, sample_rate, name=None, out=None, subdir='', **kwargs):
+def audio(audio, sample_rate, name=None, out=None, subdir='', timeout=5,
+          **kwargs):
     """summary audio files to listen on a browser.
 
     An sampled array is converted as WAV audio file, saved to output directory,
@@ -355,4 +356,4 @@ def audio(audio, sample_rate, name=None, out=None, subdir='', **kwargs):
     value['timestamp'] = created_at.isoformat()
     value['audios'] = {col_name: os.path.join(subdir, filename)}
     _chainerui_asset_observer.add(value)
-    _chainerui_asset_observer.save(out_root)
+    _chainerui_asset_observer.save(out_root, timeout)
