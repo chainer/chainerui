@@ -29,8 +29,7 @@ install:
 script:
   # python style check
   - flake8
-  - autopep8 -r . --global-config .pep8 --diff | tee check_autopep8
-  - test ! -s check_autopep8
+  - autopep8 -r . --global-config .pep8 --diff --exit-code
   # frontend style check
   - pushd frontend
   - npm run lint
