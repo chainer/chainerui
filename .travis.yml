@@ -1,8 +1,24 @@
 language: python
-python:
-  - "2.7"
-  - "3.5"
-  - "3.6"
+
+matrix:
+  include:
+    - name: "Ubuntu14.04 Py27"
+      dist: trusty
+      python: "2.7"
+    - name: "Ubuntu16.04 Py35"
+      dist: xenial
+      python: "3.5"
+    - name: "Ubuntu16.04 Py36, plain install"
+      dist: xenial
+      python: "3.6"
+      env:
+        - CHAINERUI_PLAIN_INSTALL=1
+    - name: "Ubuntu16.04 Py36"
+      dist: xenial
+      python: "3.6"
+      env:
+        - CHAINERUI_COVERAGE_REPORT=1
+        - CHAINERUI_DEPLOY_JOB=1
 
 services:
   - docker
@@ -15,7 +31,7 @@ sudo: false
 before_install:
   - pip install autopep8 hacking
   - pip install -U pytest pytest-cov coveralls
-  - pip install Pillow matplotlib scipy chainer
+  - if [[ $CHAINERUI_PLAIN_INSTALL != 1 ]]; then pip install Pillow matplotlib scipy chainer; fi
   - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then pip install mock; fi
   - npm install -g npm@6
   - npm -v
@@ -43,7 +59,7 @@ script:
   - pytest --cov=chainerui
 
 after_success:
-  - if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then COVERALLS_TOKEN=$COVERALLS_TOKEN coveralls; fi
+  - if [[ $CHAINERUI_COVERAGE_REPORT == 1 ]]; then COVERALLS_TOKEN=$COVERALLS_TOKEN coveralls; fi
 
 deploy:
   - provider: pypi
@@ -51,13 +67,13 @@ deploy:
     password: $PYPI_MAINTAINER_PASS
     on:
       tags: true
-      python: 3.6
+      condition: $CHAINERUI_DEPLOY_JOB == 1
     allow_failure: false
     skip_cleanup: true
   - provider: script
     script: bash .travis/docker_push.sh
     on:
       tags: true
-      python: 3.6
+      condition: $CHAINERUI_DEPLOY_JOB == 1
     allow_failure: false
     skip_cleanup: true
