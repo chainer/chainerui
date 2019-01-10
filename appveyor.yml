@@ -14,7 +14,7 @@ install:
   - pip --version
 
   - pip install -U pytest pytest-cov mock
-  - if not "%CHAINERUI_PLAIN_INSTALL%"=="1" (pip install Pillow matplotlib scipy chainer)
+  - if "%CHAINERUI_PLAIN_INSTALL%"=="1" (pip install numpy) else (pip install Pillow matplotlib scipy chainer)
 
   # Update Node.js
   - ps: Install-Product node $env:nodejs_version
