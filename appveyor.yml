@@ -5,6 +5,8 @@ environment:
     - PYTHON: "C:\\Python27-x64"
     - PYTHON: "C:\\Python35-x64"
     - PYTHON: "C:\\Python36-x64"
+      CHAINERUI_PLAIN_INSTALL: 1
+    - PYTHON: "C:\\Python36-x64"
 
 install:
   - set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
@@ -12,7 +14,7 @@ install:
   - pip --version
 
   - pip install -U pytest pytest-cov mock
-  - pip install Pillow matplotlib scipy chainer
+  - if not "%CHAINERUI_PLAIN_INSTALL%"=="1" (pip install Pillow matplotlib scipy chainer)
 
   # Update Node.js
   - ps: Install-Product node $env:nodejs_version
