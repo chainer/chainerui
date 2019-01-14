@@ -59,7 +59,11 @@ const AssetsTable = (props) => {
           />
         );
       }
-    }
+    },
+    show: hiddenKeysForEveryHeader.length === 0 ?
+      true
+      :
+      !hiddenKeysForEveryHeader[1].find((hk) => hk === k)
   }));
 
   const columns = [

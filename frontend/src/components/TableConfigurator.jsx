@@ -37,8 +37,8 @@ class TableConfigurator extends React.Component {
 
   handleChange(prefix, event) {
     const { columnHeaders, hiddenKeysForEveryHeader } = this.props;
-    const primaryHiddenKeys = hiddenKeysForEveryHeader[0];
-    const secondaryHiddenKeys = hiddenKeysForEveryHeader[1];
+    const primaryHiddenKeys = hiddenKeysForEveryHeader[0] || [];
+    const secondaryHiddenKeys = hiddenKeysForEveryHeader[1] || [];
 
     if (prefix === columnHeaders[0].Header) {
       const nextHiddenPrimaryKeys = !event.target.checked

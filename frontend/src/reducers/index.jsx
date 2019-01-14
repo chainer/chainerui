@@ -381,8 +381,8 @@ const resultsConfigReducer = (state = {}, action) => {
           hiddenTrainInfoKeys = [],
           hiddenContentsKeys = []
         } = action;
-        const resultConfig = state[resultId] || {};
-        const { assetsTableState = {} } = state[resultId];
+        const resultConfig = state[resultId] || { hidden: false };
+        const { assetsTableState = {} } = resultConfig;
         return {
           ...state,
           [resultId]: {
