@@ -36,8 +36,6 @@ class TableConfigurator extends React.Component {
   }
 
   handleChange(prefix, event) {
-    console.log({ prefix });
-    console.log(event.target.name);
     const { columnHeaders, hiddenKeysForEveryHeader } = this.props;
     const primaryHiddenKeys = hiddenKeysForEveryHeader[0];
     const secondaryHiddenKeys = hiddenKeysForEveryHeader[1];
@@ -61,10 +59,6 @@ class TableConfigurator extends React.Component {
 
   render() {
     const { columnHeaders, hiddenKeysForEveryHeader } = this.props;
-
-    console.log({ columnHeaders });
-    console.log({ hiddenKeysForEveryHeader });
-
     return (
       <div>
         <Button color="secondary" className="my-2" onClick={this.handleModalShow}>
@@ -87,7 +81,12 @@ class TableConfigurator extends React.Component {
                           key={`${ch.Header}.${sch}`}
                           type="checkbox"
                           name={sch}
-                          checked={!hiddenKeysForEveryHeader[idx].find((vk) => vk === sch)}
+                          checked={
+                            (hiddenKeysForEveryHeader[idx] === undefined) ?
+                              true
+                              :
+                              (!hiddenKeysForEveryHeader[idx].find((vk) => vk === sch))
+                          }
                           onChange={(e) => this.handleChange(ch.Header, e)}
                         >{sch}</Check>
                       ))

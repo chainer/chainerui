@@ -8,7 +8,7 @@ import TableConfigurator from './TableConfigurator';
 
 const AssetsTable = (props) => {
   const { assets, onAssetsTableColumnsVisibilityUpdate, tableState } = props;
-  const { hiddenKeysForEveryHeader } = tableState;
+  const { hiddenKeysForEveryHeader = [] } = tableState;
 
   const trainInfoKeys = assets.map((asset) => Object.keys(asset.train_info)).flat();
   const uniqueTrainInfoKeys = [...new Set(trainInfoKeys)];
@@ -24,7 +24,10 @@ const AssetsTable = (props) => {
       const trainInfo = p.train_info;
       return trainInfo[k];
     },
-    show: !hiddenKeysForEveryHeader[0].find((hk) => hk === k)
+    show: hiddenKeysForEveryHeader.length === 0 ?
+      true
+      :
+      !hiddenKeysForEveryHeader[0].find((hk) => hk === k)
   }));
 
   const contentColumns = uniqueContentKeys.map((k) => ({
@@ -70,16 +73,10 @@ const AssetsTable = (props) => {
     }
   ];
 
-  console.log({ columns });
-
   const columnHeaders = columns.map((c) => ({
     Header: c.Header,
     columns: c.columns.map((sc) => sc.Header)
   }));
-
-  console.log({ columnHeaders });
-
-
 
   return (
     <div>
@@ -102,9 +99,7 @@ const AssetsTable = (props) => {
 
 AssetsTable.propTypes = {
   assets: uiPropTypes.assets.isRequired,
-  tableState: PropTypes.objectOf({
-    hiddenKeysForEveryHeader: PropTypes.any
-  }).isRequired,
+  tableState: uiPropTypes.tableState.isRequired,
   onAssetsTableColumnsVisibilityUpdate: PropTypes.func.isRequired
 };
 

@@ -28,8 +28,6 @@ class AssetsContainer extends React.Component {
       projectId,
       resultId
     } = this.props;
-    console.log({ hiddenTrainInfoKeys });
-    console.log({ hiddenContentsKeys });
     this.props.updateAssetsTableColumnsVisibility(
       projectId,
       resultId,
@@ -43,9 +41,8 @@ class AssetsContainer extends React.Component {
       assets, globalConfig, fetchState, resultConfig
     } = this.props;
     const {
-      assetsTableState
+      assetsTableState = {}
     } = resultConfig;
-    console.log({ assetsTableState });
     return (
       <div>
         <NavigationBar
@@ -69,7 +66,6 @@ class AssetsContainer extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log({ state });
   const projectId = Number(ownProps.params.projectId);
   const resultId = Number(ownProps.params.resultId);
   const {
@@ -78,10 +74,8 @@ const mapStateToProps = (state, ownProps) => {
     config
   } = state;
   const { assets } = entities;
-  console.log({ config });
   const globalConfig = config.global;
   const projectConfig = config.projectsConfig[projectId] || {};
-  console.log({ projectConfig });
   const resultConfig = projectConfig.resultsConfig[resultId] || {};
   return { projectId, resultId, assets, fetchState, globalConfig, resultConfig };
 };
@@ -92,9 +86,7 @@ AssetsContainer.propTypes = {
   assets: uiPropTypes.assets.isRequired,
   fetchState: uiPropTypes.fetchState.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
-  resultConfig: PropTypes.objectOf({
-    assetsTableState: PropTypes.any
-  }).isRequired,
+  resultConfig: uiPropTypes.resultConfig.isRequired,
   getResultAsset: PropTypes.func.isRequired,
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
