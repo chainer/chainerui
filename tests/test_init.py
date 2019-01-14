@@ -4,7 +4,7 @@ import pytest
 from six import string_types
 from sqlalchemy.exc import OperationalError
 
-from chainerui import db
+from chainerui.database import db
 from tests.helpers import assert_json_api
 
 

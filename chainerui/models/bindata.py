@@ -34,6 +34,8 @@ class Bindata(database.BASE):
             return 'image/png'
         elif ext in ['jpg', 'jpeg']:
             return 'image/jpeg'
+        elif ext == 'wav':
+            return 'audio/wav'
         else:
             raise ValueError('"%s" is not support' % ext)
 

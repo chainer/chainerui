@@ -124,17 +124,21 @@ Show detail information about the line, and enable to change the line color. To 
 Training job table
 ~~~~~~~~~~~~~~~~~~
 
-.. image:: ../../images/result_table_condition_sample.png
+.. image:: ../../images/result_table.png
 
 .. figure:: ../../images/result_table_expand_row.png
 
-   expanded the first row to show sub components.
+   expanded the second row to show sub components.
 
 The training job table shows brief log information and experimental conditions. Job names are set to the directory name by default. The name can be edit directly on the table. To unregister a result, click ``Unregister`` button in the expanded row. Expanded row has some operation buttons. These buttons operate similarly to buttons in :ref:`Commands pane <ui_result_page_commands>`.
 
 .. note::
 
    [Known problem] Once a result is unregistered, a result with the same name cannot be restored on the result table. This will be fixed in future.
+
+* ``Table Settings``: Customize visibility of table columns
+
+.. image:: ../../images/result_table_setting.png
 
 
 .. _ui_result_page:
