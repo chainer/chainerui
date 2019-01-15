@@ -9,10 +9,10 @@ export const CommandStatus = {
 export const responseStatusToIcon = (status) => {
   switch (status) {
     case CommandStatus.RESPONSE_SUCCESS:
-      return (<span className="oi oi-check text-success" />);
+      return (<i className="fas fa-check text-success" />);
     case CommandStatus.RESPONSE_FAILURE:
-      return (<span className="oi oi-x text-danger" />);
+      return (<i className="fas fa-times text-danger" />);
     default:
-      return (<span className="oi oi-ellipses text-muted" />);
+      return (<i className="fas fa-ellipsis-h text-muted" />);
   }
 };
