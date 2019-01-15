@@ -53,7 +53,6 @@
     "html2canvas": "^1.0.0-alpha.12",
     "jquery": "^3.2.1",
     "moment": "^2.22.2",
-    "open-iconic": "^1.1.1",
     "popper.js": "^1.12.3",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
