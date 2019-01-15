@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import VisibilityCheckbox from '../../utils/VisibilityCheckbox';
 import * as uiPropTypes from '../../store/uiPropTypes';
 
 class ToggleResult extends React.Component {
@@ -17,8 +18,8 @@ class ToggleResult extends React.Component {
   render() {
     const { resultConfig } = this.props;
     return (
-      <input
-        type="checkbox"
+      <VisibilityCheckbox
+        className="fa-xs"
         checked={!resultConfig.hidden}
         onChange={this.handleSelectToggle}
       />
