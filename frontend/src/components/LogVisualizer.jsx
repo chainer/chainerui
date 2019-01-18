@@ -63,6 +63,7 @@ class LogVisualizer extends React.Component {
       projectConfig,
       globalConfig,
       onResultSelect,
+      onAxisConfigLogKeySelectToggle,
       stats
     } = this.props;
     const { resultsStatus = {} } = projectStatus;
@@ -98,6 +99,7 @@ class LogVisualizer extends React.Component {
           chartSize={chartSize}
           isResultNameAlignRight={isResultNameAlignRight}
           onResultSelect={onResultSelect}
+          onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
         />
         <Button size="sm" className="m-1" onClick={this.handleClickDownloadCode}>
           <span className="mx-1 oi oi-data-transfer-download" />code
@@ -118,7 +120,8 @@ LogVisualizer.propTypes = {
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   onChartDownloadStatusUpdate: PropTypes.func.isRequired,
-  onResultSelect: PropTypes.func.isRequired
+  onResultSelect: PropTypes.func.isRequired,
+  onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
 };
 
 export default LogVisualizer;
