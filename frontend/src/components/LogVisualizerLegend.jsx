@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { Row, Col, FormGroup, Label, Input } from 'reactstrap';
 import { Row, Col, Input, FormGroup } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
