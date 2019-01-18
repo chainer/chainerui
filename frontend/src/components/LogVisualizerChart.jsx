@@ -75,9 +75,7 @@ const LogVisualizerChart = (props) => {
       selectedLogKeys[axisName].forEach((logKey) => {
         const line = lines[line2key({ resultId, logKey })] ||
                 createLine(resultId, logKey, results, logKeys);
-        if (line.config.isVisible) {
-          axisLines[axisName].push(line);
-        }
+        axisLines[axisName].push(line);
       });
     });
   });
@@ -90,6 +88,9 @@ const LogVisualizerChart = (props) => {
   const lineElems = [];
   Object.keys(axisLines).forEach((axisName) => {
     axisLines[axisName].forEach((line) => {
+      if (!line.config.isVisible) {
+        return;
+      }
       const { config = {}, resultId, logKey } = line;
       const resultStatus = resultsStatus[resultId] || {};
       const selected = resultStatus.selected === true || resultStatus.selected === logKey;
