@@ -5,54 +5,78 @@ import { Row, Col, Input, FormGroup } from 'reactstrap';
 import * as uiPropTypes from '../store/uiPropTypes';
 import TruncatedResultName from './TruncatedResultName';
 import {
+  line2key,
   line2dataKey
 } from '../utils';
 
-const LogVisualizerLegendItem = (props) => {
-  const {
-    isDisplay, project, result, resultStatus, axisName, line, isResultNameAlignRight,
-    onResultSelect, onAxisConfigLineUpdate
-  } = props;
-  const { logKey, config } = line;
-  const selected = resultStatus.selected === true || resultStatus.selected === logKey;
+class LogVisualizerLegendItem extends React.Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <li
-      className={`list-group-item py-0 ${selected ? 'result-highlight' : ''}`}
-      style={{ borderLeft: `3px solid ${config.color}` }}
-      onMouseEnter={() => {
-        onResultSelect(project.id, result.id, logKey);
-      }}
-      onMouseLeave={() => {
-        onResultSelect(project.id, result.id, false);
-      }}
-    >
-      <Row>
-        { isDisplay ? (
-          <Col xs="auto" className="px-1">
-            <FormGroup check>
-              <Input
-                type="checkbox"
-                checked={line.config.isVisible}
-                onChange={() => onAxisConfigLineUpdate(project.id, axisName, logKey, line)}
-              />
-            </FormGroup>
+    this.handleLineVisibilityUpdate = this.handleLineVisibilityUpdate.bind(this);
+  }
+
+  handleLineVisibilityUpdate(e) {
+    const { project, axisName, line, onAxisConfigLineUpdate } = this.props;
+    const { config } = line;
+    const { checked } = e.target;
+    const newLine = {
+      ...line,
+      config: {
+        ...config,
+        isVisible: checked
+      }
+    };
+
+    onAxisConfigLineUpdate(project.id, axisName, line2key(line), newLine);
+  }
+
+  render() {
+    const {
+      isDisplay, project, result, resultStatus, line, isResultNameAlignRight,
+      onResultSelect
+    } = this.props;
+    const { logKey, config } = line;
+    const selected = resultStatus.selected === true || resultStatus.selected === logKey;
+
+    return (
+      <li
+        className={`list-group-item py-0 ${selected ? 'result-highlight' : ''}`}
+        style={{ borderLeft: `3px solid ${config.color}` }}
+        onMouseEnter={() => {
+          onResultSelect(project.id, result.id, logKey);
+        }}
+        onMouseLeave={() => {
+          onResultSelect(project.id, result.id, false);
+        }}
+      >
+        <Row>
+          { isDisplay ? (
+            <Col xs="auto" className="px-1">
+              <FormGroup check>
+                <Input
+                  type="checkbox"
+                  checked={line.config.isVisible}
+                  onChange={this.handleLineVisibilityUpdate}
+                />
+              </FormGroup>
+            </Col>
+          ) : null}
+          <Col className="text-truncate px-1">
+            <TruncatedResultName
+              project={project}
+              result={result}
+              isResultNameAlignRight={isResultNameAlignRight}
+            />
           </Col>
-        ) : null}
-        <Col className="text-truncate px-1">
-          <TruncatedResultName
-            project={project}
-            result={result}
-            isResultNameAlignRight={isResultNameAlignRight}
-          />
-        </Col>
-        <Col className="text-truncate px-1">
-          {logKey}
-        </Col>
-      </Row>
-    </li>
-  );
-};
+          <Col className="text-truncate px-1">
+            {logKey}
+          </Col>
+        </Row>
+      </li>
+    );
+  }
+}
 
 LogVisualizerLegendItem.propTypes = {
   isDisplay: PropTypes.bool.isRequired,
