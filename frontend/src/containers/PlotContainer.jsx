@@ -118,7 +118,7 @@ class PlotContainer extends React.Component {
                 globalConfig={globalConfig}
                 onChartDownloadStatusUpdate={this.props.updateChartDownloadStatus}
                 onResultSelect={this.props.updateResultSelect}
-                onAxisConfigLogKeySelectToggle={this.props.toggleLogKeySelect}
+                onAxisConfigLineUpdate={this.props.updateLineInAxis}
               />
               <ExperimentsTable
                 project={project}

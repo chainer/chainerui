@@ -11,7 +11,7 @@ import {
 const LogVisualizerLegendItem = (props) => {
   const {
     isDisplay, project, result, resultStatus, axisName, line, isResultNameAlignRight,
-    onResultSelect, onAxisConfigLogKeySelectToggle
+    onResultSelect, onAxisConfigLineUpdate
   } = props;
   const { logKey, config } = line;
   const selected = resultStatus.selected === true || resultStatus.selected === logKey;
@@ -34,7 +34,7 @@ const LogVisualizerLegendItem = (props) => {
               <Input
                 type="checkbox"
                 checked={line.config.isVisible}
-                onChange={() => onAxisConfigLogKeySelectToggle(project.id, axisName, logKey)}
+                onChange={() => onAxisConfigLineUpdate(project.id, axisName, logKey, line)}
               />
             </FormGroup>
           </Col>
@@ -63,7 +63,7 @@ LogVisualizerLegendItem.propTypes = {
   line: PropTypes.any.isRequired, // eslint-disable-line react/forbid-prop-types
   isResultNameAlignRight: PropTypes.bool.isRequired,
   onResultSelect: PropTypes.func.isRequired,
-  onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
+  onAxisConfigLineUpdate: PropTypes.func.isRequired
 };
 
 LogVisualizerLegendItem.defaultProps = {
@@ -75,7 +75,7 @@ const LogVisualizerLegend = (props) => {
   const {
     isDisplay,
     project, results, resultsStatus, lines, maxHeight, isResultNameAlignRight,
-    onResultSelect, onAxisConfigLogKeySelectToggle
+    onResultSelect, onAxisConfigLineUpdate
   } = props;
 
   return (
@@ -94,7 +94,7 @@ const LogVisualizerLegend = (props) => {
                 line={line}
                 isResultNameAlignRight={isResultNameAlignRight}
                 onResultSelect={onResultSelect}
-                onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
+                onAxisConfigLineUpdate={onAxisConfigLineUpdate}
               />
             ))
           ))}
@@ -113,7 +113,7 @@ LogVisualizerLegend.propTypes = {
   maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired,
   onResultSelect: PropTypes.func.isRequired,
-  onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
+  onAxisConfigLineUpdate: PropTypes.func.isRequired
 };
 
 export default LogVisualizerLegend;

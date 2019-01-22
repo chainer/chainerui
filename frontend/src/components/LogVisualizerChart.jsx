@@ -46,7 +46,7 @@ const LogVisualizerChart = (props) => {
     chartSize,
     isResultNameAlignRight,
     onResultSelect,
-    onAxisConfigLogKeySelectToggle
+    onAxisConfigLineUpdate
   } = props;
   const { axes, resultsConfig, lines } = projectConfig;
   const { logKeys, xAxisKeys } = stats;
@@ -175,7 +175,7 @@ const LogVisualizerChart = (props) => {
           maxHeight={chartSize.height}
           isResultNameAlignRight={isResultNameAlignRight}
           onResultSelect={onResultSelect}
-          onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
+          onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
       </div>
     </div>
@@ -192,7 +192,7 @@ LogVisualizerChart.propTypes = {
   chartSize: uiPropTypes.chartSize.isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired,
   onResultSelect: PropTypes.func.isRequired,
-  onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
+  onAxisConfigLineUpdate: PropTypes.func.isRequired
 };
 
 export default LogVisualizerChart;
