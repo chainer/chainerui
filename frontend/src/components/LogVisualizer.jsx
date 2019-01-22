@@ -82,6 +82,7 @@ class LogVisualizer extends React.Component {
             chartSize={chartSize}
             isResultNameAlignRight={isResultNameAlignRight}
             onResultSelect={onResultSelect}
+            onAxisConfigLineUpdate={onAxisConfigLineUpdate}
           />
         </div>
       ) : null;

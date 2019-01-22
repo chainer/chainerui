@@ -39,6 +39,11 @@ class LogVisualizerLegendItem extends React.Component {
     const { logKey, config } = line;
     const selected = resultStatus.selected === true || resultStatus.selected === logKey;
 
+    if (!isDisplay && !line.config.isVisible) {
+      // do not inclue rows for invisible lines when rendering for png download
+      return null;
+    }
+
     return (
       <li
         className={`list-group-item py-0 ${selected ? 'result-highlight' : ''}`}
@@ -129,7 +134,7 @@ const LogVisualizerLegend = (props) => {
 };
 
 LogVisualizerLegend.propTypes = {
-  isDisplay: PropTypes.bool.isRequired,
+  isDisplay: PropTypes.bool.isRequired, // false when rendering for png download
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
   resultsStatus: uiPropTypes.resultsStatus.isRequired,
