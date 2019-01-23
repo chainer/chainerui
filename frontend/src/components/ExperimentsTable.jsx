@@ -43,7 +43,7 @@ const ExperimentsTable = (props) => {
       onResultsConfigSelectUpdate(project.id, resultId, !evt.target.checked);
     });
   };
-  const handleGroupedResultsConfigSelectChange = (groupedResultKeys) => (evt) => {
+  const generateHandleGroupedResultsConfigSelectChange = (groupedResultKeys) => (evt) => {
     groupedResultKeys.forEach((resultId) => {
       onResultsConfigSelectUpdate(project.id, resultId, !evt.target.checked);
     });
@@ -98,7 +98,7 @@ const ExperimentsTable = (props) => {
           type="checkbox"
           checked={groupedVisibleResultCount > 0}
           style={{ opacity: isGroupedPartialSelect ? 0.5 : 1 }}
-          onChange={handleGroupedResultsConfigSelectChange(groupedResultKeys)}
+          onChange={generateHandleGroupedResultsConfigSelectChange(groupedResultKeys)}
         />;
       }
     },
