@@ -108,12 +108,15 @@ const ExperimentsTable = (props) => {
       id: 'name',
       Cell: (p) => {
         const { original } = p;
-        return (<ResultName
-          project={project}
-          result={original}
-          isResultNameAlignRight={globalConfig.isResultNameAlignRight}
-          onResultUpdate={onResultUpdate}
-        />);
+        if (original) {
+          return (<ResultName
+            project={project}
+            result={original}
+            isResultNameAlignRight={globalConfig.isResultNameAlignRight}
+            onResultUpdate={onResultUpdate}
+          />);
+        }
+        return null;
       },
       minWidth: 250
     }
