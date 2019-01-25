@@ -42,7 +42,8 @@ class ExperimentsTableConfigurator extends React.Component {
     const { tableState } = projectConfig;
     const {
       hiddenLogKeys = [],
-      hiddenArgKeys = []
+      hiddenArgKeys = [],
+      isGrouped
     } = tableState;
 
     if (prefix === 'logKey') {
@@ -51,15 +52,24 @@ class ExperimentsTableConfigurator extends React.Component {
         : hiddenLogKeys.filter((vk) => vk !== event.target.name);
 
       this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, nextHiddenLogKeys, hiddenArgKeys);
+        this.props.project.id, nextHiddenLogKeys, hiddenArgKeys, isGrouped);
     } else {
       const nextHiddenArgKeys = !event.target.checked
         ? hiddenArgKeys.concat(event.target.name)
         : hiddenArgKeys.filter((vk) => vk !== event.target.name);
 
       this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, hiddenLogKeys, nextHiddenArgKeys);
+        this.props.project.id, hiddenLogKeys, nextHiddenArgKeys, isGrouped);
     }
+  }
+
+  handleIsGrouped(event) {
+    const { tableState } = this.props.projectConfig;
+
+    this.props.onTableColumnsVisibilityUpdate(
+      this.props.project.id, tableState.hiddenLogKeys, tableState.hiddenArgKeys,
+      event.target.checked
+    );
   }
 
   render() {
@@ -68,7 +78,8 @@ class ExperimentsTableConfigurator extends React.Component {
     const { tableState } = projectConfig;
     const {
       hiddenLogKeys = [],
-      hiddenArgKeys = []
+      hiddenArgKeys = [],
+      isGrouped
     } = tableState;
 
     return (
@@ -76,6 +87,13 @@ class ExperimentsTableConfigurator extends React.Component {
         <Button color="secondary" className="my-2" onClick={this.handleModalShow}>
           Table settings
         </Button>
+        <Check
+          type="checkbox"
+          checked={isGrouped}
+          onChange={(e) => this.handleIsGrouped(e)}
+        >
+          Grouping
+        </Check>
 
         <Modal isOpen={this.state.showModal} toggle={this.handleModalHide}>
           <ModalHeader>

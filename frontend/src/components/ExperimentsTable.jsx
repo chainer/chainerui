@@ -5,6 +5,7 @@ import ReactTable from 'react-table';
 import * as uiPropTypes from '../store/uiPropTypes';
 import {
   argValue2string,
+  getGrandParentDirectoryName,
   getLastLogDict,
   sortMethod
 } from '../utils';
@@ -57,9 +58,9 @@ const ExperimentsTable = (props) => {
   const expanded = resultList.length === 0 ? {} : tableState.expanded;
   const {
     hiddenLogKeys = [],
-    hiddenArgKeys = []
+    hiddenArgKeys = [],
+    isGrouped = false
   } = tableState;
-  const isGrouped = resultList.some((r) => (r.group && r.group !== ''));
 
   const nameColumns = [
     {
@@ -120,7 +121,8 @@ const ExperimentsTable = (props) => {
   if (isGrouped) {
     nameColumns.unshift({
       Header: '',
-      accessor: 'group'
+      id: 'group',
+      accessor: (p) => getGrandParentDirectoryName(p)
     });
   }
   const groupedKey = isGrouped ? ['group'] : [];

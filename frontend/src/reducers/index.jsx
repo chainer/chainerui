@@ -403,7 +403,8 @@ const tableStateReducer = (state = {}, action) => {
   const {
     expanded = {},
     hiddenLogKeys = [],
-    hiddenArgKeys = []
+    hiddenArgKeys = [],
+    isGrouped = false
   } = action;
   switch (action.type) {
     case ActionTypes.TABLE_STATE_EXPANDED_UPDATE:
@@ -415,7 +416,8 @@ const tableStateReducer = (state = {}, action) => {
       return {
         ...state,
         hiddenLogKeys,
-        hiddenArgKeys
+        hiddenArgKeys,
+        isGrouped
       };
     default:
       return state;

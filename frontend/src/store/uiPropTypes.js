@@ -130,7 +130,8 @@ export const projectConfig = PropTypes.shape({
       PropTypes.bool, PropTypes.object
     ]),
     hiddenLogKeys: PropTypes.arrayOf(PropTypes.string),
-    hiddenArgKeys: PropTypes.arrayOf(PropTypes.string)
+    hiddenArgKeys: PropTypes.arrayOf(PropTypes.string),
+    isGrouped: PropTypes.bool
   }).isRequired,
   resultsConfig: resultsConfig.isRequired,
   lines: lines.isRequired
