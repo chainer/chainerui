@@ -62,7 +62,7 @@ class PollingStatus extends React.Component {
     return (
       <div className={colorClass}>
         <small>
-          <span id="polling-status-tooltip" className="oi oi-media-record" />
+          <i id="polling-status-tooltip" className="fas fa-circle fa-xs" />
         </small>
         <Tooltip
           placement="bottom"

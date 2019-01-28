@@ -79,7 +79,7 @@ class NavigationBar extends React.Component {
               />
             </span>
             <Button id="navbar-global-setting" onClick={this.toggleSettingPopover}>
-              <span className="oi oi-cog" />
+              <i className="fas fa-cog" />
             </Button>
           </Collapse>
         </Container>
@@ -131,7 +131,7 @@ class NavigationBar extends React.Component {
                   checked={!isResultNameAlignRight}
                   onChange={this.handleResultNameAlignmentChange}
                 >
-                  <span className="mx-1 oi oi-align-left" />
+                  <i className="mx-1 fas fa-align-left" />
                   Align left
                 </Check>
                 <Check
@@ -140,7 +140,7 @@ class NavigationBar extends React.Component {
                   checked={!!isResultNameAlignRight}
                   onChange={this.handleResultNameAlignmentChange}
                 >
-                  <span className="mx-1 oi oi-align-right" />
+                  <i className="mx-1 fas fa-align-right" />
                   Align right
                 </Check>
               </FormGroup>

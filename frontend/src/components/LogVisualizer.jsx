@@ -98,10 +98,10 @@ class LogVisualizer extends React.Component {
           onResultSelect={onResultSelect}
         />
         <Button size="sm" className="m-1" onClick={this.handleClickDownloadCode}>
-          <span className="mx-1 oi oi-data-transfer-download" />code
+          <i className="mx-1 fas fa-download" />code
         </Button>
         <Button size="sm" className="m-1" onClick={this.handleClickDownloadPNG}>
-          <span className="mx-1 oi oi-data-transfer-download" />png
+          <i className="mx-1 fas fa-download" />png
         </Button>
       </div>
     );

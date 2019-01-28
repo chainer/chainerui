@@ -36,7 +36,7 @@ module.exports = {
       'babel-polyfill',
       'whatwg-fetch',
       'bootstrap/dist/css/bootstrap.css',
-      'open-iconic/font/css/open-iconic-bootstrap.css',
+      '@fortawesome/fontawesome-free/css/all.css',
       'react-table/react-table.css',
       './src/index.jsx'
     ]
