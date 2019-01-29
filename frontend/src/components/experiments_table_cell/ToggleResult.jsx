@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import VisibilityCheckbox from '../../utils/VisibilityCheckbox';
+import VisibilityCheckbox from '../VisibilityCheckbox';
 import * as uiPropTypes from '../../store/uiPropTypes';
 
 class ToggleResult extends React.Component {

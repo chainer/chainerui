@@ -12,7 +12,7 @@ import {
 import ResultName from './experiments_table_cell/ResultName';
 import ToggleResult from './experiments_table_cell/ToggleResult';
 import SubComponent from './experiments_table_cell/SubComponent';
-import VisibilityCheckbox from '../utils/VisibilityCheckbox';
+import VisibilityCheckbox from './VisibilityCheckbox';
 
 const emptyStr = '-';
 
