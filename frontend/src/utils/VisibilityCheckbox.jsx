@@ -12,7 +12,7 @@ const VisibilityCheckbox = ({ className, checked, indeterminate, onChange }) => 
       type="checkbox"
       style={{ display: 'none' }}
       checked={checked}
-      indeterminate={indeterminate}
+      indeterminate={indeterminate.toString()}
       onChange={onChange}
     />
   </label>
