@@ -13,6 +13,7 @@ import {
 import ResultName from './experiments_table_cell/ResultName';
 import ToggleResult from './experiments_table_cell/ToggleResult';
 import SubComponent from './experiments_table_cell/SubComponent';
+import VisibilityCheckbox from './VisibilityCheckbox';
 
 const emptyStr = '-';
 
@@ -64,10 +65,10 @@ const ExperimentsTable = (props) => {
 
   const nameColumns = [
     {
-      Header: <input
-        type="checkbox"
+      Header: <VisibilityCheckbox
+        className="fa-xs"
         checked={visibleResultCount > 0}
-        style={{ opacity: isPartialSelect ? 0.5 : 1 }}
+        indeterminate={isPartialSelect}
         onChange={handleResultsConfigSelectChange}
       />,
       Cell: (p) => {

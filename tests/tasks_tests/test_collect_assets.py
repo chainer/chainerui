@@ -5,17 +5,20 @@ import os
 import pytest
 
 from chainerui.models.result import Result
-from chainerui.tasks import collect_images
+from chainerui import summary
+from chainerui.tasks import collect_assets
 
 
 @pytest.fixture(autouse=True, scope='function')
 def result_path(func_dir, func_db):
-    info_path = os.path.join(func_dir, '.chainerui_assets')
+    info_path = os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
 
     with open(os.path.join(func_dir, 'img1_1.png'), 'w') as f:
         f.write('text')
     with open(os.path.join(func_dir, 'img1_2.png'), 'w') as f:
         f.write('text2')
+    with open(os.path.join(func_dir, 'audio1_1.wav'), 'w') as f:
+        f.write('audio1')
     with open(os.path.join(func_dir, 'img2.png'), 'w') as f:
         f.write('text3')
 
@@ -26,7 +29,8 @@ def result_path(func_dir, func_db):
             'images': OrderedDict([
                 ('0', 'img1_1.png'),
                 ('1', 'img1_2.png'),
-            ])
+            ]),
+            'audios': OrderedDict([('2', 'audio1_1.wav')])
         },
         {
             'iteration': 2000,
@@ -49,27 +53,31 @@ def _get_dummy_result(path):
     return r
 
 
-def test_collect_images_no_meta(result_path):
-    os.remove(os.path.join(result_path, '.chainerui_assets'))
-    result = _get_dummy_result(result_path)
+def test_collect_assets_no_meta(func_dir):
+    os.remove(os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME))
+    result = _get_dummy_result(func_dir)
 
-    actual_list = collect_images.collect_images(result, [])
-    assert len(actual_list) == 0
+    collect_assets.collect_assets(result)
+    assert len(result.assets) == 0
 
 
-def test_collect_images(result_path):
-    result = _get_dummy_result(result_path)
-    actual_list = collect_images.collect_images(result, [])
+def test_collect_assets(func_dir):
+    result = _get_dummy_result(func_dir)
+    collect_assets.collect_assets(result)
+    actual_list = result.assets
 
     assert len(actual_list) == 2
     actual_img1 = actual_list[0]
-    assert len(actual_img1.content_list) == 2
+    assert len(actual_img1.content_list) == 3
     assert actual_img1.content_list[0].name == 'img1_1.png'
     assert actual_img1.content_list[0].tag == '0'
     assert actual_img1.content_list[0].content == b'text'
     assert actual_img1.content_list[1].name == 'img1_2.png'
     assert actual_img1.content_list[1].tag == '1'
     assert actual_img1.content_list[1].content == b'text2'
+    assert actual_img1.content_list[2].name == 'audio1_1.wav'
+    assert actual_img1.content_list[2].tag == '2'
+    assert actual_img1.content_list[2].content == b'audio1'
     actual_img1_summary = json.loads(actual_img1.summary)
     assert 'iteration' in actual_img1_summary
     assert actual_img1_summary['iteration'] == 1000
@@ -87,22 +95,24 @@ def test_collect_images(result_path):
     assert actual_img2.content_list[0].content == b'text3'
 
 
-def test_collect_images_no_updated(result_path):
-    result = _get_dummy_result(result_path)
-    first_assets = collect_images.collect_images(result, [])
+def test_collect_assets_no_updated(func_dir):
+    result = _get_dummy_result(func_dir)
+    collect_assets.collect_assets(result)
+    first_assets = result.assets
     assert len(first_assets) == 2
 
-    second_assets = collect_images.collect_images(result, first_assets)
-    assert first_assets == second_assets
+    collect_assets.collect_assets(result, first_assets)
+    assert first_assets == result.assets
 
 
-def test_collect_images_updated(result_path):
-    info_path = os.path.join(result_path, '.chainerui_assets')
-    result = _get_dummy_result(result_path)
-    first_assets = collect_images.collect_images(result, [])
+def test_collect_assets_updated(func_dir):
+    info_path = os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
+    result = _get_dummy_result(func_dir)
+    collect_assets.collect_assets(result)
+    first_assets = result.assets
     assert len(first_assets) == 2
 
-    with open(os.path.join(result_path, 'img1_3.png'), 'w') as f:
+    with open(os.path.join(func_dir, 'img1_3.png'), 'w') as f:
         f.write('text add')
     test_data2 = {
         'iteration': 3000,
@@ -117,7 +127,8 @@ def test_collect_images_updated(result_path):
     with open(info_path, 'w') as f:
         json.dump(meta, f)
 
-    second_assets = collect_images.collect_images(result, first_assets)
+    collect_assets.collect_assets(result)
+    second_assets = result.assets
     assert len(second_assets) == 3
 
     actual_img3 = second_assets[2]
@@ -132,10 +143,11 @@ def test_collect_images_updated(result_path):
     assert actual_img3_summary['epoch'] == 3
 
 
-def test_collect_images_new_meta(result_path):
-    info_path = os.path.join(result_path, '.chainerui_assets')
-    result = _get_dummy_result(result_path)
-    first_assets = collect_images.collect_images(result, [])
+def test_collect_assets_new_meta(func_dir):
+    info_path = os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
+    result = _get_dummy_result(func_dir)
+    collect_assets.collect_assets(result)
+    first_assets = result.assets
     assert len(first_assets) == 2
 
     test_data = [
@@ -150,7 +162,8 @@ def test_collect_images_new_meta(result_path):
     ]
     with open(info_path, 'w') as f:
         json.dump(test_data, f)
-    second_assets = collect_images.collect_images(result, first_assets)
+    collect_assets.collect_assets(result)
+    second_assets = result.assets
     assert len(second_assets) == 1
     actual_img1 = second_assets[0]
     assert len(actual_img1.content_list) == 2

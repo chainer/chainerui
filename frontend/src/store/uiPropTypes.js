@@ -85,12 +85,14 @@ export const line = PropTypes.shape({
 
 export const lines = PropTypes.objectOf(line);
 
+export const chartSize = PropTypes.shape({
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  aspect: PropTypes.number.isRequired
+});
+
 export const globalConfig = PropTypes.shape({
-  chartSize: PropTypes.shape({
-    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    aspect: PropTypes.number.isRequired
-  }).isRequired,
+  chartSize: chartSize.isRequired,
   pollingRate: PropTypes.number.isRequired,
   logsLimit: PropTypes.number.isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired

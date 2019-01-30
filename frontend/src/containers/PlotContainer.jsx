@@ -90,7 +90,6 @@ class PlotContainer extends React.Component {
           <div className="row">
             <div className="col-md-4 col-lg-3 order-12 order-md-1">
               <BreadcrumbLink
-                length={2}
                 globalConfig={globalConfig}
                 project={project}
               />

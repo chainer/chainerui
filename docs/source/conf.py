@@ -169,3 +169,7 @@ texinfo_documents = [
      author, 'chainerui', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+# -- Own configuration for this project -----------------------------------
+
+html_scaled_image_link = False
