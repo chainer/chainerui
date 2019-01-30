@@ -13,22 +13,6 @@ import * as uiPropTypes from '../store/uiPropTypes';
 import Check from './FormControl/Check';
 
 
-const GroupingCheckBox = ({ checked, onChange }) => (
-  // eslint-disable-next-line jsx-a11y/label-has-associated-control, jsx-a11y/label-has-for
-  <label className="ml-2 fa-xs">
-    <i
-      className={`fas fa-folder${checked ? '' : '-open'}`}
-    />
-    <input
-      type="checkbox"
-      style={{ display: 'none' }}
-      checked={checked}
-      onChange={onChange}
-    />
-  </label>
-);
-
-
 class ExperimentsTableConfigurator extends React.Component {
   constructor(props) {
     super(props);
@@ -100,13 +84,19 @@ class ExperimentsTableConfigurator extends React.Component {
 
     return (
       <div>
-        <Button color="secondary" className="my-2" onClick={this.handleModalShow}>
-          Table settings
-        </Button>
-        <GroupingCheckBox
-          checked={isGrouped}
-          onChange={(e) => this.handleIsGrouped(e)}
-        />
+        <div className="form-inline">
+          <Button color="secondary" className="my-2" onClick={this.handleModalShow}>
+            Table settings
+          </Button>
+          <Check
+            type="checkbox"
+            className="ml-2"
+            checked={isGrouped}
+            onChange={(e) => this.handleIsGrouped(e)}
+          >
+            Grouping
+          </Check>
+        </div>
 
         <Modal isOpen={this.state.showModal} toggle={this.handleModalHide}>
           <ModalHeader>
@@ -149,11 +139,6 @@ class ExperimentsTableConfigurator extends React.Component {
     );
   }
 }
-
-GroupingCheckBox.propTypes = {
-  checked: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired
-};
 
 ExperimentsTableConfigurator.propTypes = {
   project: uiPropTypes.project.isRequired,
