@@ -43,7 +43,7 @@ class ExperimentsTableConfigurator extends React.Component {
     const {
       hiddenLogKeys = [],
       hiddenArgKeys = [],
-      isGrouped
+      isGrouped = false
     } = tableState;
 
     if (prefix === 'logKey') {
@@ -79,7 +79,7 @@ class ExperimentsTableConfigurator extends React.Component {
     const {
       hiddenLogKeys = [],
       hiddenArgKeys = [],
-      isGrouped
+      isGrouped = false
     } = tableState;
 
     return (
