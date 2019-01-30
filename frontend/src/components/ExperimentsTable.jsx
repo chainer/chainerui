@@ -96,10 +96,10 @@ const ExperimentsTable = (props) => {
           (resultId) => !(resultsConfig[resultId] || {}).hidden).length;
         const isGroupedPartialSelect = groupedVisibleResultCount > 0 &&
           visibleResultCount < groupedResultKeys.length;
-        return <input
-          type="checkbox"
+        return <VisibilityCheckbox
+          className="fa-xs"
           checked={groupedVisibleResultCount > 0}
-          style={{ opacity: isGroupedPartialSelect ? 0.5 : 1 }}
+          indeterminate={isGroupedPartialSelect}
           onChange={generateHandleGroupedResultsConfigSelectChange(groupedResultKeys)}
         />;
       }
