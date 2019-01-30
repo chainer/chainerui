@@ -19,6 +19,7 @@ class ExperimentsTableConfigurator extends React.Component {
     this.handleModalShow = this.handleModalShow.bind(this);
     this.handleModalHide = this.handleModalHide.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleIsGrouped = this.handleIsGrouped.bind(this);
 
     this.state = {
       showModal: false
@@ -92,7 +93,7 @@ class ExperimentsTableConfigurator extends React.Component {
             type="checkbox"
             className="ml-2"
             checked={isGrouped}
-            onChange={(e) => this.handleIsGrouped(e)}
+            onChange={this.handleIsGrouped}
           >
             Grouping
           </Check>
