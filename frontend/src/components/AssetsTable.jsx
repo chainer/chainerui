@@ -49,16 +49,15 @@ const AssetsTable = (props) => {
             controls
           />
         );
-      } else {
-        return (
-          <img
-            src={selectedContent.uri}
-            alt={selectedContent.tag}
-            width="80%"
-            height="auto"
-          />
-        );
       }
+      return (
+        <img
+          src={selectedContent.uri}
+          alt={selectedContent.tag}
+          width="80%"
+          height="auto"
+        />
+      );
     },
     show: hiddenKeysForEveryHeader.length === 0 ?
       true

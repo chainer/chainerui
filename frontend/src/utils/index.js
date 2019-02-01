@@ -125,7 +125,8 @@ export const sortMethod = (a, b) => {
 
   if (casted[0] > casted[1]) {
     return 1;
-  } else if (casted[0] < casted[1]) {
+  }
+  if (casted[0] < casted[1]) {
     return -1;
   }
   return 0;
