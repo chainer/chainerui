@@ -63,6 +63,7 @@ class LogVisualizer extends React.Component {
       projectConfig,
       globalConfig,
       onResultSelect,
+      onAxisConfigLineUpdate,
       stats
     } = this.props;
     const { resultsStatus = {} } = projectStatus;
@@ -72,6 +73,7 @@ class LogVisualizer extends React.Component {
       (projectStatus.chartDownloadStatus !== CHART_DOWNLOAD_STATUS.NONE) ? (
         <div className="plot-hidden" ref={this.chartRef}>
           <LogVisualizerChart
+            isDisplay={false}
             project={project}
             results={results}
             stats={stats}
@@ -80,6 +82,7 @@ class LogVisualizer extends React.Component {
             chartSize={chartSize}
             isResultNameAlignRight={isResultNameAlignRight}
             onResultSelect={onResultSelect}
+            onAxisConfigLineUpdate={onAxisConfigLineUpdate}
           />
         </div>
       ) : null;
@@ -88,6 +91,7 @@ class LogVisualizer extends React.Component {
       <div className="log-visualizer-root">
         {tempHiddenPlot}
         <LogVisualizerChart
+          isDisplay
           project={project}
           results={results}
           stats={stats}
@@ -96,6 +100,7 @@ class LogVisualizer extends React.Component {
           chartSize={chartSize}
           isResultNameAlignRight={isResultNameAlignRight}
           onResultSelect={onResultSelect}
+          onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
         <Button size="sm" className="m-1" onClick={this.handleClickDownloadCode}>
           <i className="mx-1 fas fa-download" />code
@@ -116,7 +121,8 @@ LogVisualizer.propTypes = {
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   onChartDownloadStatusUpdate: PropTypes.func.isRequired,
-  onResultSelect: PropTypes.func.isRequired
+  onResultSelect: PropTypes.func.isRequired,
+  onAxisConfigLineUpdate: PropTypes.func.isRequired
 };
 
 export default LogVisualizer;

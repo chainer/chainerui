@@ -37,6 +37,7 @@ const getDomain = (axisConfig = {}) => {
 
 const LogVisualizerChart = (props) => {
   const {
+    isDisplay,
     project,
     results,
     stats,
@@ -44,7 +45,8 @@ const LogVisualizerChart = (props) => {
     resultsStatus,
     chartSize,
     isResultNameAlignRight,
-    onResultSelect
+    onResultSelect,
+    onAxisConfigLineUpdate
   } = props;
   const { axes, resultsConfig, lines } = projectConfig;
   const { logKeys, xAxisKeys } = stats;
@@ -74,9 +76,7 @@ const LogVisualizerChart = (props) => {
       selectedLogKeys[axisName].forEach((logKey) => {
         const line = lines[line2key({ resultId, logKey })] ||
                 createLine(resultId, logKey, results, logKeys);
-        if (line.config.isVisible) {
-          axisLines[axisName].push(line);
-        }
+        axisLines[axisName].push(line);
       });
     });
   });
@@ -89,6 +89,9 @@ const LogVisualizerChart = (props) => {
   const lineElems = [];
   Object.keys(axisLines).forEach((axisName) => {
     axisLines[axisName].forEach((line) => {
+      if (!line.config.isVisible) {
+        return;
+      }
       const { config = {}, resultId, logKey } = line;
       const resultStatus = resultsStatus[resultId] || {};
       const selected = resultStatus.selected === true || resultStatus.selected === logKey;
@@ -164,6 +167,7 @@ const LogVisualizerChart = (props) => {
       </ResponsiveContainer>
       <div>
         <LogVisualizerLegend
+          isDisplay={isDisplay}
           project={project}
           results={results}
           resultsStatus={resultsStatus}
@@ -171,6 +175,7 @@ const LogVisualizerChart = (props) => {
           maxHeight={chartSize.height}
           isResultNameAlignRight={isResultNameAlignRight}
           onResultSelect={onResultSelect}
+          onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
       </div>
     </div>
@@ -178,6 +183,7 @@ const LogVisualizerChart = (props) => {
 };
 
 LogVisualizerChart.propTypes = {
+  isDisplay: PropTypes.bool.isRequired,
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
   stats: uiPropTypes.stats.isRequired,
@@ -185,7 +191,8 @@ LogVisualizerChart.propTypes = {
   resultsStatus: uiPropTypes.resultsStatus.isRequired,
   chartSize: uiPropTypes.chartSize.isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired,
-  onResultSelect: PropTypes.func.isRequired
+  onResultSelect: PropTypes.func.isRequired,
+  onAxisConfigLineUpdate: PropTypes.func.isRequired
 };
 
 export default LogVisualizerChart;
