@@ -1,3 +1,5 @@
+import datetime
+
 from flask import jsonify
 from flask import request
 from flask.views import MethodView
@@ -16,9 +18,8 @@ class ResultAPI(MethodView):
         """get."""
         logs_limit = request.args.get('logs_limit', default=-1, type=int)
 
-        project = db.session.query(Project).\
-            filter_by(id=project_id).\
-            first()
+        project = db.session.query(Project).filter_by(
+            id=project_id).first()
         if project is None:
             return jsonify({
                 'project': None,
@@ -26,6 +27,16 @@ class ResultAPI(MethodView):
             }), 404
 
         if id is None:
+            path = request.args.get('path_name', default=None)
+            if path is not None:
+                result = db.session.query(Result).filter_by(
+                    path_name=path).first()
+                if result is None:
+                    return jsonify({
+                        'result': None,
+                        'message': 'Result path \'%s\' is not found' % path
+                    }), 400
+                return jsonify({'result': result.serialize})
 
             collect_results(project)
 
@@ -63,6 +74,42 @@ class ResultAPI(MethodView):
             return jsonify({
                 'result': result.serialize_with_sampled_logs(logs_limit)
             })
+
+    def post(self, project_id=None):
+        project = db.session.query(Project).filter_by(id=project_id).first()
+        if project is None:
+            return jsonify({
+                'project': None,
+                'message': 'No interface defined for URL.'
+            }), 404
+
+        data = request.get_json()
+        result_json = data.get('result')
+        path = result_json.get('pathName', '')
+        if path == '':
+            return jsonify({
+                'result': None,
+                'message': 'Path of the result is not set.'
+            }), 400
+        result = db.session.query(Result).filter_by(path_name=path).first()
+        if result is not None:
+            return jsonify({
+                'result': None,
+                'message': 'Result path \'%s\' already registered.' % path
+            }), 400
+
+        name = result_json.get('name', None)
+        crawlable = result_json.get('crawlable', True)
+        log_modified_at = result_json.get('logModifiedAt', None)
+        if log_modified_at is not None:
+            log_modified_at = datetime.datetime.fromtimestamp(log_modified_at)
+        result = Result.create(
+            path_name=path, name=name, project_id=project_id,
+            log_modified_at=log_modified_at, crawlable=crawlable)
+        # don't return all data to reduce data size
+        return jsonify({
+            'result': {'id': result.id}
+        })
 
     def put(self, id, project_id=None):
         """put."""

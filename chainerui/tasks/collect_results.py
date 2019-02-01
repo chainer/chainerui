@@ -31,6 +31,8 @@ def _register_result(project_id, result_path):
 
 def collect_results(project, force=False):
     """collect_results."""
+    if not project.crawlable:
+        return project
 
     now = datetime.datetime.now()
 
@@ -53,3 +55,5 @@ def collect_results(project, force=False):
     project.updated_at = datetime.datetime.now()
 
     db.session.commit()
+
+    return project

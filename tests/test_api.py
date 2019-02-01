@@ -178,6 +178,26 @@ def test_get_project_list(project, app):
     _assert_test_project(data['projects'][0], path, name)
 
 
+# GET /api/v1/projects?path_name=<string:path>
+def test_get_project_with_name(project, app):
+    # success
+    url = '/api/v1/projects?path_name=' + project[0]
+    resp = app.get(url)
+    data = assert_json_api(resp)
+    assert len(data) == 1
+    _assert_test_project(data['project'], *project)
+
+    # fail
+    dummy_project_path = 'no-exist'
+    url = '/api/v1/projects?path_name=' + dummy_project_path
+    resp = app.get(url)
+    data = assert_json_api(resp, 400)
+    assert len(data) == 2
+    assert isinstance(data['message'], string_types)
+    assert data['project'] is None
+    assert dummy_project_path in data['message']
+
+
 # GET /api/v1/projects/<int:id>
 def test_get_project(project, app):
     resp = app.get('/api/v1/projects/1')
@@ -279,6 +299,26 @@ def test_get_result_list(project, app):
     # raise an unexpected exception when GET /api/v1/projects/12345/results
 
 
+def test_get_result_with_name(project, app):
+    # success
+    url = '/api/v1/projects/1/results?path_name=' + os.path.join(
+        project[0], '10000')
+    resp = app.get(url)
+    data = assert_json_api(resp)
+    assert len(data) == 1
+    _assert_test_project_result(data['result'], project[0], None)
+
+    # fail
+    dummy_result_path = os.path.join(project[0], 'no-exist')
+    url = '/api/v1/projects/1/results?path_name=' + dummy_result_path
+    resp = app.get(url)
+    data = assert_json_api(resp, 400)
+    assert len(data) == 2
+    assert isinstance(data['message'], string_types)
+    assert data['result'] is None
+    assert dummy_result_path in data['message']
+
+
 # GET /api/v1/projects/<int:project_id>/results/<int:id>
 def test_get_result(project, app):
     for logs_limit in [None, -1, 0, 5, 7, 100]:
@@ -307,6 +347,59 @@ def test_get_result(project, app):
     assert len(data) == 2
     assert isinstance(data['message'], string_types)
     assert data['result'] is None
+
+
+# POST /api/v1/projects/<int:project_id>/results/
+def test_post_result(project, app):
+    temp_dir = os.path.join(project[0], 'test_post_result')
+    os.mkdir(temp_dir)
+
+    # success
+    test_time = os.path.getmtime(os.path.abspath(__file__))
+    request_json = {
+        'result': {
+            'pathName': temp_dir,
+            'name': 'post_test',
+            'crawlable': False,
+            'logModifiedAt': test_time
+        }
+    }
+    resp = app.post(
+        '/api/v1/projects/1/results', data=json.dumps(request_json),
+        content_type='application/json')
+    data = assert_json_api(resp)
+    assert len(data) == 1
+    # project ID 1 has already registered 3 results
+    assert data['result']['id'] == 4
+
+    # fail, same path
+    request_json['result']['name'] = 'post_test 2'
+    resp = app.post(
+        '/api/v1/projects/1/results', data=json.dumps(request_json),
+        content_type='application/json')
+    data = assert_json_api(resp, 400)
+    assert len(data) == 2
+    assert isinstance(data['message'], string_types)
+    assert data['result'] is None
+
+    # fail, required param is lack
+    del request_json['result']['pathName']
+    resp = app.post(
+        '/api/v1/projects/1/results', data=json.dumps(request_json),
+        content_type='application/json')
+    data = assert_json_api(resp, 400)
+    assert len(data) == 2
+    assert isinstance(data['message'], string_types)
+    assert data['result'] is None
+
+    # fail, invalid project ID
+    resp = app.post(
+        '/api/v1/projects/12345/results', data=json.dumps(request_json),
+        content_type='application/json')
+    data = assert_json_api(resp, 404)
+    assert len(data) == 2
+    assert isinstance(data['message'], string_types)
+    assert data['project'] is None
 
 
 # PUT /api/v1/projects/<int:project_id>/results/<int:id>
@@ -370,8 +463,117 @@ def test_delete_result(project, app):
     # not raise an exception when DELETE /api/v1/projects/12345/results/1
 
 
+# POST /api/v1/projects/<int:project_id>/results/<int:result_id>/logs
+def test_post_log(app):
+    # success
+    test_time = os.path.getmtime(os.path.abspath(__file__))
+    request_json = {
+        'log': {
+            'values': [
+                {'epoch': 8, 'loss': 0.1}, {'epoch': 9, 'loss': 0.1}
+            ],
+            'modifiedAt': test_time
+        }
+    }
+    resp = app.post(
+        '/api/v1/projects/1/results/1/logs', data=json.dumps(request_json),
+        content_type='application/json')
+    data = assert_json_api(resp)
+    assert len(data) == 1
+    assert data['logs']['resultId'] == 1
+    assert data['logs']['insertedLogCount'] == 2
+    assert data['logs']['totalLogCount'] == 9
+
+    # success, reset
+    request_json = {
+        'log': {
+            'values': [
+                {'epoch': 1, 'loss': 0.1}, {'epoch': 2, 'loss': 0.1}
+            ],
+            'reset': True
+        }
+    }
+    resp = app.post(
+        '/api/v1/projects/1/results/1/logs', data=json.dumps(request_json),
+        content_type='application/json')
+    data = assert_json_api(resp)
+    assert len(data) == 1
+    assert data['logs']['resultId'] == 1
+    assert data['logs']['insertedLogCount'] == 2
+    assert data['logs']['totalLogCount'] == 2
+
+    # success, empty log
+    request_json['log']['values'] = []
+    request_json['log']['reset'] = False
+    resp = app.post(
+        '/api/v1/projects/1/results/1/logs',
+        data=json.dumps(request_json), content_type='application/json')
+    data = assert_json_api(resp)
+    assert len(data) == 1
+    assert data['logs']['resultId'] == 1
+    assert data['logs']['insertedLogCount'] == 0
+    assert data['logs']['totalLogCount'] == 2
+
+    # fail, invalid project ID
+    resp = app.post(
+        '/api/v1/projects/12345/results/1/logs',
+        data=json.dumps(request_json), content_type='application/json')
+    data = assert_json_api(resp, 404)
+    assert len(data) == 2
+    assert isinstance(data['message'], string_types)
+    assert data['project'] is None
+
+    # fail, invalid result ID
+    resp = app.post(
+        '/api/v1/projects/1/results/12345/logs',
+        data=json.dumps(request_json), content_type='application/json')
+    data = assert_json_api(resp, 404)
+    assert len(data) == 2
+    assert isinstance(data['message'], string_types)
+    assert data['result'] is None
+
+
+# POST /api/v1/projects/<int:project_id>/results/<int:result_id>/args
+def test_post_argument(app):
+    # success
+    request_json = {'argument': {'key': 'value'}}
+    resp = app.post(
+        '/api/v1/projects/1/results/1/args', data=json.dumps(request_json),
+        content_type='application/json')
+    data = assert_json_api(resp)
+    assert len(data) == 1
+    assert data['argument']['resultId'] == 1
+
+    # success, empty args
+    request_json['argument'] = {}
+    resp = app.post(
+        '/api/v1/projects/1/results/1/args',
+        data=json.dumps(request_json), content_type='application/json')
+    data2 = assert_json_api(resp)
+    assert len(data2) == 1
+    assert data2['argument']['id'] == data['argument']['id'] + 1
+
+    # fail, invalid project ID
+    resp = app.post(
+        '/api/v1/projects/12345/results/1/args',
+        data=json.dumps(request_json), content_type='application/json')
+    data = assert_json_api(resp, 404)
+    assert len(data) == 2
+    assert isinstance(data['message'], string_types)
+    assert data['project'] is None
+
+    # fail, invalid result ID
+    resp = app.post(
+        '/api/v1/projects/1/results/12345/args',
+        data=json.dumps(request_json), content_type='application/json')
+    data = assert_json_api(resp, 404)
+    assert len(data) == 2
+    assert isinstance(data['message'], string_types)
+    assert data['result'] is None
+
+
 # POST /api/v1/projects/<int:project_id>/results/<int:result_id>/commands,
-def test_post_result_command(func_dir, project, app):
+def test_post_result_command(func_dir, app):
     project2_path = os.path.join(func_dir, 'test_project2')
     result_path = os.path.join(project2_path, '10003')
     os.makedirs(result_path)
@@ -516,7 +718,7 @@ def test_post_result_command(func_dir, project, app):
 
 
 # GET /api/v1/projects/<int:project_id>/results/<int:id>/assets
-def test_get_assets(func_dir, project, app):
+def test_get_assets(func_dir, app):
     project3_path = os.path.join(func_dir, 'test_project3')
     path = os.path.join(project3_path, '10004')
     os.makedirs(path)
