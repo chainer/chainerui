@@ -11,12 +11,15 @@ const createProjectsNotFoundElem = () => (
     <p>You need to:</p>
     <ol>
       <li>
-        set up a database<br />
-        <code>chainerui db create</code><br />
+        set up a database
+        <br />
+        <code>chainerui db create</code>
+        <br />
         <code>chainerui db upgrade</code>
       </li>
       <li>
-        create a project, for example,<br />
+        create a project, for example,
+        <br />
         <code>chainerui project create -d PROJECT_DIR [-n PROJECT_NAME]</code>
       </li>
     </ol>
@@ -39,9 +42,9 @@ const Projects = (props) => {
 
   return (
     <div className="mt-4 border border-left-0 border-right-0 border-bottom-0">
-      {(Object.keys(projects).length === 0) ?
-        createProjectsNotFoundElem() :
-        createProjectRowElems(projects, onProjectUpdate, onProjectDelete)}
+      {(Object.keys(projects).length === 0)
+        ? createProjectsNotFoundElem()
+        : createProjectRowElems(projects, onProjectUpdate, onProjectDelete)}
     </div>
   );
 };
@@ -49,8 +52,7 @@ const Projects = (props) => {
 Projects.propTypes = {
   projects: uiPropTypes.projects.isRequired,
   onProjectUpdate: PropTypes.func.isRequired,
-  onProjectDelete: PropTypes.func.isRequired
+  onProjectDelete: PropTypes.func.isRequired,
 };
 
 export default Projects;
-

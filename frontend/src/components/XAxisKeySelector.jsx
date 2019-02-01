@@ -6,7 +6,9 @@ import Select from './FormControl/Select';
 
 
 const XAxisKeySelector = (props) => {
-  const { projectId, stats, value, onChange } = props;
+  const {
+    projectId, stats, value, onChange,
+  } = props;
   const { xAxisKeys } = stats;
   const handleChangeXAxisKey = (e) => {
     onChange(projectId, e.target.value);
@@ -24,11 +26,11 @@ XAxisKeySelector.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   stats: uiPropTypes.stats.isRequired,
   value: PropTypes.string,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
 };
 
 XAxisKeySelector.defaultProps = {
-  value: ''
+  value: '',
 };
 
 export default XAxisKeySelector;

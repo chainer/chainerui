@@ -8,10 +8,8 @@ import StopForm from './StopForm';
 import HyperparamsAdjustForm from './HyperparamsAdjustFrom';
 
 
-const createCommandRowElems = (commands) => commands.sort((a, b) =>
-  // sort commands in decending order
-  b.id - a.id
-).map((command) => {
+// sort commands in decending order
+const createCommandRowElems = (commands) => commands.sort((a, b) => b.id - a.id).map((command) => {
   const request = command.request || {};
   const response = command.response || {};
   const { schedule } = request;
@@ -41,7 +39,9 @@ const createCommandRowElems = (commands) => commands.sort((a, b) =>
 });
 
 const Commands = (props) => {
-  const { projectId, resultId, commands, onCommandSubmit } = props;
+  const {
+    projectId, resultId, commands, onCommandSubmit,
+  } = props;
   return (
     <div className="card">
       <div className="card-header">Commands</div>
@@ -97,8 +97,7 @@ Commands.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   resultId: uiPropTypes.resultId.isRequired,
   commands: uiPropTypes.commands.isRequired,
-  onCommandSubmit: PropTypes.func.isRequired
+  onCommandSubmit: PropTypes.func.isRequired,
 };
 
 export default Commands;
-

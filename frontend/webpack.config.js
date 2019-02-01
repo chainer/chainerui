@@ -3,17 +3,12 @@
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
-const { URL } = require('url');
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-const convert = require('koa-connect');
-const history = require('connect-history-api-fallback');
-const proxy = require('http-proxy-middleware');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const API_ROOT = process.env.API_ROOT || 'http://localhost:5000';
@@ -36,15 +31,14 @@ module.exports = {
       'babel-polyfill',
       'whatwg-fetch',
       'bootstrap/dist/css/bootstrap.css',
-      'open-iconic/font/css/open-iconic-bootstrap.css',
+      '@fortawesome/fontawesome-free/css/all.css',
       'react-table/react-table.css',
-      './src/index.jsx'
-    ]
+      './src/index.jsx',
+    ],
   },
   output: {
     path: path.resolve(path.dirname(__dirname), 'chainerui', 'static', 'dist'),
-    publicPath: process.env.WEBPACK_SERVE ? '/' : undefined,
-    filename: '[name].js'
+    filename: '[name].js',
   },
   mode: NODE_ENV,
   module: {
@@ -53,7 +47,7 @@ module.exports = {
         enforce: 'pre',
         exclude: nodeModulePath,
         test: /\.jsx?$/,
-        use: 'eslint-loader'
+        use: 'eslint-loader',
       },
       {
         exclude: nodeModulePath,
@@ -67,18 +61,18 @@ module.exports = {
                   '@babel/preset-env',
                   {
                     modules: false,
-                    targets: targetBrowser
-                  }
+                    targets: targetBrowser,
+                  },
                 ],
-                '@babel/preset-react'
+                '@babel/preset-react',
               ],
               plugins: [
                 '@babel/proposal-object-rest-spread',
-                'lodash'
-              ]
-            }
-          }
-        ]
+                'lodash',
+              ],
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
@@ -91,57 +85,57 @@ module.exports = {
               parser: 'postcss-scss',
               plugins: [
                 require('autoprefixer')({
-                  browsers: targetBrowser
-                })
-              ]
-            }
-          }
-        ]
+                  browsers: targetBrowser,
+                }),
+              ],
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpe?g|gif|svg|eot|otf|ttf|woff2?)$/,
         use: {
           loader: 'file-loader',
           options: {
-            name: '[name].[ext]'
-          }
-        }
+            name: '[name].[ext]',
+          },
+        },
       },
       {
         test: /\.tmpl$/,
-        use: 'raw-loader'
-      }
-    ]
+        use: 'raw-loader',
+      },
+    ],
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
   },
   optimization: {
     splitChunks: {
       chunks: 'initial',
-      name: 'vendor'
+      name: 'vendor',
     },
     minimizer: [
       new UglifyJsPlugin({
         cache: true,
-        parallel: true
+        parallel: true,
       }),
-      new OptimizeCSSAssetsPlugin({})
-    ]
+      new OptimizeCSSAssetsPlugin({}),
+    ],
   },
   plugins: [
     new CleanWebpackPlugin(['chainerui/static/dist'], {
-      root: path.join(__dirname, '..')
+      root: path.join(__dirname, '..'),
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
-      'process.env.VERSION': JSON.stringify(version)
+      'process.env.VERSION': JSON.stringify(version),
     }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
-      Popper: ['popper.js', 'default']
+      Popper: ['popper.js', 'default'],
     }),
     new HtmlWebpackPlugin({
       title: 'ChainerUI',
@@ -158,28 +152,24 @@ module.exports = {
         removeStyleLinkTypeAttributes: true,
         sortAttributes: true,
         sortClassName: true,
-        useShortDoctype: true
-      } : null
+        useShortDoctype: true,
+      } : null,
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
-      chunkFilename: 'vendor.css'
-    })
+      chunkFilename: 'vendor.css',
+    }),
   ],
   node: {
     __dirname: false,
-    __filename: false
+    __filename: false,
   },
-  serve: {
-    content: [__dirname],
-    add: (app) => {
-      app.use(convert(proxy('/api', {
+  devServer: {
+    historyApiFallback: true,
+    proxy: {
+      '/api': {
         target: API_ROOT,
-        headers: {
-          Host: new URL(API_ROOT).host
-        }
-      })));
-      app.use(convert(history()));
-    }
-  }
+      },
+    },
+  },
 };

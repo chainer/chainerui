@@ -6,7 +6,7 @@ export const projectId = PropTypes.number;
 export const project = PropTypes.shape({
   id: projectId,
   pathName: PropTypes.string,
-  name: PropTypes.string
+  name: PropTypes.string,
 });
 
 export const projects = PropTypes.objectOf(project);
@@ -19,14 +19,14 @@ export const logs = PropTypes.arrayOf(PropTypes.shape({
   logItems: PropTypes.arrayOf(PropTypes.shape({
     logId: PropTypes.number,
     key: PropTypes.string.isRequired,
-    value: PropTypes.any
-  })).isRequired
+    value: PropTypes.any,
+  })).isRequired,
 }));
 
 export const args = PropTypes.arrayOf(PropTypes.shape({
   resultId,
   key: PropTypes.string.isRequired,
-  value: PropTypes.any.isRequired
+  value: PropTypes.any.isRequired,
 }));
 
 export const commands = PropTypes.arrayOf(PropTypes.shape({
@@ -36,9 +36,9 @@ export const commands = PropTypes.arrayOf(PropTypes.shape({
     created_at: PropTypes.string.isRequired,
     schedule: PropTypes.shape({
       key: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired
+      value: PropTypes.number.isRequired,
     }),
-    body: PropTypes.object
+    body: PropTypes.object,
   }).isRequired,
   response: PropTypes.shape({
     status: PropTypes.string.isRequired,
@@ -46,31 +46,32 @@ export const commands = PropTypes.arrayOf(PropTypes.shape({
     iteration: PropTypes.number.isRequired,
     elapsed_time: PropTypes.number,
     executed_at: PropTypes.string,
-    body: PropTypes.object
-  })
+    body: PropTypes.object,
+  }),
 }));
 
 export const snapshots = PropTypes.arrayOf(PropTypes.shape({
   id: PropTypes.number,
   iteration: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired,
 }));
 
 export const result = PropTypes.shape({
   id: resultId,
   pathName: PropTypes.string,
   name: PropTypes.string,
+  group: PropTypes.string,
   isUnregistered: PropTypes.bool,
   logs,
   args,
   commands,
-  snapshots
+  snapshots,
 });
 
 export const results = PropTypes.objectOf(result);
 
 export const fetchState = PropTypes.shape({
-  resultList: PropTypes.string
+  resultList: PropTypes.string,
 });
 
 export const line = PropTypes.shape({
@@ -78,8 +79,8 @@ export const line = PropTypes.shape({
   logKey: PropTypes.string,
   config: PropTypes.shape({
     color: PropTypes.string.isRequired,
-    isVisible: PropTypes.bool.isRequired
-  })
+    isVisible: PropTypes.bool.isRequired,
+  }),
 });
 
 export const lines = PropTypes.objectOf(line);
@@ -87,24 +88,29 @@ export const lines = PropTypes.objectOf(line);
 export const chartSize = PropTypes.shape({
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  aspect: PropTypes.number.isRequired
+  aspect: PropTypes.number.isRequired,
 });
 
 export const globalConfig = PropTypes.shape({
   chartSize: chartSize.isRequired,
   pollingRate: PropTypes.number.isRequired,
   logsLimit: PropTypes.number.isRequired,
-  isResultNameAlignRight: PropTypes.bool.isRequired
+  isResultNameAlignRight: PropTypes.bool.isRequired,
+});
+
+export const tableState = PropTypes.shape({
+  hiddenKeysForEveryHeader: PropTypes.arrayOf(PropTypes.any),
 });
 
 export const resultConfig = PropTypes.shape({
-  hidden: PropTypes.bool.isRequired
+  hidden: PropTypes.bool.isRequired,
+  assetsTableState: tableState,
 });
 
 export const resultsConfig = PropTypes.objectOf(resultConfig);
 
 export const logKeyConfig = PropTypes.shape({
-  selected: PropTypes.bool.isRequired
+  selected: PropTypes.bool.isRequired,
 });
 
 const logKeysConfig = PropTypes.objectOf(logKeyConfig);
@@ -116,51 +122,52 @@ export const axisConfig = PropTypes.shape({
   scale: PropTypes.string,
   scaleRange: PropTypes.objectOf(PropTypes.shape({
     range: PropTypes.arrayOf(PropTypes.number).isRequired,
-    rangeTypes: PropTypes.arrayOf(PropTypes.string).isRequired
-  }))
+    rangeTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  })),
 });
 
 export const projectConfig = PropTypes.shape({
   axes: PropTypes.shape({
     xAxis: axisConfig,
     yLeftAxis: axisConfig,
-    yRightAxis: axisConfig
+    yRightAxis: axisConfig,
   }).isRequired,
   tableState: PropTypes.shape({
     expanded: PropTypes.oneOfType([
-      PropTypes.bool, PropTypes.object
+      PropTypes.bool, PropTypes.object,
     ]),
     hiddenLogKeys: PropTypes.arrayOf(PropTypes.string),
-    hiddenArgKeys: PropTypes.arrayOf(PropTypes.string)
+    hiddenArgKeys: PropTypes.arrayOf(PropTypes.string),
+    isGrouped: PropTypes.bool,
   }).isRequired,
   resultsConfig: resultsConfig.isRequired,
-  lines: lines.isRequired
+  lines: lines.isRequired,
 });
 
 export const stats = PropTypes.shape({
   argKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   logKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
-  xAxisKeys: PropTypes.arrayOf(PropTypes.string).isRequired
+  xAxisKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
 });
 
 export const assets = PropTypes.arrayOf(PropTypes.shape({
   contents: PropTypes.arrayOf(PropTypes.any),
-  trainInfo: PropTypes.objectOf(PropTypes.any)
+  trainInfo: PropTypes.objectOf(PropTypes.any),
 }));
 
 export const resultStatus = PropTypes.shape({
-  selected: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
+  selected: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
 });
 
 export const resultsStatus = PropTypes.objectOf(resultStatus);
 
 export const projectStatus = PropTypes.shape({
   chartDownloadStatus: PropTypes.oneOf(Object.values(CHART_DOWNLOAD_STATUS)),
-  resultsStatus
+  resultsStatus,
 });
 
 export const projectsStatus = PropTypes.objectOf(projectStatus);
 
 export const status = PropTypes.shape({
-  projectsStatus
+  projectsStatus,
 });

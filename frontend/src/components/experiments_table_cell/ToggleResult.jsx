@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import VisibilityCheckbox from '../VisibilityCheckbox';
 import * as uiPropTypes from '../../store/uiPropTypes';
 
 class ToggleResult extends React.Component {
@@ -10,15 +11,17 @@ class ToggleResult extends React.Component {
   }
 
   handleSelectToggle() {
-    const { project, result, resultConfig, onResultsConfigSelectUpdate } = this.props;
+    const {
+      project, result, resultConfig, onResultsConfigSelectUpdate,
+    } = this.props;
     onResultsConfigSelectUpdate(project.id, result.id, !resultConfig.hidden);
   }
 
   render() {
     const { resultConfig } = this.props;
     return (
-      <input
-        type="checkbox"
+      <VisibilityCheckbox
+        className="fa-xs"
         checked={!resultConfig.hidden}
         onChange={this.handleSelectToggle}
       />
@@ -30,13 +33,13 @@ ToggleResult.propTypes = {
   project: uiPropTypes.project.isRequired,
   result: uiPropTypes.result.isRequired,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
-  resultConfig: uiPropTypes.resultConfig
+  resultConfig: uiPropTypes.resultConfig,
 };
 
 ToggleResult.defaultProps = {
   resultConfig: {
-    hidden: false
-  }
+    hidden: false,
+  },
 };
 
 export default ToggleResult;

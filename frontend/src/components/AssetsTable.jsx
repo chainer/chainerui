@@ -1,10 +1,14 @@
 import React from 'react';
 import ReactTable from 'react-table';
 
+import PropTypes from 'prop-types';
 import * as uiPropTypes from '../store/uiPropTypes';
 
+import TableConfigurator from './TableConfigurator';
+
 const AssetsTable = (props) => {
-  const { assets } = props;
+  const { assets, onAssetsTableColumnsVisibilityUpdate, tableState } = props;
+  const { hiddenKeysForEveryHeader = [] } = tableState;
 
   const trainInfoKeys = assets.map((asset) => Object.keys(asset.train_info)).flat();
   const uniqueTrainInfoKeys = [...new Set(trainInfoKeys)];
@@ -19,7 +23,10 @@ const AssetsTable = (props) => {
     accessor: (p) => {
       const trainInfo = p.train_info;
       return trainInfo[k];
-    }
+    },
+    show: hiddenKeysForEveryHeader.length === 0
+      ? true
+      : !hiddenKeysForEveryHeader[0].find((hk) => hk === k),
   }));
 
   const contentColumns = uniqueContentKeys.map((k) => ({
@@ -41,43 +48,60 @@ const AssetsTable = (props) => {
             controls
           />
         );
-      } else {
-        return (
-          <img
-            src={selectedContent.uri}
-            alt={selectedContent.tag}
-            width="80%"
-            height="auto"
-          />
-        );
       }
-    }
+      return (
+        <img
+          src={selectedContent.uri}
+          alt={selectedContent.tag}
+          width="80%"
+          height="auto"
+        />
+      );
+    },
+    show: hiddenKeysForEveryHeader.length === 0
+      ? true
+      : !hiddenKeysForEveryHeader[1].find((hk) => hk === k),
   }));
 
   const columns = [
     {
       Header: 'Train Info',
-      columns: trainInfoColumns
+      columns: trainInfoColumns,
     },
     {
       Header: 'Contents',
-      columns: contentColumns
-    }
+      columns: contentColumns,
+    },
   ];
 
+  const columnHeaders = columns.map((c) => ({
+    Header: c.Header,
+    columns: c.columns.map((sc) => sc.Header),
+  }));
+
   return (
-    <ReactTable
-      style={{ width: '100%' }}
-      data={assets}
-      columns={columns}
-      showPagination={false}
-      minRows={3}
-    />
+    <div>
+      <ReactTable
+        style={{ width: '100%' }}
+        data={assets}
+        columns={columns}
+        showPagination={false}
+        minRows={3}
+      />
+
+      <TableConfigurator
+        columnHeaders={columnHeaders}
+        hiddenKeysForEveryHeader={hiddenKeysForEveryHeader}
+        onTableColumnsVisibilityUpdate={onAssetsTableColumnsVisibilityUpdate}
+      />
+    </div>
   );
 };
 
 AssetsTable.propTypes = {
-  assets: uiPropTypes.assets.isRequired
+  assets: uiPropTypes.assets.isRequired,
+  tableState: uiPropTypes.tableState.isRequired,
+  onAssetsTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };
 
 export default AssetsTable;

@@ -8,22 +8,20 @@ const callApi = (endpoint, method = 'GET', body) => {
   const options = {
     method,
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
   if (body !== null) {
     options.body = JSON.stringify(body);
   }
 
   return fetch(fullUrl, options)
-    .then((response) =>
-      response.json().then((json) => {
-        if (!response.ok) {
-          return Promise.reject(json);
-        }
-        return json;
-      })
-    );
+    .then((response) => response.json().then((json) => {
+      if (!response.ok) {
+        return Promise.reject(json);
+      }
+      return json;
+    }));
 };
 
 export const CALL_API = 'Call API';
@@ -59,12 +57,11 @@ export default (store) => (next) => (action) => {
       response,
       type: successType,
       endpoint,
-      body
+      body,
     })),
     failure: (error) => (actionWith({
       type: failureType,
-      error: error.message || 'Something bad happened'
-    }))
+      error: error.message || 'Something bad happened',
+    })),
   }, () => (callApi(endpoint, method, body)), next);
 };
-

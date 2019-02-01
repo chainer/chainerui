@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Label, Collapse, Button, Col } from 'reactstrap';
+import {
+  Form, FormGroup, Label, Collapse, Button, Col,
+} from 'reactstrap';
 import { ChromePicker, GithubPicker } from 'react-color';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -24,11 +26,15 @@ class LineConfigurator extends React.Component {
     this.handleResetColorClick = this.handleResetColorClick.bind(this);
     this.togglePicker = this.togglePicker.bind(this);
 
-    this.state = { colorPickerCollapse: false };
+    this.state = {
+      colorPickerCollapse: false,
+    };
   }
 
   togglePicker() {
-    this.setState({ colorPickerCollapse: !this.state.colorPickerCollapse });
+    this.setState((prevState) => ({
+      colorPickerCollapse: !prevState.colorPickerCollapse,
+    }));
   }
 
   handleResultChange(e) {
@@ -51,8 +57,8 @@ class LineConfigurator extends React.Component {
       ...line,
       config: {
         ...config,
-        color: hex
-      }
+        color: hex,
+      },
     });
   }
 
@@ -64,32 +70,36 @@ class LineConfigurator extends React.Component {
       ...line,
       config: {
         ...config,
-        isVisible: checked
-      }
+        isVisible: checked,
+      },
     });
   }
 
   handleResetColorClick() {
-    const { line, results, stats, onChange } = this.props;
+    const {
+      line, results, stats, onChange,
+    } = this.props;
     const { config } = line;
     const { logKeys } = stats;
     onChange({
       ...line,
       config: {
         ...config,
-        color: lineColorGenerator(line.resultId, line.logKey, results, logKeys)
-      }
+        color: lineColorGenerator(line.resultId, line.logKey, results, logKeys),
+      },
     });
   }
 
   render() {
-    const { project, results, line, isResultNameAlignRight } = this.props;
+    const {
+      project, results, line, isResultNameAlignRight,
+    } = this.props;
     const { resultId = RESULT_NONE, logKey = LOG_KEY_NONE, config = {} } = line;
     const result = results[resultId] || {};
     const { color, isVisible } = config;
 
     const colorBlockStyle = {
-      backgroundColor: color
+      backgroundColor: color,
     };
 
     return (
@@ -150,12 +160,11 @@ LineConfigurator.propTypes = {
   stats: uiPropTypes.stats.isRequired,
   line: uiPropTypes.line,
   isResultNameAlignRight: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
 };
 
 LineConfigurator.defaultProps = {
-  line: {}
+  line: {},
 };
 
 export default LineConfigurator;
-

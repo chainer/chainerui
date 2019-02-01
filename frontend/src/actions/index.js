@@ -19,15 +19,15 @@ export const PROJECT_DELETE_FAILURE = 'PROJECT_DELETE_FAILURE';
 export const getProjectList = () => ({
   [CALL_API]: {
     types: [PROJECT_LIST_REQUEST, PROJECT_LIST_SUCCESS, PROJECT_LIST_FAILURE],
-    endpoint: 'projects'
-  }
+    endpoint: 'projects',
+  },
 });
 
 export const getProject = (projectId) => ({
   [CALL_API]: {
     types: [PROJECT_REQUEST, PROJECT_SUCCESS, PROJECT_FAILURE],
-    endpoint: `projects/${projectId}`
-  }
+    endpoint: `projects/${projectId}`,
+  },
 });
 
 export const updateProject = (project = {}) => {
@@ -40,8 +40,8 @@ export const updateProject = (project = {}) => {
       types: [PROJECT_UPDATE_REQUEST, PROJECT_UPDATE_SUCCESS, PROJECT_UPDATE_FAILURE],
       endpoint: `projects/${id}`,
       method: 'PUT',
-      body: { project: { id, name } }
-    }
+      body: { project: { id, name } },
+    },
   };
 };
 
@@ -53,8 +53,8 @@ export const deleteProject = (projectId) => {
     [CALL_API]: {
       types: [PROJECT_DELETE_REQUEST, PROJECT_DELETE_SUCCESS, PROJECT_DELETE_FAILURE],
       endpoint: `projects/${projectId}`,
-      method: 'DELETE'
-    }
+      method: 'DELETE',
+    },
   };
 };
 
@@ -81,15 +81,15 @@ export const RESULT_ASSET_FAILURE = 'RESULT_ASSET_FAILURE';
 export const getResultList = (projectId, logsLimit = -1) => ({
   [CALL_API]: {
     types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILURE],
-    endpoint: `projects/${projectId}/results?logs_limit=${logsLimit}`
-  }
+    endpoint: `projects/${projectId}/results?logs_limit=${logsLimit}`,
+  },
 });
 
 export const getResult = (projectId, resultId, logsLimit = -1) => ({
   [CALL_API]: {
     types: [RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILURE],
-    endpoint: `projects/${projectId}/results/${resultId}?logs_limit=${logsLimit}`
-  }
+    endpoint: `projects/${projectId}/results/${resultId}?logs_limit=${logsLimit}`,
+  },
 });
 
 export const updateResult = (projectId, result = {}) => {
@@ -102,8 +102,8 @@ export const updateResult = (projectId, result = {}) => {
       types: [RESULT_UPDATE_REQUEST, RESULT_UPDATE_SUCCESS, RESULT_UPDATE_FAILURE],
       endpoint: `projects/${projectId}/results/${id}`,
       method: 'PUT',
-      body: { result: { id, name, isUnregistered } }
-    }
+      body: { result: { id, name, isUnregistered } },
+    },
   };
 };
 
@@ -115,20 +115,20 @@ export const deleteResult = (projectId, resultId) => {
     [CALL_API]: {
       types: [RESULT_DELETE_REQUEST, RESULT_DELETE_SUCCESS, RESULT_DELETE_FAILURE],
       endpoint: `projects/${projectId}/results/${resultId}`,
-      method: 'DELETE'
-    }
+      method: 'DELETE',
+    },
   };
 };
 
 export const clearResultList = () => ({
-  type: RESULT_LIST_CLEAR
+  type: RESULT_LIST_CLEAR,
 });
 
 export const getResultAsset = (projectId, resultId) => ({
   [CALL_API]: {
     types: [RESULT_ASSET_REQUEST, RESULT_ASSET_SUCCESS, RESULT_ASSET_FAILURE],
-    endpoint: `projects/${projectId}/results/${resultId}/assets`
-  }
+    endpoint: `projects/${projectId}/results/${resultId}/assets`,
+  },
 });
 
 // commands API
@@ -137,9 +137,7 @@ export const COMMAND_CREATE_REQUEST = 'COMMAND_CREATE_REQUEST';
 export const COMMAND_CREATE_SUCCESS = 'COMMAND_CREATE_SUCCESS';
 export const COMMAND_CREATE_FAILURE = 'COMMAND_CREATE_FAILURE';
 
-export const createCommand = (
-  projectId, resultId, commandName, requestBody = null, schedule = null
-) => {
+export const createCommand = (projectId, resultId, commandName, requestBody = null, schedule = null) => {
   if (!Number.isInteger(resultId)) {
     throw new Error('Result id is invalid.');
   }
@@ -152,9 +150,9 @@ export const createCommand = (
         name: commandName,
         body: requestBody,
         schedule,
-        resultId
-      }
-    }
+        resultId,
+      },
+    },
   };
 };
 
@@ -165,7 +163,7 @@ export const PROJECT_CONFIG_RESET = 'PROJECT_CONFIG_RESET';
 
 export const resetProjectConfig = (projectId) => ({
   type: PROJECT_CONFIG_RESET,
-  projectId
+  projectId,
 });
 
 
@@ -181,14 +179,14 @@ export const updateAxisScale = (projectId, axisName, scale) => ({
   type: AXIS_CONFIG_SCALE_UPDATE,
   projectId,
   axisName,
-  scale
+  scale,
 });
 
 export const updateXAxisKey = (projectId, xAxisKey) => ({
   type: AXIS_CONFIG_X_KEY_UPDATE,
   projectId,
   axisName: 'xAxis',
-  xAxisKey
+  xAxisKey,
 });
 
 export const updateAxisScaleRangeType = (projectId, axisName, scale, isMin, rangeType = 'auto') => ({
@@ -197,7 +195,7 @@ export const updateAxisScaleRangeType = (projectId, axisName, scale, isMin, rang
   axisName,
   scale,
   isMin,
-  rangeType
+  rangeType,
 });
 
 export const updateAxisScaleRangeNumber = (projectId, axisName, scale, isMin, rangeNumber) => ({
@@ -206,14 +204,14 @@ export const updateAxisScaleRangeNumber = (projectId, axisName, scale, isMin, ra
   axisName,
   scale,
   isMin,
-  rangeNumber
+  rangeNumber,
 });
 
 export const toggleLogKeySelect = (projectId, axisName, logKey) => ({
   type: AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE,
   projectId,
   axisName,
-  logKey
+  logKey,
 });
 
 
@@ -226,14 +224,14 @@ export const updateResultsConfigSelect = (projectId, resultId, hidden) => ({
   type: RESULTS_CONFIG_SELECT_UPDATE,
   projectId,
   resultId,
-  hidden
+  hidden,
 });
 
 export const updateResultSelect = (projectId, resultId, selected) => ({
   type: RESULT_SELECT_UPDATE,
   projectId,
   resultId,
-  selected
+  selected,
 });
 
 // lines config
@@ -245,7 +243,7 @@ export const updateLineInAxis = (projectId, axisName, lineKey, line) => ({
   projectId,
   axisName,
   lineKey,
-  line
+  line,
 });
 
 export const TABLE_STATE_EXPANDED_UPDATE = 'TABLE_STATE_EXPANDED_UPDATE';
@@ -253,15 +251,25 @@ export const TABLE_STATE_EXPANDED_UPDATE = 'TABLE_STATE_EXPANDED_UPDATE';
 export const updateTableExpanded = (projectId, expanded) => ({
   type: TABLE_STATE_EXPANDED_UPDATE,
   projectId,
-  expanded
+  expanded,
 });
 
 export const TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
-export const updateTableColumnsVisibility = (projectId, hiddenLogKeys, hiddenArgKeys) => ({
+export const updateTableColumnsVisibility = (projectId, hiddenLogKeys, hiddenArgKeys, isGrouped) => ({
   type: TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
   projectId,
   hiddenLogKeys,
-  hiddenArgKeys
+  hiddenArgKeys,
+  isGrouped,
+});
+
+export const ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
+export const updateAssetsTableColumnsVisibility = (projectId, resultId, hiddenTrainInfoKeys, hiddenContentsKeys) => ({
+  type: ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
+  projectId,
+  resultId,
+  hiddenTrainInfoKeys,
+  hiddenContentsKeys,
 });
 
 // global config
@@ -273,22 +281,22 @@ export const GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE = 'GLOBAL_CONFIG_RESULT_
 
 export const updateGlobalPollingRate = (pollingRate) => ({
   type: GLOBAL_CONFIG_POLLING_RATE_UPDATE,
-  pollingRate
+  pollingRate,
 });
 
 export const updateGlobalChartSize = (chartSize) => ({
   type: GLOBAL_CONFIG_CHART_SIZE_UPDATE,
-  chartSize
+  chartSize,
 });
 
 export const updateGlobalLogsLimit = (logsLimit) => ({
   type: GLOBAL_CONFIG_LOGS_LIMIT_UPDATE,
-  logsLimit
+  logsLimit,
 });
 
 export const updateGlobalResultNameAlignment = (isResultNameAlignRight) => ({
   type: GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE,
-  isResultNameAlignRight
+  isResultNameAlignRight,
 });
 
 // download
@@ -298,5 +306,5 @@ export const CHART_DOWNLOAD_STATUS_UPDATE = 'CHART_DOWNLOAD_STATUS_UPDATE';
 export const updateChartDownloadStatus = (projectId, chartDownloadStatus) => ({
   type: CHART_DOWNLOAD_STATUS_UPDATE,
   projectId,
-  chartDownloadStatus
+  chartDownloadStatus,
 });

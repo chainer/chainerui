@@ -12,7 +12,7 @@ import {
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateGlobalLogsLimit,
-  updateGlobalResultNameAlignment
+  updateGlobalResultNameAlignment,
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
@@ -27,9 +27,7 @@ class ResultDetail extends React.Component {
     const { projectId, resultId, globalConfig } = this.props;
     const { pollingRate, logsLimit } = globalConfig;
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(
-      this.props.getResult, pollingRate, projectId, resultId, logsLimit
-    );
+    this.resultsPollingTimer = startPolling(this.props.getResult, pollingRate, projectId, resultId, logsLimit);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -41,9 +39,7 @@ class ResultDetail extends React.Component {
 
     if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(
-        this.props.getResult, nextPollingRate, projectId, resultId, nextLogsLimit
-      );
+      this.resultsPollingTimer = startPolling(this.props.getResult, nextPollingRate, projectId, resultId, nextLogsLimit);
     }
   }
 
@@ -53,7 +49,7 @@ class ResultDetail extends React.Component {
 
   render() {
     const {
-      projectId, project, result, globalConfig, fetchState
+      projectId, project, result, globalConfig, fetchState,
     } = this.props;
     return (
       <div className="result-detail">
@@ -114,13 +110,15 @@ const mapStateToProps = (state, ownProps) => {
   const {
     entities,
     fetchState,
-    config
+    config,
   } = state;
   const globalConfig = config.global;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId];
   const result = results[resultId];
-  return { projectId, resultId, project, result, fetchState, globalConfig };
+  return {
+    projectId, resultId, project, result, fetchState, globalConfig,
+  };
 };
 
 ResultDetail.propTypes = {
@@ -136,12 +134,12 @@ ResultDetail.propTypes = {
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
-  updateGlobalResultNameAlignment: PropTypes.func.isRequired
+  updateGlobalResultNameAlignment: PropTypes.func.isRequired,
 };
 
 ResultDetail.defaultProps = {
   project: {},
-  result: {}
+  result: {},
 };
 
 export default connect(mapStateToProps, {
@@ -151,6 +149,5 @@ export default connect(mapStateToProps, {
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateGlobalLogsLimit,
-  updateGlobalResultNameAlignment
+  updateGlobalResultNameAlignment,
 })(ResultDetail);
-

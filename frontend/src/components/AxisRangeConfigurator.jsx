@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Col, Input } from 'reactstrap';
+import {
+  Form, FormGroup, Col, Input,
+} from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import Check from './FormControl/Check';
@@ -16,7 +18,7 @@ class AxisRangeConfigurator extends React.Component {
 
   handleRangeTypeChange(e) {
     const {
-      projectId, axisName, axisConfig, isMin, onAxisConfigScaleRangeTypeUpdate
+      projectId, axisName, axisConfig, isMin, onAxisConfigScaleRangeTypeUpdate,
     } = this.props;
     const { scale = 'linear' } = axisConfig;
     onAxisConfigScaleRangeTypeUpdate(projectId, axisName, scale, isMin, e.target.value);
@@ -24,14 +26,14 @@ class AxisRangeConfigurator extends React.Component {
 
   handleNumberChange(e) {
     const {
-      projectId, axisName, axisConfig, isMin, onAxisConfigScaleRangeNumberUpdate
+      projectId, axisName, axisConfig, isMin, onAxisConfigScaleRangeNumberUpdate,
     } = this.props;
     const { scale = 'linear' } = axisConfig;
 
     let rangeNumber = null;
     if (e.target.value) {
       const num = Number(e.target.value);
-      rangeNumber = (isNaN(num) || !isFinite(num)) ? null : num;
+      rangeNumber = (Number.isNaN(num) || !Number.isFinite(num)) ? null : num;
     }
 
     onAxisConfigScaleRangeNumberUpdate(projectId, axisName, scale, isMin, rangeNumber);
@@ -70,7 +72,9 @@ class AxisRangeConfigurator extends React.Component {
                 checked={rangeType === (isMin ? 'dataMin' : 'dataMax')}
                 onChange={this.handleRangeTypeChange}
               >
-                data {isMin ? 'min' : 'max'}
+                data
+                {' '}
+                {isMin ? 'min' : 'max'}
               </Check>
             </Col>
             <Col sm={{ size: 5 }}>
@@ -106,8 +110,7 @@ AxisRangeConfigurator.propTypes = {
   axisConfig: uiPropTypes.axisConfig.isRequired,
   isMin: PropTypes.bool.isRequired,
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
-  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired
+  onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
 };
 
 export default AxisRangeConfigurator;
-

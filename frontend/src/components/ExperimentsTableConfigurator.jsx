@@ -6,7 +6,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Form
+  Form,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -19,21 +19,22 @@ class ExperimentsTableConfigurator extends React.Component {
     this.handleModalShow = this.handleModalShow.bind(this);
     this.handleModalHide = this.handleModalHide.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleIsGrouped = this.handleIsGrouped.bind(this);
 
     this.state = {
-      showModal: false
+      showModal: false,
     };
   }
 
   handleModalShow() {
     this.setState({
-      showModal: true
+      showModal: true,
     });
   }
 
   handleModalHide() {
     this.setState({
-      showModal: false
+      showModal: false,
     });
   }
 
@@ -42,7 +43,8 @@ class ExperimentsTableConfigurator extends React.Component {
     const { tableState } = projectConfig;
     const {
       hiddenLogKeys = [],
-      hiddenArgKeys = []
+      hiddenArgKeys = [],
+      isGrouped = false,
     } = tableState;
 
     if (prefix === 'logKey') {
@@ -50,16 +52,23 @@ class ExperimentsTableConfigurator extends React.Component {
         ? hiddenLogKeys.concat(event.target.name)
         : hiddenLogKeys.filter((vk) => vk !== event.target.name);
 
-      this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, nextHiddenLogKeys, hiddenArgKeys);
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, nextHiddenLogKeys, hiddenArgKeys, isGrouped);
     } else {
       const nextHiddenArgKeys = !event.target.checked
         ? hiddenArgKeys.concat(event.target.name)
         : hiddenArgKeys.filter((vk) => vk !== event.target.name);
 
-      this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, hiddenLogKeys, nextHiddenArgKeys);
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, hiddenLogKeys, nextHiddenArgKeys, isGrouped);
     }
+  }
+
+  handleIsGrouped(event) {
+    const { tableState } = this.props.projectConfig;
+
+    this.props.onTableColumnsVisibilityUpdate(
+      this.props.project.id, tableState.hiddenLogKeys, tableState.hiddenArgKeys,
+      event.target.checked
+    );
   }
 
   render() {
@@ -68,14 +77,25 @@ class ExperimentsTableConfigurator extends React.Component {
     const { tableState } = projectConfig;
     const {
       hiddenLogKeys = [],
-      hiddenArgKeys = []
+      hiddenArgKeys = [],
+      isGrouped = false,
     } = tableState;
 
     return (
       <div>
-        <Button color="secondary" className="my-2" onClick={this.handleModalShow}>
-          Table settings
-        </Button>
+        <div className="form-inline">
+          <Button color="secondary" className="my-2" onClick={this.handleModalShow}>
+            Table settings
+          </Button>
+          <Check
+            type="checkbox"
+            className="ml-2"
+            checked={isGrouped}
+            onChange={this.handleIsGrouped}
+          >
+            Grouping
+          </Check>
+        </div>
 
         <Modal isOpen={this.state.showModal} toggle={this.handleModalHide}>
           <ModalHeader>
@@ -92,7 +112,9 @@ class ExperimentsTableConfigurator extends React.Component {
                     name={l}
                     checked={!hiddenLogKeys.find((vk) => vk === l)}
                     onChange={(e) => this.handleChange('logKey', e)}
-                  >{l}</Check>
+                  >
+                    {l}
+                  </Check>
                 ))
               }
               <hr />
@@ -105,7 +127,9 @@ class ExperimentsTableConfigurator extends React.Component {
                     name={a}
                     checked={!hiddenArgKeys.find((va) => va === a)}
                     onChange={(e) => this.handleChange('argKey', e)}
-                  >{a}</Check>
+                  >
+                    {a}
+                  </Check>
                 ))
               }
             </Form>
@@ -123,7 +147,7 @@ ExperimentsTableConfigurator.propTypes = {
   project: uiPropTypes.project.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   stats: uiPropTypes.stats.isRequired,
-  onTableColumnsVisibilityUpdate: PropTypes.func.isRequired
+  onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };
 
 export default ExperimentsTableConfigurator;

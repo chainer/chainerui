@@ -9,4 +9,3 @@ export const startPolling = (func, pollingRate, ...args) => {
 export const stopPolling = (timer) => {
   clearInterval(timer);
 };
-

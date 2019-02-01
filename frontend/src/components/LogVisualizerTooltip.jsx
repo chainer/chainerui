@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  formatLogValue, formatLogTooltipLabel
+  formatLogValue, formatLogTooltipLabel,
 } from '../utils';
 
 
@@ -22,12 +22,14 @@ const LogVisualizerTooltipItem = (props) => {
 LogVisualizerTooltipItem.propTypes = {
   entry: PropTypes.any.isRequired, // eslint-disable-line react/forbid-prop-types
   formatter: PropTypes.func.isRequired,
-  anySelected: PropTypes.bool.isRequired
+  anySelected: PropTypes.bool.isRequired,
 };
 
 
 const LogVisualizerTooltip = (props) => {
-  const { xAxisKey, label, payload, anySelected } = props;
+  const {
+    xAxisKey, label, payload, anySelected,
+  } = props;
 
   if (!payload || payload.length === 0) {
     return null;
@@ -62,13 +64,13 @@ LogVisualizerTooltip.propTypes = {
   // passed by reactstrap Tooltip
   label: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   // passed by reactstrap Tooltip
-  payload: PropTypes.arrayOf(PropTypes.any)
+  payload: PropTypes.arrayOf(PropTypes.any),
 };
 
 LogVisualizerTooltip.defaultProps = {
   xAxisKey: '',
   label: undefined,
-  payload: []
+  payload: [],
 };
 
 export default LogVisualizerTooltip;

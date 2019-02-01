@@ -3,10 +3,8 @@ import React from 'react';
 import * as uiPropTypes from '../../store/uiPropTypes';
 
 
-const createSnapshotRowElems = (snapshots) => snapshots.sort((a, b) =>
-  // sort snapshots by their iteration
-  a.iteration - b.iteration
-).map((snapshot) => (
+// sort snapshots by their iteration
+const createSnapshotRowElems = (snapshots) => snapshots.sort((a, b) => a.iteration - b.iteration).map((snapshot) => (
   <tr className="command-row" key={snapshot.id}>
     <td>{snapshot.iteration}</td>
     <td>{snapshot.name}</td>
@@ -36,8 +34,7 @@ const Snapshots = (props) => {
 };
 
 Snapshots.propTypes = {
-  snapshots: uiPropTypes.snapshots.isRequired
+  snapshots: uiPropTypes.snapshots.isRequired,
 };
 
 export default Snapshots;
-
