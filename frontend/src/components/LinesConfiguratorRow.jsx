@@ -33,13 +33,15 @@ class LinesConfiguratorRow extends React.Component {
       ...line,
       config: {
         ...config,
-        isVisible: checked
-      }
+        isVisible: checked,
+      },
     });
   }
 
   render() {
-    const { line, project, result, isResultNameAlignRight } = this.props;
+    const {
+      line, project, result, isResultNameAlignRight,
+    } = this.props;
     const { config = {} } = line;
     const { color, isVisible } = config;
 
@@ -81,8 +83,7 @@ LinesConfiguratorRow.propTypes = {
   result: uiPropTypes.result.isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired,
   onEditClick: PropTypes.func.isRequired,
-  onVisibilityUpdate: PropTypes.func.isRequired
+  onVisibilityUpdate: PropTypes.func.isRequired,
 };
 
 export default LinesConfiguratorRow;
-

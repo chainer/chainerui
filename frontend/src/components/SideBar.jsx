@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
-  Modal, ModalHeader, ModalFooter, ModalBody
+  Modal, ModalHeader, ModalFooter, ModalBody,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -17,14 +17,14 @@ class SideBar extends React.Component {
     this.handleConfigReset = this.handleConfigReset.bind(this);
 
     this.state = {
-      showModal: false
+      showModal: false,
     };
   }
 
   handleModalToggle() {
-    this.setState({
-      showModal: !this.state.showModal
-    });
+    this.setState((prevState) => ({
+      showModal: !prevState.showModal,
+    }));
   }
 
   handleConfigReset() {
@@ -44,7 +44,7 @@ class SideBar extends React.Component {
       onAxisConfigScaleUpdate,
       onAxisConfigXKeyUpdate,
       onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate,
-      onAxisConfigLogKeySelectToggle
+      onAxisConfigLogKeySelectToggle,
     } = this.props;
 
     return (
@@ -62,7 +62,7 @@ class SideBar extends React.Component {
             onAxisConfigXKeyUpdate,
             onAxisConfigScaleRangeTypeUpdate,
             onAxisConfigScaleRangeNumberUpdate,
-            onAxisConfigLogKeySelectToggle
+            onAxisConfigLogKeySelectToggle,
           }
           }
         />
@@ -96,8 +96,7 @@ SideBar.propTypes = {
   onAxisConfigXKeyUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
-  onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
+  onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired,
 };
 
 export default SideBar;
-

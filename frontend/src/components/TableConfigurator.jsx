@@ -6,7 +6,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Form
+  Form,
 } from 'reactstrap';
 
 import Check from './FormControl/Check';
@@ -19,19 +19,19 @@ class TableConfigurator extends React.Component {
     this.handleChange = this.handleChange.bind(this);
 
     this.state = {
-      showModal: false
+      showModal: false,
     };
   }
 
   handleModalShow() {
     this.setState({
-      showModal: true
+      showModal: true,
     });
   }
 
   handleModalHide() {
     this.setState({
-      showModal: false
+      showModal: false,
     });
   }
 
@@ -45,15 +45,13 @@ class TableConfigurator extends React.Component {
         ? primaryHiddenKeys.concat(event.target.name)
         : primaryHiddenKeys.filter((vk) => vk !== event.target.name);
 
-      this.props.onTableColumnsVisibilityUpdate(
-        nextHiddenPrimaryKeys, secondaryHiddenKeys);
+      this.props.onTableColumnsVisibilityUpdate(nextHiddenPrimaryKeys, secondaryHiddenKeys);
     } else {
       const nextHiddenSecondaryKeys = !event.target.checked
         ? secondaryHiddenKeys.concat(event.target.name)
         : secondaryHiddenKeys.filter((vk) => vk !== event.target.name);
 
-      this.props.onTableColumnsVisibilityUpdate(
-        primaryHiddenKeys, nextHiddenSecondaryKeys);
+      this.props.onTableColumnsVisibilityUpdate(primaryHiddenKeys, nextHiddenSecondaryKeys);
     }
   }
 
@@ -82,13 +80,14 @@ class TableConfigurator extends React.Component {
                           type="checkbox"
                           name={sch}
                           checked={
-                            (hiddenKeysForEveryHeader[idx] === undefined) ?
-                              true
-                              :
-                              (!hiddenKeysForEveryHeader[idx].find((vk) => vk === sch))
+                            (hiddenKeysForEveryHeader[idx] === undefined)
+                              ? true
+                              : (!hiddenKeysForEveryHeader[idx].find((vk) => vk === sch))
                           }
                           onChange={(e) => this.handleChange(ch.Header, e)}
-                        >{sch}</Check>
+                        >
+                          {sch}
+                        </Check>
                       ))
                     }
                   </div>
@@ -107,17 +106,15 @@ class TableConfigurator extends React.Component {
 }
 
 TableConfigurator.propTypes = {
-  columnHeaders: PropTypes.arrayOf(
-    PropTypes.shape({
-      Header: PropTypes.string.isRequired,
-      columns: PropTypes.array.isRequired
-    })
-  ).isRequired,
+  columnHeaders: PropTypes.arrayOf(PropTypes.shape({
+    Header: PropTypes.string.isRequired,
+    columns: PropTypes.array.isRequired,
+  })).isRequired,
   hiddenKeysForEveryHeader: PropTypes.arrayOf(
     PropTypes.array.isRequired,
     PropTypes.array.isRequired
   ).isRequired,
-  onTableColumnsVisibilityUpdate: PropTypes.func.isRequired
+  onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };
 
 export default TableConfigurator;

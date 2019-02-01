@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Input, FormGroup } from 'reactstrap';
+import {
+  Row, Col, Input, FormGroup,
+} from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import TruncatedResultName from './TruncatedResultName';
 import {
   line2key,
-  line2dataKey
+  line2dataKey,
 } from '../utils';
 
 class LogVisualizerLegendItem extends React.Component {
@@ -17,15 +19,17 @@ class LogVisualizerLegendItem extends React.Component {
   }
 
   handleLineVisibilityUpdate(e) {
-    const { project, axisName, line, onAxisConfigLineUpdate } = this.props;
+    const {
+      project, axisName, line, onAxisConfigLineUpdate,
+    } = this.props;
     const { config } = line;
     const { checked } = e.target;
     const newLine = {
       ...line,
       config: {
         ...config,
-        isVisible: checked
-      }
+        isVisible: checked,
+      },
     };
 
     onAxisConfigLineUpdate(project.id, axisName, line2key(line), newLine);
@@ -34,7 +38,7 @@ class LogVisualizerLegendItem extends React.Component {
   render() {
     const {
       isDisplay, project, result, resultStatus, line, isResultNameAlignRight,
-      onResultSelect
+      onResultSelect,
     } = this.props;
     const { logKey, config } = line;
     const selected = resultStatus.selected === true || resultStatus.selected === logKey;
@@ -92,19 +96,19 @@ LogVisualizerLegendItem.propTypes = {
   line: PropTypes.any.isRequired, // eslint-disable-line react/forbid-prop-types
   isResultNameAlignRight: PropTypes.bool.isRequired,
   onResultSelect: PropTypes.func.isRequired,
-  onAxisConfigLineUpdate: PropTypes.func.isRequired
+  onAxisConfigLineUpdate: PropTypes.func.isRequired,
 };
 
 LogVisualizerLegendItem.defaultProps = {
   result: {},
-  resultStatus: {}
+  resultStatus: {},
 };
 
 const LogVisualizerLegend = (props) => {
   const {
     isDisplay,
     project, results, resultsStatus, lines, maxHeight, isResultNameAlignRight,
-    onResultSelect, onAxisConfigLineUpdate
+    onResultSelect, onAxisConfigLineUpdate,
   } = props;
 
   return (
@@ -142,7 +146,7 @@ LogVisualizerLegend.propTypes = {
   maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired,
   onResultSelect: PropTypes.func.isRequired,
-  onAxisConfigLineUpdate: PropTypes.func.isRequired
+  onAxisConfigLineUpdate: PropTypes.func.isRequired,
 };
 
 export default LogVisualizerLegend;

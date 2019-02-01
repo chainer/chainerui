@@ -24,10 +24,9 @@ const AssetsTable = (props) => {
       const trainInfo = p.train_info;
       return trainInfo[k];
     },
-    show: hiddenKeysForEveryHeader.length === 0 ?
-      true
-      :
-      !hiddenKeysForEveryHeader[0].find((hk) => hk === k)
+    show: hiddenKeysForEveryHeader.length === 0
+      ? true
+      : !hiddenKeysForEveryHeader[0].find((hk) => hk === k),
   }));
 
   const contentColumns = uniqueContentKeys.map((k) => ({
@@ -49,37 +48,35 @@ const AssetsTable = (props) => {
             controls
           />
         );
-      } else {
-        return (
-          <img
-            src={selectedContent.uri}
-            alt={selectedContent.tag}
-            width="80%"
-            height="auto"
-          />
-        );
       }
+      return (
+        <img
+          src={selectedContent.uri}
+          alt={selectedContent.tag}
+          width="80%"
+          height="auto"
+        />
+      );
     },
-    show: hiddenKeysForEveryHeader.length === 0 ?
-      true
-      :
-      !hiddenKeysForEveryHeader[1].find((hk) => hk === k)
+    show: hiddenKeysForEveryHeader.length === 0
+      ? true
+      : !hiddenKeysForEveryHeader[1].find((hk) => hk === k),
   }));
 
   const columns = [
     {
       Header: 'Train Info',
-      columns: trainInfoColumns
+      columns: trainInfoColumns,
     },
     {
       Header: 'Contents',
-      columns: contentColumns
-    }
+      columns: contentColumns,
+    },
   ];
 
   const columnHeaders = columns.map((c) => ({
     Header: c.Header,
-    columns: c.columns.map((sc) => sc.Header)
+    columns: c.columns.map((sc) => sc.Header),
   }));
 
   return (
@@ -104,7 +101,7 @@ const AssetsTable = (props) => {
 AssetsTable.propTypes = {
   assets: uiPropTypes.assets.isRequired,
   tableState: uiPropTypes.tableState.isRequired,
-  onAssetsTableColumnsVisibilityUpdate: PropTypes.func.isRequired
+  onAssetsTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };
 
 export default AssetsTable;

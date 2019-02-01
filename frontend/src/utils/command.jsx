@@ -3,7 +3,7 @@ import React from 'react';
 export const CommandStatus = {
   REQUEST_OPEN: 'OPEN',
   RESPONSE_SUCCESS: 'SUCCESS',
-  RESPONSE_FAILURE: 'FAILURE'
+  RESPONSE_FAILURE: 'FAILURE',
 };
 
 export const responseStatusToIcon = (status) => {

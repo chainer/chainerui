@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Modal, ModalHeader, ModalBody, ModalFooter
+  Button, Modal, ModalHeader, ModalBody, ModalFooter,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../../store/uiPropTypes';
 import {
-  displayResultNameFull
+  displayResultNameFull,
 } from '../../utils';
 
 class UnregisterButton extends React.Component {
@@ -16,21 +16,23 @@ class UnregisterButton extends React.Component {
     this.toggleUnregisterModal = this.toggleUnregisterModal.bind(this);
 
     this.state = {
-      showUnregisterModal: false
+      showUnregisterModal: false,
     };
   }
 
   handleUnregister() {
-    const { project, result, onResultUpdate, onResultUnregistered } = this.props;
+    const {
+      project, result, onResultUpdate, onResultUnregistered,
+    } = this.props;
     onResultUpdate(project.id, { ...result, isUnregistered: true });
     onResultUnregistered();
     this.toggleUnregisterModal();
   }
 
   toggleUnregisterModal() {
-    this.setState({
-      showUnregisterModal: !this.state.showUnregisterModal
-    });
+    this.setState((prevState) => ({
+      showUnregisterModal: !prevState.showUnregisterModal,
+    }));
   }
 
   render() {
@@ -44,7 +46,7 @@ class UnregisterButton extends React.Component {
         <Modal isOpen={showUnregisterModal}>
           <ModalHeader>Unregister a result</ModalHeader>
           <ModalBody>
-            Are you sure to unregister {displayResultNameFull(project, result)} ?
+            {`Are you sure to unregister ${displayResultNameFull(project, result)} ?`}
           </ModalBody>
           <ModalFooter>
             <Button color="secondary" onClick={this.toggleUnregisterModal}>Cancel</Button>
@@ -60,7 +62,7 @@ UnregisterButton.propTypes = {
   project: uiPropTypes.project.isRequired,
   result: uiPropTypes.result.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
-  onResultUnregistered: PropTypes.func.isRequired
+  onResultUnregistered: PropTypes.func.isRequired,
 };
 
 export default UnregisterButton;

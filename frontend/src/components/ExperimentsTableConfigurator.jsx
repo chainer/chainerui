@@ -6,7 +6,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Form
+  Form,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -22,19 +22,19 @@ class ExperimentsTableConfigurator extends React.Component {
     this.handleIsGrouped = this.handleIsGrouped.bind(this);
 
     this.state = {
-      showModal: false
+      showModal: false,
     };
   }
 
   handleModalShow() {
     this.setState({
-      showModal: true
+      showModal: true,
     });
   }
 
   handleModalHide() {
     this.setState({
-      showModal: false
+      showModal: false,
     });
   }
 
@@ -44,7 +44,7 @@ class ExperimentsTableConfigurator extends React.Component {
     const {
       hiddenLogKeys = [],
       hiddenArgKeys = [],
-      isGrouped = false
+      isGrouped = false,
     } = tableState;
 
     if (prefix === 'logKey') {
@@ -52,15 +52,13 @@ class ExperimentsTableConfigurator extends React.Component {
         ? hiddenLogKeys.concat(event.target.name)
         : hiddenLogKeys.filter((vk) => vk !== event.target.name);
 
-      this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, nextHiddenLogKeys, hiddenArgKeys, isGrouped);
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, nextHiddenLogKeys, hiddenArgKeys, isGrouped);
     } else {
       const nextHiddenArgKeys = !event.target.checked
         ? hiddenArgKeys.concat(event.target.name)
         : hiddenArgKeys.filter((vk) => vk !== event.target.name);
 
-      this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, hiddenLogKeys, nextHiddenArgKeys, isGrouped);
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, hiddenLogKeys, nextHiddenArgKeys, isGrouped);
     }
   }
 
@@ -80,7 +78,7 @@ class ExperimentsTableConfigurator extends React.Component {
     const {
       hiddenLogKeys = [],
       hiddenArgKeys = [],
-      isGrouped = false
+      isGrouped = false,
     } = tableState;
 
     return (
@@ -114,7 +112,9 @@ class ExperimentsTableConfigurator extends React.Component {
                     name={l}
                     checked={!hiddenLogKeys.find((vk) => vk === l)}
                     onChange={(e) => this.handleChange('logKey', e)}
-                  >{l}</Check>
+                  >
+                    {l}
+                  </Check>
                 ))
               }
               <hr />
@@ -127,7 +127,9 @@ class ExperimentsTableConfigurator extends React.Component {
                     name={a}
                     checked={!hiddenArgKeys.find((va) => va === a)}
                     onChange={(e) => this.handleChange('argKey', e)}
-                  >{a}</Check>
+                  >
+                    {a}
+                  </Check>
                 ))
               }
             </Form>
@@ -145,7 +147,7 @@ ExperimentsTableConfigurator.propTypes = {
   project: uiPropTypes.project.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   stats: uiPropTypes.stats.isRequired,
-  onTableColumnsVisibilityUpdate: PropTypes.func.isRequired
+  onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };
 
 export default ExperimentsTableConfigurator;

@@ -21,7 +21,7 @@ import {
   createCommand,
   updateTableExpanded,
   updateTableColumnsVisibility,
-  updateChartDownloadStatus
+  updateChartDownloadStatus,
 } from '../actions';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
@@ -40,9 +40,7 @@ class PlotContainer extends React.Component {
 
     this.props.clearResultList();
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(
-      this.props.getResultList, pollingRate, projectId, logsLimit
-    );
+    this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId, logsLimit);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -54,9 +52,7 @@ class PlotContainer extends React.Component {
 
     if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(
-        this.props.getResultList, nextPollingRate, projectId, nextLogsLimit
-      );
+      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate, projectId, nextLogsLimit);
     }
   }
 
@@ -72,7 +68,7 @@ class PlotContainer extends React.Component {
       fetchState,
       projectConfig,
       globalConfig,
-      stats
+      stats,
     } = this.props;
 
     return (
@@ -153,7 +149,7 @@ const mapStateToProps = (state, ownProps) => {
     entities,
     fetchState,
     status,
-    config
+    config,
   } = state;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId] || { id: projectId };
@@ -170,7 +166,7 @@ const mapStateToProps = (state, ownProps) => {
     projectStatus,
     projectConfig,
     globalConfig,
-    stats
+    stats,
   };
 };
 
@@ -203,7 +199,7 @@ PlotContainer.propTypes = {
   updateAxisScaleRangeNumber: PropTypes.func.isRequired,
   updateTableExpanded: PropTypes.func.isRequired,
   updateTableColumnsVisibility: PropTypes.func.isRequired,
-  updateChartDownloadStatus: PropTypes.func.isRequired
+  updateChartDownloadStatus: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, {
@@ -227,5 +223,5 @@ export default connect(mapStateToProps, {
   updateAxisScaleRangeNumber,
   updateTableExpanded,
   updateTableColumnsVisibility,
-  updateChartDownloadStatus
+  updateChartDownloadStatus,
 })(PlotContainer);

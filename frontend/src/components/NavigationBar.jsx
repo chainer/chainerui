@@ -5,14 +5,16 @@ import {
   Collapse, Navbar, NavbarBrand,
   Popover, PopoverHeader, PopoverBody,
   Form, FormGroup, Label,
-  Button
+  Button,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import Check from './FormControl/Check';
 import Select from './FormControl/Select';
 import PollingStatus from './PollingStatus';
-import { chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION } from '../constants';
+import {
+  chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION,
+} from '../constants';
 
 
 const RESULT_NAME_ALIGN_LEFT = 'result-name-align-left';
@@ -28,14 +30,14 @@ class NavigationBar extends React.Component {
     this.handleChangeLogsLimit = this.handleChangeLogsLimit.bind(this);
     this.handleResultNameAlignmentChange = this.handleResultNameAlignmentChange.bind(this);
     this.state = {
-      settingPopoverOpen: false
+      settingPopoverOpen: false,
     };
   }
 
   toggleSettingPopover() {
-    this.setState({
-      settingPopoverOpen: !this.state.settingPopoverOpen
-    });
+    this.setState((prevState) => ({
+      settingPopoverOpen: !prevState.settingPopoverOpen,
+    }));
   }
 
   handleChangePollingRate(e) {
@@ -63,7 +65,7 @@ class NavigationBar extends React.Component {
       pollingRate,
       chartSize,
       logsLimit,
-      isResultNameAlignRight
+      isResultNameAlignRight,
     } = this.props.globalConfig;
 
     return (
@@ -145,7 +147,12 @@ class NavigationBar extends React.Component {
                 </Check>
               </FormGroup>
             </Form>
-            <p className="my-0"><small>ChainerUI {CHAINERUI_VERSION}</small></p>
+            <p className="my-0">
+              <small>
+                ChainerUI
+                {CHAINERUI_VERSION}
+              </small>
+            </p>
           </PopoverBody>
         </Popover>
       </Navbar>
@@ -160,12 +167,11 @@ NavigationBar.propTypes = {
   onGlobalConfigPollingRateUpdate: PropTypes.func.isRequired,
   onGlobalConfigChartSizeUpdate: PropTypes.func.isRequired,
   onGlobalConfigLogsLimitUpdate: PropTypes.func.isRequired,
-  onGlobalConfigResultNameAlignmentUpdate: PropTypes.func.isRequired
+  onGlobalConfigResultNameAlignmentUpdate: PropTypes.func.isRequired,
 };
 
 NavigationBar.defaultProps = {
-  pollingKey: undefined
+  pollingKey: undefined,
 };
 
 export default NavigationBar;
-

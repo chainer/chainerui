@@ -58,7 +58,7 @@ export const getUrlSafeProjectNameFull = (project = {}) => (
 );
 
 export const isFloat = (value) => (
-  isFinite(value) && !Number.isInteger(value)
+  Number.isFinite(value) && !Number.isInteger(value)
 );
 
 export const formatLogValue = (precision = 4) => (value) => (
@@ -112,20 +112,21 @@ export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
   logKey,
   config: {
     color: lineColorGenerator(resultId, logKey, results, logKeys),
-    isVisible: true
-  }
+    isVisible: true,
+  },
 });
 
 export const sortMethod = (a, b) => {
   const original = [a, b];
-  const isNumber = original.every((o) => isFinite(o) || !isNaN(o) || o === 'NaN');
-  const casted = isNumber ?
-    original.map((o) => Number(o)) :
-    original.map((o) => String(o).toLowerCase());
+  const isNumber = original.every((o) => Number.isFinite(o) || !Number.isNaN(o) || o === 'NaN');
+  const casted = isNumber
+    ? original.map((o) => Number(o))
+    : original.map((o) => String(o).toLowerCase());
 
   if (casted[0] > casted[1]) {
     return 1;
-  } else if (casted[0] < casted[1]) {
+  }
+  if (casted[0] < casted[1]) {
     return -1;
   }
   return 0;
@@ -138,14 +139,14 @@ export const getLogData = (results, stats, projectConfig) => {
   const {
     xAxis = {},
     yLeftAxis = {},
-    yRightAxis = {}
+    yRightAxis = {},
   } = axes || {};
   const { xAxisKey = xAxisKeys[0] } = xAxis;
 
   const selectedResults = getSelectedResults(results, resultsConfig);
   const selectedLogKeys = {
     yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
-    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
+    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig),
   };
 
   const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
@@ -156,8 +157,8 @@ export const getLogData = (results, stats, projectConfig) => {
         return;
       }
       selectedLogKeys[axisName].forEach((logKey) => {
-        const line = lines[line2key({ resultId, logKey })] ||
-              createLine(resultId, logKey, results, logKeys);
+        const line = lines[line2key({ resultId, logKey })]
+              || createLine(resultId, logKey, results, logKeys);
         const logs = result.logs || [];
         logs.forEach((log) => {
           const logDict = {};
@@ -186,20 +187,20 @@ export const getPlotLogData = (results, stats, projectConfig) => {
   const {
     xAxis = {},
     yLeftAxis = {},
-    yRightAxis = {}
+    yRightAxis = {},
   } = axes || {};
   const { xAxisKey = xAxisKeys[0] } = xAxis;
 
   const selectedResults = getSelectedResults(results, resultsConfig);
   const selectedLogKeys = {
     yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
-    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
+    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig),
   };
   const plotConfig = {
     xAxis: xAxisKey,
     yLeftAxis: selectedLogKeys.yLeftAxis,
     yRightAxis: selectedLogKeys.yRightAxis,
-    resultIds: selectedResults
+    resultIds: selectedResults,
   };
 
   const allData = {};
@@ -215,7 +216,7 @@ export const getPlotLogData = (results, stats, projectConfig) => {
     });
     allData[result.id] = {
       log: allLogs,
-      name: result.name || result.pathName
+      name: result.name || result.pathName,
     };
   });
 

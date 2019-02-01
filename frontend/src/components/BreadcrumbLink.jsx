@@ -7,18 +7,20 @@ import TruncatedResultName from './TruncatedResultName';
 import {
   displayProjectName,
   urlForPlot,
-  urlForResultDetail
+  urlForResultDetail,
 } from '../utils';
 
 
 const BreadcrumbLink = (props) => {
   const { globalConfig, project, result } = props;
   const { isResultNameAlignRight } = globalConfig;
-  const items = [(
-    <BreadcrumbItem key="home">
-      <IndexLink to="/">Home</IndexLink>
-    </BreadcrumbItem>
-  )];
+  const items = [
+    (
+      <BreadcrumbItem key="home">
+        <IndexLink to="/">Home</IndexLink>
+      </BreadcrumbItem>
+    ),
+  ];
 
   if (project && project.id) {
     items.push(
@@ -55,12 +57,12 @@ const BreadcrumbLink = (props) => {
 BreadcrumbLink.propTypes = {
   globalConfig: uiPropTypes.globalConfig.isRequired,
   project: uiPropTypes.project,
-  result: uiPropTypes.result
+  result: uiPropTypes.result,
 };
 
 BreadcrumbLink.defaultProps = {
   project: {},
-  result: {}
+  result: {},
 };
 
 export default BreadcrumbLink;

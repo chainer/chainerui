@@ -9,7 +9,7 @@ import {
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateGlobalLogsLimit,
-  updateGlobalResultNameAlignment
+  updateGlobalResultNameAlignment,
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import Projects from '../components/projects/Projects';
@@ -22,7 +22,7 @@ class ProjectsContainer extends React.Component {
 
   render() {
     const {
-      projects, globalConfig, fetchState
+      projects, globalConfig, fetchState,
     } = this.props;
     return (
       <div className="result-detail">
@@ -55,7 +55,7 @@ const mapStateToProps = (state) => {
   const {
     entities,
     fetchState,
-    config
+    config,
   } = state;
   const { projects } = entities;
   const globalConfig = config.global;
@@ -72,7 +72,7 @@ ProjectsContainer.propTypes = {
   updateGlobalPollingRate: PropTypes.func.isRequired,
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
-  updateGlobalResultNameAlignment: PropTypes.func.isRequired
+  updateGlobalResultNameAlignment: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, {
@@ -82,6 +82,5 @@ export default connect(mapStateToProps, {
   updateGlobalPollingRate,
   updateGlobalChartSize,
   updateGlobalLogsLimit,
-  updateGlobalResultNameAlignment
+  updateGlobalResultNameAlignment,
 })(ProjectsContainer);
-

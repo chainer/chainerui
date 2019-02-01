@@ -5,7 +5,7 @@ import { Tooltip } from 'reactstrap';
 import * as uiPropTypes from '../store/uiPropTypes';
 import {
   RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILURE,
-  RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILURE
+  RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILURE,
 } from '../actions';
 
 
@@ -16,14 +16,14 @@ class PollingStatus extends React.Component {
     this.toggleTooltip = this.toggleTooltip.bind(this);
 
     this.state = {
-      isTooltipOpen: false
+      isTooltipOpen: false,
     };
   }
 
   toggleTooltip() {
-    this.setState({
-      isTooltipOpen: !this.state.isTooltipOpen
-    });
+    this.setState((prevState) => ({
+      isTooltipOpen: !prevState.isTooltipOpen,
+    }));
   }
 
   render() {
@@ -80,12 +80,11 @@ class PollingStatus extends React.Component {
 PollingStatus.propTypes = {
   pollingKey: PropTypes.oneOf(['resultList', 'result']),
   fetchState: uiPropTypes.fetchState.isRequired,
-  globalConfig: uiPropTypes.globalConfig.isRequired
+  globalConfig: uiPropTypes.globalConfig.isRequired,
 };
 
 PollingStatus.defaultProps = {
-  pollingKey: undefined
+  pollingKey: undefined,
 };
 
 export default PollingStatus;
-

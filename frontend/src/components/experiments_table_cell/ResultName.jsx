@@ -5,7 +5,7 @@ import { Input } from 'reactstrap';
 import * as uiPropTypes from '../../store/uiPropTypes';
 import {
   getRelativeResultPathName,
-  displayResultNameFull
+  displayResultNameFull,
 } from '../../utils';
 
 class ResultName extends React.Component {
@@ -18,14 +18,14 @@ class ResultName extends React.Component {
 
     const { result } = this.props;
     this.state = {
-      resultName: result.name
+      resultName: result.name,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.result.id !== nextProps.result.id) {
       this.setState({
-        resultName: nextProps.result.name
+        resultName: nextProps.result.name,
       });
     }
   }
@@ -36,7 +36,7 @@ class ResultName extends React.Component {
 
   handleResultNameChange(e) {
     this.setState({
-      resultName: e.target.value
+      resultName: e.target.value,
     });
   }
 
@@ -77,7 +77,7 @@ ResultName.propTypes = {
   project: uiPropTypes.project.isRequired,
   result: uiPropTypes.result.isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired,
-  onResultUpdate: PropTypes.func.isRequired
+  onResultUpdate: PropTypes.func.isRequired,
 };
 
 export default ResultName;

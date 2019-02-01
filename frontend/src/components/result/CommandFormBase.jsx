@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Form,
-  Modal, ModalHeader, ModalBody, ModalFooter
+  Modal, ModalHeader, ModalBody, ModalFooter,
 } from 'reactstrap';
 import { SCHEDULE_NOW, SCHEDULE_CUSTOM } from '../../constants';
 import CommandScheduleForm from './CommandScheduleForm';
@@ -13,9 +13,9 @@ const initialState = {
   scheduleType: SCHEDULE_NOW,
   schedule: {
     value: 0,
-    key: 'epoch'
+    key: 'epoch',
   },
-  showConfirmationModal: false
+  showConfirmationModal: false,
 };
 
 class CommandFormBase extends React.Component {
@@ -34,20 +34,20 @@ class CommandFormBase extends React.Component {
 
   openConfirmationModal() {
     this.setState({
-      showConfirmationModal: true
+      showConfirmationModal: true,
     });
   }
 
   closeConfirmationModal() {
     this.setState({
-      showConfirmationModal: false
+      showConfirmationModal: false,
     });
   }
 
   submitCommand() {
     const {
       onSubmit,
-      freezeTime
+      freezeTime,
     } = this.props;
     const { scheduleType } = this.state;
     const schedule = (scheduleType === SCHEDULE_CUSTOM) ? this.state.schedule : null;
@@ -81,8 +81,12 @@ class CommandFormBase extends React.Component {
   }
 
   render() {
-    const { disabled, schedule, scheduleType, showConfirmationModal } = this.state;
-    const { title, buttonLabel, children, confirmationMessage } = this.props;
+    const {
+      disabled, schedule, scheduleType, showConfirmationModal,
+    } = this.state;
+    const {
+      title, buttonLabel, children, confirmationMessage,
+    } = this.props;
     const confirmationTitle = this.props.confirmationTitle || title;
     return (
       <div className="card">
@@ -132,8 +136,8 @@ CommandFormBase.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ])
+    PropTypes.node,
+  ]),
 };
 
 CommandFormBase.defaultProps = {
@@ -141,8 +145,7 @@ CommandFormBase.defaultProps = {
   confirmationTitle: '',
   confirmationMessage: 'Are you sure to submit this command?',
   freezeTime: 1000,
-  children: null
+  children: null,
 };
 
 export default CommandFormBase;
-

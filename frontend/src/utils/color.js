@@ -19,7 +19,7 @@ export const rgbFromHSV = ({ h, s, v }) => {
   return {
     r: Math.round(r * 255),
     g: Math.round(g * 255),
-    b: Math.round(b * 255)
+    b: Math.round(b * 255),
   };
 };
 
@@ -34,8 +34,7 @@ export const lineColorGenerator = (resultId, logKey, results = {}, logKeys = [])
   const hsv = {
     h: resultIdx / Math.max(1, resultIds.length),
     s: 0.75,
-    v: ((logKeyIdx / Math.max(1, logKeys.length)) * 0.5) + 0.5
+    v: ((logKeyIdx / Math.max(1, logKeys.length)) * 0.5) + 0.5,
   };
   return hexFromRGB(rgbFromHSV(hsv));
 };
-
