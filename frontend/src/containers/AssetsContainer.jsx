@@ -43,7 +43,7 @@ class AssetsContainer extends React.Component {
       assetsTableState = {},
     } = resultConfig;
     return (
-      <div>
+      <div className="chainerui-container">
         <NavigationBar
           fetchState={fetchState}
           globalConfig={globalConfig}

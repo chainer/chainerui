@@ -25,7 +25,7 @@ class ProjectsContainer extends React.Component {
       projects, globalConfig, fetchState,
     } = this.props;
     return (
-      <div className="result-detail">
+      <div className="chainerui-container">
         <NavigationBar
           fetchState={fetchState}
           globalConfig={globalConfig}

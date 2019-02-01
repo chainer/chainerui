@@ -52,7 +52,7 @@ class ResultDetail extends React.Component {
       projectId, project, result, globalConfig, fetchState,
     } = this.props;
     return (
-      <div className="result-detail">
+      <div className="chainerui-container">
         <NavigationBar
           pollingKey="result"
           fetchState={fetchState}
