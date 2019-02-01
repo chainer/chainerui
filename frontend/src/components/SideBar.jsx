@@ -22,9 +22,9 @@ class SideBar extends React.Component {
   }
 
   handleModalToggle() {
-    this.setState({
-      showModal: !this.state.showModal,
-    });
+    this.setState((prevState) => ({
+      showModal: !prevState.showModal,
+    }));
   }
 
   handleConfigReset() {

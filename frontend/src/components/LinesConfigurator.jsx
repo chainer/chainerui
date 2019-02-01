@@ -76,9 +76,9 @@ class LinesConfigurator extends React.Component {
   }
 
   toggleLinesConfig() {
-    this.setState({
-      showLinesConfig: !this.state.showLinesConfig,
-    });
+    this.setState((prevState) => ({
+      showLinesConfig: !prevState.showLinesConfig,
+    }));
   }
 
   render() {

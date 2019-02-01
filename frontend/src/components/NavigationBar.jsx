@@ -35,9 +35,9 @@ class NavigationBar extends React.Component {
   }
 
   toggleSettingPopover() {
-    this.setState({
-      settingPopoverOpen: !this.state.settingPopoverOpen,
-    });
+    this.setState((prevState) => ({
+      settingPopoverOpen: !prevState.settingPopoverOpen,
+    }));
   }
 
   handleChangePollingRate(e) {

@@ -21,9 +21,9 @@ class PollingStatus extends React.Component {
   }
 
   toggleTooltip() {
-    this.setState({
-      isTooltipOpen: !this.state.isTooltipOpen,
-    });
+    this.setState((prevState) => ({
+      isTooltipOpen: !prevState.isTooltipOpen,
+    }));
   }
 
   render() {

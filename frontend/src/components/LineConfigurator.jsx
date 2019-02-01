@@ -26,11 +26,15 @@ class LineConfigurator extends React.Component {
     this.handleResetColorClick = this.handleResetColorClick.bind(this);
     this.togglePicker = this.togglePicker.bind(this);
 
-    this.state = { colorPickerCollapse: false };
+    this.state = {
+      colorPickerCollapse: false,
+    };
   }
 
   togglePicker() {
-    this.setState({ colorPickerCollapse: !this.state.colorPickerCollapse });
+    this.setState((prevState) => ({
+      colorPickerCollapse: !prevState.colorPickerCollapse,
+    }));
   }
 
   handleResultChange(e) {

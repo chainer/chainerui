@@ -80,9 +80,9 @@ class ProjectRow extends React.Component {
   }
 
   toggleDeleteModal() {
-    this.setState({
-      isDeleteModalOpen: !this.state.isDeleteModalOpen,
-    });
+    this.setState((prevState) => ({
+      isDeleteModalOpen: !prevState.isDeleteModalOpen,
+    }));
   }
 
   render() {

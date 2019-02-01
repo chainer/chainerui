@@ -25,9 +25,9 @@ class AxisConfigurator extends React.Component {
   }
 
   toggleRangeConfig() {
-    this.setState({
-      showRangeConfig: !this.state.showRangeConfig,
-    });
+    this.setState((prevState) => ({
+      showRangeConfig: !prevState.showRangeConfig,
+    }));
   }
 
   render() {

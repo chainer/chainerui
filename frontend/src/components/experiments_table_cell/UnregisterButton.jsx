@@ -30,9 +30,9 @@ class UnregisterButton extends React.Component {
   }
 
   toggleUnregisterModal() {
-    this.setState({
-      showUnregisterModal: !this.state.showUnregisterModal,
-    });
+    this.setState((prevState) => ({
+      showUnregisterModal: !prevState.showUnregisterModal,
+    }));
   }
 
   render() {
