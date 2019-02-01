@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Input, FormGroup } from 'reactstrap';
+import {
+  Row, Col, Input, FormGroup,
+} from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import TruncatedResultName from './TruncatedResultName';
@@ -17,7 +19,9 @@ class LogVisualizerLegendItem extends React.Component {
   }
 
   handleLineVisibilityUpdate(e) {
-    const { project, axisName, line, onAxisConfigLineUpdate } = this.props;
+    const {
+      project, axisName, line, onAxisConfigLineUpdate,
+    } = this.props;
     const { config } = line;
     const { checked } = e.target;
     const newLine = {

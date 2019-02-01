@@ -21,7 +21,9 @@ class UnregisterButton extends React.Component {
   }
 
   handleUnregister() {
-    const { project, result, onResultUpdate, onResultUnregistered } = this.props;
+    const {
+      project, result, onResultUpdate, onResultUnregistered,
+    } = this.props;
     onResultUpdate(project.id, { ...result, isUnregistered: true });
     onResultUnregistered();
     this.toggleUnregisterModal();

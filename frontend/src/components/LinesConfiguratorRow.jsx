@@ -39,7 +39,9 @@ class LinesConfiguratorRow extends React.Component {
   }
 
   render() {
-    const { line, project, result, isResultNameAlignRight } = this.props;
+    const {
+      line, project, result, isResultNameAlignRight,
+    } = this.props;
     const { config = {} } = line;
     const { color, isVisible } = config;
 

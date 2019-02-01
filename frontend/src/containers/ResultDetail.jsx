@@ -116,7 +116,9 @@ const mapStateToProps = (state, ownProps) => {
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId];
   const result = results[resultId];
-  return { projectId, resultId, project, result, fetchState, globalConfig };
+  return {
+    projectId, resultId, project, result, fetchState, globalConfig,
+  };
 };
 
 ResultDetail.propTypes = {

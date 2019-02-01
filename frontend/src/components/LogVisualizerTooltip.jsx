@@ -27,7 +27,9 @@ LogVisualizerTooltipItem.propTypes = {
 
 
 const LogVisualizerTooltip = (props) => {
-  const { xAxisKey, label, payload, anySelected } = props;
+  const {
+    xAxisKey, label, payload, anySelected,
+  } = props;
 
   if (!payload || payload.length === 0) {
     return null;

@@ -6,7 +6,9 @@ import Select from './FormControl/Select';
 
 
 const XAxisKeySelector = (props) => {
-  const { projectId, stats, value, onChange } = props;
+  const {
+    projectId, stats, value, onChange,
+  } = props;
   const { xAxisKeys } = stats;
   const handleChangeXAxisKey = (e) => {
     onChange(projectId, e.target.value);

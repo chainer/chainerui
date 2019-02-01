@@ -12,7 +12,9 @@ import * as uiPropTypes from '../store/uiPropTypes';
 import Check from './FormControl/Check';
 import Select from './FormControl/Select';
 import PollingStatus from './PollingStatus';
-import { chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION } from '../constants';
+import {
+  chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION,
+} from '../constants';
 
 
 const RESULT_NAME_ALIGN_LEFT = 'result-name-align-left';

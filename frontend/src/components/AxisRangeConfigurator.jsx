@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Col, Input } from 'reactstrap';
+import {
+  Form, FormGroup, Col, Input,
+} from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import Check from './FormControl/Check';

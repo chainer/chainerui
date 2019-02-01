@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Label, Collapse, Button, Col } from 'reactstrap';
+import {
+  Form, FormGroup, Label, Collapse, Button, Col,
+} from 'reactstrap';
 import { ChromePicker, GithubPicker } from 'react-color';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -70,7 +72,9 @@ class LineConfigurator extends React.Component {
   }
 
   handleResetColorClick() {
-    const { line, results, stats, onChange } = this.props;
+    const {
+      line, results, stats, onChange,
+    } = this.props;
     const { config } = line;
     const { logKeys } = stats;
     onChange({
@@ -83,7 +87,9 @@ class LineConfigurator extends React.Component {
   }
 
   render() {
-    const { project, results, line, isResultNameAlignRight } = this.props;
+    const {
+      project, results, line, isResultNameAlignRight,
+    } = this.props;
     const { resultId = RESULT_NONE, logKey = LOG_KEY_NONE, config = {} } = line;
     const result = results[resultId] || {};
     const { color, isVisible } = config;

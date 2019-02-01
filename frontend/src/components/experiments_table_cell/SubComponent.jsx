@@ -13,7 +13,9 @@ import {
 
 
 const SubComponent = (props) => {
-  const { original, project, onResultUpdate, onResultUnregistered, onCommandSubmit } = props;
+  const {
+    original, project, onResultUpdate, onResultUnregistered, onCommandSubmit,
+  } = props;
   const { id } = original;
   const style = {
     padding: '1rem',

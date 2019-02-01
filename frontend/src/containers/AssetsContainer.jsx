@@ -77,7 +77,9 @@ const mapStateToProps = (state, ownProps) => {
   const globalConfig = config.global;
   const projectConfig = config.projectsConfig[projectId] || {};
   const resultConfig = projectConfig.resultsConfig[resultId] || {};
-  return { projectId, resultId, assets, fetchState, globalConfig, resultConfig };
+  return {
+    projectId, resultId, assets, fetchState, globalConfig, resultConfig,
+  };
 };
 
 AssetsContainer.propTypes = {

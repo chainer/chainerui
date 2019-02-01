@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Collapse, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {
+  Button, Collapse, Modal, ModalHeader, ModalBody, ModalFooter,
+} from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
-import { line2key, getSelectedResults, getSelectedLogKeys, createLine } from '../utils';
+import {
+  line2key, getSelectedResults, getSelectedLogKeys, createLine,
+} from '../utils';
 import LinesConfiguratorRow from './LinesConfiguratorRow';
 import LineConfigurator from './LineConfigurator';
 
@@ -78,7 +82,9 @@ class LinesConfigurator extends React.Component {
   }
 
   render() {
-    const { axisName, project, results, stats, projectConfig, globalConfig } = this.props;
+    const {
+      axisName, project, results, stats, projectConfig, globalConfig,
+    } = this.props;
     const { editingLine } = this.state;
     const { logKeys = [] } = stats;
     const { axes = {}, resultsConfig = {}, lines = {} } = projectConfig;

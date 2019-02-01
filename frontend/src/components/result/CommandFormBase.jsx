@@ -81,8 +81,12 @@ class CommandFormBase extends React.Component {
   }
 
   render() {
-    const { disabled, schedule, scheduleType, showConfirmationModal } = this.state;
-    const { title, buttonLabel, children, confirmationMessage } = this.props;
+    const {
+      disabled, schedule, scheduleType, showConfirmationModal,
+    } = this.state;
+    const {
+      title, buttonLabel, children, confirmationMessage,
+    } = this.props;
     const confirmationTitle = this.props.confirmationTitle || title;
     return (
       <div className="card">

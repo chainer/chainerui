@@ -39,7 +39,9 @@ const createCommandRowElems = (commands) => commands.sort((a, b) => b.id - a.id)
 });
 
 const Commands = (props) => {
-  const { projectId, resultId, commands, onCommandSubmit } = props;
+  const {
+    projectId, resultId, commands, onCommandSubmit,
+  } = props;
   return (
     <div className="card">
       <div className="card-header">Commands</div>

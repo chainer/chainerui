@@ -42,7 +42,9 @@ class LogVisualizer extends React.Component {
   }
 
   handleClickDownloadCode() {
-    const { project, results, stats, projectConfig } = this.props;
+    const {
+      project, results, stats, projectConfig,
+    } = this.props;
     const data = getPlotLogData(results, stats, projectConfig);
     const exportName = getUrlSafeProjectNameFull(project);
     downloadObjectAsCode(data, exportName);

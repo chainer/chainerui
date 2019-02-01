@@ -4,7 +4,9 @@ import { persistReducer } from 'redux-persist';
 import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
-import { chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, CHART_DOWNLOAD_STATUS, keyOptions } from '../constants';
+import {
+  chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, CHART_DOWNLOAD_STATUS, keyOptions,
+} from '../constants';
 
 
 const updatePartialState = (state, action, keyId, fn) => {
@@ -477,7 +479,9 @@ const defaultGlobalState = {
 };
 
 const globalConfigReducer = (state = defaultGlobalState, action) => {
-  const { pollingRate, chartSize, logsLimit, isResultNameAlignRight } = action;
+  const {
+    pollingRate, chartSize, logsLimit, isResultNameAlignRight,
+  } = action;
   switch (action.type) {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
       return {

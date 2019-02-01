@@ -25,7 +25,6 @@ rules:
   max-len: off
 
   no-restricted-globals: off
-  object-curly-newline: off
   jsx-a11y/anchor-is-valid: off
   jsx-a11y/media-has-caption: off
   react/jsx-closing-tag-location: off
