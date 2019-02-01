@@ -27,7 +27,6 @@ rules:
   jsx-a11y/anchor-is-valid: off
   jsx-a11y/media-has-caption: off
 
-  implicit-arrow-linebreak: off
   no-multiple-empty-lines: off
   operator-linebreak: off
   react/destructuring-assignment: off

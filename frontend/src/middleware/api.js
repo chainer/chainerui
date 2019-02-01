@@ -16,13 +16,12 @@ const callApi = (endpoint, method = 'GET', body) => {
   }
 
   return fetch(fullUrl, options)
-    .then((response) =>
-      response.json().then((json) => {
-        if (!response.ok) {
-          return Promise.reject(json);
-        }
-        return json;
-      }));
+    .then((response) => response.json().then((json) => {
+      if (!response.ok) {
+        return Promise.reject(json);
+      }
+      return json;
+    }));
 };
 
 export const CALL_API = 'Call API';
