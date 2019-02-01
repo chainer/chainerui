@@ -45,15 +45,13 @@ class TableConfigurator extends React.Component {
         ? primaryHiddenKeys.concat(event.target.name)
         : primaryHiddenKeys.filter((vk) => vk !== event.target.name);
 
-      this.props.onTableColumnsVisibilityUpdate(
-        nextHiddenPrimaryKeys, secondaryHiddenKeys);
+      this.props.onTableColumnsVisibilityUpdate(nextHiddenPrimaryKeys, secondaryHiddenKeys);
     } else {
       const nextHiddenSecondaryKeys = !event.target.checked
         ? secondaryHiddenKeys.concat(event.target.name)
         : secondaryHiddenKeys.filter((vk) => vk !== event.target.name);
 
-      this.props.onTableColumnsVisibilityUpdate(
-        primaryHiddenKeys, nextHiddenSecondaryKeys);
+      this.props.onTableColumnsVisibilityUpdate(primaryHiddenKeys, nextHiddenSecondaryKeys);
     }
   }
 
@@ -107,12 +105,10 @@ class TableConfigurator extends React.Component {
 }
 
 TableConfigurator.propTypes = {
-  columnHeaders: PropTypes.arrayOf(
-    PropTypes.shape({
-      Header: PropTypes.string.isRequired,
-      columns: PropTypes.array.isRequired,
-    })
-  ).isRequired,
+  columnHeaders: PropTypes.arrayOf(PropTypes.shape({
+    Header: PropTypes.string.isRequired,
+    columns: PropTypes.array.isRequired,
+  })).isRequired,
   hiddenKeysForEveryHeader: PropTypes.arrayOf(
     PropTypes.array.isRequired,
     PropTypes.array.isRequired

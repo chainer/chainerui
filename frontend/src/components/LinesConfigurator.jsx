@@ -97,17 +97,15 @@ class LinesConfigurator extends React.Component {
       selectedLogKeys.forEach((logKey) => {
         const line = lines[line2key({ resultId, logKey })] ||
           createLine(resultId, logKey, results, logKeys);
-        lineConfiguratorElems.push(
-          <LinesConfiguratorRow
-            line={line}
-            project={project}
-            result={result}
-            isResultNameAlignRight={isResultNameAlignRight}
-            onEditClick={this.handleModalOpen}
-            onVisibilityUpdate={this.handleLineVisibilityUpdate}
-            key={line2key(line)}
-          />
-        );
+        lineConfiguratorElems.push(<LinesConfiguratorRow
+          line={line}
+          project={project}
+          result={result}
+          isResultNameAlignRight={isResultNameAlignRight}
+          onEditClick={this.handleModalOpen}
+          onVisibilityUpdate={this.handleLineVisibilityUpdate}
+          key={line2key(line)}
+        />);
       });
     });
 

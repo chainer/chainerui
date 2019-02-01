@@ -137,9 +137,7 @@ export const COMMAND_CREATE_REQUEST = 'COMMAND_CREATE_REQUEST';
 export const COMMAND_CREATE_SUCCESS = 'COMMAND_CREATE_SUCCESS';
 export const COMMAND_CREATE_FAILURE = 'COMMAND_CREATE_FAILURE';
 
-export const createCommand = (
-  projectId, resultId, commandName, requestBody = null, schedule = null
-) => {
+export const createCommand = (projectId, resultId, commandName, requestBody = null, schedule = null) => {
   if (!Number.isInteger(resultId)) {
     throw new Error('Result id is invalid.');
   }
@@ -257,9 +255,7 @@ export const updateTableExpanded = (projectId, expanded) => ({
 });
 
 export const TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
-export const updateTableColumnsVisibility = (
-  projectId, hiddenLogKeys, hiddenArgKeys, isGrouped
-) => ({
+export const updateTableColumnsVisibility = (projectId, hiddenLogKeys, hiddenArgKeys, isGrouped) => ({
   type: TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
   projectId,
   hiddenLogKeys,
@@ -268,9 +264,7 @@ export const updateTableColumnsVisibility = (
 });
 
 export const ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
-export const updateAssetsTableColumnsVisibility = (
-  projectId, resultId, hiddenTrainInfoKeys, hiddenContentsKeys
-) => ({
+export const updateAssetsTableColumnsVisibility = (projectId, resultId, hiddenTrainInfoKeys, hiddenContentsKeys) => ({
   type: ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
   projectId,
   resultId,

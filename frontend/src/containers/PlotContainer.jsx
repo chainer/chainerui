@@ -40,9 +40,7 @@ class PlotContainer extends React.Component {
 
     this.props.clearResultList();
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(
-      this.props.getResultList, pollingRate, projectId, logsLimit
-    );
+    this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId, logsLimit);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -54,9 +52,7 @@ class PlotContainer extends React.Component {
 
     if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(
-        this.props.getResultList, nextPollingRate, projectId, nextLogsLimit
-      );
+      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate, projectId, nextLogsLimit);
     }
   }
 

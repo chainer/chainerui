@@ -52,15 +52,13 @@ class ExperimentsTableConfigurator extends React.Component {
         ? hiddenLogKeys.concat(event.target.name)
         : hiddenLogKeys.filter((vk) => vk !== event.target.name);
 
-      this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, nextHiddenLogKeys, hiddenArgKeys, isGrouped);
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, nextHiddenLogKeys, hiddenArgKeys, isGrouped);
     } else {
       const nextHiddenArgKeys = !event.target.checked
         ? hiddenArgKeys.concat(event.target.name)
         : hiddenArgKeys.filter((vk) => vk !== event.target.name);
 
-      this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, hiddenLogKeys, nextHiddenArgKeys, isGrouped);
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, hiddenLogKeys, nextHiddenArgKeys, isGrouped);
     }
   }
 

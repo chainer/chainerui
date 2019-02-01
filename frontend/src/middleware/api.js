@@ -22,8 +22,7 @@ const callApi = (endpoint, method = 'GET', body) => {
           return Promise.reject(json);
         }
         return json;
-      })
-    );
+      }));
 };
 
 export const CALL_API = 'Call API';

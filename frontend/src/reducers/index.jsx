@@ -459,9 +459,7 @@ const projectsConfigReducer = (state = {}, action) => {
   if (projectId) {
     switch (action.type) {
       case ActionTypes.PROJECT_CONFIG_RESET:
-        return updatePartialState(
-          state, action, projectId, () => projectConfigReducer(undefined, action)
-        );
+        return updatePartialState(state, action, projectId, () => projectConfigReducer(undefined, action));
       default:
         return updatePartialState(state, action, projectId, projectConfigReducer);
     }

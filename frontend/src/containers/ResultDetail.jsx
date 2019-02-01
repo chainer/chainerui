@@ -27,9 +27,7 @@ class ResultDetail extends React.Component {
     const { projectId, resultId, globalConfig } = this.props;
     const { pollingRate, logsLimit } = globalConfig;
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(
-      this.props.getResult, pollingRate, projectId, resultId, logsLimit
-    );
+    this.resultsPollingTimer = startPolling(this.props.getResult, pollingRate, projectId, resultId, logsLimit);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -41,9 +39,7 @@ class ResultDetail extends React.Component {
 
     if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(
-        this.props.getResult, nextPollingRate, projectId, resultId, nextLogsLimit
-      );
+      this.resultsPollingTimer = startPolling(this.props.getResult, nextPollingRate, projectId, resultId, nextLogsLimit);
     }
   }
 

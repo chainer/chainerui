@@ -92,8 +92,7 @@ const ExperimentsTable = (props) => {
           const { _original } = r;
           return _original.id;
         });
-        const groupedVisibleResultCount = groupedResultKeys.filter(
-          (resultId) => !(resultsConfig[resultId] || {}).hidden).length;
+        const groupedVisibleResultCount = groupedResultKeys.filter((resultId) => !(resultsConfig[resultId] || {}).hidden).length;
         const isGroupedPartialSelect = groupedVisibleResultCount > 0 &&
           visibleResultCount < groupedResultKeys.length;
         return <VisibilityCheckbox

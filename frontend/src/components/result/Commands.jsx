@@ -8,10 +8,8 @@ import StopForm from './StopForm';
 import HyperparamsAdjustForm from './HyperparamsAdjustFrom';
 
 
-const createCommandRowElems = (commands) => commands.sort((a, b) =>
-  // sort commands in decending order
-  b.id - a.id
-).map((command) => {
+// sort commands in decending order
+const createCommandRowElems = (commands) => commands.sort((a, b) => b.id - a.id).map((command) => {
   const request = command.request || {};
   const response = command.response || {};
   const { schedule } = request;

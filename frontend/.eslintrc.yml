@@ -22,8 +22,8 @@ rules:
       imports: always-multiline
       exports: always-multiline
       functions: never
+  max-len: off
 
-  function-paren-newline: off
   no-restricted-globals: off
   object-curly-newline: off
   jsx-a11y/anchor-is-valid: off

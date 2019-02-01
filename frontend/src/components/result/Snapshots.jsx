@@ -5,12 +5,11 @@ import * as uiPropTypes from '../../store/uiPropTypes';
 
 const createSnapshotRowElems = (snapshots) => snapshots.sort((a, b) =>
   // sort snapshots by their iteration
-  a.iteration - b.iteration
-).map((snapshot) => (
-  <tr className="command-row" key={snapshot.id}>
-    <td>{snapshot.iteration}</td>
-    <td>{snapshot.name}</td>
-  </tr>
+  a.iteration - b.iteration).map((snapshot) => (
+    <tr className="command-row" key={snapshot.id}>
+      <td>{snapshot.iteration}</td>
+      <td>{snapshot.name}</td>
+    </tr>
 ));
 
 const Snapshots = (props) => {

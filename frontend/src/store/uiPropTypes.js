@@ -99,9 +99,7 @@ export const globalConfig = PropTypes.shape({
 });
 
 export const tableState = PropTypes.shape({
-  hiddenKeysForEveryHeader: PropTypes.arrayOf(
-    PropTypes.any
-  ),
+  hiddenKeysForEveryHeader: PropTypes.arrayOf(PropTypes.any),
 });
 
 export const resultConfig = PropTypes.shape({

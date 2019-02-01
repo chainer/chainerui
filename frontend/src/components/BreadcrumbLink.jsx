@@ -21,28 +21,24 @@ const BreadcrumbLink = (props) => {
   )];
 
   if (project && project.id) {
-    items.push(
-      <BreadcrumbItem key="plot">
-        <Link to={urlForPlot(project.id)}>
-          {displayProjectName(project)}
-        </Link>
-      </BreadcrumbItem>
-    );
+    items.push(<BreadcrumbItem key="plot">
+      <Link to={urlForPlot(project.id)}>
+        {displayProjectName(project)}
+      </Link>
+    </BreadcrumbItem>);
   }
 
   if (result && result.id) {
-    items.push(
-      <BreadcrumbItem key="resultDetail">
-        <Link to={urlForResultDetail(project.id, result.id)}>
-          <TruncatedResultName
-            project={project}
-            result={result}
-            isResultNameAlignRight={isResultNameAlignRight}
-            style={{ display: 'inline-block', width: '10em' }}
-          />
-        </Link>
-      </BreadcrumbItem>
-    );
+    items.push(<BreadcrumbItem key="resultDetail">
+      <Link to={urlForResultDetail(project.id, result.id)}>
+        <TruncatedResultName
+          project={project}
+          result={result}
+          isResultNameAlignRight={isResultNameAlignRight}
+          style={{ display: 'inline-block', width: '10em' }}
+        />
+      </Link>
+    </BreadcrumbItem>);
   }
 
   return (
