@@ -23,7 +23,7 @@ class LinesConfigurator extends React.Component {
     this.state = {
       showModal: false,
       showLinesConfig: false,
-      editingLine: undefined
+      editingLine: undefined,
     };
   }
 
@@ -39,19 +39,19 @@ class LinesConfigurator extends React.Component {
     this.setState({
       showModal: true,
       targetLineKey: line2key(line),
-      editingLine: line
+      editingLine: line,
     });
   }
 
   handleModalClose() {
     this.setState({
-      showModal: false
+      showModal: false,
     });
   }
 
   handleEditingLineChange(newLine) {
     this.setState({
-      editingLine: newLine
+      editingLine: newLine,
     });
   }
 
@@ -59,7 +59,7 @@ class LinesConfigurator extends React.Component {
     const {
       project,
       axisName,
-      onAxisConfigLineUpdate
+      onAxisConfigLineUpdate,
     } = this.props;
     const { targetLineKey, editingLine } = this.state;
     onAxisConfigLineUpdate(project.id, axisName, targetLineKey, editingLine);
@@ -73,7 +73,7 @@ class LinesConfigurator extends React.Component {
 
   toggleLinesConfig() {
     this.setState({
-      showLinesConfig: !this.state.showLinesConfig
+      showLinesConfig: !this.state.showLinesConfig,
     });
   }
 
@@ -154,7 +154,7 @@ LinesConfigurator.propTypes = {
   stats: uiPropTypes.stats.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
-  onAxisConfigLineUpdate: PropTypes.func.isRequired
+  onAxisConfigLineUpdate: PropTypes.func.isRequired,
 };
 
 export default LinesConfigurator;

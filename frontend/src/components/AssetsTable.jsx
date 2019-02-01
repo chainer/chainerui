@@ -27,7 +27,7 @@ const AssetsTable = (props) => {
     show: hiddenKeysForEveryHeader.length === 0 ?
       true
       :
-      !hiddenKeysForEveryHeader[0].find((hk) => hk === k)
+      !hiddenKeysForEveryHeader[0].find((hk) => hk === k),
   }));
 
   const contentColumns = uniqueContentKeys.map((k) => ({
@@ -63,23 +63,23 @@ const AssetsTable = (props) => {
     show: hiddenKeysForEveryHeader.length === 0 ?
       true
       :
-      !hiddenKeysForEveryHeader[1].find((hk) => hk === k)
+      !hiddenKeysForEveryHeader[1].find((hk) => hk === k),
   }));
 
   const columns = [
     {
       Header: 'Train Info',
-      columns: trainInfoColumns
+      columns: trainInfoColumns,
     },
     {
       Header: 'Contents',
-      columns: contentColumns
-    }
+      columns: contentColumns,
+    },
   ];
 
   const columnHeaders = columns.map((c) => ({
     Header: c.Header,
-    columns: c.columns.map((sc) => sc.Header)
+    columns: c.columns.map((sc) => sc.Header),
   }));
 
   return (
@@ -104,7 +104,7 @@ const AssetsTable = (props) => {
 AssetsTable.propTypes = {
   assets: uiPropTypes.assets.isRequired,
   tableState: uiPropTypes.tableState.isRequired,
-  onAssetsTableColumnsVisibilityUpdate: PropTypes.func.isRequired
+  onAssetsTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };
 
 export default AssetsTable;

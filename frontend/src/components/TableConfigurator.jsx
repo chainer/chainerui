@@ -6,7 +6,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Form
+  Form,
 } from 'reactstrap';
 
 import Check from './FormControl/Check';
@@ -19,19 +19,19 @@ class TableConfigurator extends React.Component {
     this.handleChange = this.handleChange.bind(this);
 
     this.state = {
-      showModal: false
+      showModal: false,
     };
   }
 
   handleModalShow() {
     this.setState({
-      showModal: true
+      showModal: true,
     });
   }
 
   handleModalHide() {
     this.setState({
-      showModal: false
+      showModal: false,
     });
   }
 
@@ -110,14 +110,14 @@ TableConfigurator.propTypes = {
   columnHeaders: PropTypes.arrayOf(
     PropTypes.shape({
       Header: PropTypes.string.isRequired,
-      columns: PropTypes.array.isRequired
+      columns: PropTypes.array.isRequired,
     })
   ).isRequired,
   hiddenKeysForEveryHeader: PropTypes.arrayOf(
     PropTypes.array.isRequired,
     PropTypes.array.isRequired
   ).isRequired,
-  onTableColumnsVisibilityUpdate: PropTypes.func.isRequired
+  onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };
 
 export default TableConfigurator;

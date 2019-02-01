@@ -33,8 +33,8 @@ class LinesConfiguratorRow extends React.Component {
       ...line,
       config: {
         ...config,
-        isVisible: checked
-      }
+        isVisible: checked,
+      },
     });
   }
 
@@ -81,7 +81,7 @@ LinesConfiguratorRow.propTypes = {
   result: uiPropTypes.result.isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired,
   onEditClick: PropTypes.func.isRequired,
-  onVisibilityUpdate: PropTypes.func.isRequired
+  onVisibilityUpdate: PropTypes.func.isRequired,
 };
 
 export default LinesConfiguratorRow;

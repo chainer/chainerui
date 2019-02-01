@@ -13,14 +13,14 @@ Select.propTypes = {
   options: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     name: PropTypes.string.isRequired,
-    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   })),
-  values: PropTypes.arrayOf(PropTypes.string)
+  values: PropTypes.arrayOf(PropTypes.string),
 };
 
 Select.defaultProps = {
   options: [],
-  values: []
+  values: [],
 };
 
 export default Select;

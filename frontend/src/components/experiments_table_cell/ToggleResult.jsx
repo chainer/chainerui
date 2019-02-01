@@ -31,13 +31,13 @@ ToggleResult.propTypes = {
   project: uiPropTypes.project.isRequired,
   result: uiPropTypes.result.isRequired,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
-  resultConfig: uiPropTypes.resultConfig
+  resultConfig: uiPropTypes.resultConfig,
 };
 
 ToggleResult.defaultProps = {
   resultConfig: {
-    hidden: false
-  }
+    hidden: false,
+  },
 };
 
 export default ToggleResult;

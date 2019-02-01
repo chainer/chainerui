@@ -8,7 +8,7 @@ import {
   getPlotLogData,
   getUrlSafeProjectNameFull,
   downloadObjectAsCode,
-  downloadChartAsPng
+  downloadChartAsPng,
 } from '../utils';
 import { CHART_DOWNLOAD_STATUS } from '../constants';
 import LogVisualizerChart from './LogVisualizerChart';
@@ -64,7 +64,7 @@ class LogVisualizer extends React.Component {
       globalConfig,
       onResultSelect,
       onAxisConfigLineUpdate,
-      stats
+      stats,
     } = this.props;
     const { resultsStatus = {} } = projectStatus;
 
@@ -122,7 +122,7 @@ LogVisualizer.propTypes = {
   globalConfig: uiPropTypes.globalConfig.isRequired,
   onChartDownloadStatusUpdate: PropTypes.func.isRequired,
   onResultSelect: PropTypes.func.isRequired,
-  onAxisConfigLineUpdate: PropTypes.func.isRequired
+  onAxisConfigLineUpdate: PropTypes.func.isRequired,
 };
 
 export default LogVisualizer;

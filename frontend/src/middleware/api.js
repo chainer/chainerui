@@ -8,8 +8,8 @@ const callApi = (endpoint, method = 'GET', body) => {
   const options = {
     method,
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
   if (body !== null) {
     options.body = JSON.stringify(body);
@@ -59,12 +59,12 @@ export default (store) => (next) => (action) => {
       response,
       type: successType,
       endpoint,
-      body
+      body,
     })),
     failure: (error) => (actionWith({
       type: failureType,
-      error: error.message || 'Something bad happened'
-    }))
+      error: error.message || 'Something bad happened',
+    })),
   }, () => (callApi(endpoint, method, body)), next);
 };
 

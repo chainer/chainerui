@@ -36,7 +36,7 @@ const ResultSummary = (props) => {
 };
 
 ResultSummary.propTypes = {
-  result: uiPropTypes.result.isRequired
+  result: uiPropTypes.result.isRequired,
 };
 
 export default ResultSummary;

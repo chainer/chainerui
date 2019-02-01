@@ -22,14 +22,14 @@ VisibilityCheckbox.propTypes = {
   className: PropTypes.string,
   checked: PropTypes.bool,
   indeterminate: PropTypes.bool,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
 };
 
 VisibilityCheckbox.defaultProps = {
   className: '',
   checked: false,
   indeterminate: false,
-  onChange: () => {}
+  onChange: () => {},
 };
 
 export default VisibilityCheckbox;

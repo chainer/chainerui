@@ -16,7 +16,12 @@ rules:
     - always
   comma-dangle:
     - error
-    - never
+    -
+      arrays: always-multiline
+      objects: always-multiline
+      imports: always-multiline
+      exports: always-multiline
+      functions: never
 
   function-paren-newline: off
   no-restricted-globals: off

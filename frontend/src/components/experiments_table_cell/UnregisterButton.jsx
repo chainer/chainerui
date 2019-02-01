@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Modal, ModalHeader, ModalBody, ModalFooter
+  Button, Modal, ModalHeader, ModalBody, ModalFooter,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../../store/uiPropTypes';
 import {
-  displayResultNameFull
+  displayResultNameFull,
 } from '../../utils';
 
 class UnregisterButton extends React.Component {
@@ -16,7 +16,7 @@ class UnregisterButton extends React.Component {
     this.toggleUnregisterModal = this.toggleUnregisterModal.bind(this);
 
     this.state = {
-      showUnregisterModal: false
+      showUnregisterModal: false,
     };
   }
 
@@ -29,7 +29,7 @@ class UnregisterButton extends React.Component {
 
   toggleUnregisterModal() {
     this.setState({
-      showUnregisterModal: !this.state.showUnregisterModal
+      showUnregisterModal: !this.state.showUnregisterModal,
     });
   }
 
@@ -60,7 +60,7 @@ UnregisterButton.propTypes = {
   project: uiPropTypes.project.isRequired,
   result: uiPropTypes.result.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
-  onResultUnregistered: PropTypes.func.isRequired
+  onResultUnregistered: PropTypes.func.isRequired,
 };
 
 export default UnregisterButton;

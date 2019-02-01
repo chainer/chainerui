@@ -7,7 +7,7 @@ import TruncatedResultName from './TruncatedResultName';
 import {
   displayProjectName,
   urlForPlot,
-  urlForResultDetail
+  urlForResultDetail,
 } from '../utils';
 
 
@@ -55,12 +55,12 @@ const BreadcrumbLink = (props) => {
 BreadcrumbLink.propTypes = {
   globalConfig: uiPropTypes.globalConfig.isRequired,
   project: uiPropTypes.project,
-  result: uiPropTypes.result
+  result: uiPropTypes.result,
 };
 
 BreadcrumbLink.defaultProps = {
   project: {},
-  result: {}
+  result: {},
 };
 
 export default BreadcrumbLink;

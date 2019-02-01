@@ -8,7 +8,7 @@ import SnapshotTakeForm from '../result/SnapshotTakeForm';
 import StopForm from '../result/StopForm';
 import UnregisterButton from './UnregisterButton';
 import {
-  urlForResultDetail
+  urlForResultDetail,
 } from '../../utils';
 
 
@@ -17,7 +17,7 @@ const SubComponent = (props) => {
   const { id } = original;
   const style = {
     padding: '1rem',
-    borderTop: '1px solid #eee'
+    borderTop: '1px solid #eee',
   };
 
   return (
@@ -74,7 +74,7 @@ SubComponent.propTypes = {
   project: uiPropTypes.project.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
   onResultUnregistered: PropTypes.func.isRequired,
-  onCommandSubmit: PropTypes.func.isRequired
+  onCommandSubmit: PropTypes.func.isRequired,
 };
 
 export default SubComponent;

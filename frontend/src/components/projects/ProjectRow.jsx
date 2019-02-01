@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import {
   Button, Input,
-  Modal, ModalHeader, ModalFooter, ModalBody
+  Modal, ModalHeader, ModalFooter, ModalBody,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../../store/uiPropTypes';
 import {
   displayProjectName,
   displayProjectNameFull,
-  urlForPlot
+  urlForPlot,
 } from '../../utils';
 
 
@@ -28,7 +28,7 @@ class ProjectRow extends React.Component {
 
     this.state = {
       isEditing: false,
-      name: ''
+      name: '',
     };
   }
 
@@ -38,7 +38,7 @@ class ProjectRow extends React.Component {
     this.setState({
       isEditing: true,
       isDeleteModalOpen: false,
-      name: displayProjectNameFull(project)
+      name: displayProjectNameFull(project),
     });
   }
 
@@ -51,13 +51,13 @@ class ProjectRow extends React.Component {
     }
 
     this.setState({
-      isEditing: false
+      isEditing: false,
     });
   }
 
   handleEditCancel() {
     this.setState({
-      isEditing: false
+      isEditing: false,
     });
   }
 
@@ -75,13 +75,13 @@ class ProjectRow extends React.Component {
 
   handleNameChange(e) {
     this.setState({
-      name: e.target.value
+      name: e.target.value,
     });
   }
 
   toggleDeleteModal() {
     this.setState({
-      isDeleteModalOpen: !this.state.isDeleteModalOpen
+      isDeleteModalOpen: !this.state.isDeleteModalOpen,
     });
   }
 
@@ -150,7 +150,7 @@ class ProjectRow extends React.Component {
 ProjectRow.propTypes = {
   project: uiPropTypes.project.isRequired,
   onProjectUpdate: PropTypes.func.isRequired,
-  onProjectDelete: PropTypes.func.isRequired
+  onProjectDelete: PropTypes.func.isRequired,
 };
 
 export default ProjectRow;

@@ -6,7 +6,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -15,7 +15,7 @@ import {
   formatLogValue,
   getSelectedResults, getSelectedLogKeys,
   getLogData,
-  createLine
+  createLine,
 } from '../utils';
 import LogVisualizerLegend from './LogVisualizerLegend';
 
@@ -46,21 +46,21 @@ const LogVisualizerChart = (props) => {
     chartSize,
     isResultNameAlignRight,
     onResultSelect,
-    onAxisConfigLineUpdate
+    onAxisConfigLineUpdate,
   } = props;
   const { axes, resultsConfig, lines } = projectConfig;
   const { logKeys, xAxisKeys } = stats;
   const {
     xAxis = {},
     yLeftAxis = {},
-    yRightAxis = {}
+    yRightAxis = {},
   } = axes;
   const { xAxisKey = xAxisKeys[0] } = xAxis;
 
   const selectedResults = getSelectedResults(results, resultsConfig);
   const selectedLogKeys = {
     yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
-    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
+    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig),
   };
 
   const data = getLogData(results, stats, projectConfig);
@@ -192,7 +192,7 @@ LogVisualizerChart.propTypes = {
   chartSize: uiPropTypes.chartSize.isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired,
   onResultSelect: PropTypes.func.isRequired,
-  onAxisConfigLineUpdate: PropTypes.func.isRequired
+  onAxisConfigLineUpdate: PropTypes.func.isRequired,
 };
 
 export default LogVisualizerChart;

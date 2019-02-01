@@ -6,7 +6,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Form
+  Form,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -22,19 +22,19 @@ class ExperimentsTableConfigurator extends React.Component {
     this.handleIsGrouped = this.handleIsGrouped.bind(this);
 
     this.state = {
-      showModal: false
+      showModal: false,
     };
   }
 
   handleModalShow() {
     this.setState({
-      showModal: true
+      showModal: true,
     });
   }
 
   handleModalHide() {
     this.setState({
-      showModal: false
+      showModal: false,
     });
   }
 
@@ -44,7 +44,7 @@ class ExperimentsTableConfigurator extends React.Component {
     const {
       hiddenLogKeys = [],
       hiddenArgKeys = [],
-      isGrouped = false
+      isGrouped = false,
     } = tableState;
 
     if (prefix === 'logKey') {
@@ -80,7 +80,7 @@ class ExperimentsTableConfigurator extends React.Component {
     const {
       hiddenLogKeys = [],
       hiddenArgKeys = [],
-      isGrouped = false
+      isGrouped = false,
     } = tableState;
 
     return (
@@ -145,7 +145,7 @@ ExperimentsTableConfigurator.propTypes = {
   project: uiPropTypes.project.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   stats: uiPropTypes.stats.isRequired,
-  onTableColumnsVisibilityUpdate: PropTypes.func.isRequired
+  onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };
 
 export default ExperimentsTableConfigurator;

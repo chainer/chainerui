@@ -36,7 +36,7 @@ const Snapshots = (props) => {
 };
 
 Snapshots.propTypes = {
-  snapshots: uiPropTypes.snapshots.isRequired
+  snapshots: uiPropTypes.snapshots.isRequired,
 };
 
 export default Snapshots;

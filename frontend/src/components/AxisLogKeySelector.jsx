@@ -19,7 +19,7 @@ class AxisLogKeySelector extends React.Component {
 
   render() {
     const {
-      axisConfig, stats
+      axisConfig, stats,
     } = this.props;
     const { logKeysConfig = {} } = axisConfig;
     const { logKeys } = stats;
@@ -47,7 +47,7 @@ AxisLogKeySelector.propTypes = {
   axisName: uiPropTypes.axisName.isRequired,
   axisConfig: uiPropTypes.axisConfig.isRequired,
   stats: uiPropTypes.stats.isRequired,
-  onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
+  onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired,
 };
 
 export default AxisLogKeySelector;

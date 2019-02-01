@@ -51,8 +51,8 @@ class LineConfigurator extends React.Component {
       ...line,
       config: {
         ...config,
-        color: hex
-      }
+        color: hex,
+      },
     });
   }
 
@@ -64,8 +64,8 @@ class LineConfigurator extends React.Component {
       ...line,
       config: {
         ...config,
-        isVisible: checked
-      }
+        isVisible: checked,
+      },
     });
   }
 
@@ -77,8 +77,8 @@ class LineConfigurator extends React.Component {
       ...line,
       config: {
         ...config,
-        color: lineColorGenerator(line.resultId, line.logKey, results, logKeys)
-      }
+        color: lineColorGenerator(line.resultId, line.logKey, results, logKeys),
+      },
     });
   }
 
@@ -89,7 +89,7 @@ class LineConfigurator extends React.Component {
     const { color, isVisible } = config;
 
     const colorBlockStyle = {
-      backgroundColor: color
+      backgroundColor: color,
     };
 
     return (
@@ -150,11 +150,11 @@ LineConfigurator.propTypes = {
   stats: uiPropTypes.stats.isRequired,
   line: uiPropTypes.line,
   isResultNameAlignRight: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
 };
 
 LineConfigurator.defaultProps = {
-  line: {}
+  line: {},
 };
 
 export default LineConfigurator;

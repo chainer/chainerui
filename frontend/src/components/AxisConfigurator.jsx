@@ -15,7 +15,7 @@ class AxisConfigurator extends React.Component {
     this.toggleRangeConfig = this.toggleRangeConfig.bind(this);
 
     this.state = {
-      showRangeConfig: false
+      showRangeConfig: false,
     };
   }
 
@@ -26,7 +26,7 @@ class AxisConfigurator extends React.Component {
 
   toggleRangeConfig() {
     this.setState({
-      showRangeConfig: !this.state.showRangeConfig
+      showRangeConfig: !this.state.showRangeConfig,
     });
   }
 
@@ -35,7 +35,7 @@ class AxisConfigurator extends React.Component {
       projectId,
       axisName,
       axisConfig,
-      onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate
+      onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate,
     } = this.props;
     const { scale } = axisConfig;
 
@@ -82,12 +82,12 @@ AxisConfigurator.propTypes = {
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ])
+    PropTypes.node,
+  ]),
 };
 
 AxisConfigurator.defaultProps = {
-  children: null
+  children: null,
 };
 
 export default AxisConfigurator;

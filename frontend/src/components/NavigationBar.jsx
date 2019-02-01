@@ -5,7 +5,7 @@ import {
   Collapse, Navbar, NavbarBrand,
   Popover, PopoverHeader, PopoverBody,
   Form, FormGroup, Label,
-  Button
+  Button,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -28,13 +28,13 @@ class NavigationBar extends React.Component {
     this.handleChangeLogsLimit = this.handleChangeLogsLimit.bind(this);
     this.handleResultNameAlignmentChange = this.handleResultNameAlignmentChange.bind(this);
     this.state = {
-      settingPopoverOpen: false
+      settingPopoverOpen: false,
     };
   }
 
   toggleSettingPopover() {
     this.setState({
-      settingPopoverOpen: !this.state.settingPopoverOpen
+      settingPopoverOpen: !this.state.settingPopoverOpen,
     });
   }
 
@@ -63,7 +63,7 @@ class NavigationBar extends React.Component {
       pollingRate,
       chartSize,
       logsLimit,
-      isResultNameAlignRight
+      isResultNameAlignRight,
     } = this.props.globalConfig;
 
     return (
@@ -160,11 +160,11 @@ NavigationBar.propTypes = {
   onGlobalConfigPollingRateUpdate: PropTypes.func.isRequired,
   onGlobalConfigChartSizeUpdate: PropTypes.func.isRequired,
   onGlobalConfigLogsLimitUpdate: PropTypes.func.isRequired,
-  onGlobalConfigResultNameAlignmentUpdate: PropTypes.func.isRequired
+  onGlobalConfigResultNameAlignmentUpdate: PropTypes.func.isRequired,
 };
 
 NavigationBar.defaultProps = {
-  pollingKey: undefined
+  pollingKey: undefined,
 };
 
 export default NavigationBar;

@@ -25,7 +25,7 @@ class CommandScheduleForm extends React.Component {
     const { schedule, onScheduleChange } = this.props;
     onScheduleChange({
       ...schedule,
-      value: Number(e.target.value)
+      value: Number(e.target.value),
     });
   }
 
@@ -33,7 +33,7 @@ class CommandScheduleForm extends React.Component {
     const { schedule, onScheduleChange } = this.props;
     onScheduleChange({
       ...schedule,
-      key: e.target.value
+      key: e.target.value,
     });
   }
 
@@ -86,10 +86,10 @@ CommandScheduleForm.propTypes = {
   scheduleType: PropTypes.oneOf([SCHEDULE_NOW, SCHEDULE_CUSTOM]).isRequired,
   schedule: PropTypes.shape({
     value: PropTypes.number,
-    key: PropTypes.oneOf(SCHEDULE_KEYS)
+    key: PropTypes.oneOf(SCHEDULE_KEYS),
   }).isRequired,
   onScheduleTypeChange: PropTypes.func.isRequired,
-  onScheduleChange: PropTypes.func.isRequired
+  onScheduleChange: PropTypes.func.isRequired,
 };
 
 export default CommandScheduleForm;

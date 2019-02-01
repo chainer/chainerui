@@ -19,12 +19,12 @@ const AxesConfigurator = (props) => {
     onAxisConfigScaleUpdate,
     onAxisConfigXKeyUpdate,
     onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate,
-    onAxisConfigLogKeySelectToggle
+    onAxisConfigLogKeySelectToggle,
   } = props;
   const {
     xAxis = {},
     yLeftAxis = {},
-    yRightAxis = {}
+    yRightAxis = {},
   } = projectConfig.axes;
 
   return (
@@ -113,7 +113,7 @@ AxesConfigurator.propTypes = {
   onAxisConfigXKeyUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
-  onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired
+  onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired,
 };
 
 export default AxesConfigurator;

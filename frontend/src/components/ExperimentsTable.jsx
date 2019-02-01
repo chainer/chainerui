@@ -7,7 +7,7 @@ import {
   argValue2string,
   getGrandParentDirectoryName,
   getLastLogDict,
-  sortMethod
+  sortMethod,
 } from '../utils';
 
 import ResultName from './experiments_table_cell/ResultName';
@@ -29,7 +29,7 @@ const ExperimentsTable = (props) => {
     onResultUpdate,
     onResultSelect,
     onCommandSubmit,
-    onTableExpandedUpdate
+    onTableExpandedUpdate,
   } = props;
   const { argKeys, logKeys } = stats;
   const { resultsConfig, tableState } = projectConfig;
@@ -52,7 +52,7 @@ const ExperimentsTable = (props) => {
   };
 
   const defaultStyle = {
-    textAlign: 'right'
+    textAlign: 'right',
   };
 
   const resultList = resultKeys.map((resultId) => results[resultId]);
@@ -60,7 +60,7 @@ const ExperimentsTable = (props) => {
   const {
     hiddenLogKeys = [],
     hiddenArgKeys = [],
-    isGrouped = false
+    isGrouped = false,
   } = tableState;
 
   const nameColumns = [
@@ -102,7 +102,7 @@ const ExperimentsTable = (props) => {
           indeterminate={isGroupedPartialSelect}
           onChange={generateHandleGroupedResultsConfigSelectChange(groupedResultKeys)}
         />;
-      }
+      },
     },
     {
       Header: 'name',
@@ -119,14 +119,14 @@ const ExperimentsTable = (props) => {
         }
         return null;
       },
-      minWidth: 250
-    }
+      minWidth: 250,
+    },
   ];
   if (isGrouped) {
     nameColumns.unshift({
       Header: '',
       id: 'group',
-      accessor: (p) => getGrandParentDirectoryName(p)
+      accessor: (p) => getGrandParentDirectoryName(p),
     });
   }
   const groupedKey = isGrouped ? ['group'] : [];
@@ -143,7 +143,7 @@ const ExperimentsTable = (props) => {
     },
     style: defaultStyle,
     show: !hiddenLogKeys.find((k) => k === logKey),
-    aggregate: () => ''
+    aggregate: () => '',
   }));
 
   const argsList = argKeys.map((argKey) => ({
@@ -159,22 +159,22 @@ const ExperimentsTable = (props) => {
     },
     style: defaultStyle,
     show: !hiddenArgKeys.find((k) => k === argKey),
-    aggregate: () => ''
+    aggregate: () => '',
   }));
 
   const columns = [
     {
       Header: ' ', // To prevent from showing "Pivoted" on default (=''), set space on purpose.
-      columns: nameColumns
+      columns: nameColumns,
     },
     {
       Header: 'last logs',
-      columns: logs
+      columns: logs,
     },
     {
       Header: 'args',
-      columns: argsList
-    }
+      columns: argsList,
+    },
   ];
 
   return (
@@ -189,8 +189,8 @@ const ExperimentsTable = (props) => {
       defaultSortMethod={sortMethod}
       defaultSorted={[
         {
-          id: 'result_id'
-        }
+          id: 'result_id',
+        },
       ]}
       pivotBy={groupedKey}
       freezeWhenExpanded={expanded === {}}
@@ -216,7 +216,7 @@ const ExperimentsTable = (props) => {
           },
           onMouseLeave: () => {
             onResultSelect(project.id, resultId, false);
-          }
+          },
         };
       }}
     />
@@ -234,11 +234,11 @@ ExperimentsTable.propTypes = {
   onResultUpdate: PropTypes.func.isRequired,
   onResultSelect: PropTypes.func.isRequired,
   onCommandSubmit: PropTypes.func.isRequired,
-  onTableExpandedUpdate: PropTypes.func.isRequired
+  onTableExpandedUpdate: PropTypes.func.isRequired,
 };
 
 ExperimentsTable.defaultProps = {
-  resultsStatus: {}
+  resultsStatus: {},
 };
 
 export default ExperimentsTable;

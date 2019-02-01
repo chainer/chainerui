@@ -12,12 +12,12 @@ const Check = ({ inline, children, ...props }) => (
 
 Check.propTypes = {
   inline: PropTypes.bool,
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
+  children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 
 Check.defaultProps = {
   inline: false,
-  children: '\u00A0'
+  children: '\u00A0',
 };
 
 export default Check;

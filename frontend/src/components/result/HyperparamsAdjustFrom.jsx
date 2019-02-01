@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  FormGroup, Label, Input
+  FormGroup, Label, Input,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../../store/uiPropTypes';
@@ -29,14 +29,14 @@ class HyperparamsAdjustForm extends React.Component {
 
     this.state = {
       optimizer: 'MomentumSGD',
-      hyperparam: {}
+      hyperparam: {},
     };
   }
 
   handleOptimizerChange(e) {
     const { value } = e.target;
     this.setState({
-      optimizer: value
+      optimizer: value,
     });
   }
 
@@ -46,8 +46,8 @@ class HyperparamsAdjustForm extends React.Component {
     this.setState({
       hyperparam: {
         ...hyperparam,
-        [name]: (value == null || value === '') ? null : Number(value)
-      }
+        [name]: (value == null || value === '') ? null : Number(value),
+      },
     });
   }
 
@@ -125,7 +125,7 @@ HyperparamsAdjustForm.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   resultId: uiPropTypes.resultId.isRequired,
   commands: uiPropTypes.commands.isRequired,
-  onCommandSubmit: PropTypes.func.isRequired
+  onCommandSubmit: PropTypes.func.isRequired,
 };
 
 export default HyperparamsAdjustForm;

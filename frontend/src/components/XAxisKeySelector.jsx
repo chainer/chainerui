@@ -24,11 +24,11 @@ XAxisKeySelector.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   stats: uiPropTypes.stats.isRequired,
   value: PropTypes.string,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
 };
 
 XAxisKeySelector.defaultProps = {
-  value: ''
+  value: '',
 };
 
 export default XAxisKeySelector;

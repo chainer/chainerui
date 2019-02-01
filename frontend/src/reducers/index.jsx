@@ -12,7 +12,7 @@ const updatePartialState = (state, action, keyId, fn) => {
   if (state[keyId] !== partialState) {
     return {
       ...state,
-      [keyId]: partialState
+      [keyId]: partialState,
     };
   }
   return state;
@@ -45,7 +45,7 @@ const projectsReducer = (state = {}, action) => {
         const { project } = action.response;
         return {
           ...state,
-          [project.id]: project
+          [project.id]: project,
         };
       }
       return state;
@@ -100,7 +100,7 @@ const resultsReducer = (state = {}, action) => {
         const { result } = action.response;
         return {
           ...state,
-          [result.id]: result
+          [result.id]: result,
         };
       }
       return state;
@@ -112,7 +112,7 @@ const resultsReducer = (state = {}, action) => {
         }
         return {
           ...state,
-          [result.id]: result
+          [result.id]: result,
         };
       }
       return state;
@@ -129,8 +129,8 @@ const resultsReducer = (state = {}, action) => {
           ...state,
           [action.body.resultId]: {
             ...result,
-            commands: action.response.commands
-          }
+            commands: action.response.commands,
+          },
         };
       }
       return state;
@@ -159,7 +159,7 @@ const assetsReducer = (state = [], action) => {
 const entitiesReducer = combineReducers({
   projects: projectsReducer,
   results: resultsReducer,
-  assets: assetsReducer
+  assets: assetsReducer,
 });
 
 
@@ -170,14 +170,14 @@ const fetchStateReducer = (state = {}, action) => {
     case ActionTypes.RESULT_LIST_FAILURE:
       return {
         ...state,
-        resultList: action.type
+        resultList: action.type,
       };
     case ActionTypes.RESULT_REQUEST:
     case ActionTypes.RESULT_SUCCESS:
     case ActionTypes.RESULT_FAILURE:
       return {
         ...state,
-        result: action.type
+        result: action.type,
       };
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
     case LOCATION_CHANGE:
@@ -210,7 +210,7 @@ const resultSelectedReducer = (state = false, action) => {
 };
 
 const resultStatusReducer = combineReducers({
-  selected: resultSelectedReducer
+  selected: resultSelectedReducer,
 });
 
 const resultsStatusReducer = (state = {}, action) => {
@@ -224,7 +224,7 @@ const resultsStatusReducer = (state = {}, action) => {
 
 const projectStatusReducer = combineReducers({
   chartDownloadStatus: chartDownloadStatusReducer,
-  resultsStatus: resultsStatusReducer
+  resultsStatus: resultsStatusReducer,
 });
 
 const projectsStatusReducer = (state = {}, action) => {
@@ -254,7 +254,7 @@ const statsReducer = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, actio
         const newStats = {
           argKeys: Object.keys(argKeySet),
           logKeys: Object.keys(logKeySet).sort(),
-          xAxisKeys: keyOptions.filter((key) => key in logKeySet)
+          xAxisKeys: keyOptions.filter((key) => key in logKeySet),
         };
         Object.keys(newStats).forEach((key) => {
           if (`${newStats[key]}` === `${state[key]}`) {
@@ -274,7 +274,7 @@ const statsReducer = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, actio
 
 const statusReducer = combineReducers({
   projectsStatus: projectsStatusReducer,
-  stats: statsReducer
+  stats: statsReducer,
 });
 
 
@@ -284,7 +284,7 @@ const axisConfigReducer = (state = {}, action) => {
     scale = 'linear',
     xAxisKey,
     rangeType = 'auto',
-    isMin, rangeNumber
+    isMin, rangeNumber,
   } = action;
   const { logKeysConfig = {}, scaleRange = {} } = state;
   const idx = isMin ? 0 : 1;
@@ -295,12 +295,12 @@ const axisConfigReducer = (state = {}, action) => {
     case ActionTypes.AXIS_CONFIG_SCALE_UPDATE:
       return {
         ...state,
-        scale
+        scale,
       };
     case ActionTypes.AXIS_CONFIG_X_KEY_UPDATE:
       return {
         ...state,
-        xAxisKey
+        xAxisKey,
       };
     case ActionTypes.AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE:
       return {
@@ -309,9 +309,9 @@ const axisConfigReducer = (state = {}, action) => {
           ...scaleRange,
           [scale]: {
             rangeTypes: Object.assign([], rangeTypes, { [idx]: rangeType }),
-            range
-          }
-        }
+            range,
+          },
+        },
       };
     case ActionTypes.AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE:
       return {
@@ -320,9 +320,9 @@ const axisConfigReducer = (state = {}, action) => {
           ...scaleRange,
           [scale]: {
             rangeTypes,
-            range: Object.assign([], range, { [idx]: rangeNumber })
-          }
-        }
+            range: Object.assign([], range, { [idx]: rangeNumber }),
+          },
+        },
       };
     case ActionTypes.AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE: {
       const logKeyConfig = logKeysConfig[logKey] || {};
@@ -332,9 +332,9 @@ const axisConfigReducer = (state = {}, action) => {
           ...logKeysConfig,
           [logKey]: {
             ...logKeyConfig,
-            selected: !logKeyConfig.selected
-          }
-        }
+            selected: !logKeyConfig.selected,
+          },
+        },
       };
     }
     default:
@@ -362,8 +362,8 @@ const resultsConfigReducer = (state = {}, action) => {
           ...state,
           [resultId]: {
             ...resultConfig,
-            hidden: action.hidden
-          }
+            hidden: action.hidden,
+          },
         };
       }
       return state;
@@ -379,7 +379,7 @@ const resultsConfigReducer = (state = {}, action) => {
       if (resultId) {
         const {
           hiddenTrainInfoKeys = [],
-          hiddenContentsKeys = []
+          hiddenContentsKeys = [],
         } = action;
         const resultConfig = state[resultId] || { hidden: false };
         const { assetsTableState = {} } = resultConfig;
@@ -391,10 +391,10 @@ const resultsConfigReducer = (state = {}, action) => {
               ...assetsTableState,
               hiddenKeysForEveryHeader: [
                 hiddenTrainInfoKeys,
-                hiddenContentsKeys
-              ]
-            }
-          }
+                hiddenContentsKeys,
+              ],
+            },
+          },
         };
       }
       return state;
@@ -415,7 +415,7 @@ const linesConfigReducer = (state = {}, action) => {
       }
       return {
         ...state,
-        [lineKey]: { ...state[lineKey], ...line }
+        [lineKey]: { ...state[lineKey], ...line },
       };
     default:
       return state;
@@ -427,20 +427,20 @@ const tableStateReducer = (state = {}, action) => {
     expanded = {},
     hiddenLogKeys = [],
     hiddenArgKeys = [],
-    isGrouped = false
+    isGrouped = false,
   } = action;
   switch (action.type) {
     case ActionTypes.TABLE_STATE_EXPANDED_UPDATE:
       return {
         ...state,
-        expanded
+        expanded,
       };
     case ActionTypes.TABLE_STATE_COLUMNS_VISIBILITY_UPDATE:
       return {
         ...state,
         hiddenLogKeys,
         hiddenArgKeys,
-        isGrouped
+        isGrouped,
       };
     default:
       return state;
@@ -451,7 +451,7 @@ const projectConfigReducer = combineReducers({
   axes: axesConfigReducer,
   resultsConfig: resultsConfigReducer,
   lines: linesConfigReducer,
-  tableState: tableStateReducer
+  tableState: tableStateReducer,
 });
 
 const projectsConfigReducer = (state = {}, action) => {
@@ -475,7 +475,7 @@ const defaultGlobalState = {
   pollingRate: pollingOptions[1].value,
   chartSize: chartSizeOptions[0],
   logsLimit: logsLimitOptions[0].value,
-  isResultNameAlignRight: false
+  isResultNameAlignRight: false,
 };
 
 const globalConfigReducer = (state = defaultGlobalState, action) => {
@@ -484,22 +484,22 @@ const globalConfigReducer = (state = defaultGlobalState, action) => {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
       return {
         ...state,
-        pollingRate
+        pollingRate,
       };
     case ActionTypes.GLOBAL_CONFIG_CHART_SIZE_UPDATE:
       return {
         ...state,
-        chartSize
+        chartSize,
       };
     case ActionTypes.GLOBAL_CONFIG_LOGS_LIMIT_UPDATE:
       return {
         ...state,
-        logsLimit
+        logsLimit,
       };
     case ActionTypes.GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE:
       return {
         ...state,
-        isResultNameAlignRight
+        isResultNameAlignRight,
       };
     default:
       return state;
@@ -509,7 +509,7 @@ const globalConfigReducer = (state = defaultGlobalState, action) => {
 
 const configReducer = combineReducers({
   projectsConfig: projectsConfigReducer,
-  global: globalConfigReducer
+  global: globalConfigReducer,
 });
 
 
@@ -528,7 +528,7 @@ const persistConfig = {
       return Promise.resolve(undefined);
     }
     return Promise.resolve(restoredState);
-  }
+  },
 };
 
 const rootReducer = combineReducers({
@@ -537,7 +537,7 @@ const rootReducer = combineReducers({
   fetchState: fetchStateReducer,
   status: statusReducer,
   config: persistReducer(persistConfig, configReducer),
-  routing: routerReducer
+  routing: routerReducer,
 });
 
 export default rootReducer;

@@ -112,8 +112,8 @@ export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
   logKey,
   config: {
     color: lineColorGenerator(resultId, logKey, results, logKeys),
-    isVisible: true
-  }
+    isVisible: true,
+  },
 });
 
 export const sortMethod = (a, b) => {
@@ -138,14 +138,14 @@ export const getLogData = (results, stats, projectConfig) => {
   const {
     xAxis = {},
     yLeftAxis = {},
-    yRightAxis = {}
+    yRightAxis = {},
   } = axes || {};
   const { xAxisKey = xAxisKeys[0] } = xAxis;
 
   const selectedResults = getSelectedResults(results, resultsConfig);
   const selectedLogKeys = {
     yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
-    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
+    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig),
   };
 
   const dataDict = {}; // ex. 1: { epoch: 1, 12_main_loss: 0.011, ... }
@@ -186,20 +186,20 @@ export const getPlotLogData = (results, stats, projectConfig) => {
   const {
     xAxis = {},
     yLeftAxis = {},
-    yRightAxis = {}
+    yRightAxis = {},
   } = axes || {};
   const { xAxisKey = xAxisKeys[0] } = xAxis;
 
   const selectedResults = getSelectedResults(results, resultsConfig);
   const selectedLogKeys = {
     yLeftAxis: getSelectedLogKeys(yLeftAxis.logKeysConfig),
-    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig)
+    yRightAxis: getSelectedLogKeys(yRightAxis.logKeysConfig),
   };
   const plotConfig = {
     xAxis: xAxisKey,
     yLeftAxis: selectedLogKeys.yLeftAxis,
     yRightAxis: selectedLogKeys.yRightAxis,
-    resultIds: selectedResults
+    resultIds: selectedResults,
   };
 
   const allData = {};
@@ -215,7 +215,7 @@ export const getPlotLogData = (results, stats, projectConfig) => {
     });
     allData[result.id] = {
       log: allLogs,
-      name: result.name || result.pathName
+      name: result.name || result.pathName,
     };
   });
 

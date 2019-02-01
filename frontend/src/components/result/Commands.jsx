@@ -97,7 +97,7 @@ Commands.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   resultId: uiPropTypes.resultId.isRequired,
   commands: uiPropTypes.commands.isRequired,
-  onCommandSubmit: PropTypes.func.isRequired
+  onCommandSubmit: PropTypes.func.isRequired,
 };
 
 export default Commands;

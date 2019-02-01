@@ -19,7 +19,7 @@ const SnapshotTakeForm = (props) => {
 SnapshotTakeForm.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   resultId: uiPropTypes.resultId.isRequired,
-  onCommandSubmit: PropTypes.func.isRequired
+  onCommandSubmit: PropTypes.func.isRequired,
 };
 
 export default SnapshotTakeForm;

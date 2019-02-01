@@ -17,7 +17,7 @@ class Root extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      rehydrated: false
+      rehydrated: false,
     };
   }
 

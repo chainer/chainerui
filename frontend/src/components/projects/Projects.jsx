@@ -49,7 +49,7 @@ const Projects = (props) => {
 Projects.propTypes = {
   projects: uiPropTypes.projects.isRequired,
   onProjectUpdate: PropTypes.func.isRequired,
-  onProjectDelete: PropTypes.func.isRequired
+  onProjectDelete: PropTypes.func.isRequired,
 };
 
 export default Projects;

@@ -10,7 +10,7 @@ import {
   updateGlobalChartSize,
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
-  updateAssetsTableColumnsVisibility
+  updateAssetsTableColumnsVisibility,
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import AssetsTable from '../components/AssetsTable';
@@ -26,7 +26,7 @@ class AssetsContainer extends React.Component {
   handleAssetsTableColumnsVisibilityUpdate(hiddenTrainInfoKeys, hiddenContentsKeys) {
     const {
       projectId,
-      resultId
+      resultId,
     } = this.props;
     this.props.updateAssetsTableColumnsVisibility(
       projectId,
@@ -38,10 +38,10 @@ class AssetsContainer extends React.Component {
 
   render() {
     const {
-      assets, globalConfig, fetchState, resultConfig
+      assets, globalConfig, fetchState, resultConfig,
     } = this.props;
     const {
-      assetsTableState = {}
+      assetsTableState = {},
     } = resultConfig;
     return (
       <div>
@@ -71,7 +71,7 @@ const mapStateToProps = (state, ownProps) => {
   const {
     entities,
     fetchState,
-    config
+    config,
   } = state;
   const { assets } = entities;
   const globalConfig = config.global;
@@ -92,7 +92,7 @@ AssetsContainer.propTypes = {
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
-  updateAssetsTableColumnsVisibility: PropTypes.func.isRequired
+  updateAssetsTableColumnsVisibility: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, {
@@ -101,5 +101,5 @@ export default connect(mapStateToProps, {
   updateGlobalChartSize,
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
-  updateAssetsTableColumnsVisibility
+  updateAssetsTableColumnsVisibility,
 })(AssetsContainer);

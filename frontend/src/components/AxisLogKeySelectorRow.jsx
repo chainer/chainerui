@@ -32,13 +32,13 @@ class AxisLogKeySelectorRow extends React.Component {
 AxisLogKeySelectorRow.propTypes = {
   logKey: PropTypes.string.isRequired,
   logKeyConfig: uiPropTypes.logKeyConfig,
-  onLogKeySelectToggle: PropTypes.func.isRequired
+  onLogKeySelectToggle: PropTypes.func.isRequired,
 };
 
 AxisLogKeySelectorRow.defaultProps = {
   logKeyConfig: {
-    selected: false
-  }
+    selected: false,
+  },
 };
 
 export default AxisLogKeySelectorRow;

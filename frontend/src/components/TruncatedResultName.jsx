@@ -22,7 +22,7 @@ const TruncatedResultName = (props) => {
 TruncatedResultName.propTypes = {
   project: uiPropTypes.project.isRequired,
   result: uiPropTypes.result.isRequired,
-  isResultNameAlignRight: PropTypes.bool.isRequired
+  isResultNameAlignRight: PropTypes.bool.isRequired,
 };
 
 export default TruncatedResultName;
