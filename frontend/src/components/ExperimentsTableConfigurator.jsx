@@ -19,6 +19,7 @@ class ExperimentsTableConfigurator extends React.Component {
     this.handleModalShow = this.handleModalShow.bind(this);
     this.handleModalHide = this.handleModalHide.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleIsGrouped = this.handleIsGrouped.bind(this);
 
     this.state = {
       showModal: false
@@ -42,7 +43,8 @@ class ExperimentsTableConfigurator extends React.Component {
     const { tableState } = projectConfig;
     const {
       hiddenLogKeys = [],
-      hiddenArgKeys = []
+      hiddenArgKeys = [],
+      isGrouped = false
     } = tableState;
 
     if (prefix === 'logKey') {
@@ -51,15 +53,24 @@ class ExperimentsTableConfigurator extends React.Component {
         : hiddenLogKeys.filter((vk) => vk !== event.target.name);
 
       this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, nextHiddenLogKeys, hiddenArgKeys);
+        this.props.project.id, nextHiddenLogKeys, hiddenArgKeys, isGrouped);
     } else {
       const nextHiddenArgKeys = !event.target.checked
         ? hiddenArgKeys.concat(event.target.name)
         : hiddenArgKeys.filter((vk) => vk !== event.target.name);
 
       this.props.onTableColumnsVisibilityUpdate(
-        this.props.project.id, hiddenLogKeys, nextHiddenArgKeys);
+        this.props.project.id, hiddenLogKeys, nextHiddenArgKeys, isGrouped);
     }
+  }
+
+  handleIsGrouped(event) {
+    const { tableState } = this.props.projectConfig;
+
+    this.props.onTableColumnsVisibilityUpdate(
+      this.props.project.id, tableState.hiddenLogKeys, tableState.hiddenArgKeys,
+      event.target.checked
+    );
   }
 
   render() {
@@ -68,14 +79,25 @@ class ExperimentsTableConfigurator extends React.Component {
     const { tableState } = projectConfig;
     const {
       hiddenLogKeys = [],
-      hiddenArgKeys = []
+      hiddenArgKeys = [],
+      isGrouped = false
     } = tableState;
 
     return (
       <div>
-        <Button color="secondary" className="my-2" onClick={this.handleModalShow}>
-          Table settings
-        </Button>
+        <div className="form-inline">
+          <Button color="secondary" className="my-2" onClick={this.handleModalShow}>
+            Table settings
+          </Button>
+          <Check
+            type="checkbox"
+            className="ml-2"
+            checked={isGrouped}
+            onChange={this.handleIsGrouped}
+          >
+            Grouping
+          </Check>
+        </div>
 
         <Modal isOpen={this.state.showModal} toggle={this.handleModalHide}>
           <ModalHeader>

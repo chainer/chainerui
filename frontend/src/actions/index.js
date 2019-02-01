@@ -257,11 +257,14 @@ export const updateTableExpanded = (projectId, expanded) => ({
 });
 
 export const TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
-export const updateTableColumnsVisibility = (projectId, hiddenLogKeys, hiddenArgKeys) => ({
+export const updateTableColumnsVisibility = (
+  projectId, hiddenLogKeys, hiddenArgKeys, isGrouped
+) => ({
   type: TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
   projectId,
   hiddenLogKeys,
-  hiddenArgKeys
+  hiddenArgKeys,
+  isGrouped
 });
 
 export const ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';

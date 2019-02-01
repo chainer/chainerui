@@ -5,6 +5,7 @@ import ReactTable from 'react-table';
 import * as uiPropTypes from '../store/uiPropTypes';
 import {
   argValue2string,
+  getGrandParentDirectoryName,
   getLastLogDict,
   sortMethod
 } from '../utils';
@@ -44,6 +45,11 @@ const ExperimentsTable = (props) => {
       onResultsConfigSelectUpdate(project.id, resultId, !evt.target.checked);
     });
   };
+  const generateHandleGroupedResultsConfigSelectChange = (groupedResultKeys) => (evt) => {
+    groupedResultKeys.forEach((resultId) => {
+      onResultsConfigSelectUpdate(project.id, resultId, !evt.target.checked);
+    });
+  };
 
   const defaultStyle = {
     textAlign: 'right'
@@ -53,8 +59,77 @@ const ExperimentsTable = (props) => {
   const expanded = resultList.length === 0 ? {} : tableState.expanded;
   const {
     hiddenLogKeys = [],
-    hiddenArgKeys = []
+    hiddenArgKeys = [],
+    isGrouped = false
   } = tableState;
+
+  const nameColumns = [
+    {
+      Header: <VisibilityCheckbox
+        className="fa-xs"
+        checked={visibleResultCount > 0}
+        indeterminate={isPartialSelect}
+        onChange={handleResultsConfigSelectChange}
+      />,
+      Cell: (p) => {
+        const { original } = p;
+        if (!original) {
+          return {};
+        }
+        const { id } = original;
+        return (<ToggleResult
+          project={project}
+          result={original}
+          resultConfig={resultsConfig[id]}
+          onResultsConfigSelectUpdate={onResultsConfigSelectUpdate}
+        />);
+      },
+      className: 'text-center',
+      sortable: false,
+      minWidth: 40,
+      Aggregated: (row) => {
+        const groupedResultKeys = row.subRows.map((r) => {
+          const { _original } = r;
+          return _original.id;
+        });
+        const groupedVisibleResultCount = groupedResultKeys.filter(
+          (resultId) => !(resultsConfig[resultId] || {}).hidden).length;
+        const isGroupedPartialSelect = groupedVisibleResultCount > 0 &&
+          visibleResultCount < groupedResultKeys.length;
+        return <VisibilityCheckbox
+          className="fa-xs"
+          checked={groupedVisibleResultCount > 0}
+          indeterminate={isGroupedPartialSelect}
+          onChange={generateHandleGroupedResultsConfigSelectChange(groupedResultKeys)}
+        />;
+      }
+    },
+    {
+      Header: 'name',
+      id: 'name',
+      Cell: (p) => {
+        const { original } = p;
+        if (original) {
+          return (<ResultName
+            project={project}
+            result={original}
+            isResultNameAlignRight={globalConfig.isResultNameAlignRight}
+            onResultUpdate={onResultUpdate}
+          />);
+        }
+        return null;
+      },
+      minWidth: 250
+    }
+  ];
+  if (isGrouped) {
+    nameColumns.unshift({
+      Header: '',
+      id: 'group',
+      accessor: (p) => getGrandParentDirectoryName(p)
+    });
+  }
+  const groupedKey = isGrouped ? ['group'] : [];
 
   const logs = logKeys.map((logKey) => ({
     Header: logKey,
@@ -67,7 +142,8 @@ const ExperimentsTable = (props) => {
       return lastLogDict[logKey];
     },
     style: defaultStyle,
-    show: !hiddenLogKeys.find((k) => k === logKey)
+    show: !hiddenLogKeys.find((k) => k === logKey),
+    aggregate: () => ''
   }));
 
   const argsList = argKeys.map((argKey) => ({
@@ -82,44 +158,14 @@ const ExperimentsTable = (props) => {
       return argValue2string(argDict[argKey]);
     },
     style: defaultStyle,
-    show: !hiddenArgKeys.find((k) => k === argKey)
+    show: !hiddenArgKeys.find((k) => k === argKey),
+    aggregate: () => ''
   }));
 
   const columns = [
     {
-      Header: <VisibilityCheckbox
-        className="fa-xs"
-        checked={visibleResultCount > 0}
-        indeterminate={isPartialSelect}
-        onChange={handleResultsConfigSelectChange}
-      />,
-      Cell: (p) => {
-        const { original } = p;
-        const { id } = original;
-        return (<ToggleResult
-          project={project}
-          result={original}
-          resultConfig={resultsConfig[id]}
-          onResultsConfigSelectUpdate={onResultsConfigSelectUpdate}
-        />);
-      },
-      className: 'text-center',
-      sortable: false,
-      minWidth: 40
-    },
-    {
-      Header: 'name',
-      id: 'name',
-      Cell: (p) => {
-        const { original } = p;
-        return (<ResultName
-          project={project}
-          result={original}
-          isResultNameAlignRight={globalConfig.isResultNameAlignRight}
-          onResultUpdate={onResultUpdate}
-        />);
-      },
-      minWidth: 250
+      Header: ' ', // To prevent from showing "Pivoted" on default (=''), set space on purpose.
+      columns: nameColumns
     },
     {
       Header: 'last logs',
@@ -146,6 +192,7 @@ const ExperimentsTable = (props) => {
           id: 'result_id'
         }
       ]}
+      pivotBy={groupedKey}
       freezeWhenExpanded={expanded === {}}
       SubComponent={(p) => (
         <SubComponent
@@ -157,6 +204,9 @@ const ExperimentsTable = (props) => {
         />
       )}
       getTrProps={(state, rowInfo) => {
+        if (rowInfo && !rowInfo.original) {
+          return {};
+        }
         const resultId = rowInfo && rowInfo.original.id;
         const resultStatus = resultsStatus[resultId] || {};
         return {
