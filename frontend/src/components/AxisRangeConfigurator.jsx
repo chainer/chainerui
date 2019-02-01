@@ -33,7 +33,7 @@ class AxisRangeConfigurator extends React.Component {
     let rangeNumber = null;
     if (e.target.value) {
       const num = Number(e.target.value);
-      rangeNumber = (isNaN(num) || !isFinite(num)) ? null : num;
+      rangeNumber = (Number.isNaN(num) || !Number.isFinite(num)) ? null : num;
     }
 
     onAxisConfigScaleRangeNumberUpdate(projectId, axisName, scale, isMin, rangeNumber);

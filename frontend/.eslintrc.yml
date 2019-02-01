@@ -24,7 +24,6 @@ rules:
       functions: never
   max-len: off
 
-  no-restricted-globals: off
   jsx-a11y/anchor-is-valid: off
   jsx-a11y/media-has-caption: off
 

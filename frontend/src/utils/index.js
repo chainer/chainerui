@@ -58,7 +58,7 @@ export const getUrlSafeProjectNameFull = (project = {}) => (
 );
 
 export const isFloat = (value) => (
-  isFinite(value) && !Number.isInteger(value)
+  Number.isFinite(value) && !Number.isInteger(value)
 );
 
 export const formatLogValue = (precision = 4) => (value) => (
@@ -118,7 +118,7 @@ export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
 
 export const sortMethod = (a, b) => {
   const original = [a, b];
-  const isNumber = original.every((o) => isFinite(o) || !isNaN(o) || o === 'NaN');
+  const isNumber = original.every((o) => Number.isFinite(o) || !Number.isNaN(o) || o === 'NaN');
   const casted = isNumber ?
     original.map((o) => Number(o)) :
     original.map((o) => String(o).toLowerCase());
