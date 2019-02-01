@@ -23,4 +23,3 @@ SnapshotTakeForm.propTypes = {
 };
 
 export default SnapshotTakeForm;
-

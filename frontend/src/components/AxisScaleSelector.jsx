@@ -30,4 +30,3 @@ AxisScaleSelector.defaultProps = {
 };
 
 export default AxisScaleSelector;
-

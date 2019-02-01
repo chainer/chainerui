@@ -38,4 +38,3 @@ Snapshots.propTypes = {
 };
 
 export default Snapshots;
-

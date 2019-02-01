@@ -40,4 +40,3 @@ ResultSummary.propTypes = {
 };
 
 export default ResultSummary;
-

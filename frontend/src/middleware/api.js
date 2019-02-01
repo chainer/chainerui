@@ -65,4 +65,3 @@ export default (store) => (next) => (action) => {
     })),
   }, () => (callApi(endpoint, method, body)), next);
 };
-

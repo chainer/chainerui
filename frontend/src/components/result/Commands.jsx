@@ -101,4 +101,3 @@ Commands.propTypes = {
 };
 
 export default Commands;
-

@@ -100,4 +100,3 @@ SideBar.propTypes = {
 };
 
 export default SideBar;
-

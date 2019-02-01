@@ -28,4 +28,3 @@ Args.propTypes = {
 };
 
 export default Args;
-

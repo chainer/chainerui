@@ -38,4 +38,3 @@ export const lineColorGenerator = (resultId, logKey, results = {}, logKeys = [])
   };
   return hexFromRGB(rgbFromHSV(hsv));
 };
-

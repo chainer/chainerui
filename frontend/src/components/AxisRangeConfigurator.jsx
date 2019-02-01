@@ -114,4 +114,3 @@ AxisRangeConfigurator.propTypes = {
 };
 
 export default AxisRangeConfigurator;
-

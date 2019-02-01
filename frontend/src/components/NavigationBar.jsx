@@ -175,4 +175,3 @@ NavigationBar.defaultProps = {
 };
 
 export default NavigationBar;
-

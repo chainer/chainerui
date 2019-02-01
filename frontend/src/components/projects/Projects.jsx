@@ -56,4 +56,3 @@ Projects.propTypes = {
 };
 
 export default Projects;
-

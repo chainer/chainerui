@@ -117,4 +117,3 @@ AxesConfigurator.propTypes = {
 };
 
 export default AxesConfigurator;
-

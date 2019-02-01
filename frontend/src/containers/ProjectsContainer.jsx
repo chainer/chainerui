@@ -84,4 +84,3 @@ export default connect(mapStateToProps, {
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
 })(ProjectsContainer);
-

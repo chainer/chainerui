@@ -155,4 +155,3 @@ ProjectRow.propTypes = {
 };
 
 export default ProjectRow;
-

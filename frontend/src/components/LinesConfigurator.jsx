@@ -164,4 +164,3 @@ LinesConfigurator.propTypes = {
 };
 
 export default LinesConfigurator;
-

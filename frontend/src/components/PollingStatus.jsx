@@ -88,4 +88,3 @@ PollingStatus.defaultProps = {
 };
 
 export default PollingStatus;
-

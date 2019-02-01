@@ -91,4 +91,3 @@ AxisConfigurator.defaultProps = {
 };
 
 export default AxisConfigurator;
-

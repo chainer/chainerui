@@ -164,4 +164,3 @@ LineConfigurator.defaultProps = {
 };
 
 export default LineConfigurator;
-

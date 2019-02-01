@@ -87,4 +87,3 @@ LinesConfiguratorRow.propTypes = {
 };
 
 export default LinesConfiguratorRow;
-

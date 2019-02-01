@@ -129,4 +129,3 @@ LogVisualizer.propTypes = {
 };
 
 export default LogVisualizer;
-

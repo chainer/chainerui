@@ -151,4 +151,3 @@ export default connect(mapStateToProps, {
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
 })(ResultDetail);
-

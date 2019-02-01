@@ -149,4 +149,3 @@ CommandFormBase.defaultProps = {
 };
 
 export default CommandFormBase;
-

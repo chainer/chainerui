@@ -26,7 +26,5 @@ rules:
 
   jsx-a11y/anchor-is-valid: off
   jsx-a11y/media-has-caption: off
-
-  no-multiple-empty-lines: off
   react/destructuring-assignment: off
   react/no-access-state-in-setstate: off
