@@ -375,6 +375,29 @@ const resultsConfigReducer = (state = {}, action) => {
         }
       }
       return state;
+    case ActionTypes.ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE:
+      if (resultId) {
+        const {
+          hiddenTrainInfoKeys = [],
+          hiddenContentsKeys = []
+        } = action;
+        const resultConfig = state[resultId] || { hidden: false };
+        const { assetsTableState = {} } = resultConfig;
+        return {
+          ...state,
+          [resultId]: {
+            ...resultConfig,
+            assetsTableState: {
+              ...assetsTableState,
+              hiddenKeysForEveryHeader: [
+                hiddenTrainInfoKeys,
+                hiddenContentsKeys
+              ]
+            }
+          }
+        };
+      }
+      return state;
     case ActionTypes.RESULT_DELETE_SUCCESS:
       return removePartialState(state, resultId);
     default:

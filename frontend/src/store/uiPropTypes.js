@@ -97,8 +97,15 @@ export const globalConfig = PropTypes.shape({
   isResultNameAlignRight: PropTypes.bool.isRequired
 });
 
+export const tableState = PropTypes.shape({
+  hiddenKeysForEveryHeader: PropTypes.arrayOf(
+    PropTypes.any
+  )
+});
+
 export const resultConfig = PropTypes.shape({
-  hidden: PropTypes.bool.isRequired
+  hidden: PropTypes.bool.isRequired,
+  assetsTableState: tableState
 });
 
 export const resultsConfig = PropTypes.objectOf(resultConfig);
