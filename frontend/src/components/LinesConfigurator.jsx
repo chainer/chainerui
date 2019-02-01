@@ -101,8 +101,8 @@ class LinesConfigurator extends React.Component {
         return;
       }
       selectedLogKeys.forEach((logKey) => {
-        const line = lines[line2key({ resultId, logKey })] ||
-          createLine(resultId, logKey, results, logKeys);
+        const line = lines[line2key({ resultId, logKey })]
+          || createLine(resultId, logKey, results, logKeys);
         lineConfiguratorElems.push(<LinesConfiguratorRow
           line={line}
           project={project}

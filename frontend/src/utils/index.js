@@ -119,9 +119,9 @@ export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
 export const sortMethod = (a, b) => {
   const original = [a, b];
   const isNumber = original.every((o) => Number.isFinite(o) || !Number.isNaN(o) || o === 'NaN');
-  const casted = isNumber ?
-    original.map((o) => Number(o)) :
-    original.map((o) => String(o).toLowerCase());
+  const casted = isNumber
+    ? original.map((o) => Number(o))
+    : original.map((o) => String(o).toLowerCase());
 
   if (casted[0] > casted[1]) {
     return 1;
@@ -157,8 +157,8 @@ export const getLogData = (results, stats, projectConfig) => {
         return;
       }
       selectedLogKeys[axisName].forEach((logKey) => {
-        const line = lines[line2key({ resultId, logKey })] ||
-              createLine(resultId, logKey, results, logKeys);
+        const line = lines[line2key({ resultId, logKey })]
+              || createLine(resultId, logKey, results, logKeys);
         const logs = result.logs || [];
         logs.forEach((log) => {
           const logDict = {};

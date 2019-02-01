@@ -71,23 +71,22 @@ class LogVisualizer extends React.Component {
     const { resultsStatus = {} } = projectStatus;
 
     const { chartSize, isResultNameAlignRight } = globalConfig;
-    const tempHiddenPlot =
-      (projectStatus.chartDownloadStatus !== CHART_DOWNLOAD_STATUS.NONE) ? (
-        <div className="plot-hidden" ref={this.chartRef}>
-          <LogVisualizerChart
-            isDisplay={false}
-            project={project}
-            results={results}
-            stats={stats}
-            projectConfig={projectConfig}
-            resultsStatus={resultsStatus}
-            chartSize={chartSize}
-            isResultNameAlignRight={isResultNameAlignRight}
-            onResultSelect={onResultSelect}
-            onAxisConfigLineUpdate={onAxisConfigLineUpdate}
-          />
-        </div>
-      ) : null;
+    const tempHiddenPlot = (projectStatus.chartDownloadStatus !== CHART_DOWNLOAD_STATUS.NONE) ? (
+      <div className="plot-hidden" ref={this.chartRef}>
+        <LogVisualizerChart
+          isDisplay={false}
+          project={project}
+          results={results}
+          stats={stats}
+          projectConfig={projectConfig}
+          resultsStatus={resultsStatus}
+          chartSize={chartSize}
+          isResultNameAlignRight={isResultNameAlignRight}
+          onResultSelect={onResultSelect}
+          onAxisConfigLineUpdate={onAxisConfigLineUpdate}
+        />
+      </div>
+    ) : null;
 
     return (
       <div className="log-visualizer-root">

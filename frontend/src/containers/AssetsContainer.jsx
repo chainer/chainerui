@@ -19,8 +19,7 @@ class AssetsContainer extends React.Component {
   componentDidMount() {
     const { projectId, resultId } = this.props;
     this.props.getResultAsset(projectId, resultId);
-    this.handleAssetsTableColumnsVisibilityUpdate =
-      this.handleAssetsTableColumnsVisibilityUpdate.bind(this);
+    this.handleAssetsTableColumnsVisibilityUpdate = this.handleAssetsTableColumnsVisibilityUpdate.bind(this);
   }
 
   handleAssetsTableColumnsVisibilityUpdate(hiddenTrainInfoKeys, hiddenContentsKeys) {

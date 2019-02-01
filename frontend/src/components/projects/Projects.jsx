@@ -42,9 +42,9 @@ const Projects = (props) => {
 
   return (
     <div className="mt-4 border border-left-0 border-right-0 border-bottom-0">
-      {(Object.keys(projects).length === 0) ?
-        createProjectsNotFoundElem() :
-        createProjectRowElems(projects, onProjectUpdate, onProjectDelete)}
+      {(Object.keys(projects).length === 0)
+        ? createProjectsNotFoundElem()
+        : createProjectRowElems(projects, onProjectUpdate, onProjectDelete)}
     </div>
   );
 };

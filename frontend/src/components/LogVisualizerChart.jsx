@@ -74,8 +74,8 @@ const LogVisualizerChart = (props) => {
         return;
       }
       selectedLogKeys[axisName].forEach((logKey) => {
-        const line = lines[line2key({ resultId, logKey })] ||
-                createLine(resultId, logKey, results, logKeys);
+        const line = lines[line2key({ resultId, logKey })]
+                || createLine(resultId, logKey, results, logKeys);
         axisLines[axisName].push(line);
       });
     });

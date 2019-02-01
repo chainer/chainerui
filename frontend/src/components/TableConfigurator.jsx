@@ -80,10 +80,9 @@ class TableConfigurator extends React.Component {
                           type="checkbox"
                           name={sch}
                           checked={
-                            (hiddenKeysForEveryHeader[idx] === undefined) ?
-                              true
-                              :
-                              (!hiddenKeysForEveryHeader[idx].find((vk) => vk === sch))
+                            (hiddenKeysForEveryHeader[idx] === undefined)
+                              ? true
+                              : (!hiddenKeysForEveryHeader[idx].find((vk) => vk === sch))
                           }
                           onChange={(e) => this.handleChange(ch.Header, e)}
                         >

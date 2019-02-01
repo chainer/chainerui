@@ -24,10 +24,9 @@ const AssetsTable = (props) => {
       const trainInfo = p.train_info;
       return trainInfo[k];
     },
-    show: hiddenKeysForEveryHeader.length === 0 ?
-      true
-      :
-      !hiddenKeysForEveryHeader[0].find((hk) => hk === k),
+    show: hiddenKeysForEveryHeader.length === 0
+      ? true
+      : !hiddenKeysForEveryHeader[0].find((hk) => hk === k),
   }));
 
   const contentColumns = uniqueContentKeys.map((k) => ({
@@ -59,10 +58,9 @@ const AssetsTable = (props) => {
         />
       );
     },
-    show: hiddenKeysForEveryHeader.length === 0 ?
-      true
-      :
-      !hiddenKeysForEveryHeader[1].find((hk) => hk === k),
+    show: hiddenKeysForEveryHeader.length === 0
+      ? true
+      : !hiddenKeysForEveryHeader[1].find((hk) => hk === k),
   }));
 
   const columns = [
