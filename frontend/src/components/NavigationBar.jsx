@@ -147,7 +147,12 @@ class NavigationBar extends React.Component {
                 </Check>
               </FormGroup>
             </Form>
-            <p className="my-0"><small>ChainerUI {CHAINERUI_VERSION}</small></p>
+            <p className="my-0">
+              <small>
+                ChainerUI
+                {CHAINERUI_VERSION}
+              </small>
+            </p>
           </PopoverBody>
         </Popover>
       </Navbar>

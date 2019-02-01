@@ -24,7 +24,9 @@ class AxisLogKeySelectorRow extends React.Component {
         type="checkbox"
         checked={logKeyConfig.selected}
         onChange={this.handleSelectToggle}
-      >{logKey}</Check>
+      >
+        {logKey}
+      </Check>
     );
   }
 }

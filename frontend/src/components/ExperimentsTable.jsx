@@ -77,12 +77,14 @@ const ExperimentsTable = (props) => {
           return {};
         }
         const { id } = original;
-        return (<ToggleResult
-          project={project}
-          result={original}
-          resultConfig={resultsConfig[id]}
-          onResultsConfigSelectUpdate={onResultsConfigSelectUpdate}
-        />);
+        return (
+          <ToggleResult
+            project={project}
+            result={original}
+            resultConfig={resultsConfig[id]}
+            onResultsConfigSelectUpdate={onResultsConfigSelectUpdate}
+          />
+        );
       },
       className: 'text-center',
       sortable: false,
@@ -95,12 +97,14 @@ const ExperimentsTable = (props) => {
         const groupedVisibleResultCount = groupedResultKeys.filter((resultId) => !(resultsConfig[resultId] || {}).hidden).length;
         const isGroupedPartialSelect = groupedVisibleResultCount > 0 &&
           visibleResultCount < groupedResultKeys.length;
-        return <VisibilityCheckbox
-          className="fa-xs"
-          checked={groupedVisibleResultCount > 0}
-          indeterminate={isGroupedPartialSelect}
-          onChange={generateHandleGroupedResultsConfigSelectChange(groupedResultKeys)}
-        />;
+        return (
+          <VisibilityCheckbox
+            className="fa-xs"
+            checked={groupedVisibleResultCount > 0}
+            indeterminate={isGroupedPartialSelect}
+            onChange={generateHandleGroupedResultsConfigSelectChange(groupedResultKeys)}
+          />
+        );
       },
     },
     {
@@ -109,12 +113,14 @@ const ExperimentsTable = (props) => {
       Cell: (p) => {
         const { original } = p;
         if (original) {
-          return (<ResultName
-            project={project}
-            result={original}
-            isResultNameAlignRight={globalConfig.isResultNameAlignRight}
-            onResultUpdate={onResultUpdate}
-          />);
+          return (
+            <ResultName
+              project={project}
+              result={original}
+              isResultNameAlignRight={globalConfig.isResultNameAlignRight}
+              onResultUpdate={onResultUpdate}
+            />
+          );
         }
         return null;
       },

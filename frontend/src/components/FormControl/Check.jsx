@@ -5,7 +5,9 @@ import { FormGroup, Label, Input } from 'reactstrap';
 const Check = ({ inline, children, ...props }) => (
   <FormGroup check inline={inline}>
     <Label check className="form-check-label-break-word">
-      <Input {...props} /> {children}
+      <Input {...props} />
+      {' '}
+      {children}
     </Label>
   </FormGroup>
 );

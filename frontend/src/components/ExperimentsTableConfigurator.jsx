@@ -112,7 +112,9 @@ class ExperimentsTableConfigurator extends React.Component {
                     name={l}
                     checked={!hiddenLogKeys.find((vk) => vk === l)}
                     onChange={(e) => this.handleChange('logKey', e)}
-                  >{l}</Check>
+                  >
+                    {l}
+                  </Check>
                 ))
               }
               <hr />
@@ -125,7 +127,9 @@ class ExperimentsTableConfigurator extends React.Component {
                     name={a}
                     checked={!hiddenArgKeys.find((va) => va === a)}
                     onChange={(e) => this.handleChange('argKey', e)}
-                  >{a}</Check>
+                  >
+                    {a}
+                  </Check>
                 ))
               }
             </Form>

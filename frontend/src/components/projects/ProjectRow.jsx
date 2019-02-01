@@ -126,7 +126,8 @@ class ProjectRow extends React.Component {
         </div>
         <div>
           <p className="mb-0 text-secondary">
-          # {project.id}
+            {'# '}
+            {project.id}
           </p>
           <p className="mb-0 text-secondary">
             {project.pathName}
@@ -135,7 +136,7 @@ class ProjectRow extends React.Component {
         <Modal isOpen={isDeleteModalOpen}>
           <ModalHeader>Delete a project</ModalHeader>
           <ModalBody>
-              Are you sure to delete {displayProjectName(project)} ?
+            {`Are you sure to delete ${displayProjectName(project)} ?`}
           </ModalBody>
           <ModalFooter>
             <Button color="secondary" onClick={this.toggleDeleteModal}>Cancel</Button>

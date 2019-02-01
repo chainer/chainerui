@@ -137,14 +137,16 @@ class LinesConfigurator extends React.Component {
               />
             </ModalBody>
             <ModalFooter>
-              <Button color="secondary" onClick={this.handleModalToggle}>Cancel</Button>{' '}
+              <Button color="secondary" onClick={this.handleModalToggle}>Cancel</Button>
+              {' '}
               <Button
                 color="primary"
                 onClick={this.handleAxisConfigLineSave}
-              >Save</Button>
+              >
+                Save
+              </Button>
             </ModalFooter>
           </Modal>
-
         </div>
       </div>
     );

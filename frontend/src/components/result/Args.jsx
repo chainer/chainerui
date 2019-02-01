@@ -5,7 +5,7 @@ import { argValue2string } from '../../utils';
 
 
 const createDescriptionElems = (args) => args.map((arg) => [
-  (<dt className="col-sm-3" key={`${arg.key}-dt`}>({arg.key})</dt>),
+  (<dt className="col-sm-3" key={`${arg.key}-dt`}>{`(${arg.key})`}</dt>),
   (<dd className="col-sm-9" key={`${arg.key}-dd`}>{argValue2string(arg.value)}</dd>),
 ]);
 

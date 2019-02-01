@@ -86,7 +86,9 @@ class TableConfigurator extends React.Component {
                               (!hiddenKeysForEveryHeader[idx].find((vk) => vk === sch))
                           }
                           onChange={(e) => this.handleChange(ch.Header, e)}
-                        >{sch}</Check>
+                        >
+                          {sch}
+                        </Check>
                       ))
                     }
                   </div>

@@ -46,7 +46,7 @@ class UnregisterButton extends React.Component {
         <Modal isOpen={showUnregisterModal}>
           <ModalHeader>Unregister a result</ModalHeader>
           <ModalBody>
-            Are you sure to unregister {displayResultNameFull(project, result)} ?
+            {`Are you sure to unregister ${displayResultNameFull(project, result)} ?`}
           </ModalBody>
           <ModalFooter>
             <Button color="secondary" onClick={this.toggleUnregisterModal}>Cancel</Button>

@@ -27,13 +27,10 @@ rules:
   no-restricted-globals: off
   jsx-a11y/anchor-is-valid: off
   jsx-a11y/media-has-caption: off
-  react/jsx-closing-tag-location: off
 
   implicit-arrow-linebreak: off
   no-else-return: off
   no-multiple-empty-lines: off
   operator-linebreak: off
   react/destructuring-assignment: off
-  react/jsx-one-expression-per-line: off
-  react/jsx-wrap-multilines: off
   react/no-access-state-in-setstate: off

@@ -105,10 +105,12 @@ class LogVisualizer extends React.Component {
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
         <Button size="sm" className="m-1" onClick={this.handleClickDownloadCode}>
-          <i className="mx-1 fas fa-download" />code
+          <i className="mx-1 fas fa-download" />
+          code
         </Button>
         <Button size="sm" className="m-1" onClick={this.handleClickDownloadPNG}>
-          <i className="mx-1 fas fa-download" />png
+          <i className="mx-1 fas fa-download" />
+          png
         </Button>
       </div>
     );

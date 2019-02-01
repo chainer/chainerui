@@ -72,7 +72,9 @@ class AxisRangeConfigurator extends React.Component {
                 checked={rangeType === (isMin ? 'dataMin' : 'dataMax')}
                 onChange={this.handleRangeTypeChange}
               >
-                data {isMin ? 'min' : 'max'}
+                data
+                {' '}
+                {isMin ? 'min' : 'max'}
               </Check>
             </Col>
             <Col sm={{ size: 5 }}>
