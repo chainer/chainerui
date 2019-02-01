@@ -22,6 +22,7 @@ import Commands from '../components/result/Commands';
 import Snapshots from '../components/result/Snapshots';
 import { startPolling, stopPolling, urlForResultDetail } from '../utils';
 
+
 class ResultDetail extends React.Component {
   componentDidMount() {
     const { projectId, resultId, globalConfig } = this.props;
@@ -104,23 +105,6 @@ class ResultDetail extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const projectId = Number(ownProps.params.projectId);
-  const resultId = Number(ownProps.params.resultId);
-  const {
-    entities,
-    fetchState,
-    config,
-  } = state;
-  const globalConfig = config.global;
-  const { projects = {}, results = {} } = entities;
-  const project = projects[projectId];
-  const result = results[resultId];
-  return {
-    projectId, resultId, project, result, fetchState, globalConfig,
-  };
-};
-
 ResultDetail.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   resultId: uiPropTypes.resultId.isRequired,
@@ -140,6 +124,28 @@ ResultDetail.propTypes = {
 ResultDetail.defaultProps = {
   project: {},
   result: {},
+};
+
+const mapStateToProps = (state, ownProps) => {
+  const projectId = Number(ownProps.params.projectId);
+  const resultId = Number(ownProps.params.resultId);
+  const {
+    entities,
+    fetchState,
+    config,
+  } = state;
+  const globalConfig = config.global;
+  const { projects = {}, results = {} } = entities;
+  const project = projects[projectId];
+  const result = results[resultId];
+  return {
+    projectId,
+    resultId,
+    project,
+    result,
+    fetchState,
+    globalConfig,
+  };
 };
 
 export default connect(mapStateToProps, {

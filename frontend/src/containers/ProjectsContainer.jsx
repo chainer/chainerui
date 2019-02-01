@@ -51,17 +51,6 @@ class ProjectsContainer extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const {
-    entities,
-    fetchState,
-    config,
-  } = state;
-  const { projects } = entities;
-  const globalConfig = config.global;
-  return { projects, fetchState, globalConfig };
-};
-
 ProjectsContainer.propTypes = {
   projects: uiPropTypes.projects.isRequired,
   fetchState: uiPropTypes.fetchState.isRequired,
@@ -73,6 +62,21 @@ ProjectsContainer.propTypes = {
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => {
+  const {
+    entities,
+    fetchState,
+    config,
+  } = state;
+  const { projects } = entities;
+  const globalConfig = config.global;
+  return {
+    projects,
+    fetchState,
+    globalConfig,
+  };
 };
 
 export default connect(mapStateToProps, {
