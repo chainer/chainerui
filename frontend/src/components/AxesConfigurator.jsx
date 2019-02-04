@@ -116,4 +116,4 @@ AxesConfigurator.propTypes = {
   onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired,
 };
 
-export default AxesConfigurator;
+export default React.memo(AxesConfigurator);
