@@ -143,33 +143,6 @@ class PlotContainer extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const projectId = Number(ownProps.params.projectId);
-  const {
-    entities,
-    fetchState,
-    status,
-    config,
-  } = state;
-  const { projects = {}, results = {} } = entities;
-  const project = projects[projectId] || { id: projectId };
-  const projectStatus = status.projectsStatus[projectId] || defaultProjectStatus;
-  const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
-  const globalConfig = config.global;
-  const { stats } = status;
-
-  return {
-    projectId,
-    project,
-    results,
-    fetchState,
-    projectStatus,
-    projectConfig,
-    globalConfig,
-    stats,
-  };
-};
-
 PlotContainer.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   project: uiPropTypes.project.isRequired,
@@ -200,6 +173,32 @@ PlotContainer.propTypes = {
   updateTableExpanded: PropTypes.func.isRequired,
   updateTableColumnsVisibility: PropTypes.func.isRequired,
   updateChartDownloadStatus: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state, ownProps) => {
+  const projectId = Number(ownProps.params.projectId);
+  const {
+    entities,
+    fetchState,
+    status,
+    config,
+  } = state;
+  const { projects = {}, results = {} } = entities;
+  const project = projects[projectId] || { id: projectId };
+  const projectStatus = status.projectsStatus[projectId] || defaultProjectStatus;
+  const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
+  const globalConfig = config.global;
+  const { stats } = status;
+  return {
+    projectId,
+    project,
+    results,
+    fetchState,
+    projectStatus,
+    projectConfig,
+    globalConfig,
+    stats,
+  };
 };
 
 export default connect(mapStateToProps, {

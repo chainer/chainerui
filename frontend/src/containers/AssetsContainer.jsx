@@ -15,6 +15,7 @@ import {
 import NavigationBar from '../components/NavigationBar';
 import AssetsTable from '../components/AssetsTable';
 
+
 class AssetsContainer extends React.Component {
   componentDidMount() {
     const { projectId, resultId } = this.props;
@@ -43,7 +44,7 @@ class AssetsContainer extends React.Component {
       assetsTableState = {},
     } = resultConfig;
     return (
-      <div>
+      <div className="chainerui-container">
         <NavigationBar
           fetchState={fetchState}
           globalConfig={globalConfig}
@@ -64,23 +65,6 @@ class AssetsContainer extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const projectId = Number(ownProps.params.projectId);
-  const resultId = Number(ownProps.params.resultId);
-  const {
-    entities,
-    fetchState,
-    config,
-  } = state;
-  const { assets } = entities;
-  const globalConfig = config.global;
-  const projectConfig = config.projectsConfig[projectId] || {};
-  const resultConfig = projectConfig.resultsConfig[resultId] || {};
-  return {
-    projectId, resultId, assets, fetchState, globalConfig, resultConfig,
-  };
-};
-
 AssetsContainer.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   resultId: uiPropTypes.resultId.isRequired,
@@ -94,6 +78,28 @@ AssetsContainer.propTypes = {
   updateGlobalResultNameAlignment: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
   updateAssetsTableColumnsVisibility: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state, ownProps) => {
+  const projectId = Number(ownProps.params.projectId);
+  const resultId = Number(ownProps.params.resultId);
+  const {
+    entities,
+    fetchState,
+    config,
+  } = state;
+  const { assets } = entities;
+  const globalConfig = config.global;
+  const projectConfig = config.projectsConfig[projectId] || {};
+  const resultConfig = projectConfig.resultsConfig[resultId] || {};
+  return {
+    projectId,
+    resultId,
+    assets,
+    fetchState,
+    globalConfig,
+    resultConfig,
+  };
 };
 
 export default connect(mapStateToProps, {
