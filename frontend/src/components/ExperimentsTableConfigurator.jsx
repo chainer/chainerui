@@ -42,23 +42,31 @@ class ExperimentsTableConfigurator extends React.Component {
     const { projectConfig } = this.props;
     const { tableState } = projectConfig;
     const {
-      hiddenLogKeys = [],
-      hiddenArgKeys = [],
+      knownLogKeysConfig = {},
+      knownArgKeysConfig = {},
       isGrouped = false,
     } = tableState;
 
     if (prefix === 'logKey') {
-      const nextHiddenLogKeys = !event.target.checked
-        ? hiddenLogKeys.concat(event.target.name)
-        : hiddenLogKeys.filter((vk) => vk !== event.target.name);
+      const nextKnownLogKeysConfig = {
+        ...knownLogKeysConfig,
+        [event.target.name]: {
+          ...knownLogKeysConfig[event.target.name],
+          hidden: !event.target.checked,
+        },
+      };
 
-      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, nextHiddenLogKeys, hiddenArgKeys, isGrouped);
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, nextKnownLogKeysConfig, knownArgKeysConfig, isGrouped);
     } else {
-      const nextHiddenArgKeys = !event.target.checked
-        ? hiddenArgKeys.concat(event.target.name)
-        : hiddenArgKeys.filter((vk) => vk !== event.target.name);
+      const nextKnownArgKeysConfig = {
+        ...knownArgKeysConfig,
+        [event.target.name]: {
+          ...knownArgKeysConfig[event.target.name],
+          hidden: !event.target.checked,
+        },
+      };
 
-      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, hiddenLogKeys, nextHiddenArgKeys, isGrouped);
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, knownLogKeysConfig, nextKnownArgKeysConfig, isGrouped);
     }
   }
 
@@ -76,8 +84,8 @@ class ExperimentsTableConfigurator extends React.Component {
     const { logKeys, argKeys } = stats;
     const { tableState } = projectConfig;
     const {
-      hiddenLogKeys = [],
-      hiddenArgKeys = [],
+      knownLogKeysConfig = {},
+      knownArgKeysConfig = {},
       isGrouped = false,
     } = tableState;
 
@@ -110,7 +118,7 @@ class ExperimentsTableConfigurator extends React.Component {
                     key={`logKey.${l}`}
                     type="checkbox"
                     name={l}
-                    checked={!hiddenLogKeys.find((vk) => vk === l)}
+                    checked={!(knownLogKeysConfig[l] || {}).hidden}
                     onChange={(e) => this.handleChange('logKey', e)}
                   >
                     {l}
@@ -125,7 +133,7 @@ class ExperimentsTableConfigurator extends React.Component {
                     key={`argKey.${a}`}
                     type="checkbox"
                     name={a}
-                    checked={!hiddenArgKeys.find((va) => va === a)}
+                    checked={!(knownArgKeysConfig[a] || {}).hidden}
                     onChange={(e) => this.handleChange('argKey', e)}
                   >
                     {a}
