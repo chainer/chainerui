@@ -8,6 +8,7 @@ import {
   getGrandParentDirectoryName,
   getLastLogDict,
   sortMethod,
+  sortKeys,
 } from '../utils';
 
 import ResultName from './experiments_table_cell/ResultName';
@@ -136,7 +137,7 @@ const ExperimentsTable = (props) => {
   }
   const groupedKey = isGrouped ? ['group'] : [];
 
-  const logs = logKeys.map((logKey) => ({
+  const logs = sortKeys(logKeys, knownLogKeysConfig).map((logKey) => ({
     Header: logKey,
     id: `logKey${logKey}`,
     accessor: (p) => {
@@ -151,7 +152,7 @@ const ExperimentsTable = (props) => {
     aggregate: () => '',
   }));
 
-  const argsList = argKeys.map((argKey) => ({
+  const argsList = sortKeys(argKeys, knownArgKeysConfig).map((argKey) => ({
     Header: argKey,
     id: argKey,
     accessor: (p) => {
