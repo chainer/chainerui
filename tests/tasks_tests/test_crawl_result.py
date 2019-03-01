@@ -115,3 +115,29 @@ def test_crawl_result_reset(func_dir):
     assert len(actual2.logs) == 2
     assert len(actual2.commands) == 1
     assert len(actual2.snapshots) == 2
+
+
+def test_crawl_result_default_name(func_dir):
+    conf_path = os.path.join(func_dir, '.chainerui_conf')
+    chainerui_conf = {'dummy_key': 'default_name'}
+    with open(conf_path, 'w') as f:
+        json.dump(chainerui_conf, f)
+    # basic test is checked on 'test_api.py', so this test checks only
+    # reset logic.
+    result = Result(func_dir)
+    assert result.name is None
+
+    result2 = crawl_result(result, force=True, commit=False)
+    assert result2.name is None
+
+    chainerui_conf['default_result_name'] = 'default_name'
+    with open(conf_path, 'w') as f:
+        json.dump(chainerui_conf, f)
+    result3 = crawl_result(result2, force=True, commit=False)
+    assert result3.name == 'default_name'
+
+    chainerui_conf['default_result_name'] = 'updated_name'
+    with open(conf_path, 'w') as f:
+        json.dump(chainerui_conf, f)
+    result4 = crawl_result(result3, force=True, commit=False)
+    assert result4.name == 'default_name'  # not updated
