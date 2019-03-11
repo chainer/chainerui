@@ -517,7 +517,7 @@ const configReducer = combineReducers({
 });
 
 
-const currentStoreVersion = 20181023.0;
+const currentStoreVersion = 20190311.0;
 
 const persistConfig = {
   key: 'config',
