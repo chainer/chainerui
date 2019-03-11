@@ -440,8 +440,10 @@ const tableStateReducer = (state = {}, action) => {
     case ActionTypes.TABLE_STATE_COLUMNS_VISIBILITY_UPDATE:
       return {
         ...state,
-        hiddenLogKeys,
-        hiddenArgKeys,
+        hiddenKeysForEveryHeader: [
+          hiddenLogKeys,
+          hiddenArgKeys,
+        ],
         isGrouped,
       };
     default:

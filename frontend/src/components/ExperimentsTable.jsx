@@ -14,6 +14,7 @@ import ResultName from './experiments_table_cell/ResultName';
 import ToggleResult from './experiments_table_cell/ToggleResult';
 import SubComponent from './experiments_table_cell/SubComponent';
 import VisibilityCheckbox from './VisibilityCheckbox';
+import TableConfigurator from './TableConfigurator';
 
 const emptyStr = '-';
 
@@ -30,6 +31,7 @@ const ExperimentsTable = (props) => {
     onResultSelect,
     onCommandSubmit,
     onTableExpandedUpdate,
+    onTableColumnsVisibilityUpdate,
   } = props;
   const { argKeys, logKeys } = stats;
   const { resultsConfig, tableState } = projectConfig;
@@ -39,6 +41,8 @@ const ExperimentsTable = (props) => {
   const visibleResultCount = resultKeys
     .filter((resultId) => !(resultsConfig[resultId] || {}).hidden).length;
   const isPartialSelect = visibleResultCount > 0 && visibleResultCount < resultCount;
+
+  const { hiddenKeysForEveryHeader = [] } = tableState;
 
   const handleResultsConfigSelectChange = (evt) => {
     resultKeys.forEach((resultId) => {
@@ -58,8 +62,6 @@ const ExperimentsTable = (props) => {
   const resultList = resultKeys.map((resultId) => results[resultId]);
   const expanded = resultList.length === 0 ? {} : tableState.expanded;
   const {
-    hiddenLogKeys = [],
-    hiddenArgKeys = [],
     isGrouped = false,
   } = tableState;
 
@@ -147,7 +149,9 @@ const ExperimentsTable = (props) => {
       return lastLogDict[logKey];
     },
     style: defaultStyle,
-    show: !hiddenLogKeys.find((k) => k === logKey),
+    show: hiddenKeysForEveryHeader.length === 0
+      ? true
+      : !hiddenKeysForEveryHeader[0].find((hk) => hk === logKey),
     aggregate: () => '',
   }));
 
@@ -163,7 +167,9 @@ const ExperimentsTable = (props) => {
       return argValue2string(argDict[argKey]);
     },
     style: defaultStyle,
-    show: !hiddenArgKeys.find((k) => k === argKey),
+    show: hiddenKeysForEveryHeader.length === 0
+      ? true
+      : !hiddenKeysForEveryHeader[1].find((hk) => hk === argKey),
     aggregate: () => '',
   }));
 
@@ -182,49 +188,64 @@ const ExperimentsTable = (props) => {
     },
   ];
 
+  const dataColumns = columns.slice(1, columns.length);
+
+  const columnHeaders = dataColumns.map((c) => ({
+    Header: c.Header,
+    columns: c.columns.map((sc) => sc.Header),
+  }));
+
   return (
-    <ReactTable
-      data={resultList}
-      columns={columns}
-      showPagination={false}
-      minRows={3}
-      expanded={expanded}
-      onExpandedChange={(nextExpanded) => onTableExpandedUpdate(project.id, nextExpanded)}
-      pageSize={resultList.length}
-      defaultSortMethod={sortMethod}
-      defaultSorted={[
-        {
-          id: 'result_id',
-        },
-      ]}
-      pivotBy={groupedKey}
-      freezeWhenExpanded={expanded === {}}
-      SubComponent={(p) => (
-        <SubComponent
-          original={p.original}
-          project={project}
-          onResultUpdate={onResultUpdate}
-          onResultUnregistered={() => onTableExpandedUpdate(project.id, {})}
-          onCommandSubmit={onCommandSubmit}
-        />
-      )}
-      getTrProps={(state, rowInfo) => {
-        if (rowInfo && !rowInfo.original) {
-          return {};
-        }
-        const resultId = rowInfo && rowInfo.original.id;
-        const resultStatus = resultsStatus[resultId] || {};
-        return {
-          className: resultStatus.selected ? 'result-highlight' : null,
-          onMouseEnter: () => {
-            onResultSelect(project.id, resultId, true);
+    <div>
+      <ReactTable
+        data={resultList}
+        columns={columns}
+        showPagination={false}
+        minRows={3}
+        expanded={expanded}
+        onExpandedChange={(nextExpanded) => onTableExpandedUpdate(project.id, nextExpanded)}
+        pageSize={resultList.length}
+        defaultSortMethod={sortMethod}
+        defaultSorted={[
+          {
+            id: 'result_id',
           },
-          onMouseLeave: () => {
-            onResultSelect(project.id, resultId, false);
-          },
-        };
-      }}
-    />
+        ]}
+        pivotBy={groupedKey}
+        freezeWhenExpanded={expanded === {}}
+        SubComponent={(p) => (
+          <SubComponent
+            original={p.original}
+            project={project}
+            onResultUpdate={onResultUpdate}
+            onResultUnregistered={() => onTableExpandedUpdate(project.id, {})}
+            onCommandSubmit={onCommandSubmit}
+          />
+        )}
+        getTrProps={(state, rowInfo) => {
+          if (rowInfo && !rowInfo.original) {
+            return {};
+          }
+          const resultId = rowInfo && rowInfo.original.id;
+          const resultStatus = resultsStatus[resultId] || {};
+          return {
+            className: resultStatus.selected ? 'result-highlight' : null,
+            onMouseEnter: () => {
+              onResultSelect(project.id, resultId, true);
+            },
+            onMouseLeave: () => {
+              onResultSelect(project.id, resultId, false);
+            },
+          };
+        }}
+      />
+
+      <TableConfigurator
+        columnHeaders={columnHeaders}
+        hiddenKeysForEveryHeader={hiddenKeysForEveryHeader}
+        onTableColumnsVisibilityUpdate={onTableColumnsVisibilityUpdate}
+      />
+    </div>
   );
 };
 
@@ -240,6 +261,7 @@ ExperimentsTable.propTypes = {
   onResultSelect: PropTypes.func.isRequired,
   onCommandSubmit: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired,
+  onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };
 
 ExperimentsTable.defaultProps = {

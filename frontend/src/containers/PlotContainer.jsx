@@ -41,6 +41,7 @@ class PlotContainer extends React.Component {
     this.props.clearResultList();
     this.props.getProject(projectId);
     this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId, logsLimit);
+    this.handleExperimentsTableColumnsVisibilityUpdate = this.handleExperimentsTableColumnsVisibilityUpdate.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,6 +59,22 @@ class PlotContainer extends React.Component {
 
   componentWillUnmount() {
     stopPolling(this.resultsPollingTimer);
+  }
+
+  handleExperimentsTableColumnsVisibilityUpdate(hiddenLogKeys, hiddenArgKeys) {
+    const {
+      projectId,
+      projectConfig,
+    } = this.props;
+    const { tableState } = projectConfig;
+    const { isGrouped = false } = tableState;
+
+    this.props.updateTableColumnsVisibility(
+      projectId,
+      hiddenLogKeys,
+      hiddenArgKeys,
+      isGrouped
+    );
   }
 
   render() {
@@ -128,6 +145,7 @@ class PlotContainer extends React.Component {
                 onResultSelect={this.props.updateResultSelect}
                 onCommandSubmit={this.props.createCommand}
                 onTableExpandedUpdate={this.props.updateTableExpanded}
+                onTableColumnsVisibilityUpdate={this.handleExperimentsTableColumnsVisibilityUpdate}
               />
               <ExperimentsTableConfigurator
                 project={project}
