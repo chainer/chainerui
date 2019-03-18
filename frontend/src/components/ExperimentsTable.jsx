@@ -8,6 +8,7 @@ import {
   getGrandParentDirectoryName,
   getLastLogDict,
   sortMethod,
+  sortKeys,
 } from '../utils';
 
 import ResultName from './experiments_table_cell/ResultName';
@@ -58,8 +59,8 @@ const ExperimentsTable = (props) => {
   const resultList = resultKeys.map((resultId) => results[resultId]);
   const expanded = resultList.length === 0 ? {} : tableState.expanded;
   const {
-    hiddenLogKeys = [],
-    hiddenArgKeys = [],
+    knownLogKeysConfig = {},
+    knownArgKeysConfig = {},
     isGrouped = false,
   } = tableState;
 
@@ -136,7 +137,7 @@ const ExperimentsTable = (props) => {
   }
   const groupedKey = isGrouped ? ['group'] : [];
 
-  const logs = logKeys.map((logKey) => ({
+  const logs = sortKeys(logKeys, knownLogKeysConfig).map((logKey) => ({
     Header: logKey,
     id: `logKey${logKey}`,
     accessor: (p) => {
@@ -147,11 +148,11 @@ const ExperimentsTable = (props) => {
       return lastLogDict[logKey];
     },
     style: defaultStyle,
-    show: !hiddenLogKeys.find((k) => k === logKey),
+    show: !(knownLogKeysConfig[logKey] || {}).hidden,
     aggregate: () => '',
   }));
 
-  const argsList = argKeys.map((argKey) => ({
+  const argsList = sortKeys(argKeys, knownArgKeysConfig).map((argKey) => ({
     Header: argKey,
     id: argKey,
     accessor: (p) => {
@@ -163,7 +164,7 @@ const ExperimentsTable = (props) => {
       return argValue2string(argDict[argKey]);
     },
     style: defaultStyle,
-    show: !hiddenArgKeys.find((k) => k === argKey),
+    show: !(knownArgKeysConfig[argKey] || {}).hidden,
     aggregate: () => '',
   }));
 

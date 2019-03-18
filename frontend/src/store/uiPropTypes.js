@@ -126,6 +126,10 @@ export const axisConfig = PropTypes.shape({
   })),
 });
 
+const knownKeysConfig = PropTypes.objectOf(PropTypes.shape({
+  hidden: PropTypes.bool.isRequired,
+}));
+
 export const projectConfig = PropTypes.shape({
   axes: PropTypes.shape({
     xAxis: axisConfig,
@@ -136,8 +140,8 @@ export const projectConfig = PropTypes.shape({
     expanded: PropTypes.oneOfType([
       PropTypes.bool, PropTypes.object,
     ]),
-    hiddenLogKeys: PropTypes.arrayOf(PropTypes.string),
-    hiddenArgKeys: PropTypes.arrayOf(PropTypes.string),
+    knownLogKeysConfig: knownKeysConfig,
+    knownArgKeysConfig: knownKeysConfig,
     isGrouped: PropTypes.bool,
   }).isRequired,
   resultsConfig: resultsConfig.isRequired,

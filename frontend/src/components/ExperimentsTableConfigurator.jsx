@@ -8,10 +8,29 @@ import {
   ModalFooter,
   Form,
 } from 'reactstrap';
+import {
+  sortableContainer,
+  sortableElement,
+  sortableHandle,
+} from 'react-sortable-hoc';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import Check from './FormControl/Check';
+import {
+  sortKeys,
+  arrayMove,
+} from '../utils';
 
+const DragHandle = sortableHandle(() => <i className="form-check-input fas fa-bars" />);
+
+const SortableItem = sortableElement(({ children }) => (
+  <div className="form-check" style={{ backgroundColor: '#fff' }}>
+    <DragHandle />
+    {children}
+  </div>
+));
+
+const SortableContainer = sortableContainer(({ children }) => <div>{children}</div>);
 
 class ExperimentsTableConfigurator extends React.Component {
   constructor(props) {
@@ -20,6 +39,8 @@ class ExperimentsTableConfigurator extends React.Component {
     this.handleModalHide = this.handleModalHide.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleIsGrouped = this.handleIsGrouped.bind(this);
+    this.handleSortEnd = this.handleSortEnd.bind(this);
+    this.bindModalNode = this.bindModalNode.bind(this);
 
     this.state = {
       showModal: false,
@@ -42,23 +63,31 @@ class ExperimentsTableConfigurator extends React.Component {
     const { projectConfig } = this.props;
     const { tableState } = projectConfig;
     const {
-      hiddenLogKeys = [],
-      hiddenArgKeys = [],
+      knownLogKeysConfig = {},
+      knownArgKeysConfig = {},
       isGrouped = false,
     } = tableState;
 
     if (prefix === 'logKey') {
-      const nextHiddenLogKeys = !event.target.checked
-        ? hiddenLogKeys.concat(event.target.name)
-        : hiddenLogKeys.filter((vk) => vk !== event.target.name);
+      const nextKnownLogKeysConfig = {
+        ...knownLogKeysConfig,
+        [event.target.name]: {
+          ...knownLogKeysConfig[event.target.name],
+          hidden: !event.target.checked,
+        },
+      };
 
-      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, nextHiddenLogKeys, hiddenArgKeys, isGrouped);
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, nextKnownLogKeysConfig, knownArgKeysConfig, isGrouped);
     } else {
-      const nextHiddenArgKeys = !event.target.checked
-        ? hiddenArgKeys.concat(event.target.name)
-        : hiddenArgKeys.filter((vk) => vk !== event.target.name);
+      const nextKnownArgKeysConfig = {
+        ...knownArgKeysConfig,
+        [event.target.name]: {
+          ...knownArgKeysConfig[event.target.name],
+          hidden: !event.target.checked,
+        },
+      };
 
-      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, hiddenLogKeys, nextHiddenArgKeys, isGrouped);
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, knownLogKeysConfig, nextKnownArgKeysConfig, isGrouped);
     }
   }
 
@@ -71,13 +100,52 @@ class ExperimentsTableConfigurator extends React.Component {
     );
   }
 
+  handleSortEnd(prefix, { oldIndex, newIndex }) {
+    const { stats, projectConfig } = this.props;
+    const { logKeys, argKeys } = stats;
+    const { tableState } = projectConfig;
+    const {
+      knownLogKeysConfig = {},
+      knownArgKeysConfig = {},
+      isGrouped = false,
+    } = tableState;
+
+    if (prefix === 'logKey') {
+      const nextKnownLogKeysConfig = {};
+      arrayMove(sortKeys(logKeys, knownLogKeysConfig), oldIndex, newIndex).forEach((name, index) => {
+        nextKnownLogKeysConfig[name] = {
+          hidden: false,
+          ...knownLogKeysConfig[name],
+          order: index + 1,
+        };
+      });
+
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, nextKnownLogKeysConfig, knownArgKeysConfig, isGrouped);
+    } else {
+      const nextKnownArgKeysConfig = {};
+      arrayMove(sortKeys(argKeys, knownArgKeysConfig), oldIndex, newIndex).forEach((name, index) => {
+        nextKnownArgKeysConfig[name] = {
+          hidden: false,
+          ...knownArgKeysConfig[name],
+          order: index + 1,
+        };
+      });
+
+      this.props.onTableColumnsVisibilityUpdate(this.props.project.id, knownLogKeysConfig, nextKnownArgKeysConfig, isGrouped);
+    }
+  }
+
+  bindModalNode(node) {
+    this.modalNode = node;
+  }
+
   render() {
     const { stats, projectConfig } = this.props;
     const { logKeys, argKeys } = stats;
     const { tableState } = projectConfig;
     const {
-      hiddenLogKeys = [],
-      hiddenArgKeys = [],
+      knownLogKeysConfig = {},
+      knownArgKeysConfig = {},
       isGrouped = false,
     } = tableState;
 
@@ -97,41 +165,64 @@ class ExperimentsTableConfigurator extends React.Component {
           </Check>
         </div>
 
-        <Modal isOpen={this.state.showModal} toggle={this.handleModalHide}>
+        <Modal isOpen={this.state.showModal} innerRef={this.bindModalNode} toggle={this.handleModalHide}>
           <ModalHeader>
             Edit table columns visibility
           </ModalHeader>
           <ModalBody>
             <Form>
               <legend>Log Keys</legend>
-              {
-                logKeys.map((l) => (
-                  <Check
-                    key={`logKey.${l}`}
-                    type="checkbox"
-                    name={l}
-                    checked={!hiddenLogKeys.find((vk) => vk === l)}
-                    onChange={(e) => this.handleChange('logKey', e)}
-                  >
-                    {l}
-                  </Check>
-                ))
-              }
+              <SortableContainer
+                lockAxis="y"
+                helperContainer={() => this.modalNode}
+                onSortEnd={(...args) => this.handleSortEnd('logKey', ...args)}
+                useDragHandle
+              >
+                {
+                  sortKeys(logKeys, knownLogKeysConfig).map((l, i) => (
+                    <SortableItem
+                      key={`logKey.${l}`}
+                      index={i}
+                      helperContainer={() => this.modalNode}
+                    >
+                      <Check
+                        type="checkbox"
+                        name={l}
+                        checked={!(knownLogKeysConfig[l] || {}).hidden}
+                        onChange={(e) => this.handleChange('logKey', e)}
+                      >
+                        {l}
+                      </Check>
+                    </SortableItem>
+                  ))
+                }
+              </SortableContainer>
               <hr />
               <legend>Arg Keys</legend>
-              {
-                argKeys.map((a) => (
-                  <Check
-                    key={`argKey.${a}`}
-                    type="checkbox"
-                    name={a}
-                    checked={!hiddenArgKeys.find((va) => va === a)}
-                    onChange={(e) => this.handleChange('argKey', e)}
-                  >
-                    {a}
-                  </Check>
-                ))
-              }
+              <SortableContainer
+                lockAxis="y"
+                helperContainer={() => this.modalNode}
+                onSortEnd={(...args) => this.handleSortEnd('argKey', ...args)}
+                useDragHandle
+              >
+                {
+                  sortKeys(argKeys, knownArgKeysConfig).map((a, i) => (
+                    <SortableItem
+                      key={`argKey.${a}`}
+                      index={i}
+                    >
+                      <Check
+                        type="checkbox"
+                        name={a}
+                        checked={!(knownArgKeysConfig[a] || {}).hidden}
+                        onChange={(e) => this.handleChange('argKey', e)}
+                      >
+                        {a}
+                      </Check>
+                    </SortableItem>
+                  ))
+                }
+              </SortableContainer>
             </Form>
           </ModalBody>
           <ModalFooter>
