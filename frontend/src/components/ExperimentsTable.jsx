@@ -239,7 +239,7 @@ const ExperimentsTable = (props) => {
 
       <TableConfigurator
         columnHeaders={columnHeaders}
-        hiddenKeysForEveryHeader={[
+        keyConfigs={[
           knownLogKeysConfig,
           knownArgKeysConfig,
         ]}

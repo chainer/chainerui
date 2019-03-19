@@ -23,7 +23,7 @@ class AssetsContainer extends React.Component {
     this.handleAssetsTableColumnsVisibilityUpdate = this.handleAssetsTableColumnsVisibilityUpdate.bind(this);
   }
 
-  handleAssetsTableColumnsVisibilityUpdate(hiddenTrainInfoKeys, hiddenContentsKeys) {
+  handleAssetsTableColumnsVisibilityUpdate(knownTrainInfoKeysConfig, knownContentKeysConfig) {
     const {
       projectId,
       resultId,
@@ -31,8 +31,8 @@ class AssetsContainer extends React.Component {
     this.props.updateAssetsTableColumnsVisibility(
       projectId,
       resultId,
-      hiddenTrainInfoKeys,
-      hiddenContentsKeys
+      knownTrainInfoKeysConfig,
+      knownContentKeysConfig
     );
   }
 

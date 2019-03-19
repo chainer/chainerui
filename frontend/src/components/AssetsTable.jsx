@@ -6,9 +6,16 @@ import * as uiPropTypes from '../store/uiPropTypes';
 
 import TableConfigurator from './TableConfigurator';
 
+import {
+  sortKeys,
+} from '../utils';
+
 const AssetsTable = (props) => {
   const { assets, onAssetsTableColumnsVisibilityUpdate, tableState } = props;
-  const { hiddenKeysForEveryHeader = [] } = tableState;
+  const {
+    knownTrainInfoKeysConfig = {},
+    knownContentKeysConfig = {},
+  } = tableState;
 
   const trainInfoKeys = assets.map((asset) => Object.keys(asset.train_info)).flat();
   const uniqueTrainInfoKeys = [...new Set(trainInfoKeys)];
@@ -16,7 +23,7 @@ const AssetsTable = (props) => {
   const contentKeys = assets.map((asset) => asset.contents.map((content) => content.tag)).flat();
   const uniqueContentKeys = [...new Set(contentKeys)];
 
-  const trainInfoColumns = uniqueTrainInfoKeys.map((k) => ({
+  const trainInfoColumns = sortKeys(uniqueTrainInfoKeys, knownTrainInfoKeysConfig).map((k) => ({
     Header: k,
     id: k,
     className: 'text-right',
@@ -24,12 +31,10 @@ const AssetsTable = (props) => {
       const trainInfo = p.train_info;
       return trainInfo[k];
     },
-    show: hiddenKeysForEveryHeader.length === 0
-      ? true
-      : !hiddenKeysForEveryHeader[0].find((hk) => hk === k),
+    show: !(knownTrainInfoKeysConfig[k] || {}).hidden,
   }));
 
-  const contentColumns = uniqueContentKeys.map((k) => ({
+  const contentColumns = sortKeys(uniqueContentKeys, knownContentKeysConfig).map((k) => ({
     Header: k,
     id: k,
     className: 'text-center',
@@ -58,9 +63,7 @@ const AssetsTable = (props) => {
         />
       );
     },
-    show: hiddenKeysForEveryHeader.length === 0
-      ? true
-      : !hiddenKeysForEveryHeader[1].find((hk) => hk === k),
+    show: !(knownContentKeysConfig[k] || {}).hidden,
   }));
 
   const columns = [
@@ -91,7 +94,10 @@ const AssetsTable = (props) => {
 
       <TableConfigurator
         columnHeaders={columnHeaders}
-        hiddenKeysForEveryHeader={hiddenKeysForEveryHeader}
+        keyConfigs={[
+          knownTrainInfoKeysConfig,
+          knownContentKeysConfig,
+        ]}
         onTableColumnsVisibilityUpdate={onAssetsTableColumnsVisibilityUpdate}
       />
     </div>

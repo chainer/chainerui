@@ -58,9 +58,9 @@ class TableConfigurator extends React.Component {
   }
 
   handleChange(prefix, event) {
-    const { columnHeaders, hiddenKeysForEveryHeader } = this.props;
-    const primaryKnownKeysConfig = hiddenKeysForEveryHeader[0] || [];
-    const secondaryKnownKeysConfig = hiddenKeysForEveryHeader[1] || [];
+    const { columnHeaders, keyConfigs } = this.props;
+    const primaryKnownKeysConfig = keyConfigs[0] || [];
+    const secondaryKnownKeysConfig = keyConfigs[1] || [];
 
     if (prefix === columnHeaders[0].Header) {
       const nextPrimary = {
@@ -86,9 +86,9 @@ class TableConfigurator extends React.Component {
   }
 
   handleSortEnd(prefix, { oldIndex, newIndex }) {
-    const { columnHeaders, hiddenKeysForEveryHeader } = this.props;
-    const primaryKnownKeysConfig = hiddenKeysForEveryHeader[0] || [];
-    const secondaryKnownKeysConfig = hiddenKeysForEveryHeader[1] || [];
+    const { columnHeaders, keyConfigs } = this.props;
+    const primaryKnownKeysConfig = keyConfigs[0] || [];
+    const secondaryKnownKeysConfig = keyConfigs[1] || [];
 
     if (prefix === columnHeaders[0].Header) {
       const nextPrimary = {};
@@ -120,7 +120,7 @@ class TableConfigurator extends React.Component {
   }
 
   render() {
-    const { columnHeaders, hiddenKeysForEveryHeader } = this.props;
+    const { columnHeaders, keyConfigs } = this.props;
     return (
       <div>
         <Button color="secondary" className="my-2" onClick={this.handleModalShow}>
@@ -144,7 +144,7 @@ class TableConfigurator extends React.Component {
                       useDragHandle
                     >
                       {
-                        sortKeys(ch.columns, hiddenKeysForEveryHeader[idx]).map((l, i) => (
+                        sortKeys(ch.columns, keyConfigs[idx]).map((l, i) => (
                           <SortableItem
                             key={`logKey.${l}`}
                             index={i}
@@ -153,8 +153,8 @@ class TableConfigurator extends React.Component {
                             <Check
                               type="checkbox"
                               name={l}
-                              checked={!(hiddenKeysForEveryHeader[idx][l] || {}).hidden}
-                              onChange={(e) => this.handleChange('logKey', e)}
+                              checked={!(keyConfigs[idx][l] || {}).hidden}
+                              onChange={(e) => this.handleChange(ch.Header, e)}
                             >
                               {l}
                             </Check>
@@ -182,9 +182,9 @@ TableConfigurator.propTypes = {
     Header: PropTypes.string.isRequired,
     columns: PropTypes.array.isRequired,
   })).isRequired,
-  hiddenKeysForEveryHeader: PropTypes.arrayOf(
-    PropTypes.array.isRequired,
-    PropTypes.array.isRequired
+  keyConfigs: PropTypes.arrayOf(
+    PropTypes.object.isRequired,
+    PropTypes.object.isRequired
   ).isRequired,
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };
