@@ -230,3 +230,15 @@ export const padDigits = (num, len) => {
   }
   return str;
 };
+
+export const sortKeys = (keys, keysConfig) => keys.slice().sort((a, b) => {
+  const aOrder = (keysConfig[a] || {}).order || Infinity;
+  const bOrder = (keysConfig[b] || {}).order || Infinity;
+  return aOrder - bOrder || 0; // Infinity - Infinity = NaN
+});
+
+export const arrayMove = (arr, from, to) => {
+  const a = arr.slice();
+  a.splice((to < 0 ? a.length + to : to), 0, a.splice(from, 1)[0]);
+  return a;
+};

@@ -8,6 +8,7 @@ import {
   getGrandParentDirectoryName,
   getLastLogDict,
   sortMethod,
+  sortKeys,
 } from '../utils';
 
 import ResultName from './experiments_table_cell/ResultName';
@@ -42,8 +43,6 @@ const ExperimentsTable = (props) => {
     .filter((resultId) => !(resultsConfig[resultId] || {}).hidden).length;
   const isPartialSelect = visibleResultCount > 0 && visibleResultCount < resultCount;
 
-  const { hiddenKeysForEveryHeader = [] } = tableState;
-
   const handleResultsConfigSelectChange = (evt) => {
     resultKeys.forEach((resultId) => {
       onResultsConfigSelectUpdate(project.id, resultId, !evt.target.checked);
@@ -62,6 +61,8 @@ const ExperimentsTable = (props) => {
   const resultList = resultKeys.map((resultId) => results[resultId]);
   const expanded = resultList.length === 0 ? {} : tableState.expanded;
   const {
+    knownLogKeysConfig = {},
+    knownArgKeysConfig = {},
     isGrouped = false,
   } = tableState;
 
@@ -138,7 +139,7 @@ const ExperimentsTable = (props) => {
   }
   const groupedKey = isGrouped ? ['group'] : [];
 
-  const logs = logKeys.map((logKey) => ({
+  const logs = sortKeys(logKeys, knownLogKeysConfig).map((logKey) => ({
     Header: logKey,
     id: `logKey${logKey}`,
     accessor: (p) => {
@@ -149,13 +150,11 @@ const ExperimentsTable = (props) => {
       return lastLogDict[logKey];
     },
     style: defaultStyle,
-    show: hiddenKeysForEveryHeader.length === 0
-      ? true
-      : !hiddenKeysForEveryHeader[0].find((hk) => hk === logKey),
+    show: !(knownLogKeysConfig[logKey] || {}).hidden,
     aggregate: () => '',
   }));
 
-  const argsList = argKeys.map((argKey) => ({
+  const argsList = sortKeys(argKeys, knownArgKeysConfig).map((argKey) => ({
     Header: argKey,
     id: argKey,
     accessor: (p) => {
@@ -167,9 +166,7 @@ const ExperimentsTable = (props) => {
       return argValue2string(argDict[argKey]);
     },
     style: defaultStyle,
-    show: hiddenKeysForEveryHeader.length === 0
-      ? true
-      : !hiddenKeysForEveryHeader[1].find((hk) => hk === argKey),
+    show: !(knownArgKeysConfig[argKey] || {}).hidden,
     aggregate: () => '',
   }));
 
@@ -242,7 +239,10 @@ const ExperimentsTable = (props) => {
 
       <TableConfigurator
         columnHeaders={columnHeaders}
-        hiddenKeysForEveryHeader={hiddenKeysForEveryHeader}
+        hiddenKeysForEveryHeader={[
+          knownLogKeysConfig,
+          knownArgKeysConfig,
+        ]}
         onTableColumnsVisibilityUpdate={onTableColumnsVisibilityUpdate}
       />
     </div>

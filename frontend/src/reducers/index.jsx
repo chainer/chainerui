@@ -427,8 +427,8 @@ const linesConfigReducer = (state = {}, action) => {
 const tableStateReducer = (state = {}, action) => {
   const {
     expanded = {},
-    hiddenLogKeys = [],
-    hiddenArgKeys = [],
+    knownLogKeysConfig = {},
+    knownArgKeysConfig = {},
     isGrouped = false,
   } = action;
   switch (action.type) {
@@ -440,10 +440,8 @@ const tableStateReducer = (state = {}, action) => {
     case ActionTypes.TABLE_STATE_COLUMNS_VISIBILITY_UPDATE:
       return {
         ...state,
-        hiddenKeysForEveryHeader: [
-          hiddenLogKeys,
-          hiddenArgKeys,
-        ],
+        knownLogKeysConfig,
+        knownArgKeysConfig,
         isGrouped,
       };
     default:
