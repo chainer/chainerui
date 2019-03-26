@@ -6,16 +6,14 @@ models without using the Trainer class in chainer and instead write a
 training loop that manually computes the loss of minibatches and
 applies an optimizer to update the model.
 """
-from __future__ import print_function
 
 import argparse
 
 import chainer
+from chainer import configuration
 from chainer.dataset import convert
 import chainer.links as L
 from chainer import serializers
-
-from chainerui.utils import LogReport
 
 import train_mnist
 
@@ -53,6 +51,11 @@ def main():
     optimizer = chainer.optimizers.Adam()
     optimizer.setup(model)
 
+    if args.resume:
+        # Resume from a snapshot
+        serializers.load_npz('{}/mlp.model'.format(args.resume), model)
+        serializers.load_npz('{}/mlp.state'.format(args.resume), optimizer)
+
     # Load the MNIST dataset
     train, test = chainer.datasets.get_mnist()
 
@@ -65,57 +68,57 @@ def main():
 
     sum_accuracy = 0
     sum_loss = 0
+    
+    import chainerui.client.client as chainerui_client
+    chainerui_client.init(result_dir=args.out)
+    import chainerui.client.model_hook as chainerui_hook
+    chainerui_hook.monitor(model, ['loss', 'accuracy'])
 
     # [ChainerUI] setup log reporter to show on ChainerUI
-    ui_report = LogReport(args.out, conditions=args)
+    # ui_report = LogReport(args.out, conditions=args)
     while train_iter.epoch < args.epoch:
         batch = train_iter.next()
-        x_array, t_array = convert.concat_examples(batch, args.gpu)
-        x = chainer.Variable(x_array)
-        t = chainer.Variable(t_array)
+        x, t = convert.concat_examples(batch, args.gpu)
         optimizer.update(model, x, t)
-        sum_loss += float(model.loss.data) * len(t.data)
-        sum_accuracy += float(model.accuracy.data) * len(t.data)
+        sum_loss += float(model.loss.data) * len(t)
+        sum_accuracy += float(model.accuracy.data) * len(t)
 
         if train_iter.is_new_epoch:
-            print('epoch: ', train_iter.epoch)
-            train_loss = sum_loss / train_count
-            train_accuracy = sum_accuracy / train_count
+            print('epoch: {}'.format(train_iter.epoch))
             print('train mean loss: {}, accuracy: {}'.format(
-                train_loss, train_accuracy))
-
+                sum_loss / train_count, sum_accuracy / train_count))
             # evaluation
             sum_accuracy = 0
             sum_loss = 0
-            for batch in test_iter:
-                x_array, t_array = convert.concat_examples(batch, args.gpu)
-                x = chainer.Variable(x_array)
-                t = chainer.Variable(t_array)
-                loss = model(x, t)
-                sum_loss += float(loss.data) * len(t.data)
-                sum_accuracy += float(model.accuracy.data) * len(t.data)
+            # Enable evaluation mode.
+            with configuration.using_config('train', False):
+                # This is optional but can reduce computational overhead.
+                with chainer.using_config('enable_backprop', False):
+                    for batch in test_iter:
+                        x, t = convert.concat_examples(batch, args.gpu)
+                        loss = model(x, t)
+                        sum_loss += float(loss.data) * len(t)
+                        sum_accuracy += float(model.accuracy.data) * len(t)
 
             test_iter.reset()
-            test_loss = sum_loss / test_count
-            test_accuracy = sum_accuracy / test_count
             print('test mean  loss: {}, accuracy: {}'.format(
-                test_loss, test_accuracy))
+                sum_loss / test_count, sum_accuracy / test_count))
             # [ChainerUI] write values to 'log' file
-            stats = {
-                'epoch': train_iter.epoch,
-                'iteration': train_iter.epoch * args.batchsize,
-                'train/loss': train_loss, 'train/accuracy': train_accuracy,
-                'test/loss': test_loss, 'test/accuracy': test_accuracy
-            }
-            ui_report(stats)
+            # stats = {
+            #     'epoch': train_iter.epoch,
+            #     'iteration': train_iter.epoch * args.batchsize,
+            #     'train/loss': train_loss, 'train/accuracy': train_accuracy,
+            #     'test/loss': test_loss, 'test/accuracy': test_accuracy
+            # }
+            # ui_report(stats)
             sum_accuracy = 0
             sum_loss = 0
 
     # Save the model and the optimizer
     print('save the model')
-    serializers.save_npz('mlp.model', model)
+    serializers.save_npz('{}/mlp.model'.format(args.out), model)
     print('save the optimizer')
-    serializers.save_npz('mlp.state', optimizer)
+    serializers.save_npz('{}/mlp.state'.format(args.out), optimizer)
 
 
 if __name__ == '__main__':

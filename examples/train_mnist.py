@@ -1,8 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from __future__ import print_function
-
 import argparse
 
 import chainer
@@ -10,9 +6,6 @@ import chainer.functions as F
 import chainer.links as L
 from chainer import training
 from chainer.training import extensions
-
-from chainerui.extensions import CommandsExtension
-from chainerui.utils import save_args
 
 
 # Network definition
@@ -48,6 +41,8 @@ def main():
                         help='Resume the training from snapshot')
     parser.add_argument('--unit', '-u', type=int, default=1000,
                         help='Number of units')
+    parser.add_argument('--noplot', dest='plot', action='store_false',
+                        help='Disable PlotReport extension')
     args = parser.parse_args()
 
     print('GPU: {}'.format(args.gpu))
@@ -77,9 +72,14 @@ def main():
     test_iter = chainer.iterators.SerialIterator(test, args.batchsize,
                                                  repeat=False, shuffle=False)
 
+    # [ChainerUI] setup
+    import chainerui.client.client as chainerui_client
+    chainerui_client.init(result_dir=args.out)
+
     # Set up a trainer
-    updater = training.StandardUpdater(train_iter, optimizer, device=args.gpu)
-    trainer = training.Trainer(updater, (args.epoch, 'epoch'), out=args.out)
+    updater = training.updaters.StandardUpdater(
+        train_iter, optimizer, device=args.gpu)
+    trainer = training.Trainer(updater, (args.epoch, 'epoch'), out=chainerui_client.get_log_path())
 
     # Evaluate the model with the test dataset for each epoch
     trainer.extend(extensions.Evaluator(test_iter, model, device=args.gpu))
@@ -94,7 +94,7 @@ def main():
 
     # Write a log of evaluation statistics for each epoch
     # [ChainerUI] read 'log' file for plotting values
-    trainer.extend(extensions.LogReport())
+    trainer.extend(extensions.LogReport(postprocess=chainerui_client.get_log_report_post_process()))
 
     # Save two plot images to the result dir
     if extensions.PlotReport.available():
@@ -125,9 +125,8 @@ def main():
     # [ChainerUI] Observe learning rate
     trainer.extend(extensions.observe_lr())
     # [ChainerUI] enable to send commands from ChainerUI
-    trainer.extend(CommandsExtension())
+    # trainer.extend(CommandsExtension())
     # [ChainerUI] save 'args' to show experimental conditions
-    save_args(args, args.out)
 
     # Run the training
     trainer.run()
