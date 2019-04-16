@@ -8,8 +8,28 @@ import {
   ModalFooter,
   Form,
 } from 'reactstrap';
+import {
+  sortableContainer,
+  sortableElement,
+  sortableHandle,
+} from 'react-sortable-hoc';
 
 import Check from './FormControl/Check';
+import {
+  sortKeys,
+  arrayMove,
+} from '../utils';
+
+const DragHandle = sortableHandle(() => <i className="form-check-input fas fa-bars" />);
+
+const SortableItem = sortableElement(({ children }) => (
+  <div className="form-check" style={{ backgroundColor: '#fff' }}>
+    <DragHandle />
+    {children}
+  </div>
+));
+
+const SortableContainer = sortableContainer(({ children }) => <div>{children}</div>);
 
 class TableConfigurator extends React.Component {
   constructor(props) {
@@ -17,6 +37,8 @@ class TableConfigurator extends React.Component {
     this.handleModalShow = this.handleModalShow.bind(this);
     this.handleModalHide = this.handleModalHide.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSortEnd = this.handleSortEnd.bind(this);
+    this.bindModalNode = this.bindModalNode.bind(this);
 
     this.state = {
       showModal: false,
@@ -36,34 +58,76 @@ class TableConfigurator extends React.Component {
   }
 
   handleChange(prefix, event) {
-    const { columnHeaders, hiddenKeysForEveryHeader } = this.props;
-    const primaryHiddenKeys = hiddenKeysForEveryHeader[0] || [];
-    const secondaryHiddenKeys = hiddenKeysForEveryHeader[1] || [];
+    const { columnHeaders, keyConfigs } = this.props;
+    const primaryKnownKeysConfig = keyConfigs[0] || [];
+    const secondaryKnownKeysConfig = keyConfigs[1] || [];
 
     if (prefix === columnHeaders[0].Header) {
-      const nextHiddenPrimaryKeys = !event.target.checked
-        ? primaryHiddenKeys.concat(event.target.name)
-        : primaryHiddenKeys.filter((vk) => vk !== event.target.name);
+      const nextPrimary = {
+        ...primaryKnownKeysConfig,
+        [event.target.name]: {
+          ...primaryKnownKeysConfig[event.target.name],
+          hidden: !event.target.checked,
+        },
+      };
 
-      this.props.onTableColumnsVisibilityUpdate(nextHiddenPrimaryKeys, secondaryHiddenKeys);
+      this.props.onTableColumnsVisibilityUpdate(nextPrimary, secondaryKnownKeysConfig);
     } else {
-      const nextHiddenSecondaryKeys = !event.target.checked
-        ? secondaryHiddenKeys.concat(event.target.name)
-        : secondaryHiddenKeys.filter((vk) => vk !== event.target.name);
+      const nextSecondary = {
+        ...secondaryKnownKeysConfig,
+        [event.target.name]: {
+          ...secondaryKnownKeysConfig[event.target.name],
+          hidden: !event.target.checked,
+        },
+      };
 
-      this.props.onTableColumnsVisibilityUpdate(primaryHiddenKeys, nextHiddenSecondaryKeys);
+      this.props.onTableColumnsVisibilityUpdate(primaryKnownKeysConfig, nextSecondary);
     }
   }
 
+  handleSortEnd(prefix, { oldIndex, newIndex }) {
+    const { columnHeaders, keyConfigs } = this.props;
+    const primaryKnownKeysConfig = keyConfigs[0] || [];
+    const secondaryKnownKeysConfig = keyConfigs[1] || [];
+
+    if (prefix === columnHeaders[0].Header) {
+      const nextPrimary = {};
+      arrayMove(sortKeys(columnHeaders[0].columns, primaryKnownKeysConfig), oldIndex, newIndex).forEach((name, index) => {
+        nextPrimary[name] = {
+          hidden: false,
+          ...primaryKnownKeysConfig[name],
+          order: index + 1,
+        };
+      });
+
+      this.props.onTableColumnsVisibilityUpdate(nextPrimary, secondaryKnownKeysConfig);
+    } else {
+      const nextSecondary = {};
+      arrayMove(sortKeys(columnHeaders[1].columns, secondaryKnownKeysConfig), oldIndex, newIndex).forEach((name, index) => {
+        nextSecondary[name] = {
+          hidden: false,
+          ...secondaryKnownKeysConfig[name],
+          order: index + 1,
+        };
+      });
+
+      this.props.onTableColumnsVisibilityUpdate(primaryKnownKeysConfig, nextSecondary);
+    }
+  }
+
+  bindModalNode(node) {
+    this.modalNode = node;
+  }
+
   render() {
-    const { columnHeaders, hiddenKeysForEveryHeader } = this.props;
+    const { columnHeaders, keyConfigs } = this.props;
     return (
       <div>
         <Button color="secondary" className="my-2" onClick={this.handleModalShow}>
           Table settings
         </Button>
 
-        <Modal isOpen={this.state.showModal} toggle={this.handleModalHide}>
+        <Modal isOpen={this.state.showModal} innerRef={this.bindModalNode} toggle={this.handleModalHide}>
           <ModalHeader>
             Edit table columns visibility
           </ModalHeader>
@@ -73,23 +137,31 @@ class TableConfigurator extends React.Component {
                 columnHeaders.map((ch, idx) => (
                   <div key={ch.Header}>
                     <legend>{ ch.Header }</legend>
-                    {
-                      ch.columns.map((sch) => (
-                        <Check
-                          key={`${ch.Header}.${sch}`}
-                          type="checkbox"
-                          name={sch}
-                          checked={
-                            (hiddenKeysForEveryHeader[idx] === undefined)
-                              ? true
-                              : (!hiddenKeysForEveryHeader[idx].find((vk) => vk === sch))
-                          }
-                          onChange={(e) => this.handleChange(ch.Header, e)}
-                        >
-                          {sch}
-                        </Check>
-                      ))
-                    }
+                    <SortableContainer
+                      lockAxis="y"
+                      helperContainer={() => this.modalNode}
+                      onSortEnd={(...args) => this.handleSortEnd(ch.Header, ...args)}
+                      useDragHandle
+                    >
+                      {
+                        sortKeys(ch.columns, keyConfigs[idx]).map((l, i) => (
+                          <SortableItem
+                            key={`logKey.${l}`}
+                            index={i}
+                            helperContainer={() => this.modalNode}
+                          >
+                            <Check
+                              type="checkbox"
+                              name={l}
+                              checked={!(keyConfigs[idx][l] || {}).hidden}
+                              onChange={(e) => this.handleChange(ch.Header, e)}
+                            >
+                              {l}
+                            </Check>
+                          </SortableItem>
+                        ))
+                      }
+                    </SortableContainer>
                   </div>
                 ))
               }
@@ -110,9 +182,9 @@ TableConfigurator.propTypes = {
     Header: PropTypes.string.isRequired,
     columns: PropTypes.array.isRequired,
   })).isRequired,
-  hiddenKeysForEveryHeader: PropTypes.arrayOf(
-    PropTypes.array.isRequired,
-    PropTypes.array.isRequired
+  keyConfigs: PropTypes.arrayOf(
+    PropTypes.object.isRequired,
+    PropTypes.object.isRequired
   ).isRequired,
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };

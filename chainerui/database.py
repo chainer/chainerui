@@ -56,7 +56,6 @@ class Database(object):
         try:
             engine = create_engine(
                 url,
-                convert_unicode=True,
                 connect_args=connect_args,
                 echo=echo
             )
