@@ -264,12 +264,12 @@ export const updateTableColumnsVisibility = (projectId, knownLogKeysConfig, know
 });
 
 export const ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
-export const updateAssetsTableColumnsVisibility = (projectId, resultId, hiddenTrainInfoKeys, hiddenContentsKeys) => ({
+export const updateAssetsTableColumnsVisibility = (projectId, resultId, knownTrainInfoKeysConfig, knownContentKeysConfig) => ({
   type: ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
   projectId,
   resultId,
-  hiddenTrainInfoKeys,
-  hiddenContentsKeys,
+  knownTrainInfoKeysConfig,
+  knownContentKeysConfig,
 });
 
 // global config

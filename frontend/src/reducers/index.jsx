@@ -380,8 +380,8 @@ const resultsConfigReducer = (state = {}, action) => {
     case ActionTypes.ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE:
       if (resultId) {
         const {
-          hiddenTrainInfoKeys = [],
-          hiddenContentsKeys = [],
+          knownTrainInfoKeysConfig = {},
+          knownContentKeysConfig = {},
         } = action;
         const resultConfig = state[resultId] || { hidden: false };
         const { assetsTableState = {} } = resultConfig;
@@ -391,10 +391,8 @@ const resultsConfigReducer = (state = {}, action) => {
             ...resultConfig,
             assetsTableState: {
               ...assetsTableState,
-              hiddenKeysForEveryHeader: [
-                hiddenTrainInfoKeys,
-                hiddenContentsKeys,
-              ],
+              knownTrainInfoKeysConfig,
+              knownContentKeysConfig,
             },
           },
         };
@@ -515,7 +513,7 @@ const configReducer = combineReducers({
 });
 
 
-const currentStoreVersion = 20181023.0;
+const currentStoreVersion = 20190311.0;
 
 const persistConfig = {
   key: 'config',
