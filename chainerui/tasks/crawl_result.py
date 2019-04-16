@@ -20,7 +20,7 @@ def load_result_json(result_path, json_file_name):
         with open(json_path) as json_data:
             try:
                 _list = json.load(json_data)
-            except json.decoder.JSONDecodeError as err:
+            except ValueError as err:
                 logger.error(
                     'Failed to load json: {}, {}'.format(json_path, err))
 
@@ -74,7 +74,7 @@ def _update_to_default_name(result):
     with open(conf_path) as f:
         try:
             chainerui_conf = json.load(f)
-        except json.decoder.JSONDecodeError as err:
+        except ValueError as err:
             logger.error(
                 'Failed to load json: {}, {}'.format(conf_path, err))
             return
