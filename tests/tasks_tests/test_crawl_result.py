@@ -94,6 +94,12 @@ def test_load_result_json_with_incorrect_file(func_dir):
     assert len(load_result_json(func_dir, 'log.txt')) == 0
 
 
+def test_load_result_json_with_invalid_json(func_dir):
+    with open(os.path.join(func_dir, 'log'), 'w') as f:
+        f.write('{')  # broken JSON
+    assert len(load_result_json(func_dir, 'log')) == 0
+
+
 def test_crawl_result_reset(func_dir):
     # basic test is checked on 'test_api.py', so this test checks only
     # reset logic.
@@ -141,3 +147,14 @@ def test_crawl_result_default_name(func_dir):
         json.dump(chainerui_conf, f)
     result4 = crawl_result(result3, force=True, commit=False)
     assert result4.name == 'default_name'  # not updated
+
+
+def test_crawl_result_invalid_default_name_file(func_dir):
+    conf_path = os.path.join(func_dir, '.chainerui_conf')
+    with open(conf_path, 'w') as f:
+        f.write('{"default_result_name": "default_name"')  # broken JSON
+    result = Result(func_dir)
+    assert result.name is None
+
+    result2 = crawl_result(result, force=True, commit=False)
+    assert result2.name is None
