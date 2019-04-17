@@ -23,19 +23,16 @@ def format_datetime(dt=None):
 
 class Client(object):
 
-    def __init__(self, url=None, project_name=None, crawlable=False,
-                 result_dir='results'):
+    def __init__(self, url=None, project_name=None, crawlable=False):
         if url is None:
             url = get_default_url()
         self.url = (url[:len(url)-1] if url.endswith('/') else url) + '/api/v1'
         self.project_name = project_name
         self.crawlable = crawlable
-        self.result_dir = result_dir
 
         self.project_path = os.path.abspath(os.getcwd())
         self.project_id = None
         self.result_id = None
-        self.log_path = None
         self.cached_logs = []
         self.first_reset = False
 
@@ -47,11 +44,12 @@ class Client(object):
         project_res, msg = urlopen('GET', check_url)
         # if project is not found, create a project
         if project_res is None:
-            if project_path not in msg:
-                print(msg)
+            if (project_path + '\' is not found') not in msg:
+                print('connection error, URL: {}, Message: {}'.format(
+                    check_url, msg))
                 return False
             # if message includes pathname, means not found error
-            # and continue to process
+            # continue to process to register this project
             project_req = {
                 'project': {
                     'path_name': project_path,
@@ -61,8 +59,9 @@ class Client(object):
             }
             project_res, msg = urlopen(
                 'POST', self.projects_url, data=project_req)
-            if msg != '':
-                print(msg)
+            if project_res is None:
+                print('register error, URL: {}, Message: {}'. format(
+                    self.projects_url, msg))
                 return False
 
         project_id = project_res['project']['id']
@@ -72,45 +71,57 @@ class Client(object):
             project_req = {'project': {'name': self.project_name}}
             project_res, msg = urlopen(
                 'PUT', self.project_url, data=project_req)
-            if msg != '':
-                print(msg)
+            if project_res is None:
+                print('update error, URL: {}, Message: {}'.format(
+                    self.project_url, msg))
                 return False
 
         self.project_id = project_id
         return True
 
-    def register_result(self, result_name=None):
-        if result_name is not None:
-            self.log_path = os.path.join(
-                self.project_path, self.result_dir, result_name)
-            # check the result path exists or not
+    def register_result(self, result_name=None, overwrite_result=False):
+        now = datetime.datetime.now()
+
+        if result_name is None:
+            result_path = self.project_path
+        else:
+            result_path = os.path.join(self.project_path, result_name)
+
+        if overwrite_result:
             check_url = '{}?path_name={}'.format(
-                self.results_url, self.log_path)
-            result_res, _ = urlopen('GET', check_url)  # ignore error
-            if result_res is not None:
+                self.results_url, result_path)
+            result_res, msg = urlopen('GET', check_url)
+            if result_res is None:
+                if (result_path + '\' is not found') not in msg:
+                    print('connection error, URL: {}, Message: {}'.format(
+                        self.check_url, msg))
+                    return False
+            else:
+                # result is found, overwrite on the result record
                 self.result_id = result_res['result']['id']
                 self.first_reset = True
+                return True
+        else:
+            # result path is required unique key, make dummy path but not
+            # make the physical directory.
+            result_path += '-' + format_datetime(now)
+            if result_name is not None:
+                result_name += '-' + format_datetime(now)
 
-        now = datetime.datetime.now()
-        if self.result_id is None:
-            if self.log_path is None:
-                self.log_path = os.path.join(
-                    self.project_path, self.result_dir, format_datetime(now))
-                os.makedirs(self.log_path)
-            result_req = {
-                'result': {
-                    'pathName': self.log_path,
-                    'crawlable': False,
-                    'logModifiedAt': make_timestamp(now),
-                }
+        result_req = {
+            'result': {
+                'pathName': result_path,
+                'crawlable': False,
+                'logModifiedAt': make_timestamp(now),
             }
-            result_res, msg = urlopen(
-                'POST', self.results_url, data=result_req)
-            if msg != '':
-                print(msg)
-                return None  # ignore error
-            self.result_id = result_res['result']['id']
-        return result_res
+        }
+        result_res, msg = urlopen('POST', self.results_url, data=result_req)
+        if result_res is None:
+            print('register error, URL: {}, Message: {}'.format(
+                self.results_url, msg))
+            return False
+        self.result_id = result_res['result']['id']
+        return True
 
     def post_log(self, logs, modified_at=None):
         if modified_at is None:
@@ -124,15 +135,23 @@ class Client(object):
             }
         }
         log_res, msg = urlopen('POST', self.logs_url, data=log_req)
-        if msg != '' or log_req is None:
-            return -1  # ignore error
-        self.first_reset = False
-        self.cached_logs = []
-        return log_res['logs']['totalLogCount']
+        if log_res is None:
+            print('post log error, URL: {}, Message: {}'.format(
+                self.logs_url, msg))
+            return
+
+        if log_res['logs']['totalLogCount'] >= 0:
+            self.first_reset = False
+            self.cached_logs = []
 
     def post_args(self, conditions):
         arg_req = {'argument': conditions}
-        urlopen('POST', self.args_url, data=arg_req)
+        res, msg = urlopen('POST', self.args_url, data=arg_req)
+        if res is None:
+            print('post args error, URL: {}, Message: {}'.format(
+                self.args_url, msg))
+            return False
+        return True
 
     @property
     def projects_url(self):
@@ -140,7 +159,6 @@ class Client(object):
 
     @property
     def project_url(self):
-        assert self.project_id is not None
         return '{}/{}'.format(self.projects_url, self.project_id)
 
     @property
@@ -149,7 +167,6 @@ class Client(object):
 
     @property
     def result_url(self):
-        assert self.result_id is not None
         return '{}/{}'.format(self.results_url, self.result_id)
 
     @property
@@ -164,36 +181,29 @@ class Client(object):
 _client = None
 
 
-def init(url=None, project_name=None, result_dir='results', result_name=None,
+def init(url=None, project_name=None, result_name=None, overwrite_result=False,
          crawlable=False):
     global _client
     if _client is None:
         _client = Client(
-            url=url, project_name=project_name, crawlable=crawlable,
-            result_dir=result_dir)
+            url=url, project_name=project_name, crawlable=crawlable)
 
-    _client.setup_project()
-    _client.register_result(result_name=result_name)
+    if not _client.setup_project():
+        _client = None
+        return
 
-
-def get_log_path():
-    if _client is None:
-        raise ValueError('TODO')
-    return _client.log_path
+    if not _client.register_result(
+            result_name=result_name, overwrite_result=overwrite_result):
+        _client = None
 
 
-def get_log_report_post_process():
-    if _client is None:
-        raise ValueError('TODO')
-
+def log_reporter():
     class PostProcess(object):
-        def __init__(self):
-            self.cached_logs = []
 
         def __call__(self, stats_cpu):
-            self.cached_logs.append(stats_cpu)
-            updated_idx = _client.post_log(self.cached_logs)
-            if updated_idx >= 0:
-                self.cached_logs = []
+            if _client is None:
+                return
+
+            _client.post_log([stats_cpu])
 
     return PostProcess()
