@@ -4,7 +4,7 @@ import time
 
 import pytest
 
-from chainerui.client.client import init as client_init
+from chainerui.client import client
 from chainerui.client.helper import urlopen
 from chainerui.server import create_app
 
@@ -35,11 +35,12 @@ class DummyServer(Thread):
                 break
             time.sleep(0.1)
             wait_count += 1
+        return wait_count <= wait_limit
 
     def _shutdown(self):
         from flask import request
         if 'werkzeug.server.shutdown' not in request.environ:
-            raise 'Server has already shut down'
+            return 'Server has already shut down'
 
         request.environ['werkzeug.server.shutdown']()
         return 'Server is shutting down...'
@@ -54,19 +55,86 @@ class DummyServer(Thread):
         self.app.run(host=self.host, port=self.port)
 
 
+@pytest.fixture(scope='function')
+def server(func_db):
+    logging.getLogger('werkzeug').disabled = True
+
+    server = DummyServer(port=5099)
+    server.start()
+    assert server.wait_for_running(), 'cannot start test server'
+
+    yield server
+
+    server.shutdown()
+
+
+def test_client_init_default(server):
+    client.init(server.url)
+
+    assert client._client.project_id == 1
+    assert client._client.result_id == 1
+
+    reporter = client.log_reporter()
+    reporter({'loss': 0.001})
+
+
+def test_client_init_no_server(server):
+    server.shutdown()
+    client.init(server.url)
+
+    assert client._client is None
+
+    reporter = client.log_reporter()
+    reporter({'loss': 0.001})  # fail to make client but no error
+
+
 class TestClient(object):
 
-    @pytest.fixture(scope='function', autouse=True)
-    def server(self, func_db):
-        logging.getLogger('werkzeug').disabled = True
+    @pytest.fixture(scope='function')
+    def cli(self, server):
+        return client.Client(server.url)
 
-        server = DummyServer(port=5099)
-        server.start()
-        server.wait_for_running()
+    def test_setup_project(self, cli):
+        assert cli.setup_project()
 
-        yield
+        assert cli.project_id == 1
 
-        server.shutdown()
+        cli.project_name = 'Unit Test 2'
+        assert cli.setup_project()
+        assert cli.project_id == 1  # not register new project
 
-    def test_setup_project(self):
-        client_init(url='http://localhost:5099/')
+    def test_register_result(self, cli):
+        assert not cli.register_result()
+        assert cli.setup_project()
+
+        assert cli.register_result()
+        assert cli.result_id == 1
+
+        assert cli.register_result()
+        assert cli.result_id == 2
+
+    def test_register_result_overwrite(self, cli):
+        assert cli.setup_project()
+
+        assert cli.register_result(overwrite_result=True)
+        assert cli.result_id == 1
+
+        assert cli.register_result(overwrite_result=True)
+        assert cli.result_id == 1
+
+    def test_post_log(self, cli):
+        stats = {'loss': 0.001}
+        cli.post_log([stats])
+        assert len(cli.cached_logs) == 1
+
+        assert cli.setup_project()
+        assert cli.register_result()
+
+        cli.post_log([stats])
+        assert len(cli.cached_logs) == 0
+
+    def test_post_args(self, cli):
+        assert cli.setup_project()
+        assert cli.register_result()
+
+        assert cli.post_args({'condition1': 0})
