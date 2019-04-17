@@ -9,9 +9,9 @@ from chainerui.client.helper import urlopen
 from chainerui.server import create_app
 
 
-class MockServer(Thread):
+class DummyServer(Thread):
     def __init__(self, host='localhost', port=5099):
-        super().__init__()
+        super(DummyServer, self).__init__()
 
         self.app = create_app()
         self.host = host
@@ -26,7 +26,7 @@ class MockServer(Thread):
 
     def wait_for_running(self):
         wait_count = 0
-        wait_limit = 10
+        wait_limit = 30  # wail until 3 second
         while wait_count <= wait_limit:
             res, msg = urlopen(
                 'GET', self.url + 'test/check', content_type='plain/text',
@@ -60,7 +60,7 @@ class TestClient(object):
     def server(self, func_db):
         logging.getLogger('werkzeug').disabled = True
 
-        server = MockServer(port=5099)
+        server = DummyServer(port=5099)
         server.start()
         server.wait_for_running()
 
