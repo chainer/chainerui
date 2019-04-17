@@ -113,6 +113,9 @@ class TestClient(object):
         assert cli.register_result()
         assert cli.result_id == 2
 
+        assert cli.register_result(result_name='result 1')
+        assert cli.result_id == 3
+
     def test_register_result_overwrite(self, cli):
         assert cli.setup_project()
 
@@ -120,6 +123,14 @@ class TestClient(object):
         assert cli.result_id == 1
 
         assert cli.register_result(overwrite_result=True)
+        assert cli.result_id == 1
+
+        assert cli.register_result(
+            result_name='result 1', overwrite_result=True)
+        assert cli.result_id == 1
+
+        assert cli.register_result(
+            result_name='result 2', overwrite_result=True)
         assert cli.result_id == 1
 
     def test_post_log(self, cli):
@@ -134,6 +145,8 @@ class TestClient(object):
         assert len(cli.cached_logs) == 0
 
     def test_post_args(self, cli):
+        assert not cli.post_args({'condition1': 0})
+
         assert cli.setup_project()
         assert cli.register_result()
 

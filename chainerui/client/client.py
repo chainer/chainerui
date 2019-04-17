@@ -74,18 +74,15 @@ class Client(object):
             if project_res is None:
                 print('update error, URL: {}, Message: {}'.format(
                     self.project_url, msg))
-                return False
+                # fail to update project name, but the target project has been
+                # registered, so not return False
 
         self.project_id = project_id
         return True
 
     def register_result(self, result_name=None, overwrite_result=False):
         now = datetime.datetime.now()
-
-        if result_name is None:
-            result_path = self.project_path
-        else:
-            result_path = os.path.join(self.project_path, result_name)
+        result_path = self.project_path
 
         if overwrite_result:
             check_url = '{}?path_name={}'.format(
@@ -94,12 +91,23 @@ class Client(object):
             if result_res is None:
                 if (result_path + '\' is not found') not in msg:
                     print('connection error, URL: {}, Message: {}'.format(
-                        self.check_url, msg))
+                        check_url, msg))
                     return False
             else:
                 # result is found, overwrite on the result record
                 self.result_id = result_res['result']['id']
                 self.first_reset = True
+                if result_name is not None and\
+                        result_res['result']['name'] != result_name:
+                    # update result name
+                    result_req = {'result': {'name': result_name}}
+                    result_res, msg = urlopen(
+                        'PUT', self.result_url, data=result_req)
+                    if result_res is None:
+                        print('update error, URL: {}, Message: {}'.format(
+                            self.result_url, msg))
+                        # fail to update result name, but the target result
+                        # has been found, so not return False
                 return True
         else:
             # result path is required unique key, make dummy path but not
@@ -111,6 +119,7 @@ class Client(object):
         result_req = {
             'result': {
                 'pathName': result_path,
+                'name': result_name,
                 'crawlable': False,
                 'logModifiedAt': make_timestamp(now),
             }
