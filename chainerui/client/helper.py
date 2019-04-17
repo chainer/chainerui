@@ -42,11 +42,15 @@ def urlopen(method, url, content_type='json', data=None, return_type='json'):
     except urllib3.exceptions.HTTPError as e:
         return None, e.message
 
+    str_data = res.data.decode('utf8')
     if return_type == 'json':
-        obj = json.loads(res.data.decode('utf8'))
-        if res.status != 200:
-            return None, 'error: ' + obj.get('message', '')
+        try:
+            obj = json.loads(str_data)
+            if res.status != 200:
+                return None, 'error: ' + obj.get('message', '')
+        except ValueError:
+            return None, 'error: ' + str_data
     else:
-        obj = res.data.decode('utf8')
+        obj = str_data
 
     return obj, ''
