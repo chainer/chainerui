@@ -23,11 +23,10 @@ def format_datetime(dt=None):
 
 class Client(object):
 
-    def __init__(self, url=None, project_name=None, crawlable=False):
+    def __init__(self, url=None, crawlable=False):
         if url is None:
             url = get_default_url()
         self.url = (url[:len(url)-1] if url.endswith('/') else url) + '/api/v1'
-        self.project_name = project_name
         self.crawlable = crawlable
 
         self.project_path = os.path.abspath(os.getcwd())
@@ -36,7 +35,21 @@ class Client(object):
         self.cached_logs = []
         self.first_reset = False
 
-    def setup_project(self):
+    def setup_project(self, project_name=None):
+        """Setup project on ChainerUI server
+
+        Project path on default is working directory. First, check the project
+        path is registered or not, and if not found, register the project path.
+        Second, if ``project_name`` is set and changed, update the project
+        name.
+
+        Args:
+            project_name (str): If set, update the project name.
+
+        Returns:
+            bool: When succeed to setup, return ``True``
+        """
+
         project_path = self.project_path
 
         # check the path exists or not
@@ -53,7 +66,7 @@ class Client(object):
             project_req = {
                 'project': {
                     'path_name': project_path,
-                    'name': self.project_name,
+                    'name': project_name,
                     'crawlable': self.crawlable,
                 },
             }
@@ -65,10 +78,10 @@ class Client(object):
                 return False
 
         project_id = project_res['project']['id']
-        if self.project_name is not None and\
-                project_res['project']['name'] != self.project_name:
+        if project_name is not None and\
+                project_res['project']['name'] != project_name:
             # update project name
-            project_req = {'project': {'name': self.project_name}}
+            project_req = {'project': {'name': project_name}}
             project_res, msg = urlopen(
                 'PUT', self.project_url, data=project_req)
             if project_res is None:
@@ -81,6 +94,23 @@ class Client(object):
         return True
 
     def register_result(self, result_name=None, overwrite_result=False):
+        """Register result on ChaienrUI server
+
+        Basically result path is same as project path, but to be unique key,
+        add start time on the result path. The result path is virtual one,
+        not make physical directory. If ``overwrite_result`` set ``True``,
+        the client tool not add start time and continue to use same result
+        record.
+
+        Args:
+            result_name (str): If set, update the result name.
+            overwrite_result (bool): If set ``True``, not set start time on
+                the result path and overwrite data on the result.
+
+        Returns:
+            bool:  When succeed to setup, return ``True``
+        """
+
         now = datetime.datetime.now()
         result_path = self.project_path
 
@@ -133,6 +163,16 @@ class Client(object):
         return True
 
     def post_log(self, logs, modified_at=None):
+        """Post logs
+
+        If fail to post the ``logs``, the data is cached and try posting them
+        next time.
+
+        Args:
+            logs (list): stats data to post.
+            modified_at (datetime): last modified time.
+        """
+
         if modified_at is None:
             modified_at = make_timestamp()
         self.cached_logs.extend(logs)
@@ -192,12 +232,30 @@ _client = None
 
 def init(url=None, project_name=None, result_name=None, overwrite_result=False,
          crawlable=False):
+    """Initialize client tools
+
+    Initialize client object, then setup project and result. Even if some
+    errors are occurred, client object is set ``None`` and without exception.
+
+    Args:
+        url (str): ChainerUI server URL. set ``'localhost:5000'`` on default.
+        project_name (str): project name is set from project path, working
+            directory on default. If set, ChainerUI shows the name instead
+            the project path.
+        result_name (str): result name is set project path + start time
+            on default. If set, ChainerUI shows the name + start time instead
+            the path.
+        overwrite_result (bool): the client tool make different job results
+            every time on default. If set ``True``, the client tool posts
+            logs on the same result.
+        crawlable (bool): to inform server not to crawl physical logs.
+    """
+
     global _client
     if _client is None:
-        _client = Client(
-            url=url, project_name=project_name, crawlable=crawlable)
+        _client = Client(url=url, crawlable=crawlable)
 
-    if not _client.setup_project():
+    if not _client.setup_project(project_name=project_name):
         _client = None
         return
 

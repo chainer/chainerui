@@ -99,8 +99,7 @@ class TestClient(object):
 
         assert cli.project_id == 1
 
-        cli.project_name = 'Unit Test 2'
-        assert cli.setup_project()
+        assert cli.setup_project(project_name='Unit Test 2')
         assert cli.project_id == 1  # not register new project
 
     def test_register_result(self, cli):
