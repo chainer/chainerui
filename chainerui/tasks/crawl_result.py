@@ -67,6 +67,23 @@ def _check_log_updated(result):
     return False
 
 
+def _update_to_default_name(result):
+    conf_path = os.path.join(result.path_name, '.chainerui_conf')
+    if not os.path.isfile(conf_path):
+        return
+    with open(conf_path) as f:
+        try:
+            chainerui_conf = json.load(f)
+        except ValueError as err:
+            logger.error(
+                'Failed to load json: {}, {}'.format(conf_path, err))
+            return
+    default_name = chainerui_conf.get('default_result_name', None)
+    if default_name is None:
+        return
+    result.name = default_name
+
+
 def crawl_result(result, force=False, commit=True):
     """crawl_results."""
     if not result.crawlable:
@@ -91,6 +108,9 @@ def crawl_result(result, force=False, commit=True):
 
     if result.args is None:
         result.args = Argument(json.dumps(crawled_result['args']))
+
+    if result.name is None:
+        _update_to_default_name(result)
 
     # commands list includes new commands and already registered commands.
     # registered commands can be get response, so need to update
