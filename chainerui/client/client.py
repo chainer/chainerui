@@ -9,6 +9,10 @@ def get_default_url():
     return os.getenv('CHAINERUI_URL', 'http://localhost:5000')
 
 
+def get_default_project_path():
+    return os.getenv('CHAINERUI_PROJECT_PATH', os.path.abspath(os.getcwd()))
+
+
 def make_timestamp(dt=None):
     if dt is None:
         dt = datetime.datetime.now()
@@ -29,7 +33,11 @@ class Client(object):
         self.url = (url[:len(url)-1] if url.endswith('/') else url) + '/api/v1'
         self.crawlable = crawlable
 
-        self.project_path = os.path.abspath(os.getcwd())
+        # Basically, the project path should be set current working directory
+        # to menage experiments easier, but on some environment, working
+        # directories are same at all times. To handle this, use environment
+        # variable.
+        self.project_path = get_default_project_path()
         self.project_id = None
         self.result_id = None
         self.cached_logs = []
@@ -44,13 +52,17 @@ class Client(object):
         name.
 
         Args:
-            project_name (str): If set, update the project name.
+            project_name (str): If set, update the project name. If set
+                ``None`` (on default), try to get environment variable,
+                ``'CHAINERUI_PROJECT_NAME'`` if set.
 
         Returns:
             bool: When succeed to setup, return ``True``
         """
 
         project_path = self.project_path
+        if project_name is None:
+            project_name = os.getenv('CHAINERUI_PROJECT_NAME', None)
 
         # check the path exists or not
         check_url = '{}?path_name={}'.format(self.projects_url, project_path)
@@ -103,7 +115,9 @@ class Client(object):
         record.
 
         Args:
-            result_name (str): If set, update the result name.
+            result_name (str): If set, update the result name. If set
+                ``None`` (on default), try to get environment variable,
+                ``'CHAINERUI_RESULT_NAME'`` if set.
             overwrite_result (bool): If set ``True``, not set start time on
                 the result path and overwrite data on the result.
 
@@ -113,6 +127,8 @@ class Client(object):
 
         now = datetime.datetime.now()
         result_path = self.project_path
+        if result_name is None:
+            result_name = os.getenv('CHAINERUI_RESULT_NAME', None)
 
         if overwrite_result:
             check_url = '{}?path_name={}'.format(
