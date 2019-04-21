@@ -165,8 +165,8 @@ class Client(object):
     def post_log(self, logs, modified_at=None):
         """Post logs
 
-        If fail to post the ``logs``, the data is cached and try posting them
-        next time.
+        If fail to post the ``logs``, the data is cached and try to post them
+        next time with new one.
 
         Args:
             logs (list): stats data to post.
@@ -265,6 +265,20 @@ def init(url=None, project_name=None, result_name=None, overwrite_result=False,
 
 
 def log_reporter():
+    """Log reporter via POST API
+
+    Return a callback function to post a log to a ChainerUI server. If the
+    initialization (see ``chainerui.init()``) is failed, the callback function
+    do nothing when called. If the initialization is done but fail to send the
+    log by some kind of error, the log is cached and try to post it next time
+    with new one.
+
+    The callback function is expected to use with ``postprocess``
+    option of Chainer ``LogReport`` extension.
+
+    Returns:
+        func: function.
+    """
     class PostProcess(object):
 
         def __call__(self, stats_cpu):
