@@ -165,9 +165,13 @@ const LogVisualizerChart = (props) => {
           />
           <CartesianGrid strokeDasharray="3 3" />
           {lineElems}
-          <Tooltip
-            content={<LogVisualizerTooltip xAxisKey={xAxisKey} anySelected={anySelected} />}
-          />
+          {isDisplay
+            ? (
+              <Tooltip
+                content={<LogVisualizerTooltip xAxisKey={xAxisKey} anySelected={anySelected} />}
+              />
+            ) : null // disable tooltip when rendering for png
+          }
         </LineChart>
       </ResponsiveContainer>
       <div>
