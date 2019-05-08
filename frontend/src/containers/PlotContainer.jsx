@@ -7,6 +7,7 @@ import * as uiPropTypes from '../store/uiPropTypes';
 import {
   getProject,
   getResultList, updateResult, clearResultList,
+  getDeletedResultList,
   resetProjectConfig,
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
@@ -40,6 +41,7 @@ class PlotContainer extends React.Component {
 
     this.props.clearResultList();
     this.props.getProject(projectId);
+    this.props.getDeletedResultList(projectId);
     this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId, logsLimit);
     this.handleExperimentsTableColumnsVisibilityUpdate = this.handleExperimentsTableColumnsVisibilityUpdate.bind(this);
   }
@@ -172,6 +174,7 @@ PlotContainer.propTypes = {
   stats: uiPropTypes.stats.isRequired,
   getProject: PropTypes.func.isRequired,
   getResultList: PropTypes.func.isRequired,
+  getDeletedResultList: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
   clearResultList: PropTypes.func.isRequired,
   createCommand: PropTypes.func.isRequired,
@@ -222,6 +225,7 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(mapStateToProps, {
   getProject,
   getResultList,
+  getDeletedResultList,
   updateResult,
   clearResultList,
   createCommand,
