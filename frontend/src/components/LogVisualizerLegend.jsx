@@ -37,12 +37,19 @@ class LogVisualizerLegendItem extends React.Component {
 
   render() {
     const {
-      isDisplay, project, result, resultStatus, line, isResultNameAlignRight,
+      isDisplay, project, result, resultStatus, line, isResultNameAlignRight, highlightTableAndChart,
       onResultSelect,
     } = this.props;
     const { logKey, config } = line;
-    const selected = resultStatus.selected === true || resultStatus.selected === logKey;
-
+    const selected = highlightTableAndChart && (resultStatus.selected === true || resultStatus.selected === logKey);
+    const highlightEvents = {
+      onMouseEnter: () => {
+        onResultSelect(project.id, result.id, logKey);
+      },
+      onMouseLeave: () => {
+        onResultSelect(project.id, result.id, false);
+      },
+    };
     if (!isDisplay && !line.config.isVisible) {
       // do not inclue rows for invisible lines when rendering for png download
       return null;
@@ -52,12 +59,7 @@ class LogVisualizerLegendItem extends React.Component {
       <li
         className={`list-group-item py-0 ${selected ? 'result-highlight' : ''}`}
         style={{ borderLeft: `3px solid ${config.color}` }}
-        onMouseEnter={() => {
-          onResultSelect(project.id, result.id, logKey);
-        }}
-        onMouseLeave={() => {
-          onResultSelect(project.id, result.id, false);
-        }}
+        {...highlightEvents}
       >
         <Row>
           { isDisplay ? (
@@ -95,6 +97,7 @@ LogVisualizerLegendItem.propTypes = {
   axisName: uiPropTypes.axisName.isRequired,
   line: PropTypes.any.isRequired, // eslint-disable-line react/forbid-prop-types
   isResultNameAlignRight: PropTypes.bool.isRequired,
+  highlightTableAndChart: PropTypes.bool.isRequired,
   onResultSelect: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
 };
@@ -107,7 +110,7 @@ LogVisualizerLegendItem.defaultProps = {
 const LogVisualizerLegend = (props) => {
   const {
     isDisplay,
-    project, results, resultsStatus, lines, maxHeight, isResultNameAlignRight,
+    project, results, resultsStatus, lines, maxHeight, isResultNameAlignRight, highlightTableAndChart,
     onResultSelect, onAxisConfigLineUpdate,
   } = props;
 
@@ -126,6 +129,7 @@ const LogVisualizerLegend = (props) => {
                 axisName={axisName}
                 line={line}
                 isResultNameAlignRight={isResultNameAlignRight}
+                highlightTableAndChart={highlightTableAndChart}
                 onResultSelect={onResultSelect}
                 onAxisConfigLineUpdate={onAxisConfigLineUpdate}
               />
@@ -145,6 +149,7 @@ LogVisualizerLegend.propTypes = {
   lines: PropTypes.objectOf(PropTypes.any).isRequired,
   maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired,
+  highlightTableAndChart: PropTypes.bool.isRequired,
   onResultSelect: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
 };
