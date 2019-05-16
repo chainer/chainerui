@@ -10,6 +10,7 @@ import {
   updateGlobalChartSize,
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
+  updateGlobalHighlightTableAndChart,
   updateAssetsTableColumnsVisibility,
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
@@ -52,6 +53,7 @@ class AssetsContainer extends React.Component {
           onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
           onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
+          onGlobalHighlightTableAndChartUpdate={this.props.updateGlobalHighlightTableAndChart}
         />
         <Container>
           <AssetsTable
@@ -77,6 +79,7 @@ AssetsContainer.propTypes = {
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
+  updateGlobalHighlightTableAndChart: PropTypes.func.isRequired,
   updateAssetsTableColumnsVisibility: PropTypes.func.isRequired,
 };
 
@@ -108,5 +111,6 @@ export default connect(mapStateToProps, {
   updateGlobalChartSize,
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
+  updateGlobalHighlightTableAndChart,
   updateAssetsTableColumnsVisibility,
 })(AssetsContainer);

@@ -10,6 +10,7 @@ import {
   updateGlobalChartSize,
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
+  updateGlobalHighlightTableAndChart,
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import Projects from '../components/projects/Projects';
@@ -33,6 +34,7 @@ class ProjectsContainer extends React.Component {
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
           onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
           onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
+          onGlobalHighlightTableAndChartUpdate={this.props.updateGlobalHighlightTableAndChart}
         />
         <Container fluid>
           <Row>
@@ -62,6 +64,7 @@ ProjectsContainer.propTypes = {
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired,
+  updateGlobalHighlightTableAndChart: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -87,4 +90,5 @@ export default connect(mapStateToProps, {
   updateGlobalChartSize,
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
+  updateGlobalHighlightTableAndChart,
 })(ProjectsContainer);

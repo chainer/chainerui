@@ -278,6 +278,7 @@ export const GLOBAL_CONFIG_POLLING_RATE_UPDATE = 'GLOBAL_CONFIG_POLLING_RATE_UPD
 export const GLOBAL_CONFIG_CHART_SIZE_UPDATE = 'GLOBAL_CONFIG_CHART_SIZE_UPDATE';
 export const GLOBAL_CONFIG_LOGS_LIMIT_UPDATE = 'GLOBAL_CONFIG_LOGS_LIMIT_UPDATE';
 export const GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE = 'GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE';
+export const GLOBAL_CONFIG_HIGHLIGHT_TABLE_AND_CHART = 'GLOBAL_CONFIG_HIGHLIGHT_TABLE_AND_CHART';
 
 export const updateGlobalPollingRate = (pollingRate) => ({
   type: GLOBAL_CONFIG_POLLING_RATE_UPDATE,
@@ -297,6 +298,11 @@ export const updateGlobalLogsLimit = (logsLimit) => ({
 export const updateGlobalResultNameAlignment = (isResultNameAlignRight) => ({
   type: GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE,
   isResultNameAlignRight,
+});
+
+export const updateGlobalHighlightTableAndChart = (highlightTableAndChart) => ({
+  type: GLOBAL_CONFIG_HIGHLIGHT_TABLE_AND_CHART,
+  highlightTableAndChart,
 });
 
 // download
