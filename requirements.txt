@@ -6,3 +6,4 @@ alembic>=1.0.0
 gevent>=1.2.2
 structlog>=18.2.0
 filelock>=3.0.9
+urllib3>=1.24.1
