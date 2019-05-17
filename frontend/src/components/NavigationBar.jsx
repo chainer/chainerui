@@ -29,6 +29,7 @@ class NavigationBar extends React.Component {
     this.handleChangeChartSize = this.handleChangeChartSize.bind(this);
     this.handleChangeLogsLimit = this.handleChangeLogsLimit.bind(this);
     this.handleResultNameAlignmentChange = this.handleResultNameAlignmentChange.bind(this);
+    this.handleHighlightTableAndChartChange = this.handleHighlightTableAndChartChange.bind(this);
     this.state = {
       settingPopoverOpen: false,
     };
@@ -60,12 +61,18 @@ class NavigationBar extends React.Component {
     this.props.onGlobalConfigResultNameAlignmentUpdate(isResultNameAlignRight);
   }
 
+  handleHighlightTableAndChartChange(e) {
+    const highlightTableAndChart = e.target.checked;
+    this.props.onGlobalHighlightTableAndChartUpdate(highlightTableAndChart);
+  }
+
   render() {
     const {
       pollingRate,
       chartSize,
       logsLimit,
       isResultNameAlignRight,
+      highlightTableAndChart,
     } = this.props.globalConfig;
 
     return (
@@ -146,6 +153,17 @@ class NavigationBar extends React.Component {
                   Align right
                 </Check>
               </FormGroup>
+
+              <FormGroup>
+                <Label>Highlight table and chart</Label>
+                <Check
+                  type="checkbox"
+                  checked={!!highlightTableAndChart}
+                  onChange={this.handleHighlightTableAndChartChange}
+                >
+                  Enable
+                </Check>
+              </FormGroup>
             </Form>
             <p className="my-0">
               <small>
@@ -168,6 +186,7 @@ NavigationBar.propTypes = {
   onGlobalConfigChartSizeUpdate: PropTypes.func.isRequired,
   onGlobalConfigLogsLimitUpdate: PropTypes.func.isRequired,
   onGlobalConfigResultNameAlignmentUpdate: PropTypes.func.isRequired,
+  onGlobalHighlightTableAndChartUpdate: PropTypes.func.isRequired,
 };
 
 NavigationBar.defaultProps = {
