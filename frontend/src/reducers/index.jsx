@@ -492,11 +492,12 @@ const defaultGlobalState = {
   chartSize: chartSizeOptions[0],
   logsLimit: logsLimitOptions[0].value,
   isResultNameAlignRight: false,
+  highlightTableAndChart: true,
 };
 
 const globalConfigReducer = (state = defaultGlobalState, action) => {
   const {
-    pollingRate, chartSize, logsLimit, isResultNameAlignRight,
+    pollingRate, chartSize, logsLimit, isResultNameAlignRight, highlightTableAndChart,
   } = action;
   switch (action.type) {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
@@ -519,6 +520,11 @@ const globalConfigReducer = (state = defaultGlobalState, action) => {
         ...state,
         isResultNameAlignRight,
       };
+    case ActionTypes.GLOBAL_CONFIG_HIGHLIGHT_TABLE_AND_CHART:
+      return {
+        ...state,
+        highlightTableAndChart,
+      };
     default:
       return state;
   }
@@ -531,7 +537,7 @@ const configReducer = combineReducers({
 });
 
 
-const currentStoreVersion = 20190311.0;
+const currentStoreVersion = 20190516.0;
 
 const persistConfig = {
   key: 'config',

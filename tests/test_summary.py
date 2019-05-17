@@ -149,6 +149,31 @@ def test_summary_audio(func_dir):
     assert saved_filename.endswith('.wav')
 
 
+def test_summary_text(func_dir):
+    summary.text('content', out=func_dir, epoch=10)
+
+    meta_filepath = os.path.join(
+        func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
+    assert os.path.exists(meta_filepath)
+
+    with open(meta_filepath, 'r') as f:
+        metas = json.load(f)
+    assert len(metas) == 1
+    assert 'timestamp' in metas[0]
+    assert metas[0].get('epoch', None) == 10
+    assert 'texts' in metas[0]
+    assert metas[0]['texts'].get('text', None) == 'content'
+
+    summary.text('content2', 'text2', out=func_dir, epoch=20)
+    with open(meta_filepath, 'r') as f:
+        metas2 = json.load(f)
+    assert len(metas2) == 2
+    assert 'timestamp' in metas2[1]
+    assert metas2[1].get('epoch', None) == 20
+    assert 'texts' in metas2[1]
+    assert metas2[1]['texts'].get('text2', None) == 'content2'
+
+
 @unittest.skipUnless(_image_report_available, 'Image report is not available')
 @unittest.skipUnless(_audio_report_available, 'Audio report is not available')
 def test_summary_reporter_mix(func_dir):
@@ -162,6 +187,8 @@ def test_summary_reporter_mix(func_dir):
         r.image(img2, 'test_image', subdir='image')
         r.audio(audio, 16000)
         r.audio(audio2, 16000, 'test_audio', subdir='audio')
+        r.text('content')
+        r.text('content2', 'test_text')
 
     meta_filepath = os.path.join(
         func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
@@ -190,6 +217,9 @@ def test_summary_reporter_mix(func_dir):
     saved_filename4 = metas[0]['audios']['with_test_audio']
     assert saved_filename4.startswith(os.path.join('audio', 'with_test_audio'))
     assert saved_filename4.endswith('.wav')
+    assert 'texts' in metas[0]
+    assert metas[0]['texts'].get('with_text_4', None) == 'content'
+    assert metas[0]['texts'].get('with_test_text', None) == 'content2'
 
     img3 = np.copy(img)
     img4 = np.copy(img)
@@ -202,6 +232,8 @@ def test_summary_reporter_mix(func_dir):
         r.image(img4, 'test_image', subdir='image')
         r.audio(audio3, 44100)
         r.audio(audio4, 44100, 'test_audio', subdir='audio')
+        r.text('content')
+        r.text('content2', 'test_text')
 
     with open(meta_filepath, 'r') as f:
         metas2 = json.load(f)
@@ -228,6 +260,9 @@ def test_summary_reporter_mix(func_dir):
     assert saved_filename3.startswith(os.path.join(
         'sub', 'audio', 'with_test_audio'))
     assert saved_filename3.endswith('.wav')
+    assert 'texts' in metas2[1]
+    assert metas2[1]['texts'].get('with_text_4', None) == 'content'
+    assert metas2[1]['texts'].get('with_test_text', None) == 'content2'
 
 
 def test_summary_reporter_empty(func_dir):
@@ -281,7 +316,6 @@ def test_reporter_audio_unavailable(func_dir):
         os.path.join(func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME))
 
 
-@unittest.skipUnless(_image_report_available, 'Image report is not available')
 def test_summary_called_multiple_script(func_dir):
     # This test is not enough to check that _Summary object accepts whether
     # called by multiple scripts or not, but it's difficult to test it.
@@ -292,13 +326,12 @@ def test_summary_called_multiple_script(func_dir):
         func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
     metalock_filepath = meta_filepath + '.lock'
 
-    img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
-    summary.image(img, out=func_dir, epoch=10)
+    summary.text('test', out=func_dir, epoch=10)
     assert os.path.exists(meta_filepath)
 
     try:
         p = Process(
-            target=summary.image, args=(img,),
+            target=summary.text, args=('test2',),
             kwargs={'out': func_dir, 'epoch': 20})
 
         with filelock.FileLock(metalock_filepath):
@@ -322,18 +355,16 @@ def test_summary_called_multiple_script(func_dir):
         assert saved[2].get('epoch', None) == 20
 
 
-@unittest.skipUnless(_image_report_available, 'Image report is not available')
 def test_summary_timeout(func_dir, caplog):
     meta_filepath = os.path.join(
         func_dir, summary.CHAINERUI_ASSETS_METAFILE_NAME)
     metalock_filepath = meta_filepath + '.lock'
 
     with filelock.FileLock(metalock_filepath):
-        img = np.zeros(10*3*5*5, dtype=np.float32).reshape((10, 3, 5, 5))
         with summary.reporter(out=func_dir, timeout=0.1) as r:
             # test process has already handled meta file,
             # this saving process should be timeout
-            r.image(img)
+            r.text('test')
 
     assert len(caplog.records) == 1
     assert 'is timeout' in caplog.records[0].message

@@ -17,6 +17,7 @@ import {
   updateGlobalChartSize,
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
+  updateGlobalHighlightTableAndChart,
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber,
   createCommand,
@@ -100,6 +101,7 @@ class PlotContainer extends React.Component {
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
           onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
           onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
+          onGlobalHighlightTableAndChartUpdate={this.props.updateGlobalHighlightTableAndChart}
         />
         <Container fluid>
           <div className="row">
@@ -188,6 +190,7 @@ PlotContainer.propTypes = {
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired,
+  updateGlobalHighlightTableAndChart: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
   updateAxisScaleRangeNumber: PropTypes.func.isRequired,
@@ -239,6 +242,7 @@ export default connect(mapStateToProps, {
   updateGlobalChartSize,
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
+  updateGlobalHighlightTableAndChart,
   updateXAxisKey,
   updateAxisScaleRangeType,
   updateAxisScaleRangeNumber,

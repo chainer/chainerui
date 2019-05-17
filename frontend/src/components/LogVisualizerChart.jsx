@@ -47,6 +47,7 @@ const LogVisualizerChart = (props) => {
     resultsStatus,
     chartSize,
     isResultNameAlignRight,
+    highlightTableAndChart,
     onResultSelect,
     onAxisConfigLineUpdate,
   } = props;
@@ -83,7 +84,7 @@ const LogVisualizerChart = (props) => {
     });
   });
 
-  const anySelected = selectedResults.some((resultId) => {
+  const anySelected = highlightTableAndChart && selectedResults.some((resultId) => {
     const resultStatus = resultsStatus[resultId];
     return resultStatus && resultStatus.selected;
   });
@@ -96,7 +97,15 @@ const LogVisualizerChart = (props) => {
       }
       const { config = {}, resultId, logKey } = line;
       const resultStatus = resultsStatus[resultId] || {};
-      const selected = resultStatus.selected === true || resultStatus.selected === logKey;
+      const selected = highlightTableAndChart && (resultStatus.selected === true || resultStatus.selected === logKey);
+      const highlightEvents = highlightTableAndChart ? {
+        onMouseEnter: () => {
+          onResultSelect(project.id, resultId, logKey);
+        },
+        onMouseLeave: () => {
+          onResultSelect(project.id, resultId, false);
+        },
+      } : {};
       lineElems.push(
         <Line
           type="linear"
@@ -121,12 +130,7 @@ const LogVisualizerChart = (props) => {
           dot={false}
           activeDot={false}
           key={`${line2dataKey(line, axisName)}-events`}
-          onMouseEnter={() => {
-            onResultSelect(project.id, resultId, logKey);
-          }}
-          onMouseLeave={() => {
-            onResultSelect(project.id, resultId, false);
-          }}
+          {...highlightEvents}
         />
       );
     });
@@ -165,9 +169,13 @@ const LogVisualizerChart = (props) => {
           />
           <CartesianGrid strokeDasharray="3 3" />
           {lineElems}
-          <Tooltip
-            content={<LogVisualizerTooltip xAxisKey={xAxisKey} anySelected={anySelected} />}
-          />
+          {isDisplay
+            ? (
+              <Tooltip
+                content={<LogVisualizerTooltip xAxisKey={xAxisKey} anySelected={anySelected} />}
+              />
+            ) : null // disable tooltip when rendering for png
+          }
         </LineChart>
       </ResponsiveContainer>
       <div>
@@ -179,6 +187,7 @@ const LogVisualizerChart = (props) => {
           lines={axisLines}
           maxHeight={chartSize.height}
           isResultNameAlignRight={isResultNameAlignRight}
+          highlightTableAndChart={highlightTableAndChart}
           onResultSelect={onResultSelect}
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
@@ -196,6 +205,7 @@ LogVisualizerChart.propTypes = {
   resultsStatus: uiPropTypes.resultsStatus.isRequired,
   chartSize: uiPropTypes.chartSize.isRequired,
   isResultNameAlignRight: PropTypes.bool.isRequired,
+  highlightTableAndChart: PropTypes.bool.isRequired,
   onResultSelect: PropTypes.func.isRequired,
   onAxisConfigLineUpdate: PropTypes.func.isRequired,
 };

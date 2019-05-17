@@ -220,6 +220,9 @@ const ExperimentsTable = (props) => {
           />
         )}
         getTrProps={(state, rowInfo) => {
+          if (!globalConfig.highlightTableAndChart) {
+            return {};
+          }
           if (rowInfo && !rowInfo.original) {
             return {};
           }

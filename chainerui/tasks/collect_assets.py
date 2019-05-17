@@ -36,6 +36,7 @@ def collect_assets(result, force=False):
     for base_info in info_list[start_idx:]:
         asset_path = base_info.pop('images', {})
         asset_path.update(base_info.pop('audios', {}))
+        base_info.update(base_info.pop('texts', {}))
         asset = Asset.create(
             result_id=result.id, summary=base_info,
             file_modified_at=file_modified_at)

@@ -13,6 +13,7 @@ import {
   updateGlobalChartSize,
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
+  updateGlobalHighlightTableAndChart,
 } from '../actions';
 import NavigationBar from '../components/NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
@@ -62,6 +63,7 @@ class ResultDetail extends React.Component {
           onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
           onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
           onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
+          onGlobalHighlightTableAndChartUpdate={this.props.updateGlobalHighlightTableAndChart}
         />
         <Container fluid>
           <BreadcrumbLink
@@ -119,6 +121,7 @@ ResultDetail.propTypes = {
   updateGlobalChartSize: PropTypes.func.isRequired,
   updateGlobalLogsLimit: PropTypes.func.isRequired,
   updateGlobalResultNameAlignment: PropTypes.func.isRequired,
+  updateGlobalHighlightTableAndChart: PropTypes.func.isRequired,
 };
 
 ResultDetail.defaultProps = {
@@ -156,4 +159,5 @@ export default connect(mapStateToProps, {
   updateGlobalChartSize,
   updateGlobalLogsLimit,
   updateGlobalResultNameAlignment,
+  updateGlobalHighlightTableAndChart,
 })(ResultDetail);
