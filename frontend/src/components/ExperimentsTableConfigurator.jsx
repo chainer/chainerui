@@ -1,5 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+} from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import Check from './FormControl/Check';
@@ -8,6 +14,24 @@ class ExperimentsTableConfigurator extends React.Component {
   constructor(props) {
     super(props);
     this.handleIsGrouped = this.handleIsGrouped.bind(this);
+    this.handleModalShow = this.handleModalShow.bind(this);
+    this.handleModalHide = this.handleModalHide.bind(this);
+
+    this.state = {
+      showModal: false,
+    };
+  }
+
+  handleModalShow() {
+    this.setState({
+      showModal: true,
+    });
+  }
+
+  handleModalHide() {
+    this.setState({
+      showModal: false,
+    });
   }
 
   handleIsGrouped(event) {
@@ -20,7 +44,7 @@ class ExperimentsTableConfigurator extends React.Component {
   }
 
   render() {
-    const { projectConfig } = this.props;
+    const { projectConfig, deletedResults } = this.props;
     const { tableState } = projectConfig;
     const {
       isGrouped = false,
@@ -38,6 +62,19 @@ class ExperimentsTableConfigurator extends React.Component {
             Grouping
           </Check>
         </div>
+
+        <Button color="secondary" onClick={this.handleModalShow}>
+          Manage unregistered results
+        </Button>
+
+        <Modal isOpen={this.state.showModal} toggle={this.handleModalHide}>
+          <ModalHeader>
+            Manage unregistered results
+          </ModalHeader>
+          <ModalBody>
+            { Object.keys(deletedResults).length }
+          </ModalBody>
+        </Modal>
       </div>
     );
   }

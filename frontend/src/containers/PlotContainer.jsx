@@ -89,6 +89,7 @@ class PlotContainer extends React.Component {
       projectConfig,
       globalConfig,
       stats,
+      deletedResults,
     } = this.props;
 
     return (
@@ -156,6 +157,7 @@ class PlotContainer extends React.Component {
                 stats={stats}
                 projectConfig={projectConfig}
                 onTableColumnsVisibilityUpdate={this.props.updateTableColumnsVisibility}
+                deletedResults={deletedResults}
               />
             </div>
           </div>
@@ -173,6 +175,7 @@ PlotContainer.propTypes = {
   projectStatus: uiPropTypes.projectStatus.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
+  deletedResults: uiPropTypes.results.isRequired,
   stats: uiPropTypes.stats.isRequired,
   getProject: PropTypes.func.isRequired,
   getResultList: PropTypes.func.isRequired,
@@ -207,7 +210,7 @@ const mapStateToProps = (state, ownProps) => {
     status,
     config,
   } = state;
-  const { projects = {}, results = {} } = entities;
+  const { projects = {}, results = {}, deletedResults = {} } = entities;
   const project = projects[projectId] || { id: projectId };
   const projectStatus = status.projectsStatus[projectId] || defaultProjectStatus;
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
@@ -222,6 +225,7 @@ const mapStateToProps = (state, ownProps) => {
     projectConfig,
     globalConfig,
     stats,
+    deletedResults,
   };
 };
 
