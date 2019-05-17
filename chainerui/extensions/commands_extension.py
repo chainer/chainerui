@@ -1,18 +1,25 @@
+import os
+import shutil
+
 from chainer.serializers import npz
 from chainer.training import extension
-from chainer.training.extensions._snapshot import _snapshot_object
 from chainer.training import trigger as trigger_module
 from chainer.training.triggers import IntervalTrigger
 import six
 
 from chainerui.utils.command_item import CommandItem
 from chainerui.utils.commands_state import CommandsState
+from chainerui.utils.tempdir import tempdir
 
 
 def take_snapshot(trainer, body):
-    filename = 'snapshot_iter_{.updater.iteration}'
-    savefun = npz.save_npz
-    _snapshot_object(trainer, trainer, filename.format(trainer), savefun)
+    filename = 'snapshot_iter_{.updater.iteration}'.format(trainer)
+    out_path = trainer.out
+    # same with SimpleWriter, supported from Chainer v6
+    with tempdir(prefix='snapshot', dir=out_path) as tempd:
+        path = os.path.join(tempd, filename)
+        npz.save_npz(path, trainer)
+        shutil.move(path, os.path.join(out_path, filename))
 
 
 def adjust_hyperparams(trainer, body):
