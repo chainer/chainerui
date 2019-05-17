@@ -1,7 +1,8 @@
 name: chainerui
 type: sphinx
 base: docs/source
-requirements_file: docs/requirements.txt
 python:
   version: 3.5
   setup_py_install: true
+  install:
+    - requirements: docs/requirements.txt
