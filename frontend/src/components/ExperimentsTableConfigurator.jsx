@@ -5,6 +5,7 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
+  Table,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -58,6 +59,7 @@ class ExperimentsTableConfigurator extends React.Component {
     const {
       isGrouped = false,
     } = tableState;
+    const deletedResultKeys = Object.keys(deletedResults);
 
     return (
       <div>
@@ -72,23 +74,35 @@ class ExperimentsTableConfigurator extends React.Component {
           </Check>
         </div>
 
-        <Button color="secondary" onClick={this.handleModalShow}>
-          Manage unregistered results
-        </Button>
+        <div className="mt-2">
+          <Button color="secondary" onClick={this.handleModalShow}>
+            Manage unregistered results
+          </Button>
+        </div>
 
         <Modal isOpen={this.state.showModal} toggle={this.handleModalHide}>
           <ModalHeader toggle={this.handleModalHide}>
             Manage unregistered results
           </ModalHeader>
           <ModalBody>
-            {
-              Object.keys(deletedResults).map((rId) => (
-                <li>
-                  { `${deletedResults[rId].id}: ${deletedResults[rId].name}, ${deletedResults[rId].pathName}, ${deletedResults[rId].group}` }
-                  <Button onClick={() => this.handleResultRestore(deletedResults[rId])}>Restore</Button>
-                </li>
-              ))
+            { deletedResultKeys.length === 0
+              ? (<p>There are no unregistered results.</p>)
+              : null
             }
+            <Table borderless>
+              <tbody>
+                { deletedResultKeys.map((rId) => (
+                  <tr key={rId}>
+                    <td>
+                      {`${deletedResults[rId].name}, ${deletedResults[rId].pathName}`}
+                    </td>
+                    <td>
+                      <Button onClick={() => this.handleResultRestore(deletedResults[rId])} size="sm">Restore</Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
           </ModalBody>
         </Modal>
       </div>
