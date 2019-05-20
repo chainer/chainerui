@@ -77,7 +77,7 @@ class ExperimentsTableConfigurator extends React.Component {
         </Button>
 
         <Modal isOpen={this.state.showModal} toggle={this.handleModalHide}>
-          <ModalHeader>
+          <ModalHeader toggle={this.handleModalHide}>
             Manage unregistered results
           </ModalHeader>
           <ModalBody>
