@@ -16,6 +16,7 @@ class ExperimentsTableConfigurator extends React.Component {
     this.handleIsGrouped = this.handleIsGrouped.bind(this);
     this.handleModalShow = this.handleModalShow.bind(this);
     this.handleModalHide = this.handleModalHide.bind(this);
+    this.handleResultRestore = this.handleResultRestore.bind(this);
 
     this.state = {
       showModal: false,
@@ -23,6 +24,7 @@ class ExperimentsTableConfigurator extends React.Component {
   }
 
   handleModalShow() {
+    this.props.getDeletedResultList(this.props.project.id);
     this.setState({
       showModal: true,
     });
@@ -41,6 +43,13 @@ class ExperimentsTableConfigurator extends React.Component {
       this.props.project.id, tableState.hiddenLogKeys, tableState.hiddenArgKeys,
       event.target.checked
     );
+  }
+
+  handleResultRestore(result) {
+    const newResult = { ...result, isUnregistered: false };
+
+    this.props.onResultUpdate(this.props.project.id, newResult);
+    this.props.getDeletedResultList(this.props.project.id);
   }
 
   render() {
@@ -72,7 +81,14 @@ class ExperimentsTableConfigurator extends React.Component {
             Manage unregistered results
           </ModalHeader>
           <ModalBody>
-            { Object.keys(deletedResults).length }
+            {
+              Object.keys(deletedResults).map((rId) => (
+                <li>
+                  { `${deletedResults[rId].id}: ${deletedResults[rId].name}, ${deletedResults[rId].pathName}, ${deletedResults[rId].group}` }
+                  <Button onClick={() => this.handleResultRestore(deletedResults[rId])}>Restore</Button>
+                </li>
+              ))
+            }
           </ModalBody>
         </Modal>
       </div>
@@ -84,6 +100,9 @@ ExperimentsTableConfigurator.propTypes = {
   project: uiPropTypes.project.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
+  deletedResults: uiPropTypes.deletedResults.isRequired,
+  onResultUpdate: PropTypes.func.isRequired,
+  getDeletedResultList: PropTypes.func.isRequired,
 };
 
 export default ExperimentsTableConfigurator;

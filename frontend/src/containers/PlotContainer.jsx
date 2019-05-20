@@ -42,7 +42,6 @@ class PlotContainer extends React.Component {
 
     this.props.clearResultList();
     this.props.getProject(projectId);
-    this.props.getDeletedResultList(projectId);
     this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId, logsLimit);
     this.handleExperimentsTableColumnsVisibilityUpdate = this.handleExperimentsTableColumnsVisibilityUpdate.bind(this);
   }
@@ -158,6 +157,8 @@ class PlotContainer extends React.Component {
                 projectConfig={projectConfig}
                 onTableColumnsVisibilityUpdate={this.props.updateTableColumnsVisibility}
                 deletedResults={deletedResults}
+                onResultUpdate={this.props.updateResult}
+                getDeletedResultList={this.props.getDeletedResultList}
               />
             </div>
           </div>
