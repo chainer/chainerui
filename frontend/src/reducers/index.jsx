@@ -24,7 +24,7 @@ const removePartialState = (state, keyId) => {
   if (keyId in state) {
     const newState = { ...state };
     delete newState[keyId];
-    return state;
+    return newState;
   }
   return state;
 };
