@@ -9,6 +9,10 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 
 
+with open(os.path.join('docs', 'requirements.txt')) as f:
+    docs_required = f.read().splitlines()
+
+
 here = os.path.abspath(os.path.dirname(__file__))
 # Get __version__ variable
 exec(open(os.path.join(here, 'chainerui', '_version.py')).read())
@@ -27,6 +31,7 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     install_requires=required,
+    extras_require={'docs': docs_required},
     package_data={
         'chainerui': [
             'templates/*',
