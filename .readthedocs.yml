@@ -1,8 +1,5 @@
 version: 2
 
-sphinx:
-  configuration: docs/source/conf.py
-
 formats: all
 
 conda:
@@ -13,3 +10,6 @@ python:
   install:
     - requirements: docs/requirements.txt
     - requirements: requirements.txt
+
+sphinx:
+  configuration: docs/source/conf.py
