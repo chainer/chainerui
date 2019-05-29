@@ -8,6 +8,8 @@ const transformLogStructure = (log) => {
   });
   // eslint-disable-next-line no-param-reassign
   log.logDict = logDict;
+  // eslint-disable-next-line no-param-reassign
+  delete log.logItems;
 };
 
 export default (/* store */) => (next) => (action) => {
