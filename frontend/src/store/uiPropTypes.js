@@ -16,11 +16,7 @@ export const resultId = PropTypes.number;
 export const logs = PropTypes.arrayOf(PropTypes.shape({
   resultId,
   id: PropTypes.number,
-  logItems: PropTypes.arrayOf(PropTypes.shape({
-    logId: PropTypes.number,
-    key: PropTypes.string.isRequired,
-    value: PropTypes.any,
-  })).isRequired,
+  logDict: PropTypes.objectOf(PropTypes.any).isRequired,
 }));
 
 export const args = PropTypes.arrayOf(PropTypes.shape({
