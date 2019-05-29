@@ -1,19 +1,41 @@
 import * as ActionTypes from '../actions';
 
-const targetActions = [
-  ActionTypes.RESULT_LIST_SUCCESS,
-  ActionTypes.RESULT_SUCCESS,
-  ActionTypes.RESULT_UPDATE_SUCCESS,
-  ActionTypes.RESULT_DELETE_SUCCESS,
-];
+const transformLogStructure = (log) => {
+  const logBody = {};
+  log.logItems.forEach((item) => {
+    const { key, value } = item;
+    logBody[key] = value;
+  });
+  // eslint-disable-next-line no-param-reassign
+  log.logBody = logBody;
+};
 
 export default (/* store */) => (next) => (action) => {
-  if (!targetActions.includes(action.type)) {
-    return next(action);
+  const { response } = action;
+  switch (action.type) {
+    case ActionTypes.RESULT_LIST_SUCCESS: {
+      // handle API calls that receives list of results
+      const { results } = response;
+      results.forEach((result) => {
+        result.logs.forEach((log) => {
+          transformLogStructure(log);
+        });
+      });
+      break;
+    }
+    case ActionTypes.RESULT_SUCCESS:
+    case ActionTypes.RESULT_UPDATE_SUCCESS:
+    case ActionTypes.RESULT_DELETE_SUCCESS: {
+      // handle API calls that receives single result
+      const { result } = response;
+      result.logs.forEach((log) => {
+        transformLogStructure(log);
+      });
+      break;
+    }
+    default:
   }
 
-  // TODO: transform log structure
-  const { response } = action;
   console.log({ response });
   return next(action);
 };
