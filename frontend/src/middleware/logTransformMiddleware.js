@@ -1,13 +1,13 @@
 import * as ActionTypes from '../actions';
 
 const transformLogStructure = (log) => {
-  const logBody = {};
+  const logDict = {};
   log.logItems.forEach((item) => {
     const { key, value } = item;
-    logBody[key] = value;
+    logDict[key] = value;
   });
   // eslint-disable-next-line no-param-reassign
-  log.logBody = logBody;
+  log.logDict = logDict;
 };
 
 export default (/* store */) => (next) => (action) => {
