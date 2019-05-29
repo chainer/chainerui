@@ -30,12 +30,17 @@ Asset summaries
 
 .. autofunction:: chainerui.summary.audio
 
+.. _module_summary_text:
+
+.. autofunction:: chainerui.summary.text
+
 
 .. _module_summary_reporter:
 
 .. autofunction:: chainerui.summary.reporter
 .. automethod:: chainerui.summary._Reporter.image
 .. automethod:: chainerui.summary._Reporter.audio
+.. automethod:: chainerui.summary._Reporter.text
 
 
 Utilities

@@ -3,7 +3,7 @@
 Visualize assets
 ================
 
-ChainerUI provides ``/assets`` endpoint from v0.8.0 to visualize media assets such image or audio. Basically by using :ref:`module_summary` module, functions convert ``ndarray`` to the specified media type, and show them on a web browser. Assets page can be seen from ``assets`` button on :ref:`result table <ui_training_job_table>` or :ref:`result detail <ui_result_page>`.
+ChainerUI provides ``/assets`` endpoint from v0.8.0 to visualize media assets such image or audio. Basically by using :ref:`module_summary` module, functions convert ``ndarray`` to the specified media type or collect texts, as it turns out to show them on a web browser. Assets page can be seen from ``assets`` button on :ref:`result table <ui_training_job_table>` or :ref:`result detail <ui_result_page>`.
 
 .. image:: ../images/assets/asset_page_flow.png
 
@@ -154,3 +154,9 @@ Audio
 **Required Scipy** to use this function.
 
 Convert ``ndarray`` to audio as WAV format, save and report to ChainerUI server. ``audio`` function requires sample rate.
+
+
+Text
+----
+
+Simply collect texts, save and report to ChainerUI server.
