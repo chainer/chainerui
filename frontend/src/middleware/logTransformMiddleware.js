@@ -36,6 +36,5 @@ export default (/* store */) => (next) => (action) => {
     default:
   }
 
-  console.log({ response });
   return next(action);
 };
