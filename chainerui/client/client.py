@@ -3,6 +3,7 @@ import os
 import time
 
 from chainerui.client.helper import urlopen
+from chainerui.utils.save_args import convert_dict
 
 
 def get_default_url():
@@ -247,7 +248,7 @@ _client = None
 
 
 def init(url=None, project_name=None, result_name=None, overwrite_result=False,
-         crawlable=False):
+         crawlable=False, conditions=None):
     """Initialize client tools
 
     Initialize client object, then setup project and result. Even if some
@@ -265,6 +266,9 @@ def init(url=None, project_name=None, result_name=None, overwrite_result=False,
             every time on default. If set ``True``, the client tool posts
             logs on the same result.
         crawlable (bool): to inform server not to crawl physical logs.
+        conditions (:class:`argparse.Namespace` or dict): Experiment conditions
+            to show on a job table. Keys are show as table header and values
+            are show at a job row.
     """
 
     global _client
@@ -278,6 +282,11 @@ def init(url=None, project_name=None, result_name=None, overwrite_result=False,
     if not _client.register_result(
             result_name=result_name, overwrite_result=overwrite_result):
         _client = None
+        return
+
+    if conditions is not None:
+        args = convert_dict(conditions)
+        _client.post_args(args)
 
 
 def log_reporter():
