@@ -1,5 +1,17 @@
-name: chainerui
-type: sphinx
-base: docs/source
+version: 2
+
+formats: all
+
+conda:
+  environment: docs/rtd_conda.yml
+
 python:
-  setup_py_install: true
+  version: 3.6
+  install:
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs
+
+sphinx:
+  configuration: docs/source/conf.py
