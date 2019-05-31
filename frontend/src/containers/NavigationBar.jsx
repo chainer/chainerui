@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import {
   Container,
   Collapse, Navbar, NavbarBrand,
@@ -9,6 +10,13 @@ import {
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
+import {
+  updateGlobalPollingRate,
+  updateGlobalChartSize,
+  updateGlobalLogsLimit,
+  updateGlobalResultNameAlignment,
+  updateGlobalHighlightTableAndChart,
+} from '../actions';
 import Check from '../components/FormControl/Check';
 import Select from '../components/FormControl/Select';
 import PollingStatus from '../components/PollingStatus';
@@ -193,4 +201,22 @@ NavigationBar.defaultProps = {
   pollingKey: undefined,
 };
 
-export default NavigationBar;
+const mapStateToProps = (state) => {
+  const {
+    fetchState,
+    config,
+  } = state;
+  const globalConfig = config.global;
+  return {
+    fetchState,
+    globalConfig,
+  };
+};
+
+export default connect(mapStateToProps, {
+  onGlobalConfigPollingRateUpdate: updateGlobalPollingRate,
+  onGlobalConfigChartSizeUpdate: updateGlobalChartSize,
+  onGlobalConfigLogsLimitUpdate: updateGlobalLogsLimit,
+  onGlobalConfigResultNameAlignmentUpdate: updateGlobalResultNameAlignment,
+  onGlobalHighlightTableAndChartUpdate: updateGlobalHighlightTableAndChart,
+})(NavigationBar);
