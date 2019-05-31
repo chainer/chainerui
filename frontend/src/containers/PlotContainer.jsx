@@ -24,11 +24,11 @@ import {
   updateTableColumnsVisibility,
   updateChartDownloadStatus,
 } from '../actions';
+import NavigationBar from './NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
 import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigurator';
 import LogVisualizer from '../components/LogVisualizer';
-import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
 import { defaultProjectStatus, defaultProjectConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';

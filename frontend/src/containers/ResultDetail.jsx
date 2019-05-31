@@ -15,7 +15,7 @@ import {
   updateGlobalResultNameAlignment,
   updateGlobalHighlightTableAndChart,
 } from '../actions';
-import NavigationBar from '../components/NavigationBar';
+import NavigationBar from './NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ResultSummary from '../components/result/ResultSummary';
 import Args from '../components/result/Args';

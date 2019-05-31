@@ -9,9 +9,9 @@ import {
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
-import Check from './FormControl/Check';
-import Select from './FormControl/Select';
-import PollingStatus from './PollingStatus';
+import Check from '../components/FormControl/Check';
+import Select from '../components/FormControl/Select';
+import PollingStatus from '../components/PollingStatus';
 import {
   chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION,
 } from '../constants';

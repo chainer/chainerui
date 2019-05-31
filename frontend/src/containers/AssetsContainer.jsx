@@ -13,7 +13,7 @@ import {
   updateGlobalHighlightTableAndChart,
   updateAssetsTableColumnsVisibility,
 } from '../actions';
-import NavigationBar from '../components/NavigationBar';
+import NavigationBar from './NavigationBar';
 import AssetsTable from '../components/AssetsTable';
 
 

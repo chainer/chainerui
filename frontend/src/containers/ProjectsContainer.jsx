@@ -12,7 +12,7 @@ import {
   updateGlobalResultNameAlignment,
   updateGlobalHighlightTableAndChart,
 } from '../actions';
-import NavigationBar from '../components/NavigationBar';
+import NavigationBar from './NavigationBar';
 import Projects from '../components/projects/Projects';
 
 
