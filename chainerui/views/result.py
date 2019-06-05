@@ -17,7 +17,8 @@ class ResultAPI(MethodView):
     def get(self, id=None, project_id=None):
         """get."""
         logs_limit = request.args.get('logs_limit', default=-1, type=int)
-        unregistered = request.args.get('unregistered', default=False, type=bool)
+        unregistered = request.args.get(
+            'unregistered', default=False, type=bool)
 
         project = db.session.query(Project).filter_by(
             id=project_id).first()
