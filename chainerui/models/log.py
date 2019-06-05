@@ -30,7 +30,7 @@ class Log(database.BASE):
     def serialize(self):
         """serialize."""
 
-        log_items = []
+        log_dict = {}
 
         data = msgpack.unpackb(self.data, raw=False)
         for item in data.items():
@@ -42,14 +42,10 @@ class Log(database.BASE):
                 else item[1]
             )
 
-            log_items.append({
-                'logId': self.id,
-                'key': item[0],
-                'value': value_to_store
-            })
+            log_dict[item[0]] = value_to_store
 
         return {
             'id': self.id,
             'resultId': self.result_id,
-            'logItems': log_items
+            'logDict': log_dict
         }
