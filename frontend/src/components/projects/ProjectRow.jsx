@@ -89,50 +89,43 @@ class ProjectRow extends React.Component {
     const { project } = this.props;
     const { isEditing, isDeleteModalOpen, name } = this.state;
 
-    const nameElem = isEditing ? (
-      <Input
-        type="text"
-        autoFocus
-        value={name}
-        onChange={this.handleNameChange}
-        onKeyPress={this.handleNameKeyPress}
-      />
-    ) : (
-      <h4>
-        <Link to={urlForPlot(project.id)}>{displayProjectName(project)}</Link>
-      </h4>
-    );
-
-    const controlElem = isEditing ? (
-      <div>
-        <Button size="sm" color="primary" onClick={this.handleEditEnd}>Save</Button>
-        <span className="ml-2">or</span>
-        <Button size="sm" color="link" onClick={this.handleEditCancel}>Cancel</Button>
-      </div>
-    ) : (
-      <div>
-        <Button className="mx-2" size="sm" onClick={this.handleEditClick}>Edit</Button>
-        <Button size="sm" onClick={this.toggleDeleteModal}>Delete</Button>
-      </div>
-    );
-
     return (
       <div className="py-4 border-bottom">
-        <div className="mb-1 d-flex flex-row">
-          <div>{nameElem}</div>
-          <div className="ml-auto">
-            {controlElem}
+        {isEditing ? (
+          <div className="mb-1 d-flex flex-row">
+            <div>
+              <Input
+                type="text"
+                autoFocus
+                value={name}
+                onChange={this.handleNameChange}
+                onKeyPress={this.handleNameKeyPress}
+              />
+            </div>
+            <div className="ml-auto">
+              <Button size="sm" color="primary" onClick={this.handleEditEnd}>Save</Button>
+              <span className="ml-2">or</span>
+              <Button size="sm" color="link" onClick={this.handleEditCancel}>Cancel</Button>
+            </div>
           </div>
-        </div>
-        <div>
-          <p className="mb-0 text-secondary">
-            {'# '}
-            {project.id}
-          </p>
-          <p className="mb-0 text-secondary">
-            {project.pathName}
-          </p>
-        </div>
+        ) : (
+          <div className="mb-1 d-flex flex-row">
+            <h4>
+              <Link to={urlForPlot(project.id)}>{displayProjectName(project)}</Link>
+            </h4>
+            <div className="ml-auto">
+              <Button className="mx-2" size="sm" onClick={this.handleEditClick}>Edit</Button>
+              <Button size="sm" onClick={this.toggleDeleteModal}>Delete</Button>
+            </div>
+          </div>
+        )}
+        <p className="mb-0 text-secondary">
+          {'# '}
+          {project.id}
+        </p>
+        <p className="mb-0 text-secondary">
+          {project.pathName}
+        </p>
         <Modal isOpen={isDeleteModalOpen}>
           <ModalHeader>Delete a project</ModalHeader>
           <ModalBody>
