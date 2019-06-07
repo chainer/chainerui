@@ -117,7 +117,7 @@ class ProjectRow extends React.Component {
     );
 
     return (
-      <div className="project-row py-4 border border-top-0 border-left-0 border-right-0">
+      <div className="py-4 border-bottom">
         <div className="mb-1 d-flex flex-row">
           <div>{nameElem}</div>
           <div className="ml-auto">

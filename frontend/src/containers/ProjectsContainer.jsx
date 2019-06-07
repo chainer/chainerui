@@ -26,7 +26,7 @@ class ProjectsContainer extends React.Component {
         <Container fluid>
           <Row>
             <Col sm={10} lg={8} className="m-auto">
-              <h2>Projects</h2>
+              <h2 className="pb-4 border-bottom">Projects</h2>
               <Projects
                 projects={projects}
                 onProjectUpdate={this.props.updateProject}

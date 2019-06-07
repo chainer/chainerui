@@ -41,7 +41,7 @@ const Projects = (props) => {
   const { projects, onProjectUpdate, onProjectDelete } = props;
 
   return (
-    <div className="mt-4 border border-left-0 border-right-0 border-bottom-0">
+    <div>
       {(Object.keys(projects).length === 0)
         ? createProjectsNotFoundElem()
         : createProjectRowElems(projects, onProjectUpdate, onProjectDelete)}
