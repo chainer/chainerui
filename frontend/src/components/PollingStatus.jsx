@@ -9,16 +9,12 @@ import {
 } from '../actions';
 
 
-const PollingStatus = (props) => {
-  const { pollingKey, fetchState, globalConfig } = props;
-
-  let colorClass;
-  let statusMessage;
-  if (globalConfig.pollingRate === 0 || !pollingKey) {
-    colorClass = 'text-muted';
-    statusMessage = '';
-  } else {
+const PollingStatus = ({ pollingKey, fetchState, globalConfig }) => {
+  let colorClass = 'text-muted';
+  let statusMessage = '';
+  if (globalConfig.pollingRate && pollingKey) {
     const targetState = fetchState[pollingKey];
+    // eslint-disable-next-line default-case
     switch (targetState) {
       case RESULT_LIST_REQUEST:
       case RESULT_REQUEST:
@@ -34,10 +30,6 @@ const PollingStatus = (props) => {
       case RESULT_FAILURE:
         colorClass = 'text-danger';
         statusMessage = 'failed to load data';
-        break;
-      default:
-        colorClass = 'text-muted';
-        statusMessage = '';
         break;
     }
   }
