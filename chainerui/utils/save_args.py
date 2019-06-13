@@ -6,6 +6,12 @@ import shutil
 from chainerui.utils.tempdir import tempdir
 
 
+def convert_dict(conditions):
+    if isinstance(conditions, argparse.Namespace):
+        return vars(conditions)
+    return conditions
+
+
 def save_args(conditions, out_path):
     """A util function to save experiment condition for job table.
 
@@ -17,10 +23,7 @@ def save_args(conditions, out_path):
 
     """
 
-    if isinstance(conditions, argparse.Namespace):
-        args = vars(conditions)
-    else:
-        args = conditions
+    args = convert_dict(conditions)
 
     try:
         os.makedirs(out_path)
