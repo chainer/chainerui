@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
   Container,
   Collapse, Navbar, NavbarBrand,
-  Popover, PopoverHeader, PopoverBody,
+  UncontrolledPopover, PopoverHeader, PopoverBody,
   Form, FormGroup, Label,
   Button,
 } from 'reactstrap';
@@ -32,21 +32,11 @@ class NavigationBar extends React.Component {
   constructor(props) {
     super(props);
 
-    this.toggleSettingPopover = this.toggleSettingPopover.bind(this);
     this.handleChangePollingRate = this.handleChangePollingRate.bind(this);
     this.handleChangeChartSize = this.handleChangeChartSize.bind(this);
     this.handleChangeLogsLimit = this.handleChangeLogsLimit.bind(this);
     this.handleResultNameAlignmentChange = this.handleResultNameAlignmentChange.bind(this);
     this.handleHighlightTableAndChartChange = this.handleHighlightTableAndChartChange.bind(this);
-    this.state = {
-      settingPopoverOpen: false,
-    };
-  }
-
-  toggleSettingPopover() {
-    this.setState((prevState) => ({
-      settingPopoverOpen: !prevState.settingPopoverOpen,
-    }));
   }
 
   handleChangePollingRate(e) {
@@ -95,17 +85,15 @@ class NavigationBar extends React.Component {
                 globalConfig={this.props.globalConfig}
               />
             </span>
-            <Button id="navbar-global-setting" onClick={this.toggleSettingPopover}>
+            <Button id="navbar-global-setting">
               <i className="fas fa-cog" />
             </Button>
           </Collapse>
         </Container>
 
-        <Popover
+        <UncontrolledPopover
           placement="left-end"
-          isOpen={this.state.settingPopoverOpen}
           target="navbar-global-setting"
-          toggle={this.toggleSettingPopover}
         >
           <PopoverHeader className="popover-header">Global Settings</PopoverHeader>
           <PopoverBody className="popover-body">
@@ -180,7 +168,7 @@ class NavigationBar extends React.Component {
               </small>
             </p>
           </PopoverBody>
-        </Popover>
+        </UncontrolledPopover>
       </Navbar>
     );
   }
