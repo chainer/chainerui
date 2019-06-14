@@ -46,33 +46,13 @@ module.exports = {
       {
         enforce: 'pre',
         exclude: nodeModulePath,
-        test: /\.jsx?$/,
+        test: /\.[jt]sx?$/,
         use: 'eslint-loader',
       },
       {
         exclude: nodeModulePath,
-        test: /\.jsx?$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                [
-                  '@babel/preset-env',
-                  {
-                    modules: false,
-                    targets: targetBrowser,
-                  },
-                ],
-                '@babel/preset-react',
-              ],
-              plugins: [
-                '@babel/proposal-object-rest-spread',
-                'lodash',
-              ],
-            },
-          },
-        ],
+        test: /\.[jt]sx?$/,
+        use: 'ts-loader',
       },
       {
         test: /\.css$/,
@@ -108,7 +88,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   optimization: {
     splitChunks: {
