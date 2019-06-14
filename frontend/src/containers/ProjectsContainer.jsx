@@ -27,7 +27,6 @@ class ProjectsContainer extends React.Component {
         <Container fluid>
           <Row>
             <Col sm={10} lg={8} className="m-auto">
-              <h2 className="pb-4 border-bottom">Projects</h2>
               {Object.keys(projects).length === 0 ? (
                 <NoProjects />
               ) : (
