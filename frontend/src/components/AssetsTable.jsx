@@ -18,10 +18,10 @@ const AssetsTable = (props) => {
   } = tableState;
 
   const trainInfoKeys = assets.map((asset) => Object.keys(asset.train_info)).flat();
-  const uniqueTrainInfoKeys = [...new Set(trainInfoKeys)];
+  const uniqueTrainInfoKeys = Array.from(new Set(trainInfoKeys));
 
   const contentKeys = assets.map((asset) => asset.contents.map((content) => content.tag)).flat();
-  const uniqueContentKeys = [...new Set(contentKeys)];
+  const uniqueContentKeys = Array.from(new Set(contentKeys));
 
   const trainInfoColumns = sortKeys(uniqueTrainInfoKeys, knownTrainInfoKeysConfig).map((k) => ({
     Header: k,

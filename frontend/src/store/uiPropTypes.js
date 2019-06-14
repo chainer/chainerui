@@ -99,7 +99,7 @@ export const tableState = PropTypes.shape({
 });
 
 export const resultConfig = PropTypes.shape({
-  hidden: PropTypes.bool.isRequired,
+  hidden: PropTypes.bool,
   assetsTableState: tableState,
 });
 
