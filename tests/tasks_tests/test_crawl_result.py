@@ -173,4 +173,3 @@ def test_crawl_result_invalid_default_name_file(func_dir):
 
     result2 = crawl_result(result, force=True, commit=False)
     assert result2.name is None
-
