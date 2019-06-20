@@ -109,6 +109,12 @@ def test_load_result_jsonl_with_correct_file(func_dir):
     assert len(load_result_json(func_dir, 'log.jsonl', format='jsonl')) > 0
 
 
+def test_equality_between_load_result_json_and_load_result_jsonl(func_dir):
+    ret1 = load_result_json(func_dir, 'log')
+    ret2 = load_result_json(func_dir, 'log.jsonl', format='jsonl')
+    assert ret1 == ret2
+
+
 def test_crawl_result_reset(func_dir):
     # basic test is checked on 'test_api.py', so this test checks only
     # reset logic.
