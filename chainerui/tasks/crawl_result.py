@@ -11,7 +11,7 @@ from chainerui.models.snapshot import Snapshot
 from chainerui.utils import is_numberable
 
 
-def load_result_json(result_path, json_file_name):
+def load_result_json(result_path, json_file_name, format='json'):
     """load_result_json."""
     json_path = os.path.join(result_path, json_file_name)
 
@@ -19,7 +19,10 @@ def load_result_json(result_path, json_file_name):
     if os.path.isfile(json_path):
         with open(json_path) as json_data:
             try:
-                _list = json.load(json_data)
+                if format == 'json':
+                    _list = json.load(json_data)
+                elif format == 'jsonl':
+                    _list = [json.loads(json_line) for json_line in json_data]
             except ValueError as err:
                 logger.error(
                     'Failed to load json: {}, {}'.format(json_path, err))
@@ -27,7 +30,7 @@ def load_result_json(result_path, json_file_name):
     return _list
 
 
-def crawl_result_path(result_path, include_log):
+def crawl_result_path(result_path, include_log, format):
     """crawl_result_path."""
     result = {
         'logs': [],
@@ -38,7 +41,7 @@ def crawl_result_path(result_path, include_log):
 
     if os.path.isdir(result_path):
         if include_log:
-            result['logs'] = load_result_json(result_path, 'log')
+            result['logs'] = load_result_json(result_path, 'log', format)
         result['args'] = load_result_json(result_path, 'args')
         result['commands'] = load_result_json(result_path, 'commands')
 
@@ -84,7 +87,7 @@ def _update_to_default_name(result):
     result.name = default_name
 
 
-def crawl_result(result, force=False, commit=True):
+def crawl_result(result, force=False, commit=True, format='json'):
     """crawl_results."""
     if not result.crawlable:
         return result
@@ -95,7 +98,7 @@ def crawl_result(result, force=False, commit=True):
 
     # if log file is not updated, not necessary to get log contents
     is_updated = _check_log_updated(result)
-    crawled_result = crawl_result_path(result.path_name, is_updated)
+    crawled_result = crawl_result_path(result.path_name, is_updated, format)
 
     if is_updated:
         current_log_idx = len(result.logs)
