@@ -41,6 +41,10 @@ def result_path(func_dir):
     with open(os.path.join(func_dir, 'log.txt'), 'w') as f:
         f.write('json')
 
+    with open(os.path.join(path, 'log.jsonl'), 'w') as f:
+        for _log in log:
+            print(json.dumps(_log), file=f)
+
     open(os.path.join(func_dir, 'snapshot_iter_100'), 'w').close()
     open(os.path.join(func_dir, 'snapshot_iter_invalid'), 'w').close()
 
@@ -98,6 +102,10 @@ def test_load_result_json_with_invalid_json(func_dir):
     with open(os.path.join(func_dir, 'log'), 'w') as f:
         f.write('{')  # broken JSON
     assert len(load_result_json(func_dir, 'log')) == 0
+
+
+def test_load_result_jsonl_with_correct_file(self):
+    assert len(load_result_json(self._result_path, 'log.jsonl', 'jsonl')) > 0
 
 
 def test_crawl_result_reset(func_dir):
@@ -158,3 +166,4 @@ def test_crawl_result_invalid_default_name_file(func_dir):
 
     result2 = crawl_result(result, force=True, commit=False)
     assert result2.name is None
+
