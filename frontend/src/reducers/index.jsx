@@ -466,12 +466,25 @@ const tableStateReducer = (state = {}, action) => {
   }
 };
 
+const targetResultTypeReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.PROJECT_CONFIG_RESET:
+      return 'ACTIVE';
+    case ActionTypes.TARGET_RESULT_TYPE_UPDATE:
+      return action.resultType;
+    default:
+      return state;
+  }
+};
+
 const projectConfigReducer = combineReducers({
   axes: axesConfigReducer,
   resultsConfig: resultsConfigReducer,
   lines: linesConfigReducer,
   tableState: tableStateReducer,
+  resultType: targetResultTypeReducer,
 });
+
 
 const projectsConfigReducer = (state = {}, action) => {
   const { projectId } = action;

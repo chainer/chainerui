@@ -97,11 +97,17 @@ export const defaultAxisConfig = {
   },
 };
 
+export const RESULT_TYPE = {
+  ACTIVE: 'ACTIVE',
+  UNREGISTERED: 'UNREGISTERED',
+};
+
 export const defaultProjectConfig = {
   axes: defaultAxisConfig,
   resultsConfig: {},
   lines: {},
   tableState: {},
+  resultType: RESULT_TYPE.ACTIVE,
 };
 
 export const CHART_DOWNLOAD_STATUS = {

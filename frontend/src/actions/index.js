@@ -81,12 +81,16 @@ export const DELETED_RESULT_LIST_REQUEST = 'DELETED_RESULT_LIST_REQUEST';
 export const DELETED_RESULT_LIST_SUCCESS = 'DELETED_RESULT_LIST_SUCCESS';
 export const DELETED_RESULT_LIST_FAILURE = 'DELETED_RESULT_LIST_FAILURE';
 
-export const getResultList = (projectId, logsLimit = -1) => ({
-  [CALL_API]: {
-    types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILURE],
-    endpoint: `projects/${projectId}/results?logs_limit=${logsLimit}`,
-  },
-});
+export const getResultList = (projectId, logsLimit = -1, resultType) => {
+  const resultTypeQuery = resultType === 'ACTIVE' ? '' : '&unregistered=1';
+
+  return {
+    [CALL_API]: {
+      types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILURE],
+      endpoint: `projects/${projectId}/results?logs_limit=${logsLimit}${resultTypeQuery}`,
+    },
+  };
+};
 
 export const getDeletedResultList = (projectId) => ({
   [CALL_API]: {
@@ -174,6 +178,13 @@ export const PROJECT_CONFIG_RESET = 'PROJECT_CONFIG_RESET';
 export const resetProjectConfig = (projectId) => ({
   type: PROJECT_CONFIG_RESET,
   projectId,
+});
+
+export const TARGET_RESULT_TYPE_UPDATE = 'TARGET_RESULT_TYPE_UPDATE';
+export const updateTargetResultType = (projectId, resultType) => ({
+  type: TARGET_RESULT_TYPE_UPDATE,
+  projectId,
+  resultType,
 });
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import {
@@ -24,6 +24,7 @@ import {
   updateTableExpanded,
   updateTableColumnsVisibility,
   updateChartDownloadStatus,
+  updateTargetResultType,
 } from '../actions';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
@@ -37,25 +38,28 @@ import { startPolling, stopPolling } from '../utils';
 
 class PlotContainer extends React.Component {
   componentDidMount() {
-    const { projectId, globalConfig } = this.props;
+    const { projectId, globalConfig, projectConfig } = this.props;
     const { pollingRate, logsLimit } = globalConfig;
+    const { resultType } = projectConfig;
 
     this.props.clearResultList();
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId, logsLimit);
+    this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId, logsLimit, resultType);
     this.handleExperimentsTableColumnsVisibilityUpdate = this.handleExperimentsTableColumnsVisibilityUpdate.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, globalConfig } = this.props;
+    const { projectId, globalConfig, projectConfig } = this.props;
     const currentPollingRate = globalConfig.pollingRate;
     const currentLogsLimit = globalConfig.logsLimit;
     const nextPollingRate = nextProps.globalConfig.pollingRate;
     const nextLogsLimit = nextProps.globalConfig.logsLimit;
+    const nextResultType = nextProps.projectConfig.resultType;
+    const currentResultType = projectConfig.resultType;
 
-    if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit) {
+    if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit || currentResultType !== nextResultType) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate, projectId, nextLogsLimit);
+      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate, projectId, nextLogsLimit, nextResultType);
     }
   }
 
@@ -81,6 +85,7 @@ class PlotContainer extends React.Component {
 
   render() {
     const {
+      projectId,
       project,
       results,
       projectStatus,
@@ -106,6 +111,9 @@ class PlotContainer extends React.Component {
         <Container fluid>
           <div className="row">
             <div className="col-md-4 col-lg-3 order-12 order-md-1">
+              <p>{`${projectConfig.resultType}`}</p>
+              <Button onClick={() => this.props.updateTargetResultType(projectId, 'ACTIVE')}>ACTIVE</Button>
+              <Button onClick={() => this.props.updateTargetResultType(projectId, 'DELETED')}>DELETED</Button>
               <BreadcrumbLink
                 globalConfig={globalConfig}
                 project={project}
@@ -201,6 +209,7 @@ PlotContainer.propTypes = {
   updateTableExpanded: PropTypes.func.isRequired,
   updateTableColumnsVisibility: PropTypes.func.isRequired,
   updateChartDownloadStatus: PropTypes.func.isRequired,
+  updateTargetResultType: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -254,4 +263,5 @@ export default connect(mapStateToProps, {
   updateTableExpanded,
   updateTableColumnsVisibility,
   updateChartDownloadStatus,
+  updateTargetResultType,
 })(PlotContainer);
