@@ -14,20 +14,13 @@ def get_test_json():
     ]
 
 
-def find_log_item(log_items, key):
-    matching_log_items = [
-        log_item for log_item in log_items if log_item['key'] == key
-    ]
-    return matching_log_items[0]
-
-
 def test_log_serialize_numbers():
     json_data = get_test_json()
     logs = [Log(data) for data in json_data]
     serialized_data = [log.serialize for log in logs]
 
-    assert find_log_item(serialized_data[0]['logItems'], 'epoch')['value'] == 1
-    assert find_log_item(serialized_data[1]['logItems'], 'epoch')['value'] == 2
+    assert serialized_data[0]['logDict']['epoch'] == 1
+    assert serialized_data[1]['logDict']['epoch'] == 2
 
 
 def test_log_serialize_arbitrary_data():
@@ -44,11 +37,10 @@ def test_log_serialize_arbitrary_data():
     logs = [Log(data) for data in json_data]
     serialized_data = [log.serialize for log in logs]
 
-    assert find_log_item(serialized_data[0]['logItems'], 'epoch')['value'] == 0
-    assert find_log_item(
-        serialized_data[0]['logItems'], 'model_files')['value'] is None
-    assert find_log_item(serialized_data[1]['logItems'], 'epoch')['value'] == 1
-    assert find_log_item(serialized_data[2]['logItems'], 'epoch')['value'] == 2
+    assert serialized_data[0]['logDict']['epoch'] == 0
+    assert serialized_data[0]['logDict']['model_files'] is None
+    assert serialized_data[1]['logDict']['epoch'] == 1
+    assert serialized_data[2]['logDict']['epoch'] == 2
 
 
 def test_log_serialize_nan_and_inf():
@@ -65,11 +57,8 @@ def test_log_serialize_nan_and_inf():
     logs = [Log(data) for data in json_data]
     serialized_data = [log.serialize for log in logs]
 
-    assert find_log_item(
-        serialized_data[0]['logItems'], 'iteration')['value'] == 0
-    assert find_log_item(
-        serialized_data[0]['logItems'], 'epoch')['value'] is None
-    assert find_log_item(
-        serialized_data[0]['logItems'], 'loss')['value'] is None
-    assert find_log_item(serialized_data[1]['logItems'], 'epoch')['value'] == 1
-    assert find_log_item(serialized_data[2]['logItems'], 'epoch')['value'] == 2
+    assert serialized_data[0]['logDict']['iteration'] == 0
+    assert serialized_data[0]['logDict']['epoch'] is None
+    assert serialized_data[0]['logDict']['loss'] is None
+    assert serialized_data[1]['logDict']['epoch'] == 1
+    assert serialized_data[2]['logDict']['epoch'] == 2
