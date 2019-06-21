@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import {
@@ -14,132 +14,96 @@ import {
 } from '../../utils';
 
 
-class ProjectRow extends React.Component {
-  constructor(props) {
-    super(props);
+const ProjectRow = ({ project, onProjectUpdate, onProjectDelete }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [name, setName] = useState('');
 
-    this.handleEditClick = this.handleEditClick.bind(this);
-    this.handleEditEnd = this.handleEditEnd.bind(this);
-    this.handleEditCancel = this.handleEditCancel.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleNameKeyPress = this.handleNameKeyPress.bind(this);
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.toggleDeleteModal = this.toggleDeleteModal.bind(this);
+  const onEditClick = useCallback(() => {
+    setIsEditing(true);
+    setName(displayProjectNameFull(project));
+  }, [project]);
 
-    this.state = {
-      isEditing: false,
-      name: '',
-    };
-  }
-
-  handleEditClick() {
-    const { project } = this.props;
-
-    this.setState({
-      isEditing: true,
-      isDeleteModalOpen: false,
-      name: displayProjectNameFull(project),
-    });
-  }
-
-  handleEditEnd() {
-    const { project, onProjectUpdate } = this.props;
-    const { name } = this.state;
-
+  const onEditSaveClick = useCallback(() => {
     if (name !== project.name) {
       onProjectUpdate({ ...project, name });
     }
 
-    this.setState({
-      isEditing: false,
-    });
-  }
+    setIsEditing(false);
+  }, [project, onProjectUpdate, name]);
 
-  handleEditCancel() {
-    this.setState({
-      isEditing: false,
-    });
-  }
+  const onEditCancelClick = useCallback(() => {
+    setIsEditing(false);
+  }, []);
 
-  handleDelete() {
-    const { project, onProjectDelete } = this.props;
+  const onNameChange = useCallback((e) => {
+    setName(e.target.value);
+  }, []);
 
-    onProjectDelete(project.id);
-  }
-
-  handleNameKeyPress(e) {
+  const onNameKeyPress = useCallback((e) => {
     if (e.key === 'Enter') {
-      this.handleEditEnd();
+      onEditSaveClick();
     }
-  }
+  }, [onEditSaveClick]);
 
-  handleNameChange(e) {
-    this.setState({
-      name: e.target.value,
-    });
-  }
+  const onDeleteModalToggleClick = useCallback(() => {
+    setIsDeleteModalOpen((prevIsDeleteModalOpen) => !prevIsDeleteModalOpen);
+  }, []);
 
-  toggleDeleteModal() {
-    this.setState((prevState) => ({
-      isDeleteModalOpen: !prevState.isDeleteModalOpen,
-    }));
-  }
+  const onDeleteClick = useCallback(() => {
+    onProjectDelete(project.id);
+  }, [project, onProjectDelete]);
 
-  render() {
-    const { project } = this.props;
-    const { isEditing, isDeleteModalOpen, name } = this.state;
-
-    return (
-      <div className="py-4 border-bottom">
-        {isEditing ? (
-          <div className="mb-1 d-flex flex-row">
-            <div>
-              <Input
-                type="text"
-                autoFocus
-                value={name}
-                onChange={this.handleNameChange}
-                onKeyPress={this.handleNameKeyPress}
-              />
-            </div>
-            <div className="ml-auto">
-              <Button size="sm" color="primary" onClick={this.handleEditEnd}>Save</Button>
-              <span className="ml-2">or</span>
-              <Button size="sm" color="link" onClick={this.handleEditCancel}>Cancel</Button>
-            </div>
+  return (
+    <div className="py-4 border-bottom">
+      {isEditing ? (
+        <div className="mb-1 d-flex flex-row">
+          <div>
+            <Input
+              type="text"
+              autoFocus
+              value={name}
+              onChange={onNameChange}
+              onKeyPress={onNameKeyPress}
+            />
           </div>
-        ) : (
-          <div className="mb-1 d-flex flex-row">
-            <h4>
-              <Link to={urlForPlot(project.id)}>{displayProjectName(project)}</Link>
-            </h4>
-            <div className="ml-auto">
-              <Button className="mx-2" size="sm" onClick={this.handleEditClick}>Edit</Button>
-              <Button size="sm" onClick={this.toggleDeleteModal}>Delete</Button>
-            </div>
+          <div className="ml-auto">
+            <Button size="sm" color="primary" onClick={onEditSaveClick}>Save</Button>
+            <span className="ml-2">or</span>
+            <Button size="sm" color="link" onClick={onEditCancelClick}>Cancel</Button>
           </div>
-        )}
-        <p className="mb-0 text-secondary">
-          {'# '}
-          {project.id}
-        </p>
-        <p className="mb-0 text-secondary">
-          {project.pathName}
-        </p>
-        <Modal isOpen={isDeleteModalOpen}>
-          <ModalHeader>Delete a project</ModalHeader>
-          <ModalBody>
-            {`Are you sure to delete ${displayProjectName(project)} ?`}
-          </ModalBody>
-          <ModalFooter>
-            <Button color="secondary" onClick={this.toggleDeleteModal}>Cancel</Button>
-            <Button color="danger" onClick={this.handleDelete}>Delete</Button>
-          </ModalFooter>
-        </Modal>
-      </div>
-    );
-  }
-}
+        </div>
+      ) : (
+        <div className="mb-1 d-flex flex-row">
+          <h4>
+            <Link to={urlForPlot(project.id)}>{displayProjectName(project)}</Link>
+          </h4>
+          <div className="ml-auto">
+            <Button className="mx-2" size="sm" onClick={onEditClick}>Edit</Button>
+            <Button size="sm" onClick={onDeleteModalToggleClick}>Delete</Button>
+          </div>
+        </div>
+      )}
+      <p className="mb-0 text-secondary">
+        {'# '}
+        {project.id}
+      </p>
+      <p className="mb-0 text-secondary">
+        {project.pathName}
+      </p>
+      <Modal isOpen={isDeleteModalOpen}>
+        <ModalHeader>Delete a project</ModalHeader>
+        <ModalBody>
+          {`Are you sure to delete ${displayProjectName(project)} ?`}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={onDeleteModalToggleClick}>Cancel</Button>
+          <Button color="danger" onClick={onDeleteClick}>Delete</Button>
+        </ModalFooter>
+      </Modal>
+    </div>
+  );
+};
 
 ProjectRow.propTypes = {
   project: uiPropTypes.project.isRequired,
