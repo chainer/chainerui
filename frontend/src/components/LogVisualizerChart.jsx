@@ -67,6 +67,23 @@ const LogVisualizerChart = (props) => {
   };
 
   const data = getLogData(results, stats, projectConfig);
+  if (data.length > 0) {
+    const last = Object.assign({}, data[0]);
+    const smoothingWeight = 0.8;
+    data.forEach((d) => {
+      const smoothed = {};
+      Object.keys(d).forEach((key) => {
+        if (!last[key]) {
+          last[key] = d[key];
+        }
+        const skey = `${key}-smoothed`;
+        const s = last[key] * smoothingWeight + (1 - smoothingWeight) * d[key];
+        smoothed[skey] = s;
+        last[key] = s;
+      });
+      Object.assign(d, smoothed);
+    });
+  }
 
   const axisLines = {};
   ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {
@@ -112,11 +129,22 @@ const LogVisualizerChart = (props) => {
           dataKey={line2dataKey(line, axisName)}
           yAxisId={axisName}
           stroke={config.color}
-          strokeOpacity={!anySelected || selected ? 1 : 0.1}
+          strokeOpacity={!anySelected || selected ? 0.5 : 0.1}
           connectNulls
           isAnimationActive={false}
           dot={false}
           key={line2dataKey(line, axisName)}
+        />,
+        <Line
+          type="liner"
+          dataKey={`${line2dataKey(line, axisName)}-smoothed`}
+          yAxisId={axisName}
+          stroke="red"
+          strokeOpacity={!anySelected || selected ? 1 : 0.15}
+          connectNulls
+          dot={false}
+          activeDot={false}
+          key={`${line2dataKey(line, axisName)}-smoothed`}
         />,
         <Line
           type="linear"
