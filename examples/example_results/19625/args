@@ -1,0 +1,9 @@
+{
+    "batchsize": 100,
+    "epoch": 20,
+    "frequency": -1,
+    "gpu": -1,
+    "out": "example_results/19625",
+    "resume": "",
+    "unit": 1000
+}
