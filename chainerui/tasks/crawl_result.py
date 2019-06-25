@@ -30,7 +30,7 @@ def load_result_json(result_path, json_file_name, format='json'):
     return _list
 
 
-def crawl_result_path(result_path, include_log, format):
+def crawl_result_path(result_path, include_log):
     """crawl_result_path."""
     result = {
         'logs': [],
@@ -41,7 +41,14 @@ def crawl_result_path(result_path, include_log, format):
 
     if os.path.isdir(result_path):
         if include_log:
-            result['logs'] = load_result_json(result_path, 'log', format)
+            if os.path.isfile(os.path.join(result_path, 'log')):
+                result['logs'] = load_result_json(result_path, 'log', 'json')
+            elif os.path.isfile(os.path.join(result_path, 'log.jsonl')):
+                result['logs'] = load_result_json(
+                    result_path,
+                    'log.jsonl',
+                    'jsonl'
+                )
         result['args'] = load_result_json(result_path, 'args')
         result['commands'] = load_result_json(result_path, 'commands')
 
@@ -56,9 +63,17 @@ def crawl_result_path(result_path, include_log, format):
 
 def _check_log_updated(result):
     log_json_path = os.path.join(result.path_name, 'log')
-    if not os.path.isfile(log_json_path):
+    log_jsonl_path = os.path.join(result.path_name, 'log.jsonl')
+
+    exist_log_json = os.path.isfile(log_json_path)
+    exist_log_jsonl = os.path.isfile(log_jsonl_path)
+
+    if not exist_log_json and not exist_log_jsonl:
         # log file is removed, so don't have to update
         return False
+
+    if exist_log_jsonl:
+        log_json_path = log_jsonl_path
 
     current_modified_at = result.log_modified_at
     modified_at = datetime.datetime.fromtimestamp(
@@ -87,7 +102,7 @@ def _update_to_default_name(result):
     result.name = default_name
 
 
-def crawl_result(result, force=False, commit=True, format='json'):
+def crawl_result(result, force=False, commit=True):
     """crawl_results."""
     if not result.crawlable:
         return result
@@ -98,7 +113,7 @@ def crawl_result(result, force=False, commit=True, format='json'):
 
     # if log file is not updated, not necessary to get log contents
     is_updated = _check_log_updated(result)
-    crawled_result = crawl_result_path(result.path_name, is_updated, format)
+    crawled_result = crawl_result_path(result.path_name, is_updated)
 
     if is_updated:
         current_log_idx = len(result.logs)
