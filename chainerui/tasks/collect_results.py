@@ -4,8 +4,7 @@ import os
 from chainerui.database import db
 from chainerui.models.result import Result
 
-
-def _list_result_paths(target_path, log_file_name='log'):
+def _list_result_paths(target_path, log_file_name='log.jsonl'):
     """list_result_paths."""
 
     result_list = []
@@ -21,7 +20,7 @@ def _list_result_paths(target_path, log_file_name='log'):
 def _register_result(project_id, result_path):
     result_path = os.path.abspath(result_path)
 
-    contain_log_file = os.path.isfile(os.path.join(result_path, 'log'))
+    contain_log_file = os.path.isfile(os.path.join(result_path, 'log.jsonl'))
 
     if not contain_log_file:
         return

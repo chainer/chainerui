@@ -50,7 +50,7 @@ class ResultAPI(MethodView):
             # is not committed. Consequently a process of serializing does not
             # have to call SELECT query again.
             for result in results:
-                crawl_result(result, commit=False, format='json')
+                crawl_result(result, commit=False)
             db.session.commit()
             rs = [r.serialize_with_sampled_logs(logs_limit) for r in results]
 
@@ -69,7 +69,7 @@ class ResultAPI(MethodView):
                     'message': 'No interface defined for URL.'
                 }), 404
 
-            result = crawl_result(result, format='json')
+            result = crawl_result(result)
 
             return jsonify({
                 'result': result.serialize_with_sampled_logs(logs_limit)
