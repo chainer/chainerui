@@ -147,6 +147,7 @@ const ExperimentsTable = (props) => {
       Header: '',
       id: 'group',
       accessor: (p) => getGrandParentDirectoryName(p),
+      filterMethod: (filter, row /* , column */) => row[filter.id].includes(filter.value),
     });
   }
   const groupedKey = isGrouped ? ['group'] : [];
