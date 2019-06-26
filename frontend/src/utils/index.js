@@ -154,6 +154,8 @@ export const getLogData = (results, stats, projectConfig) => {
       if (result == null) {
         return;
       }
+      const last = {};
+      const smoothingWeight = 0.8;
       selectedLogKeys[axisName].forEach((logKey) => {
         const line = lines[line2key({ resultId, logKey })]
               || createLine(resultId, logKey, results, logKeys);
@@ -166,7 +168,21 @@ export const getLogData = (results, stats, projectConfig) => {
           if (dataDict[logDict[xAxisKey]] == null) {
             dataDict[logDict[xAxisKey]] = { [xAxisKey]: logDict[xAxisKey] };
           }
-          dataDict[logDict[xAxisKey]][line2dataKey(line, axisName)] = logDict[logKey];
+          const keyName = line2dataKey(line, axisName);
+          const value = logDict[logKey];
+          dataDict[logDict[xAxisKey]][keyName] = value;
+
+          console.log(axes[axisName].logKeysConfig[logKey].smoothing);
+          if (axes[axisName].logKeysConfig[logKey].smoothing) {
+            let smoothedValue = 0.0;
+            if (keyName in last) {
+              smoothedValue = last[keyName] * smoothingWeight + (1 - smoothingWeight) * value;
+            } else {
+              smoothedValue = value;
+            }
+            last[keyName] = smoothedValue;
+            dataDict[logDict[xAxisKey]][`${keyName}-smoothed`] = smoothedValue;
+          }
         });
       });
     });

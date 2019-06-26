@@ -107,6 +107,7 @@ export const resultsConfig = PropTypes.objectOf(resultConfig);
 
 export const logKeyConfig = PropTypes.shape({
   selected: PropTypes.bool.isRequired,
+  smoothing: PropTypes.bool.isRequired,
 });
 
 const logKeysConfig = PropTypes.objectOf(logKeyConfig);

@@ -10,6 +10,7 @@ class AxisLogKeySelectorRow extends React.Component {
     super(props);
 
     this.handleSelectToggle = this.handleSelectToggle.bind(this);
+    this.handleSelectSmoothing = this.handleSelectSmoothing.bind(this);
   }
 
   handleSelectToggle() {
@@ -17,16 +18,31 @@ class AxisLogKeySelectorRow extends React.Component {
     onLogKeySelectToggle(logKey);
   }
 
+  handleSelectSmoothing() {
+    const { logKey, onLogKeySelectSmoothing } = this.props;
+    onLogKeySelectSmoothing(logKey);
+  }
+
   render() {
     const { logKey, logKeyConfig } = this.props;
     return (
-      <Check
-        type="checkbox"
-        checked={logKeyConfig.selected}
-        onChange={this.handleSelectToggle}
-      >
-        {logKey}
-      </Check>
+      <div>
+        <Check
+          type="checkbox"
+          checked={logKeyConfig.selected}
+          onChange={this.handleSelectToggle}
+        >
+          {logKey}
+        </Check>
+        <Check
+          type="checkbox"
+          checked={logKeyConfig.smoothing}
+          onChange={this.handleSelectSmoothing}
+          disabled={!logKeyConfig.selected}
+        >
+          {`smoothing (${logKey})`}
+        </Check>
+      </div>
     );
   }
 }
@@ -35,11 +51,13 @@ AxisLogKeySelectorRow.propTypes = {
   logKey: PropTypes.string.isRequired,
   logKeyConfig: uiPropTypes.logKeyConfig,
   onLogKeySelectToggle: PropTypes.func.isRequired,
+  onLogKeySelectSmoothing: PropTypes.func.isRequired,
 };
 
 AxisLogKeySelectorRow.defaultProps = {
   logKeyConfig: {
     selected: false,
+    smoothing: false,
   },
 };
 

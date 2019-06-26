@@ -335,6 +335,20 @@ const axisConfigReducer = (state = {}, action) => {
           [logKey]: {
             ...logKeyConfig,
             selected: !logKeyConfig.selected,
+            smoothing: logKeyConfig.smoothing ? !logKeyConfig.selected : false,
+          },
+        },
+      };
+    }
+    case ActionTypes.AXIS_CONFIG_LOG_KEY_SELECT_SMOOTHING: {
+      const logKeyConfig = logKeysConfig[logKey] || {};
+      return {
+        ...state,
+        logKeysConfig: {
+          ...logKeysConfig,
+          [logKey]: {
+            ...logKeyConfig,
+            smoothing: !logKeyConfig.smoothing,
           },
         },
       };

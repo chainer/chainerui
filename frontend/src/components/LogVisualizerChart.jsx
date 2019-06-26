@@ -67,23 +67,6 @@ const LogVisualizerChart = (props) => {
   };
 
   const data = getLogData(results, stats, projectConfig);
-  if (data.length > 0) {
-    const last = Object.assign({}, data[0]);
-    const smoothingWeight = 0.8;
-    data.forEach((d) => {
-      const smoothed = {};
-      Object.keys(d).forEach((key) => {
-        if (!last[key]) {
-          last[key] = d[key];
-        }
-        const skey = `${key}-smoothed`;
-        const s = last[key] * smoothingWeight + (1 - smoothingWeight) * d[key];
-        smoothed[skey] = s;
-        last[key] = s;
-      });
-      Object.assign(d, smoothed);
-    });
-  }
 
   const axisLines = {};
   ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {

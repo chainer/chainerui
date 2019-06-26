@@ -174,6 +174,7 @@ export const AXIS_CONFIG_X_KEY_UPDATE = 'AXIS_CONFIG_X_KEY_UPDATE';
 export const AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE';
 export const AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE';
 export const AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE = 'AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE';
+export const AXIS_CONFIG_LOG_KEY_SELECT_SMOOTHING = 'AXIS_CONFIG_LOG_KEY_SELECT_SMOOTHING';
 
 export const updateAxisScale = (projectId, axisName, scale) => ({
   type: AXIS_CONFIG_SCALE_UPDATE,
@@ -209,6 +210,13 @@ export const updateAxisScaleRangeNumber = (projectId, axisName, scale, isMin, ra
 
 export const toggleLogKeySelect = (projectId, axisName, logKey) => ({
   type: AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE,
+  projectId,
+  axisName,
+  logKey,
+});
+
+export const smoothingLogKeySelect = (projectId, axisName, logKey) => ({
+  type: AXIS_CONFIG_LOG_KEY_SELECT_SMOOTHING,
   projectId,
   axisName,
   logKey,

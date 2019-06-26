@@ -10,11 +10,17 @@ class AxisLogKeySelector extends React.Component {
     super(props);
 
     this.handleLogKeySelectToggle = this.handleLogKeySelectToggle.bind(this);
+    this.handleLogKeySelectSmoothing = this.handleLogKeySelectSmoothing.bind(this);
   }
 
   handleLogKeySelectToggle(logKey) {
     const { projectId, axisName, onAxisConfigLogKeySelectToggle } = this.props;
     onAxisConfigLogKeySelectToggle(projectId, axisName, logKey);
+  }
+
+  handleLogKeySelectSmoothing(logKey) {
+    const { projectId, axisName, onAxisConfigLogKeySelectSmoothing } = this.props;
+    onAxisConfigLogKeySelectSmoothing(projectId, axisName, logKey);
   }
 
   render() {
@@ -29,6 +35,7 @@ class AxisLogKeySelector extends React.Component {
         logKey={logKey}
         logKeyConfig={logKeysConfig[logKey]}
         onLogKeySelectToggle={this.handleLogKeySelectToggle}
+        onLogKeySelectSmoothing={this.handleLogKeySelectSmoothing}
         key={logKey}
       />
     ));
@@ -48,6 +55,7 @@ AxisLogKeySelector.propTypes = {
   axisConfig: uiPropTypes.axisConfig.isRequired,
   stats: uiPropTypes.stats.isRequired,
   onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired,
+  onAxisConfigLogKeySelectSmoothing: PropTypes.func.isRequired,
 };
 
 export default AxisLogKeySelector;
