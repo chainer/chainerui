@@ -9,6 +9,7 @@ import {
   getLastLogDict,
   sortMethod,
   sortKeys,
+  displayResultNameFull,
 } from '../utils';
 
 import ResultName from './experiments_table_cell/ResultName';
@@ -16,6 +17,7 @@ import ToggleResult from './experiments_table_cell/ToggleResult';
 import SubComponent from './experiments_table_cell/SubComponent';
 import VisibilityCheckbox from './VisibilityCheckbox';
 import TableConfigurator from './TableConfigurator';
+
 
 const emptyStr = '-';
 
@@ -129,6 +131,15 @@ const ExperimentsTable = (props) => {
         return null;
       },
       minWidth: 250,
+      filterMethod: (filter, row /* , column */) => {
+        // filter by displayed result name
+        const { _original } = row;
+        if (!_original) {
+          // aggregated row
+          return true;
+        }
+        return displayResultNameFull(project, _original).includes(filter.value);
+      },
     },
   ];
   if (isGrouped) {
