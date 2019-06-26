@@ -1,51 +1,39 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
 
 import * as uiPropTypes from '../../store/uiPropTypes';
 import ProjectRow from './ProjectRow';
 
 
-const createProjectsNotFoundElem = () => (
-  <div className="my-5">
-    <h4>There is no project yet.</h4>
-    <p>You need to:</p>
-    <ol>
-      <li>
-        set up a database
-        <br />
-        <code>chainerui db create</code>
-        <br />
-        <code>chainerui db upgrade</code>
-      </li>
-      <li>
-        create a project, for example,
-        <br />
-        <code>chainerui project create -d PROJECT_DIR [-n PROJECT_NAME]</code>
-      </li>
-    </ol>
-  </div>
-);
+const Projects = ({ projects, onProjectUpdate, onProjectDelete }) => {
+  const [ascOrder, setAscOrder] = useState(false);
 
-const createProjectRowElems = (projects, onProjectUpdate, onProjectDelete) => (
-  Object.keys(projects).sort((a, b) => a - b).map((projectId) => (
-    <ProjectRow
-      project={projects[projectId]}
-      onProjectUpdate={onProjectUpdate}
-      onProjectDelete={onProjectDelete}
-      key={projectId}
-    />
-  ))
-);
-
-const Projects = (props) => {
-  const { projects, onProjectUpdate, onProjectDelete } = props;
+  const onAscOrderToggleClick = useCallback(() => {
+    setAscOrder((prevAscOrder) => !prevAscOrder);
+  }, []);
 
   return (
-    <div className="mt-4 border border-left-0 border-right-0 border-bottom-0">
-      {(Object.keys(projects).length === 0)
-        ? createProjectsNotFoundElem()
-        : createProjectRowElems(projects, onProjectUpdate, onProjectDelete)}
-    </div>
+    <React.Fragment>
+      <div className="pb-4 border-bottom d-flex flex-row">
+        <h2>Projects</h2>
+        <div className="ml-auto mt-2">
+          <Button outline size="sm" onClick={onAscOrderToggleClick}>
+            <i className={`fas fa-sort-${ascOrder ? 'down' : 'up'}`} />
+            {' '}
+            {ascOrder ? 'Asc' : 'Desc'}
+          </Button>
+        </div>
+      </div>
+      {Object.keys(projects).sort((a, b) => (ascOrder ? a - b : b - a)).map((projectId) => (
+        <ProjectRow
+          key={projectId}
+          project={projects[projectId]}
+          onProjectUpdate={onProjectUpdate}
+          onProjectDelete={onProjectDelete}
+        />
+      ))}
+    </React.Fragment>
   );
 };
 

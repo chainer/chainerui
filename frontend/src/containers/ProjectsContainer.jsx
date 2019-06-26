@@ -8,6 +8,7 @@ import {
   getProjectList, updateProject, deleteProject,
 } from '../actions';
 import NavigationBar from './NavigationBar';
+import NoProjects from '../components/projects/NoProjects';
 import Projects from '../components/projects/Projects';
 
 
@@ -26,12 +27,15 @@ class ProjectsContainer extends React.Component {
         <Container fluid>
           <Row>
             <Col sm={10} lg={8} className="m-auto">
-              <h2>Projects</h2>
-              <Projects
-                projects={projects}
-                onProjectUpdate={this.props.updateProject}
-                onProjectDelete={this.props.deleteProject}
-              />
+              {Object.keys(projects).length === 0 ? (
+                <NoProjects />
+              ) : (
+                <Projects
+                  projects={projects}
+                  onProjectUpdate={this.props.updateProject}
+                  onProjectDelete={this.props.deleteProject}
+                />
+              )}
             </Col>
           </Row>
         </Container>
