@@ -132,12 +132,12 @@ const ExperimentsTable = (props) => {
       },
       minWidth: 250,
       filterMethod: (filter, row /* , column */) => {
-        // filter by displayed result name
         const { _original } = row;
         if (!_original) {
           // aggregated row
           return true;
         }
+        // filter by displayed result name
         return displayResultNameFull(project, _original).includes(filter.value);
       },
     },
