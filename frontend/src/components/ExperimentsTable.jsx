@@ -91,6 +91,7 @@ const ExperimentsTable = (props) => {
       },
       className: 'text-center',
       sortable: false,
+      filterable: false,
       minWidth: 40,
       Aggregated: (row) => {
         const groupedResultKeys = row.subRows.map((r) => {
@@ -152,6 +153,7 @@ const ExperimentsTable = (props) => {
     style: defaultStyle,
     show: !(knownLogKeysConfig[logKey] || {}).hidden,
     aggregate: () => '',
+    filterable: false,
   }));
 
   const argsList = sortKeys(argKeys, knownArgKeysConfig).map((argKey) => ({
@@ -168,6 +170,7 @@ const ExperimentsTable = (props) => {
     style: defaultStyle,
     show: !(knownArgKeysConfig[argKey] || {}).hidden,
     aggregate: () => '',
+    filterable: false,
   }));
 
   const columns = [
@@ -202,6 +205,7 @@ const ExperimentsTable = (props) => {
         expanded={expanded}
         onExpandedChange={(nextExpanded) => onTableExpandedUpdate(project.id, nextExpanded)}
         pageSize={resultList.length}
+        filterable
         defaultSortMethod={sortMethod}
         defaultSorted={[
           {
