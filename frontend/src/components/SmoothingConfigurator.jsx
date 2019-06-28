@@ -30,7 +30,7 @@ class SmoothingConfigurator extends React.Component {
                 type="range"
                 className="custom-range"
                 min="0"
-                max="1"
+                max="0.95"
                 step="0.05"
                 value={projectConfig.smoothingWeight}
                 onChange={this.handleSmoothingWeight}

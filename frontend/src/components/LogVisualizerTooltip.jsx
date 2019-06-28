@@ -37,7 +37,19 @@ const LogVisualizerTooltip = (props) => {
 
   const labelFormatter = formatLogTooltipLabel(xAxisKey);
   const formatter = formatLogValue();
-  const entries = payload.filter((entry) => entry.value != null && entry.strokeOpacity !== '0');
+  const entryFilter = (entry) => {
+    if (entry.value == null) {
+      return false;
+    }
+    if (entry.strokeOpacity !== '0') {
+      return false;
+    }
+    if (entry.dataKey.endsWith('-smoothed')) {
+      return false;
+    }
+    return true;
+  };
+  const entries = payload.filter((entry) => entryFilter(entry));
 
   return (
     <div className="log-visualizer-tooltip card">

@@ -89,6 +89,19 @@ const LogVisualizerChart = (props) => {
     return resultStatus && resultStatus.selected;
   });
 
+  const calcOpacity = (isAnySelected, selected, smoothing) => {
+    if (!isAnySelected || selected) {
+      if (smoothing) {
+        return 0.5;
+      }
+      return 1.0;
+    }
+    if (smoothing) {
+      return 0.05;
+    }
+    return 0.1;
+  };
+
   const lineElems = [];
   Object.keys(axisLines).forEach((axisName) => {
     axisLines[axisName].forEach((line) => {
@@ -98,6 +111,7 @@ const LogVisualizerChart = (props) => {
       const { config = {}, resultId, logKey } = line;
       const resultStatus = resultsStatus[resultId] || {};
       const selected = highlightTableAndChart && (resultStatus.selected === true || resultStatus.selected === logKey);
+      const { smoothing } = axes[axisName].logKeysConfig[logKey];
       const highlightEvents = highlightTableAndChart ? {
         onMouseEnter: () => {
           onResultSelect(project.id, resultId, logKey);
@@ -112,38 +126,46 @@ const LogVisualizerChart = (props) => {
           dataKey={line2dataKey(line, axisName)}
           yAxisId={axisName}
           stroke={config.color}
-          strokeOpacity={!anySelected || selected ? 0.5 : 0.1}
+          strokeOpacity={calcOpacity(anySelected, selected, smoothing)}
           connectNulls
           isAnimationActive={false}
           dot={false}
           key={line2dataKey(line, axisName)}
-        />,
-        <Line
-          type="liner"
-          dataKey={`${line2dataKey(line, axisName)}-smoothed`}
-          yAxisId={axisName}
-          stroke="red"
-          strokeOpacity={!anySelected || selected ? 1 : 0.15}
-          connectNulls
-          dot={false}
-          activeDot={false}
-          key={`${line2dataKey(line, axisName)}-smoothed`}
-        />,
-        <Line
-          type="linear"
-          dataKey={line2dataKey(line, axisName)}
-          yAxisId={axisName}
-          stroke={config.color}
-          strokeWidth="10"
-          strokeOpacity="0"
-          connectNulls
-          isAnimationActive={false}
-          dot={false}
-          activeDot={false}
-          key={`${line2dataKey(line, axisName)}-events`}
-          {...highlightEvents}
         />
       );
+      if (smoothing) {
+        lineElems.push(
+          <Line
+            type="liner"
+            dataKey={`${line2dataKey(line, axisName)}-smoothed`}
+            yAxisId={axisName}
+            stroke={config.color}
+            strokeOpacity={!anySelected || selected ? 1 : 0.1}
+            connectNulls
+            dot={false}
+            activeDot={false}
+            key={`${line2dataKey(line, axisName)}-smoothed`}
+          />
+        );
+      }
+      if (highlightTableAndChart) {
+        lineElems.push(
+          <Line
+            type="linear"
+            dataKey={line2dataKey(line, axisName)}
+            yAxisId={axisName}
+            stroke={config.color}
+            strokeWidth="10"
+            strokeOpacity="0"
+            connectNulls
+            isAnimationActive={false}
+            dot={false}
+            activeDot={false}
+            key={`${line2dataKey(line, axisName)}-events`}
+            {...highlightEvents}
+          />
+        );
+      }
     });
   });
 
