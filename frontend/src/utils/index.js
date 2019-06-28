@@ -155,7 +155,7 @@ export const getLogData = (results, stats, projectConfig) => {
         return;
       }
       const last = {};
-      const smoothingWeight = 0.8;
+      const { smoothingWeight } = projectConfig;
       selectedLogKeys[axisName].forEach((logKey) => {
         const line = lines[line2key({ resultId, logKey })]
               || createLine(resultId, logKey, results, logKeys);
@@ -172,7 +172,6 @@ export const getLogData = (results, stats, projectConfig) => {
           const value = logDict[logKey];
           dataDict[logDict[xAxisKey]][keyName] = value;
 
-          console.log(axes[axisName].logKeysConfig[logKey].smoothing);
           if (axes[axisName].logKeysConfig[logKey].smoothing) {
             let smoothedValue = 0.0;
             if (keyName in last) {

@@ -9,7 +9,8 @@ import {
   getResultList, updateResult, clearResultList,
   resetProjectConfig,
   updateLineInAxis,
-  updateAxisScale, toggleLogKeySelect, smoothingLogKeySelect,
+  updateAxisScale, toggleLogKeySelect,
+  smoothingLogKeySelect, updateSmoothingWeight,
   updateResultSelect,
   updateResultsConfigSelect,
   updateXAxisKey,
@@ -107,6 +108,7 @@ class PlotContainer extends React.Component {
                 onAxisConfigScaleRangeNumberUpdate={this.props.updateAxisScaleRangeNumber}
                 onAxisConfigLogKeySelectToggle={this.props.toggleLogKeySelect}
                 onAxisConfigLogKeySelectSmoothing={this.props.smoothingLogKeySelect}
+                onSelectSmoothingWeight={this.props.updateSmoothingWeight}
               />
             </div>
             <div className="col-md-8 col-lg-9 order-1 order-md-12">
@@ -167,6 +169,7 @@ PlotContainer.propTypes = {
   updateAxisScale: PropTypes.func.isRequired,
   toggleLogKeySelect: PropTypes.func.isRequired,
   smoothingLogKeySelect: PropTypes.func.isRequired,
+  updateSmoothingWeight: PropTypes.func.isRequired,
   updateResultSelect: PropTypes.func.isRequired,
   updateResultsConfigSelect: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
@@ -212,6 +215,7 @@ export default connect(mapStateToProps, {
   updateAxisScale,
   toggleLogKeySelect,
   smoothingLogKeySelect,
+  updateSmoothingWeight,
   updateResultSelect,
   updateResultsConfigSelect,
   updateXAxisKey,

@@ -160,10 +160,17 @@ export const createCommand = (projectId, resultId, commandName, requestBody = nu
 // config
 
 export const PROJECT_CONFIG_RESET = 'PROJECT_CONFIG_RESET';
+export const PROJECT_CONFIG_UPDATE_SMOOTHING_WEIGHT = 'PROJECT_CONFIG_UPDATE_SMOOTHING_WEIGHT';
 
 export const resetProjectConfig = (projectId) => ({
   type: PROJECT_CONFIG_RESET,
   projectId,
+});
+
+export const updateSmoothingWeight = (projectId, smoothingWeight) => ({
+  type: PROJECT_CONFIG_UPDATE_SMOOTHING_WEIGHT,
+  projectId,
+  smoothingWeight,
 });
 
 

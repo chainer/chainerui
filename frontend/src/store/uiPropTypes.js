@@ -143,6 +143,7 @@ export const projectConfig = PropTypes.shape({
   }).isRequired,
   resultsConfig: resultsConfig.isRequired,
   lines: lines.isRequired,
+  smoothingWeight: PropTypes.number,
 });
 
 export const stats = PropTypes.shape({

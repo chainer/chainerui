@@ -6,6 +6,7 @@ import AxisConfigurator from './AxisConfigurator';
 import LinesConfigurator from './LinesConfigurator';
 import XAxisKeySelector from './XAxisKeySelector';
 import AxisLogKeySelector from './AxisLogKeySelector';
+import SmoothingConfigurator from './SmoothingConfigurator';
 
 
 const AxesConfigurator = (props) => {
@@ -20,6 +21,7 @@ const AxesConfigurator = (props) => {
     onAxisConfigXKeyUpdate,
     onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate,
     onAxisConfigLogKeySelectToggle, onAxisConfigLogKeySelectSmoothing,
+    onSelectSmoothingWeight,
   } = props;
   const {
     xAxis = {},
@@ -29,6 +31,12 @@ const AxesConfigurator = (props) => {
 
   return (
     <div className="axes-configurator">
+      <SmoothingConfigurator
+        projectId={project.id}
+        projectConfig={projectConfig}
+        onSelectSmoothingWeight={onSelectSmoothingWeight}
+      />
+
       <AxisConfigurator
         projectId={project.id}
         axisName="yLeftAxis"
@@ -117,6 +125,7 @@ AxesConfigurator.propTypes = {
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
   onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired,
   onAxisConfigLogKeySelectSmoothing: PropTypes.func.isRequired,
+  onSelectSmoothingWeight: PropTypes.func.isRequired,
 };
 
 export default React.memo(AxesConfigurator);

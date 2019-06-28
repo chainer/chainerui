@@ -469,11 +469,19 @@ const projectConfigReducer = combineReducers({
 });
 
 const projectsConfigReducer = (state = {}, action) => {
-  const { projectId } = action;
+  const { projectId, smoothingWeight = 0.8 } = action;
   if (projectId) {
     switch (action.type) {
       case ActionTypes.PROJECT_CONFIG_RESET:
         return updatePartialState(state, action, projectId, () => projectConfigReducer(undefined, action));
+      case ActionTypes.PROJECT_CONFIG_UPDATE_SMOOTHING_WEIGHT:
+        return {
+          ...state,
+          [projectId]: {
+            ...state[projectId],
+            smoothingWeight,
+          },
+        };
       default:
         return updatePartialState(state, action, projectId, projectConfigReducer);
     }
