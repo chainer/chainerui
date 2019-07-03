@@ -93,7 +93,6 @@ class PlotContainer extends React.Component {
       projectConfig,
       globalConfig,
       stats,
-      deletedResults,
     } = this.props;
 
     return (
@@ -167,9 +166,6 @@ class PlotContainer extends React.Component {
                 stats={stats}
                 projectConfig={projectConfig}
                 onTableColumnsVisibilityUpdate={this.props.updateTableColumnsVisibility}
-                deletedResults={deletedResults}
-                onResultUpdate={this.props.updateResult}
-                getDeletedResultList={this.props.getDeletedResultList}
               />
             </div>
           </div>
@@ -187,11 +183,9 @@ PlotContainer.propTypes = {
   projectStatus: uiPropTypes.projectStatus.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
-  deletedResults: uiPropTypes.results.isRequired,
   stats: uiPropTypes.stats.isRequired,
   getProject: PropTypes.func.isRequired,
   getResultList: PropTypes.func.isRequired,
-  getDeletedResultList: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
   clearResultList: PropTypes.func.isRequired,
   createCommand: PropTypes.func.isRequired,
