@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container, Button } from 'reactstrap';
+import { Alert, Container, Button } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import {
@@ -111,7 +111,10 @@ class PlotContainer extends React.Component {
         <Container fluid>
           <div className="row">
             <div className="col-md-4 col-lg-3 order-12 order-md-1">
-              <p>{`${projectConfig.resultType}`}</p>
+              { projectConfig.resultType === 'DELETED'
+                ? (<Alert color="danger">Unregistered result mode</Alert>)
+                : null
+              }
               <Button onClick={() => this.props.updateTargetResultType(projectId, 'ACTIVE')}>ACTIVE</Button>
               <Button onClick={() => this.props.updateTargetResultType(projectId, 'DELETED')}>DELETED</Button>
               <BreadcrumbLink
