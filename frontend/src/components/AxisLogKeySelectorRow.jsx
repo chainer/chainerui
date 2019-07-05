@@ -26,23 +26,21 @@ class AxisLogKeySelectorRow extends React.Component {
   render() {
     const { logKey, logKeyConfig } = this.props;
     return (
-      <div>
+      <>
         <Check
           type="checkbox"
           checked={logKeyConfig.selected}
           onChange={this.handleSelectToggle}
         >
           {logKey}
+          <Check
+            type="checkbox"
+            checked={logKeyConfig.smoothing}
+            onChange={this.handleSelectSmoothing}
+            disabled={!logKeyConfig.selected}
+          />
         </Check>
-        <Check
-          type="checkbox"
-          checked={logKeyConfig.smoothing}
-          onChange={this.handleSelectSmoothing}
-          disabled={!logKeyConfig.selected}
-        >
-          {`smoothing (${logKey})`}
-        </Check>
-      </div>
+      </>
     );
   }
 }
