@@ -469,7 +469,7 @@ const projectConfigReducer = combineReducers({
 });
 
 const projectsConfigReducer = (state = {}, action) => {
-  const { projectId, smoothingWeight = 0.8 } = action;
+  const { projectId, smoothingWeight } = action;
   if (projectId) {
     switch (action.type) {
       case ActionTypes.PROJECT_CONFIG_RESET:

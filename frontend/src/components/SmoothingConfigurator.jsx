@@ -18,24 +18,24 @@ class SmoothingConfigurator extends React.Component {
   }
 
   render() {
-    const { projectConfig } = this.props;
+    const { smoothingWeight = 0.8 } = this.props.projectConfig;
     return (
       <div className="smoothing-configurator card">
         <div className="card-header">Smoothing</div>
         <div className="list-group-item">
           <FormGroup>
-            <Label>
+            <Label className="d-flex flex-row">
               {'weight'}
               <Input
                 type="range"
-                className="custom-range"
+                className="custom-range px-2"
                 min="0"
                 max="0.95"
                 step="0.05"
-                value={projectConfig.smoothingWeight}
+                value={smoothingWeight}
                 onChange={this.handleSmoothingWeight}
               />
-              {projectConfig.smoothingWeight}
+              {smoothingWeight.toFixed(2)}
             </Label>
           </FormGroup>
         </div>
