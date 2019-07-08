@@ -36,7 +36,7 @@ def _get_script_path(dir, rendered_log):
 
     script = script_tmpl.substitute(rendered_log=rendered_log)
     script_path = os.path.join(dir, 'render.py')
-    with open(script_path, 'w') as f:
+    with open(script_path, 'w', newline='\n') as f:
         f.write(script)
 
     return script_path
