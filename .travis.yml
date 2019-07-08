@@ -29,10 +29,12 @@ notifications:
 sudo: false
 
 before_install:
-  - pip install autopep8 hacking
-  - pip install -U pytest pytest-cov coveralls
-  - if [[ $CHAINERUI_PLAIN_INSTALL != 1 ]]; then pip install Pillow matplotlib scipy chainer; else pip install numpy; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then pip install mock; fi
+  - |
+    if [[ $CHAINERUI_PLAIN_INSTALL == 1 ]]; then
+      export CHAINERUI_TEST_DEPENDS="[test-ci-plain]";
+    else
+      export CHAINERUI_TEST_DEPENDS="[test-ci]";
+    fi
   - npm install -g npm@6
   - npm -v
 
@@ -40,7 +42,7 @@ install:
   - pushd frontend
   - npm install && npm run build -- --progress=false --profile=false
   - popd
-  - pip install -e .
+  - pip install -e .$CHAINERUI_TEST_DEPENDS
 
 script:
   # python style check

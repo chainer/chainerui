@@ -13,8 +13,12 @@ install:
   - python --version
   - pip --version
 
-  - pip install -U pytest pytest-cov mock
-  - if "%CHAINERUI_PLAIN_INSTALL%"=="1" (pip install numpy) else (pip install Pillow matplotlib scipy chainer)
+  - |
+    if "%CHAINERUI_PLAIN_INSTALL%"=="1" (
+      set CHAINERUI_TEST_DEPENDS="[test-ci-plain]"
+    ) else (
+      set CHAINERUI_TEST_DEPENDS="[test-ci]"
+    )
 
   # Update Node.js
   - ps: Install-Product node $env:nodejs_version
@@ -27,7 +31,7 @@ build_script:
   - npm install
   - npm run build -- --progress=false --profile=false
   - cd ..
-  - pip install -e .
+  - pip install -e .%CHAINERUI_TEST_DEPENDS%
 
   # Server connection test
   - chainerui db create
