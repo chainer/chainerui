@@ -32,12 +32,12 @@ def _get_script_path(dir, rendered_log):
         current_dir, '..', 'frontend', 'src', 'utils', 'render.py.tmpl'))
     assert os.path.exists(render_tmp_path)
 
-    with open(render_tmp_path) as f:
+    with io.open(render_tmp_path, encoding='utf-8') as f:
         script_tmpl = Template(f.read())
 
     script = script_tmpl.substitute(rendered_log=rendered_log)
     script_path = os.path.join(dir, 'render.py')
-    with io.open(script_path, 'w', newline='\n') as f:
+    with io.open(script_path, 'w', newline='\n', encoding='utf-8') as f:
         f.write(script)
 
     return script_path
