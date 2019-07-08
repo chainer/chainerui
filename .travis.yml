@@ -43,6 +43,7 @@ install:
   - npm install && npm run build -- --progress=false --profile=false
   - popd
   - pip install -e .$CHAINERUI_TEST_DEPENDS
+  - pip list -v
 
 script:
   # python style check

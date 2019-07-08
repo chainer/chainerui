@@ -13,12 +13,7 @@ install:
   - python --version
   - pip --version
 
-  - |
-    if "%CHAINERUI_PLAIN_INSTALL%"=="1" (
-      set CHAINERUI_TEST_DEPENDS="[test-ci-plain]"
-    ) else (
-      set CHAINERUI_TEST_DEPENDS="[test-ci]"
-    )
+  - if "%CHAINERUI_PLAIN_INSTALL%"=="1" (set CHAINERUI_TEST_DEPENDS="[test-ci-plain]") else (set CHAINERUI_TEST_DEPENDS="[test-ci]")
 
   # Update Node.js
   - ps: Install-Product node $env:nodejs_version
@@ -32,6 +27,7 @@ build_script:
   - npm run build -- --progress=false --profile=false
   - cd ..
   - pip install -e .%CHAINERUI_TEST_DEPENDS%
+  - pip list -v
 
   # Server connection test
   - chainerui db create

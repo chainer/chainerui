@@ -23,7 +23,7 @@ requirements = {
     ],
     'test': [
         'numpy',
-        'pytest<5.0.0',
+        'pytest>=4.0.0,<5.0.0',
         'mock',
     ],
     'test-ci-plain': [
