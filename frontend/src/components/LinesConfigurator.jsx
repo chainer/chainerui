@@ -123,31 +123,29 @@ class LinesConfigurator extends React.Component {
         <Collapse isOpen={this.state.showLinesConfig}>
           {lineConfiguratorElems}
         </Collapse>
-        <div className="list-group-item text-right">
-          <Modal isOpen={this.state.showModal} toggle={this.handleModalToggle} className="">
-            <ModalHeader toggle={this.handleModalToggle}>Edit a line</ModalHeader>
-            <ModalBody>
-              <LineConfigurator
-                project={project}
-                results={results}
-                line={editingLine}
-                stats={stats}
-                isResultNameAlignRight={isResultNameAlignRight}
-                onChange={this.handleEditingLineChange}
-              />
-            </ModalBody>
-            <ModalFooter>
-              <Button color="secondary" onClick={this.handleModalToggle}>Cancel</Button>
-              {' '}
-              <Button
-                color="primary"
-                onClick={this.handleAxisConfigLineSave}
-              >
-                Save
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </div>
+        <Modal isOpen={this.state.showModal} toggle={this.handleModalToggle} className="">
+          <ModalHeader toggle={this.handleModalToggle}>Edit a line</ModalHeader>
+          <ModalBody>
+            <LineConfigurator
+              project={project}
+              results={results}
+              line={editingLine}
+              stats={stats}
+              isResultNameAlignRight={isResultNameAlignRight}
+              onChange={this.handleEditingLineChange}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={this.handleModalToggle}>Cancel</Button>
+            {' '}
+            <Button
+              color="primary"
+              onClick={this.handleAxisConfigLineSave}
+            >
+              Save
+            </Button>
+          </ModalFooter>
+        </Modal>
       </div>
     );
   }

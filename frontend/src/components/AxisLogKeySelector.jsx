@@ -34,9 +34,11 @@ class AxisLogKeySelector extends React.Component {
     ));
 
     return (
-      <div className="list-group-item">
-        {axisLogKeySelectorRowElems}
-      </div>
+      <ul className="list-group list-group-flush">
+        <li className="list-group-item">
+          {axisLogKeySelectorRowElems}
+        </li>
+      </ul>
     );
   }
 }

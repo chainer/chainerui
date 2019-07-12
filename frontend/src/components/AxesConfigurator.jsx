@@ -63,28 +63,30 @@ const AxesConfigurator = (props) => {
           axisName="yRightAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
-        <div className="card-body">
-          <div>Left</div>
-          <AxisConfigurator
-            projectId={project.id}
-            axisName="yLeftAxis"
-            axisConfig={yLeftAxis}
-            onChangeScale={onAxisConfigScaleUpdate}
-            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-          />
-        </div>
-        <div className="card-body">
-          <div>Right</div>
-          <AxisConfigurator
-            projectId={project.id}
-            axisName="yRightAxis"
-            axisConfig={yRightAxis}
-            onChangeScale={onAxisConfigScaleUpdate}
-            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-          />
-        </div>
+        <ul className="list-group list-group-flush">
+          <li className="list-group-item">
+            <div>Left</div>
+            <AxisConfigurator
+              projectId={project.id}
+              axisName="yLeftAxis"
+              axisConfig={yLeftAxis}
+              onChangeScale={onAxisConfigScaleUpdate}
+              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+            />
+          </li>
+          <li className="list-group-item">
+            <div>Right</div>
+            <AxisConfigurator
+              projectId={project.id}
+              axisName="yRightAxis"
+              axisConfig={yRightAxis}
+              onChangeScale={onAxisConfigScaleUpdate}
+              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+            />
+          </li>
+        </ul>
       </div>
       <div className="axis-configurator card">
         <div className="card-header">xAxis</div>
@@ -97,17 +99,17 @@ const AxesConfigurator = (props) => {
               onChange={onAxisConfigXKeyUpdate}
             />
           </li>
+          <li className="list-group-item">
+            <AxisConfigurator
+              projectId={project.id}
+              axisName="xAxis"
+              axisConfig={xAxis}
+              onChangeScale={onAxisConfigScaleUpdate}
+              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+            />
+          </li>
         </ul>
-        <div className="card-body">
-          <AxisConfigurator
-            projectId={project.id}
-            axisName="xAxis"
-            axisConfig={xAxis}
-            onChangeScale={onAxisConfigScaleUpdate}
-            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-          />
-        </div>
       </div>
     </div>
   );
