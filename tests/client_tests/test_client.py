@@ -75,8 +75,7 @@ def test_client_init_default(server):
     assert client._client.project_id == 1
     assert client._client.result_id == 1
 
-    reporter = client.log_reporter()
-    reporter({'loss': 0.001})
+    client.log({'loss': 0.001})
 
 
 def test_client_init_with_condition(server):
@@ -100,6 +99,8 @@ def test_client_init_no_server(server):
 
     reporter = client.log_reporter()
     reporter({'loss': 0.001})  # fail to make client but no error
+
+    client.log({'loss': 0.001})  # same
 
 
 class TestClient(object):
