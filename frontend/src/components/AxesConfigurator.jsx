@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import AxisConfigurator from './AxisConfigurator';
-import LinesConfigurator from './LinesConfigurator';
+import LinesConfiguratorToggle from './LinesConfiguratorToggle';
 import XAxisKeySelector from './XAxisKeySelector';
 import YAxisLogKeySelector from './YAxisLogKeySelector';
 
@@ -37,22 +37,12 @@ const AxesConfigurator = (props) => {
           stats={stats}
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
         />
-        <LinesConfigurator
+        <LinesConfiguratorToggle
           project={project}
           results={results}
           stats={stats}
           projectConfig={projectConfig}
           globalConfig={globalConfig}
-          axisName="yLeftAxis"
-          onAxisConfigLineUpdate={onAxisConfigLineUpdate}
-        />
-        <LinesConfigurator
-          project={project}
-          results={results}
-          stats={stats}
-          projectConfig={projectConfig}
-          globalConfig={globalConfig}
-          axisName="yRightAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
         <ul className="list-group list-group-flush">
