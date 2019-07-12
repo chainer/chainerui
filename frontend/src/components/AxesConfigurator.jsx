@@ -29,14 +29,18 @@ const AxesConfigurator = (props) => {
 
   return (
     <div className="axes-configurator">
-      <AxisConfigurator
-        projectId={project.id}
-        axisName="yLeftAxis"
-        axisConfig={yLeftAxis}
-        onChangeScale={onAxisConfigScaleUpdate}
-        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-      >
+      <div className="axis-configurator card">
+        <div className="card-header">yLeftAxis</div>
+        <div className="card-body">
+          <AxisConfigurator
+            projectId={project.id}
+            axisName="yLeftAxis"
+            axisConfig={yLeftAxis}
+            onChangeScale={onAxisConfigScaleUpdate}
+            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+          />
+        </div>
         <AxisLogKeySelector
           projectId={project.id}
           axisName="yLeftAxis"
@@ -53,15 +57,19 @@ const AxesConfigurator = (props) => {
           axisName="yLeftAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
-      </AxisConfigurator>
-      <AxisConfigurator
-        projectId={project.id}
-        axisName="yRightAxis"
-        axisConfig={yRightAxis}
-        onChangeScale={onAxisConfigScaleUpdate}
-        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-      >
+      </div>
+      <div className="axis-configurator card">
+        <div className="card-header">yRightAxis</div>
+        <div className="card-body">
+          <AxisConfigurator
+            projectId={project.id}
+            axisName="yRightAxis"
+            axisConfig={yRightAxis}
+            onChangeScale={onAxisConfigScaleUpdate}
+            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+          />
+        </div>
         <AxisLogKeySelector
           projectId={project.id}
           axisName="yRightAxis"
@@ -78,15 +86,19 @@ const AxesConfigurator = (props) => {
           axisName="yRightAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
-      </AxisConfigurator>
-      <AxisConfigurator
-        projectId={project.id}
-        axisName="xAxis"
-        axisConfig={xAxis}
-        onChangeScale={onAxisConfigScaleUpdate}
-        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-      >
+      </div>
+      <div className="axis-configurator card">
+        <div className="card-header">xAxis</div>
+        <div className="card-body">
+          <AxisConfigurator
+            projectId={project.id}
+            axisName="xAxis"
+            axisConfig={xAxis}
+            onChangeScale={onAxisConfigScaleUpdate}
+            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+          />
+        </div>
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
             <XAxisKeySelector
@@ -97,7 +109,7 @@ const AxesConfigurator = (props) => {
             />
           </li>
         </ul>
-      </AxisConfigurator>
+      </div>
     </div>
   );
 };
