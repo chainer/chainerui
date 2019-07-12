@@ -5,7 +5,7 @@ import * as uiPropTypes from '../store/uiPropTypes';
 import AxisConfigurator from './AxisConfigurator';
 import LinesConfigurator from './LinesConfigurator';
 import XAxisKeySelector from './XAxisKeySelector';
-import AxisLogKeySelector from './AxisLogKeySelector';
+import YAxisLogKeySelector from './YAxisLogKeySelector';
 
 
 const AxesConfigurator = (props) => {
@@ -31,17 +31,9 @@ const AxesConfigurator = (props) => {
     <div className="axes-configurator">
       <div className="axis-configurator card">
         <div className="card-header">yAxis</div>
-        <AxisLogKeySelector
+        <YAxisLogKeySelector
           projectId={project.id}
-          axisName="yLeftAxis"
-          axisConfig={yLeftAxis}
-          stats={stats}
-          onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
-        />
-        <AxisLogKeySelector
-          projectId={project.id}
-          axisName="yRightAxis"
-          axisConfig={yRightAxis}
+          axesConfig={projectConfig.axes}
           stats={stats}
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
         />

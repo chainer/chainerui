@@ -2,32 +2,38 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import * as uiPropTypes from '../store/uiPropTypes';
-import AxisLogKeySelectorRow from './AxisLogKeySelectorRow';
+import YAxisLogKeySelectorRow from './YAxisLogKeySelectorRow';
 
 
-class AxisLogKeySelector extends React.Component {
+class YAxisLogKeySelector extends React.Component {
   constructor(props) {
     super(props);
 
     this.handleLogKeySelectToggle = this.handleLogKeySelectToggle.bind(this);
   }
 
-  handleLogKeySelectToggle(logKey) {
-    const { projectId, axisName, onAxisConfigLogKeySelectToggle } = this.props;
+  handleLogKeySelectToggle(axisName, logKey) {
+    const { projectId, onAxisConfigLogKeySelectToggle } = this.props;
     onAxisConfigLogKeySelectToggle(projectId, axisName, logKey);
   }
 
   render() {
     const {
-      axisConfig, stats,
+      axesConfig, stats,
     } = this.props;
-    const { logKeysConfig = {} } = axisConfig;
+    const {
+      yLeftAxis = {},
+      yRightAxis = {},
+    } = axesConfig;
+    const { logKeysConfig: logKeysLeftConfig = {} } = yLeftAxis;
+    const { logKeysConfig: logKeysRightConfig = {} } = yRightAxis;
     const { logKeys } = stats;
 
     const axisLogKeySelectorRowElems = logKeys.map((logKey) => (
-      <AxisLogKeySelectorRow
+      <YAxisLogKeySelectorRow
         logKey={logKey}
-        logKeyConfig={logKeysConfig[logKey]}
+        logKeyLeftConfig={logKeysLeftConfig[logKey]}
+        logKeyRightConfig={logKeysRightConfig[logKey]}
         onLogKeySelectToggle={this.handleLogKeySelectToggle}
         key={logKey}
       />
@@ -44,12 +50,14 @@ class AxisLogKeySelector extends React.Component {
 }
 
 
-AxisLogKeySelector.propTypes = {
+YAxisLogKeySelector.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
-  axisName: uiPropTypes.axisName.isRequired,
-  axisConfig: uiPropTypes.axisConfig.isRequired,
+  axesConfig: PropTypes.shape({
+    yLeftAxis: uiPropTypes.axisConfig,
+    yRightAxis: uiPropTypes.axisConfig,
+  }).isRequired,
   stats: uiPropTypes.stats.isRequired,
   onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired,
 };
 
-export default AxisLogKeySelector;
+export default YAxisLogKeySelector;
