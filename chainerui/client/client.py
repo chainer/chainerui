@@ -313,3 +313,26 @@ def log_reporter():
             _client.post_log([stats_cpu])
 
     return PostProcess()
+
+
+def log(value):
+    """Send log
+
+    Send log data and will be shown ad training log on web browser.
+
+    Example::
+
+       >>> chainerui.init()
+       >>> # ...
+       >>> stats = {
+       >>>     'epoch': epoch,
+       >>>     'train/loss': loss,
+       >>>     }
+       >>> chainerui.log(stats)
+
+    Args:
+        value (dict): target log.
+    """
+    if _client is None:
+        return
+    _client.post_log([value])
