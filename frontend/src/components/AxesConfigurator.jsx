@@ -30,17 +30,7 @@ const AxesConfigurator = (props) => {
   return (
     <div className="axes-configurator">
       <div className="axis-configurator card">
-        <div className="card-header">yLeftAxis</div>
-        <div className="card-body">
-          <AxisConfigurator
-            projectId={project.id}
-            axisName="yLeftAxis"
-            axisConfig={yLeftAxis}
-            onChangeScale={onAxisConfigScaleUpdate}
-            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-          />
-        </div>
+        <div className="card-header">yAxis</div>
         <AxisLogKeySelector
           projectId={project.id}
           axisName="yLeftAxis"
@@ -48,28 +38,6 @@ const AxesConfigurator = (props) => {
           stats={stats}
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
         />
-        <LinesConfigurator
-          project={project}
-          results={results}
-          stats={stats}
-          projectConfig={projectConfig}
-          globalConfig={globalConfig}
-          axisName="yLeftAxis"
-          onAxisConfigLineUpdate={onAxisConfigLineUpdate}
-        />
-      </div>
-      <div className="axis-configurator card">
-        <div className="card-header">yRightAxis</div>
-        <div className="card-body">
-          <AxisConfigurator
-            projectId={project.id}
-            axisName="yRightAxis"
-            axisConfig={yRightAxis}
-            onChangeScale={onAxisConfigScaleUpdate}
-            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-          />
-        </div>
         <AxisLogKeySelector
           projectId={project.id}
           axisName="yRightAxis"
@@ -83,22 +51,43 @@ const AxesConfigurator = (props) => {
           stats={stats}
           projectConfig={projectConfig}
           globalConfig={globalConfig}
+          axisName="yLeftAxis"
+          onAxisConfigLineUpdate={onAxisConfigLineUpdate}
+        />
+        <LinesConfigurator
+          project={project}
+          results={results}
+          stats={stats}
+          projectConfig={projectConfig}
+          globalConfig={globalConfig}
           axisName="yRightAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
-      </div>
-      <div className="axis-configurator card">
-        <div className="card-header">xAxis</div>
         <div className="card-body">
+          <div>Left</div>
           <AxisConfigurator
             projectId={project.id}
-            axisName="xAxis"
-            axisConfig={xAxis}
+            axisName="yLeftAxis"
+            axisConfig={yLeftAxis}
             onChangeScale={onAxisConfigScaleUpdate}
             onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
             onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
           />
         </div>
+        <div className="card-body">
+          <div>Right</div>
+          <AxisConfigurator
+            projectId={project.id}
+            axisName="yRightAxis"
+            axisConfig={yRightAxis}
+            onChangeScale={onAxisConfigScaleUpdate}
+            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+          />
+        </div>
+      </div>
+      <div className="axis-configurator card">
+        <div className="card-header">xAxis</div>
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
             <XAxisKeySelector
@@ -109,6 +98,16 @@ const AxesConfigurator = (props) => {
             />
           </li>
         </ul>
+        <div className="card-body">
+          <AxisConfigurator
+            projectId={project.id}
+            axisName="xAxis"
+            axisConfig={xAxis}
+            onChangeScale={onAxisConfigScaleUpdate}
+            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+          />
+        </div>
       </div>
     </div>
   );
