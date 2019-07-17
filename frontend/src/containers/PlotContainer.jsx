@@ -7,7 +7,6 @@ import * as uiPropTypes from '../store/uiPropTypes';
 import {
   getProject,
   getResultList, updateResult, clearResultList,
-  getDeletedResultList,
   resetProjectConfig,
   updateLineInAxis,
   updateAxisScale, toggleLogKeySelect,
@@ -239,7 +238,6 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(mapStateToProps, {
   getProject,
   getResultList,
-  getDeletedResultList,
   updateResult,
   clearResultList,
   createCommand,

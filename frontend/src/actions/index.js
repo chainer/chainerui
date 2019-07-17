@@ -92,13 +92,6 @@ export const getResultList = (projectId, logsLimit = -1, resultType) => {
   };
 };
 
-export const getDeletedResultList = (projectId) => ({
-  [CALL_API]: {
-    types: [DELETED_RESULT_LIST_REQUEST, DELETED_RESULT_LIST_SUCCESS, DELETED_RESULT_LIST_FAILURE],
-    endpoint: `projects/${projectId}/results?unregistered=1`,
-  },
-});
-
 export const getResult = (projectId, resultId, logsLimit = -1) => ({
   [CALL_API]: {
     types: [RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILURE],
