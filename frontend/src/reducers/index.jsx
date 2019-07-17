@@ -158,29 +158,10 @@ const assetsReducer = (state = [], action) => {
 };
 
 
-const deletedResultsReducer = (state = {}, action) => {
-  switch (action.type) {
-    case ActionTypes.DELETED_RESULT_LIST_SUCCESS:
-      if (action.response && action.response.results) {
-        const results = {};
-        const resultList = action.response.results || [];
-        resultList.forEach((result) => {
-          results[result.id] = result;
-        });
-        return results;
-      }
-      return state;
-    default:
-      return state;
-  }
-};
-
-
 const entitiesReducer = combineReducers({
   projects: projectsReducer,
   results: resultsReducer,
   assets: assetsReducer,
-  deletedResults: deletedResultsReducer,
 });
 
 

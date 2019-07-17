@@ -216,7 +216,7 @@ const mapStateToProps = (state, ownProps) => {
     status,
     config,
   } = state;
-  const { projects = {}, results = {}, deletedResults = {} } = entities;
+  const { projects = {}, results = {} } = entities;
   const project = projects[projectId] || { id: projectId };
   const projectStatus = status.projectsStatus[projectId] || defaultProjectStatus;
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
@@ -231,7 +231,6 @@ const mapStateToProps = (state, ownProps) => {
     projectConfig,
     globalConfig,
     stats,
-    deletedResults,
   };
 };
 
