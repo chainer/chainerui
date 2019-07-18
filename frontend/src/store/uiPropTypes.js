@@ -70,16 +70,6 @@ export const result = PropTypes.shape({
 
 export const results = PropTypes.objectOf(result);
 
-export const deletedResult = PropTypes.shape({
-  id: resultId,
-  pathName: PropTypes.string,
-  name: PropTypes.string,
-  group: PropTypes.string,
-  isUnregistered: PropTypes.bool,
-});
-
-export const deletedResults = PropTypes.objectOf(result);
-
 export const fetchState = PropTypes.shape({
   resultList: PropTypes.string,
 });
