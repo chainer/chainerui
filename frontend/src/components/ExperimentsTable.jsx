@@ -9,12 +9,12 @@ import {
   getLastLogDict,
   sortMethod,
   sortKeys,
-  displayResultNameFull,
 } from '../utils';
 
 import ResultName from './experiments_table_cell/ResultName';
 import ToggleResult from './experiments_table_cell/ToggleResult';
 import SubComponent from './experiments_table_cell/SubComponent';
+import ResultFilter from './experiments_table_cell/ResultFilter';
 import VisibilityCheckbox from './VisibilityCheckbox';
 import TableConfigurator from './TableConfigurator';
 
@@ -131,15 +131,7 @@ const ExperimentsTable = (props) => {
         return null;
       },
       minWidth: 250,
-      filterMethod: (filter, row /* , column */) => {
-        const { _original } = row;
-        if (!_original) {
-          // aggregated row
-          return true;
-        }
-        // filter by displayed result name
-        return displayResultNameFull(project, _original).includes(filter.value);
-      },
+      Filter: <ResultFilter filterKey="name" />,
     },
   ];
   if (isGrouped) {
@@ -147,7 +139,7 @@ const ExperimentsTable = (props) => {
       Header: '',
       id: 'group',
       accessor: (p) => getGrandParentDirectoryName(p),
-      filterMethod: (filter, row /* , column */) => row[filter.id].includes(filter.value),
+      Filter: <ResultFilter filterKey="group" />,
     });
   }
   const groupedKey = isGrouped ? ['group'] : [];
