@@ -466,7 +466,6 @@ const projectConfigReducer = combineReducers({
   resultType: targetResultTypeReducer,
 });
 
-
 const projectsConfigReducer = (state = {}, action) => {
   const { projectId } = action;
   if (projectId) {
