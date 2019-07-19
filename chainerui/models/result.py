@@ -22,7 +22,8 @@ class Result(database.BASE):
     path_name = Column(String(512), unique=True)
     name = Column(String(512))
     is_unregistered = Column(Boolean(), default=False)
-    logs = relationship('Log', cascade='all, delete-orphan', order_by='Log.id')
+    logs = relationship(
+        'Log', cascade='all, delete-orphan', order_by='asc(Log.id)')
     args = relationship(
         'Argument', uselist=False, cascade='all, delete-orphan')
     commands = relationship('Command', cascade='all, delete-orphan')
