@@ -5,8 +5,9 @@ environment:
     - PYTHON: "C:\\Python27-x64"
     - PYTHON: "C:\\Python35-x64"
     - PYTHON: "C:\\Python36-x64"
+    - PYTHON: "C:\\Python37-x64"
       CHAINERUI_PLAIN_INSTALL: 1
-    - PYTHON: "C:\\Python36-x64"
+    - PYTHON: "C:\\Python37-x64"
 
 install:
   - set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
