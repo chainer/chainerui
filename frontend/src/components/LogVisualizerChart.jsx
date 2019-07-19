@@ -128,6 +128,7 @@ const LogVisualizerChart = (props) => {
           isAnimationActive={false}
           dot={false}
           activeDot={false}
+          name={`${line2dataKey(line, axisName)}-events`}
           key={`${line2dataKey(line, axisName)}-events`}
           {...highlightEvents}
         />
