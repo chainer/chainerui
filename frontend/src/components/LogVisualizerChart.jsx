@@ -95,16 +95,6 @@ const LogVisualizerChart = (props) => {
       const selected =
         highlightTableAndChart &&
         (resultStatus.selected === true || resultStatus.selected === logKey);
-      const highlightEvents = highlightTableAndChart
-        ? {
-            onMouseEnter: () => {
-              onResultSelect(project.id, resultId, logKey);
-            },
-            onMouseLeave: () => {
-              onResultSelect(project.id, resultId, false);
-            },
-          }
-        : {};
       lineElems.push(
         <Line
           type="linear"
@@ -116,23 +106,33 @@ const LogVisualizerChart = (props) => {
           isAnimationActive={false}
           dot={false}
           key={line2dataKey(line, axisName)}
-        />,
-        <Line
-          type="linear"
-          dataKey={line2dataKey(line, axisName)}
-          yAxisId={axisName}
-          stroke={config.color}
-          strokeWidth="10"
-          strokeOpacity="0"
-          connectNulls
-          isAnimationActive={false}
-          dot={false}
-          activeDot={false}
-          name={`${line2dataKey(line, axisName)}-events`}
-          key={`${line2dataKey(line, axisName)}-events`}
-          {...highlightEvents}
         />
       );
+
+      if (highlightTableAndChart) {
+        lineElems.push(
+          <Line
+            type="linear"
+            dataKey={line2dataKey(line, axisName)}
+            yAxisId={axisName}
+            stroke={config.color}
+            strokeWidth="10"
+            strokeOpacity="0"
+            connectNulls
+            isAnimationActive={false}
+            dot={false}
+            activeDot={false}
+            onMouseEnter={() => {
+              onResultSelect(project.id, resultId, logKey);
+            }}
+            onMouseLeave={() => {
+              onResultSelect(project.id, resultId, false);
+            }}
+            name={`${line2dataKey(line, axisName)}-events`}
+            key={`${line2dataKey(line, axisName)}-events`}
+          />
+        );
+      }
     });
   });
 
