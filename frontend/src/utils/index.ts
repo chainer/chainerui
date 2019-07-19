@@ -19,6 +19,7 @@ export * from './command';
 export * from './download';
 export * from './polling';
 export * from './url';
+export * from './smoothing';
 
 export const line2key = (line: Line): string => `${line.resultId}_${line.logKey}`;
 

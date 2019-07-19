@@ -19,6 +19,7 @@ import {
   getSelectedLogKeys,
   getLogData,
   createLine,
+  SmoothedLinear,
 } from '../utils';
 import LogVisualizerLegend from './LogVisualizerLegend';
 import LogVisualizerTooltip from './LogVisualizerTooltip';
@@ -84,6 +85,8 @@ const LogVisualizerChart = (props) => {
       return resultStatus && resultStatus.selected;
     });
 
+  const smoothing = true;
+
   const lineElems = [];
   Object.keys(axisLines).forEach((axisName) => {
     axisLines[axisName].forEach((line) => {
@@ -101,13 +104,31 @@ const LogVisualizerChart = (props) => {
           dataKey={line2dataKey(line, axisName)}
           yAxisId={axisName}
           stroke={config.color}
-          strokeOpacity={!anySelected || selected ? 1 : 0.1}
+          strokeOpacity={(!anySelected || selected ? 1 : 0.1) * (smoothing ? 0.5 : 1)}
           connectNulls
           isAnimationActive={false}
           dot={false}
           key={line2dataKey(line, axisName)}
         />
       );
+
+      if (smoothing) {
+        lineElems.push(
+          <Line
+            type={(context) => new SmoothedLinear(context, 0.8)}
+            dataKey={line2dataKey(line, axisName)}
+            yAxisId={axisName}
+            stroke={config.color}
+            strokeOpacity={!anySelected || selected ? 1 : 0.1}
+            connectNulls
+            isAnimationActive={false}
+            dot={false}
+            activeDot={false}
+            name={`${line2dataKey(line, axisName)}-smoothed`}
+            key={`${line2dataKey(line, axisName)}-smoothed`}
+          />
+        );
+      }
 
       if (highlightTableAndChart) {
         lineElems.push(
