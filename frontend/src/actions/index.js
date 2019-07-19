@@ -168,10 +168,17 @@ export const createCommand = (
 // config
 
 export const PROJECT_CONFIG_RESET = 'PROJECT_CONFIG_RESET';
+export const PROJECT_CONFIG_SMOOTHING_WEIGHT_UPDATE = 'PROJECT_CONFIG_SMOOTHING_WEIGHT_UPDATE';
 
 export const resetProjectConfig = (projectId) => ({
   type: PROJECT_CONFIG_RESET,
   projectId,
+});
+
+export const updateSmoothingWeight = (projectId, smoothingWeight) => ({
+  type: PROJECT_CONFIG_SMOOTHING_WEIGHT_UPDATE,
+  projectId,
+  smoothingWeight,
 });
 
 export const TARGET_RESULT_TYPE_UPDATE = 'TARGET_RESULT_TYPE_UPDATE';

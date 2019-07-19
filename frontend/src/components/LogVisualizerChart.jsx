@@ -53,7 +53,7 @@ const LogVisualizerChart = (props) => {
     onResultSelect,
     onAxisConfigLineUpdate,
   } = props;
-  const { axes, resultsConfig, lines } = projectConfig;
+  const { axes, resultsConfig, lines, smoothingWeight = 0.8 } = projectConfig;
   const { logKeys, xAxisKeys } = stats;
   const { xAxis = {}, yLeftAxis = {}, yRightAxis = {} } = axes;
   const { xAxisKey = xAxisKeys[0] } = xAxis;
@@ -115,7 +115,7 @@ const LogVisualizerChart = (props) => {
       if (smoothing) {
         lineElems.push(
           <Line
-            type={(context) => new SmoothedLinear(context, 0.8)}
+            type={(context) => new SmoothedLinear(context, smoothingWeight)}
             dataKey={line2dataKey(line, axisName)}
             yAxisId={axisName}
             stroke={config.color}

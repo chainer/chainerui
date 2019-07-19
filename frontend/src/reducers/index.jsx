@@ -493,12 +493,22 @@ const targetResultTypeReducer = (state = fetchResultTypes[0].id, action) => {
   }
 };
 
+const smoothingWeightReducer = (state = 0.8, action) => {
+  switch (action.type) {
+    case ActionTypes.PROJECT_CONFIG_SMOOTHING_WEIGHT_UPDATE:
+      return action.smoothingWeight;
+    default:
+      return state;
+  }
+};
+
 const projectConfigReducer = combineReducers({
   axes: axesConfigReducer,
   resultsConfig: resultsConfigReducer,
   lines: linesConfigReducer,
   tableState: tableStateReducer,
   resultType: targetResultTypeReducer,
+  smoothingWeight: smoothingWeightReducer,
 });
 
 const projectsConfigReducer = (state = {}, action) => {
