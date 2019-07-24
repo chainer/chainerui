@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Alert, Container, Button } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import {
@@ -31,7 +31,8 @@ import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigur
 import LogVisualizer from '../components/LogVisualizer';
 import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
-import { defaultProjectStatus, defaultProjectConfig } from '../constants';
+import ResultTypeSelector from '../components/ResultTypeSelector';
+import { defaultProjectStatus, defaultProjectConfig, fetchResultTypes } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
@@ -113,14 +114,12 @@ class PlotContainer extends React.Component {
                 globalConfig={globalConfig}
                 project={project}
               />
-              { projectConfig.resultType === 'DELETED'
-                ? (<Alert color="danger">Unregistered result mode</Alert>)
-                : null
-              }
-              <p>
-                <Button onClick={() => this.props.updateTargetResultType(projectId, 'ACTIVE')}>ACTIVE</Button>
-                <Button onClick={() => this.props.updateTargetResultType(projectId, 'DELETED')}>DELETED</Button>
-              </p>
+              <ResultTypeSelector
+                projectId={projectId}
+                options={fetchResultTypes}
+                value={projectConfig.resultType}
+                onChange={this.props.updateTargetResultType}
+              />
               <SideBar
                 project={project}
                 results={results}

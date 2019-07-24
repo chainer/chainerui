@@ -5,7 +5,7 @@ import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
 import {
-  chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, CHART_DOWNLOAD_STATUS, keyOptions,
+  chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, CHART_DOWNLOAD_STATUS, keyOptions, fetchResultTypes,
 } from '../constants';
 
 
@@ -447,10 +447,8 @@ const tableStateReducer = (state = {}, action) => {
   }
 };
 
-const targetResultTypeReducer = (state = 'ACTIVE', action) => {
+const targetResultTypeReducer = (state = fetchResultTypes[0].id, action) => {
   switch (action.type) {
-    case ActionTypes.PROJECT_CONFIG_RESET:
-      return 'ACTIVE';
     case ActionTypes.TARGET_RESULT_TYPE_UPDATE:
       return action.resultType;
     default:
