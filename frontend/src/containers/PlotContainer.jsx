@@ -109,16 +109,18 @@ class PlotContainer extends React.Component {
         <Container fluid>
           <div className="row">
             <div className="col-md-4 col-lg-3 order-12 order-md-1">
-              { projectConfig.resultType === 'DELETED'
-                ? (<Alert color="danger">Unregistered result mode</Alert>)
-                : null
-              }
-              <Button onClick={() => this.props.updateTargetResultType(projectId, 'ACTIVE')}>ACTIVE</Button>
-              <Button onClick={() => this.props.updateTargetResultType(projectId, 'DELETED')}>DELETED</Button>
               <BreadcrumbLink
                 globalConfig={globalConfig}
                 project={project}
               />
+              { projectConfig.resultType === 'DELETED'
+                ? (<Alert color="danger">Unregistered result mode</Alert>)
+                : null
+              }
+              <p>
+                <Button onClick={() => this.props.updateTargetResultType(projectId, 'ACTIVE')}>ACTIVE</Button>
+                <Button onClick={() => this.props.updateTargetResultType(projectId, 'DELETED')}>DELETED</Button>
+              </p>
               <SideBar
                 project={project}
                 results={results}
