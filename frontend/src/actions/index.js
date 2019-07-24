@@ -77,9 +77,6 @@ export const RESULT_LIST_CLEAR = 'RESULT_LIST_CLEAR';
 export const RESULT_ASSET_REQUEST = 'RESULT_ASSET_REQUEST';
 export const RESULT_ASSET_SUCCESS = 'RESULT_ASSET_SUCCESS';
 export const RESULT_ASSET_FAILURE = 'RESULT_ASSET_FAILURE';
-export const DELETED_RESULT_LIST_REQUEST = 'DELETED_RESULT_LIST_REQUEST';
-export const DELETED_RESULT_LIST_SUCCESS = 'DELETED_RESULT_LIST_SUCCESS';
-export const DELETED_RESULT_LIST_FAILURE = 'DELETED_RESULT_LIST_FAILURE';
 
 export const getResultList = (projectId, logsLimit = -1, resultType) => {
   const resultTypeQuery = resultType === 'ACTIVE' ? '' : '&unregistered=1';
