@@ -99,14 +99,14 @@ export const defaultAxisConfig = {
 
 export const fetchResultTypes = [
   {
-    id: 'REGISTERED',
+    id: 'FETCH_REGISTERED_RESULTS',
     name: 'Registered results',
-    value: 'REGISTERED',
+    value: 'FETCH_REGISTERED_RESULTS',
   },
   {
-    id: 'UNREGISTERED',
+    id: 'FETCH_UNREGISTERED_RESULTS',
     name: 'Unregistered results',
-    value: 'UNREGISTERED',
+    value: 'FETCH_UNREGISTERED_RESULTS',
   },
 ];
 
