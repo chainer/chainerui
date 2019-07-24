@@ -72,10 +72,8 @@ export const formatLogTooltipLabel = (xAxisKey, precision) => (value) => (
 export const getLastLogDict = (result = {}) => {
   const { logs = [] } = result;
   const lastLog = logs[logs.length - 1] || {};
-  const { logItems = [] } = lastLog;
-  const lastLogDict = {};
-  logItems.forEach((logItem) => { lastLogDict[logItem.key] = logItem.value; });
-  return lastLogDict;
+  const { logDict } = lastLog;
+  return logDict;
 };
 
 export const argValue2string = (argValue) => {
@@ -161,10 +159,7 @@ export const getLogData = (results, stats, projectConfig) => {
               || createLine(resultId, logKey, results, logKeys);
         const logs = result.logs || [];
         logs.forEach((log) => {
-          const logDict = {};
-          log.logItems.forEach((logItem) => {
-            logDict[logItem.key] = logItem.value;
-          });
+          const { logDict } = log;
           if (logDict[xAxisKey] == null || logDict[logKey] == null) {
             return;
           }
@@ -208,10 +203,7 @@ export const getPlotLogData = (results, stats, projectConfig) => {
     const result = results[resultId];
     const logs = result.logs || [];
     const allLogs = logs.map((log) => {
-      const logDict = {};
-      log.logItems.forEach((logItem) => {
-        logDict[logItem.key] = logItem.value;
-      });
+      const { logDict = {} } = log;
       return logDict;
     });
     allData[result.id] = {

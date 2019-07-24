@@ -9,13 +9,8 @@ import {
   getProject,
   getResult,
   createCommand,
-  updateGlobalPollingRate,
-  updateGlobalChartSize,
-  updateGlobalLogsLimit,
-  updateGlobalResultNameAlignment,
-  updateGlobalHighlightTableAndChart,
 } from '../actions';
-import NavigationBar from '../components/NavigationBar';
+import NavigationBar from './NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ResultSummary from '../components/result/ResultSummary';
 import Args from '../components/result/Args';
@@ -51,20 +46,11 @@ class ResultDetail extends React.Component {
 
   render() {
     const {
-      projectId, project, result, globalConfig, fetchState,
+      projectId, project, result, globalConfig,
     } = this.props;
     return (
       <div className="chainerui-container">
-        <NavigationBar
-          pollingKey="result"
-          fetchState={fetchState}
-          globalConfig={globalConfig}
-          onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
-          onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
-          onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
-          onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
-          onGlobalHighlightTableAndChartUpdate={this.props.updateGlobalHighlightTableAndChart}
-        />
+        <NavigationBar pollingKey="result" />
         <Container fluid>
           <BreadcrumbLink
             globalConfig={globalConfig}
@@ -112,16 +98,10 @@ ResultDetail.propTypes = {
   resultId: uiPropTypes.resultId.isRequired,
   project: uiPropTypes.project,
   result: uiPropTypes.result,
-  fetchState: uiPropTypes.fetchState.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   getProject: PropTypes.func.isRequired,
   getResult: PropTypes.func.isRequired,
   createCommand: PropTypes.func.isRequired,
-  updateGlobalPollingRate: PropTypes.func.isRequired,
-  updateGlobalChartSize: PropTypes.func.isRequired,
-  updateGlobalLogsLimit: PropTypes.func.isRequired,
-  updateGlobalResultNameAlignment: PropTypes.func.isRequired,
-  updateGlobalHighlightTableAndChart: PropTypes.func.isRequired,
 };
 
 ResultDetail.defaultProps = {
@@ -134,7 +114,6 @@ const mapStateToProps = (state, ownProps) => {
   const resultId = Number(ownProps.params.resultId);
   const {
     entities,
-    fetchState,
     config,
   } = state;
   const globalConfig = config.global;
@@ -146,7 +125,6 @@ const mapStateToProps = (state, ownProps) => {
     resultId,
     project,
     result,
-    fetchState,
     globalConfig,
   };
 };
@@ -155,9 +133,4 @@ export default connect(mapStateToProps, {
   getProject,
   getResult,
   createCommand,
-  updateGlobalPollingRate,
-  updateGlobalChartSize,
-  updateGlobalLogsLimit,
-  updateGlobalResultNameAlignment,
-  updateGlobalHighlightTableAndChart,
 })(ResultDetail);

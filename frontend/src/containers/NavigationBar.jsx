@@ -1,17 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import {
   Container,
   Collapse, Navbar, NavbarBrand,
-  Popover, PopoverHeader, PopoverBody,
+  UncontrolledPopover, PopoverHeader, PopoverBody,
   Form, FormGroup, Label,
   Button,
 } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
-import Check from './FormControl/Check';
-import Select from './FormControl/Select';
-import PollingStatus from './PollingStatus';
+import {
+  updateGlobalPollingRate,
+  updateGlobalChartSize,
+  updateGlobalLogsLimit,
+  updateGlobalResultNameAlignment,
+  updateGlobalHighlightTableAndChart,
+} from '../actions';
+import Check from '../components/FormControl/Check';
+import Select from '../components/FormControl/Select';
+import PollingStatus from '../components/PollingStatus';
 import {
   chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION,
 } from '../constants';
@@ -24,21 +32,11 @@ class NavigationBar extends React.Component {
   constructor(props) {
     super(props);
 
-    this.toggleSettingPopover = this.toggleSettingPopover.bind(this);
     this.handleChangePollingRate = this.handleChangePollingRate.bind(this);
     this.handleChangeChartSize = this.handleChangeChartSize.bind(this);
     this.handleChangeLogsLimit = this.handleChangeLogsLimit.bind(this);
     this.handleResultNameAlignmentChange = this.handleResultNameAlignmentChange.bind(this);
     this.handleHighlightTableAndChartChange = this.handleHighlightTableAndChartChange.bind(this);
-    this.state = {
-      settingPopoverOpen: false,
-    };
-  }
-
-  toggleSettingPopover() {
-    this.setState((prevState) => ({
-      settingPopoverOpen: !prevState.settingPopoverOpen,
-    }));
   }
 
   handleChangePollingRate(e) {
@@ -87,17 +85,15 @@ class NavigationBar extends React.Component {
                 globalConfig={this.props.globalConfig}
               />
             </span>
-            <Button id="navbar-global-setting" onClick={this.toggleSettingPopover}>
+            <Button id="navbar-global-setting">
               <i className="fas fa-cog" />
             </Button>
           </Collapse>
         </Container>
 
-        <Popover
+        <UncontrolledPopover
           placement="left-end"
-          isOpen={this.state.settingPopoverOpen}
           target="navbar-global-setting"
-          toggle={this.toggleSettingPopover}
         >
           <PopoverHeader className="popover-header">Global Settings</PopoverHeader>
           <PopoverBody className="popover-body">
@@ -172,7 +168,7 @@ class NavigationBar extends React.Component {
               </small>
             </p>
           </PopoverBody>
-        </Popover>
+        </UncontrolledPopover>
       </Navbar>
     );
   }
@@ -193,4 +189,22 @@ NavigationBar.defaultProps = {
   pollingKey: undefined,
 };
 
-export default NavigationBar;
+const mapStateToProps = (state) => {
+  const {
+    fetchState,
+    config,
+  } = state;
+  const globalConfig = config.global;
+  return {
+    fetchState,
+    globalConfig,
+  };
+};
+
+export default connect(mapStateToProps, {
+  onGlobalConfigPollingRateUpdate: updateGlobalPollingRate,
+  onGlobalConfigChartSizeUpdate: updateGlobalChartSize,
+  onGlobalConfigLogsLimitUpdate: updateGlobalLogsLimit,
+  onGlobalConfigResultNameAlignmentUpdate: updateGlobalResultNameAlignment,
+  onGlobalHighlightTableAndChartUpdate: updateGlobalHighlightTableAndChart,
+})(NavigationBar);

@@ -12,11 +12,6 @@ import {
   updateAxisScale, toggleLogKeySelect,
   updateResultSelect,
   updateResultsConfigSelect,
-  updateGlobalPollingRate,
-  updateGlobalChartSize,
-  updateGlobalLogsLimit,
-  updateGlobalResultNameAlignment,
-  updateGlobalHighlightTableAndChart,
   updateXAxisKey,
   updateAxisScaleRangeType, updateAxisScaleRangeNumber,
   createCommand,
@@ -25,11 +20,11 @@ import {
   updateChartDownloadStatus,
   updateTargetResultType,
 } from '../actions';
+import NavigationBar from './NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ExperimentsTable from '../components/ExperimentsTable';
 import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigurator';
 import LogVisualizer from '../components/LogVisualizer';
-import NavigationBar from '../components/NavigationBar';
 import SideBar from '../components/SideBar';
 import ResultTypeSelector from '../components/ResultTypeSelector';
 import { defaultProjectStatus, defaultProjectConfig, fetchResultTypes } from '../constants';
@@ -89,7 +84,6 @@ class PlotContainer extends React.Component {
       project,
       results,
       projectStatus,
-      fetchState,
       projectConfig,
       globalConfig,
       stats,
@@ -97,16 +91,7 @@ class PlotContainer extends React.Component {
 
     return (
       <div className="chainerui-container">
-        <NavigationBar
-          pollingKey="resultList"
-          fetchState={fetchState}
-          globalConfig={globalConfig}
-          onGlobalConfigPollingRateUpdate={this.props.updateGlobalPollingRate}
-          onGlobalConfigChartSizeUpdate={this.props.updateGlobalChartSize}
-          onGlobalConfigLogsLimitUpdate={this.props.updateGlobalLogsLimit}
-          onGlobalConfigResultNameAlignmentUpdate={this.props.updateGlobalResultNameAlignment}
-          onGlobalHighlightTableAndChartUpdate={this.props.updateGlobalHighlightTableAndChart}
-        />
+        <NavigationBar pollingKey="resultList" />
         <Container fluid>
           <div className="row">
             <div className="col-md-4 col-lg-3 order-12 order-md-1">
@@ -179,7 +164,6 @@ PlotContainer.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
-  fetchState: uiPropTypes.fetchState.isRequired,
   projectStatus: uiPropTypes.projectStatus.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
@@ -195,11 +179,6 @@ PlotContainer.propTypes = {
   toggleLogKeySelect: PropTypes.func.isRequired,
   updateResultSelect: PropTypes.func.isRequired,
   updateResultsConfigSelect: PropTypes.func.isRequired,
-  updateGlobalPollingRate: PropTypes.func.isRequired,
-  updateGlobalChartSize: PropTypes.func.isRequired,
-  updateGlobalLogsLimit: PropTypes.func.isRequired,
-  updateGlobalResultNameAlignment: PropTypes.func.isRequired,
-  updateGlobalHighlightTableAndChart: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
   updateAxisScaleRangeNumber: PropTypes.func.isRequired,
@@ -213,7 +192,6 @@ const mapStateToProps = (state, ownProps) => {
   const projectId = Number(ownProps.params.projectId);
   const {
     entities,
-    fetchState,
     status,
     config,
   } = state;
@@ -227,7 +205,6 @@ const mapStateToProps = (state, ownProps) => {
     projectId,
     project,
     results,
-    fetchState,
     projectStatus,
     projectConfig,
     globalConfig,
@@ -247,11 +224,6 @@ export default connect(mapStateToProps, {
   toggleLogKeySelect,
   updateResultSelect,
   updateResultsConfigSelect,
-  updateGlobalPollingRate,
-  updateGlobalChartSize,
-  updateGlobalLogsLimit,
-  updateGlobalResultNameAlignment,
-  updateGlobalHighlightTableAndChart,
   updateXAxisKey,
   updateAxisScaleRangeType,
   updateAxisScaleRangeNumber,

@@ -8,6 +8,10 @@ import { keyOptions } from '../../constants';
 const ResultSummary = (props) => {
   const { result } = props;
   const lastLogDict = getLastLogDict(result);
+  if (!lastLogDict) {
+    return null;
+  }
+
   const logKeys = keyOptions.filter((key) => key in lastLogDict);
   return (
     <div className="card">

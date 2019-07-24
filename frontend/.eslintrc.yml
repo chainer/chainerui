@@ -5,10 +5,29 @@ env:
   browser: true
   es6: true
 
-parser: babel-eslint
-
 extends:
   - airbnb
+  - plugin:@typescript-eslint/recommended
+
+plugins:
+  - react-hooks
+
+settings:
+  import/resolver:
+    node:
+      extensions:
+        - .mjs
+        - .js
+        - .jsx
+        - .json
+        - .ts
+        - .tsx
+  import/extensions:
+    - .js
+    - .mjs
+    - .jsx
+    - .ts
+    - .tsx
 
 rules:
   arrow-parens:
@@ -23,7 +42,28 @@ rules:
       exports: always-multiline
       functions: never
   max-len: off
+  react-hooks/rules-of-hooks: error
+  react-hooks/exhaustive-deps: warn
 
+  import/extensions:
+    - error
+    - ignorePackages
+    -
+      js: never
+      mjs: never
+      jsx: never
+      ts: never
+      tsx: never
+  react/jsx-filename-extension:
+    - error
+    -
+      extensions:
+        - .jsx
+        - .tsx
+
+  "@typescript-eslint/camelcase": off
+  "@typescript-eslint/indent": off
+  "@typescript-eslint/no-var-requires": off
   jsx-a11y/anchor-is-valid: off
   jsx-a11y/media-has-caption: off
   react/destructuring-assignment: off

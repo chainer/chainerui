@@ -24,7 +24,7 @@ const removePartialState = (state, keyId) => {
   if (keyId in state) {
     const newState = { ...state };
     delete newState[keyId];
-    return state;
+    return newState;
   }
   return state;
 };
@@ -248,8 +248,8 @@ const statsReducer = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, actio
         resultsList.forEach((result) => {
           result.args.forEach((arg) => { argKeySet[arg.key] = true; });
           result.logs.forEach((log) => {
-            log.logItems.forEach((logItem) => {
-              logKeySet[logItem.key] = true;
+            Object.keys(log.logDict).forEach((key) => {
+              logKeySet[key] = true;
             });
           });
         });

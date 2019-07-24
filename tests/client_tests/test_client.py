@@ -1,3 +1,4 @@
+import argparse
 import logging
 from threading import Thread
 import time
@@ -70,6 +71,19 @@ def server(func_db):
 
 def test_client_init_default(server):
     client.init(server.url)
+
+    assert client._client.project_id == 1
+    assert client._client.result_id == 1
+
+    reporter = client.log_reporter()
+    reporter({'loss': 0.001})
+
+
+def test_client_init_with_condition(server):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--gpu', '-g', type=int)
+    args = parser.parse_args(['-g', 0])
+    client.init(server.url, conditions=args)
 
     assert client._client.project_id == 1
     assert client._client.result_id == 1
