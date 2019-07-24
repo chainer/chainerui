@@ -27,7 +27,7 @@ import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigur
 import LogVisualizer from '../components/LogVisualizer';
 import SideBar from '../components/SideBar';
 import ResultTypeSelector from '../components/ResultTypeSelector';
-import { defaultProjectStatus, defaultProjectConfig, fetchResultTypes } from '../constants';
+import { defaultProjectStatus, defaultProjectConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
 
@@ -101,7 +101,6 @@ class PlotContainer extends React.Component {
               />
               <ResultTypeSelector
                 projectId={projectId}
-                options={fetchResultTypes}
                 value={projectConfig.resultType}
                 onChange={this.props.updateTargetResultType}
               />

@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import Select from './FormControl/Select';
 
 import * as uiPropTypes from '../store/uiPropTypes';
+import { fetchResultTypes } from '../constants/index';
 
 const ResultTypeSelector = (props) => {
-  const { options, value, onChange } = props;
+  const { value, onChange } = props;
 
   const handleChangeFetchResultType = (e) => {
     const { projectId } = props;
@@ -16,7 +17,7 @@ const ResultTypeSelector = (props) => {
     <div className="mb-3">
       <Select
         id="result-type"
-        options={options}
+        options={fetchResultTypes}
         onChange={handleChangeFetchResultType}
         value={value}
       />
@@ -26,11 +27,6 @@ const ResultTypeSelector = (props) => {
 
 ResultTypeSelector.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,
-  options: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    name: PropTypes.string.isRequired,
-    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  })).isRequired,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
