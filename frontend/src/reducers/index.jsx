@@ -109,7 +109,7 @@ const resultsReducer = (state = {}, action) => {
     case ActionTypes.RESULT_UPDATE_SUCCESS:
       if (action.response && action.response.result) {
         const { result } = action.response;
-        if (result.isUnregistered) {
+        if (result.isUnregistered !== state[result.id].isUnregistered) {
           return removePartialState(state, result.id);
         }
         return {
