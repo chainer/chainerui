@@ -447,7 +447,7 @@ const tableStateReducer = (state = {}, action) => {
   }
 };
 
-const targetResultTypeReducer = (state = {}, action) => {
+const targetResultTypeReducer = (state = 'ACTIVE', action) => {
   switch (action.type) {
     case ActionTypes.PROJECT_CONFIG_RESET:
       return 'ACTIVE';
