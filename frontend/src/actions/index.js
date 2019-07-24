@@ -80,7 +80,7 @@ export const RESULT_ASSET_SUCCESS = 'RESULT_ASSET_SUCCESS';
 export const RESULT_ASSET_FAILURE = 'RESULT_ASSET_FAILURE';
 
 export const getResultList = (projectId, logsLimit = -1, resultType) => {
-  const resultTypeQuery = resultType === fetchResultTypes[0].id ? '' : '&unregistered=1';
+  const resultTypeQuery = resultType === fetchResultTypes[0].id ? '' : '&is_unregistered=1';
 
   return {
     [CALL_API]: {

@@ -17,8 +17,8 @@ class ResultAPI(MethodView):
     def get(self, id=None, project_id=None):
         """get."""
         logs_limit = request.args.get('logs_limit', default=-1, type=int)
-        unregistered = request.args.get(
-            'unregistered', default=False, type=bool)
+        is_unregistered = request.args.get(
+            'is_unregistered', default=False, type=bool)
 
         project = db.session.query(Project).filter_by(
             id=project_id).first()
@@ -44,7 +44,7 @@ class ResultAPI(MethodView):
 
             results = db.session.query(Result).\
                 filter_by(project_id=project_id).\
-                filter_by(is_unregistered=unregistered).\
+                filter_by(is_unregistered=is_unregistered).\
                 all()
 
             # NOTE: To improve performance, aggregate commit phase. By set
