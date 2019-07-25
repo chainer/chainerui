@@ -22,7 +22,7 @@ export const decomposeLineDataKey = (dataKey) => {
 export const truncate = (string, options = {}) => {
   const { length = 20, restStr = '...', forward = false } = options;
   let str = string || '';
-  const chars = [...str];
+  const chars = Array.from(str);
   if (chars.length > length) {
     if (forward) {
       str = restStr + chars.slice(chars.length - length).join('');
