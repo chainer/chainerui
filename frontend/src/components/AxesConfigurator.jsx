@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import AxisConfigurator from './AxisConfigurator';
-import LinesConfigurator from './LinesConfigurator';
+import LinesConfiguratorToggle from './LinesConfiguratorToggle';
 import XAxisKeySelector from './XAxisKeySelector';
-import AxisLogKeySelector from './AxisLogKeySelector';
+import YAxisLogKeySelector from './YAxisLogKeySelector';
 
 
 const AxesConfigurator = (props) => {
@@ -29,64 +29,49 @@ const AxesConfigurator = (props) => {
 
   return (
     <div className="axes-configurator">
-      <AxisConfigurator
-        projectId={project.id}
-        axisName="yLeftAxis"
-        axisConfig={yLeftAxis}
-        onChangeScale={onAxisConfigScaleUpdate}
-        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-      >
-        <AxisLogKeySelector
+      <div className="axis-configurator card">
+        <div className="card-header">yAxis</div>
+        <YAxisLogKeySelector
           projectId={project.id}
-          axisName="yLeftAxis"
-          axisConfig={yLeftAxis}
+          axesConfig={projectConfig.axes}
           stats={stats}
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
         />
-        <LinesConfigurator
+        <LinesConfiguratorToggle
           project={project}
           results={results}
           stats={stats}
           projectConfig={projectConfig}
           globalConfig={globalConfig}
-          axisName="yLeftAxis"
           onAxisConfigLineUpdate={onAxisConfigLineUpdate}
         />
-      </AxisConfigurator>
-      <AxisConfigurator
-        projectId={project.id}
-        axisName="yRightAxis"
-        axisConfig={yRightAxis}
-        onChangeScale={onAxisConfigScaleUpdate}
-        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-      >
-        <AxisLogKeySelector
-          projectId={project.id}
-          axisName="yRightAxis"
-          axisConfig={yRightAxis}
-          stats={stats}
-          onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
-        />
-        <LinesConfigurator
-          project={project}
-          results={results}
-          stats={stats}
-          projectConfig={projectConfig}
-          globalConfig={globalConfig}
-          axisName="yRightAxis"
-          onAxisConfigLineUpdate={onAxisConfigLineUpdate}
-        />
-      </AxisConfigurator>
-      <AxisConfigurator
-        projectId={project.id}
-        axisName="xAxis"
-        axisConfig={xAxis}
-        onChangeScale={onAxisConfigScaleUpdate}
-        onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-        onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-      >
+        <ul className="list-group list-group-flush">
+          <li className="list-group-item">
+            <div>Left</div>
+            <AxisConfigurator
+              projectId={project.id}
+              axisName="yLeftAxis"
+              axisConfig={yLeftAxis}
+              onChangeScale={onAxisConfigScaleUpdate}
+              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+            />
+          </li>
+          <li className="list-group-item">
+            <div>Right</div>
+            <AxisConfigurator
+              projectId={project.id}
+              axisName="yRightAxis"
+              axisConfig={yRightAxis}
+              onChangeScale={onAxisConfigScaleUpdate}
+              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+            />
+          </li>
+        </ul>
+      </div>
+      <div className="axis-configurator card">
+        <div className="card-header">xAxis</div>
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
             <XAxisKeySelector
@@ -96,8 +81,18 @@ const AxesConfigurator = (props) => {
               onChange={onAxisConfigXKeyUpdate}
             />
           </li>
+          <li className="list-group-item">
+            <AxisConfigurator
+              projectId={project.id}
+              axisName="xAxis"
+              axisConfig={xAxis}
+              onChangeScale={onAxisConfigScaleUpdate}
+              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+            />
+          </li>
         </ul>
-      </AxisConfigurator>
+      </div>
     </div>
   );
 };

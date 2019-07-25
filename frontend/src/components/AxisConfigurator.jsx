@@ -40,35 +40,31 @@ class AxisConfigurator extends React.Component {
     const { scale } = axisConfig;
 
     return (
-      <div className="axis-configurator card">
-        <div className="card-header">{axisName}</div>
-        <div className="card-body">
-          <AxisScaleSelector
-            scale={scale}
-            onChange={this.handleChangeScale}
+      <>
+        <AxisScaleSelector
+          scale={scale}
+          onChange={this.handleChangeScale}
+        />
+        <Button size="sm" className="my-2" onClick={this.toggleRangeConfig}>Toggle range setting</Button>
+        <Collapse isOpen={this.state.showRangeConfig}>
+          <AxisRangeConfigurator
+            projectId={projectId}
+            axisName={axisName}
+            axisConfig={axisConfig}
+            isMin={false}
+            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
           />
-          <Button size="sm" className="my-2" onClick={this.toggleRangeConfig}>Toggle range setting</Button>
-          <Collapse isOpen={this.state.showRangeConfig}>
-            <AxisRangeConfigurator
-              projectId={projectId}
-              axisName={axisName}
-              axisConfig={axisConfig}
-              isMin={false}
-              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-            />
-            <AxisRangeConfigurator
-              projectId={projectId}
-              axisName={axisName}
-              axisConfig={axisConfig}
-              isMin
-              onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
-              onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
-            />
-          </Collapse>
-        </div>
-        {this.props.children}
-      </div>
+          <AxisRangeConfigurator
+            projectId={projectId}
+            axisName={axisName}
+            axisConfig={axisConfig}
+            isMin
+            onAxisConfigScaleRangeTypeUpdate={onAxisConfigScaleRangeTypeUpdate}
+            onAxisConfigScaleRangeNumberUpdate={onAxisConfigScaleRangeNumberUpdate}
+          />
+        </Collapse>
+      </>
     );
   }
 }
@@ -80,14 +76,6 @@ AxisConfigurator.propTypes = {
   onChangeScale: PropTypes.func.isRequired,
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]),
-};
-
-AxisConfigurator.defaultProps = {
-  children: null,
 };
 
 export default AxisConfigurator;
