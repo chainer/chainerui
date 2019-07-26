@@ -1,0 +1,46 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/typescript",
+    "plugin:eslint-comments/recommended",
+    "plugin:prettier/recommended",
+    "prettier/@typescript-eslint",
+    "prettier/react"
+  ],
+  "rules": {
+    "@typescript-eslint/camelcase": ["error", { "ignoreDestructuring": true }],
+    "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/no-empty-interface": ["error", { "allowSingleExtends": true }],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "ignoreRestSiblings": true, "argsIgnorePattern": "^_" }
+    ],
+    "eslint-comments/disable-enable-pair": ["error", { "allowWholeFile": true }],
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/media-has-caption": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-curly-newline": "off",
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
+    "react/jsx-fragments": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/prop-types": "off"
+  },
+  "overrides": [
+    {
+      "files": ["*.js", "*.jsx"],
+      "rules": {
+        "@typescript-eslint/camelcase": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "react/prop-types": "error"
+      }
+    }
+  ]
+}
