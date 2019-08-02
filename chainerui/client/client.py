@@ -299,7 +299,13 @@ def log_reporter():
     with new one.
 
     The callback function is expected to use with ``postprocess``
-    option of Chainer ``LogReport`` extension.
+    option of Chainer ``LogReport`` extension::
+
+       >>> chainerui.init()
+       >>>
+       >>> trainer = chainer.training.Trainer(...)
+       >>> trainer.extend(
+       >>>     extensions.LogReport(postprocess=chainerui.log_reporter()))
 
     Returns:
         func: function.
