@@ -381,6 +381,19 @@ const axisConfigReducer = (state = {}, action) => {
         },
       };
     }
+    case ActionTypes.AXIS_CONFIG_LOG_KEY_SMOOTHING_TOGGLE: {
+      const logKeyConfig = logKeysConfig[logKey] || {};
+      return {
+        ...state,
+        logKeysConfig: {
+          ...logKeysConfig,
+          [logKey]: {
+            ...logKeyConfig,
+            smoothing: !logKeyConfig.smoothing,
+          },
+        },
+      };
+    }
     default:
       return state;
   }
