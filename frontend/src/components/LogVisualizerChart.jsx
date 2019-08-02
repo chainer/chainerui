@@ -85,8 +85,6 @@ const LogVisualizerChart = (props) => {
       return resultStatus && resultStatus.selected;
     });
 
-  const smoothing = true;
-
   const lineElems = [];
   Object.keys(axisLines).forEach((axisName) => {
     axisLines[axisName].forEach((line) => {
@@ -98,6 +96,8 @@ const LogVisualizerChart = (props) => {
       const selected =
         highlightTableAndChart &&
         (resultStatus.selected === true || resultStatus.selected === logKey);
+      const { smoothing } = axes[axisName].logKeysConfig[logKey];
+
       lineElems.push(
         <Line
           type="linear"
