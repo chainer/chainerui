@@ -99,11 +99,6 @@ class PlotContainer extends React.Component {
                 globalConfig={globalConfig}
                 project={project}
               />
-              <ResultTypeSelector
-                projectId={projectId}
-                value={projectConfig.resultType}
-                onChange={this.props.updateTargetResultType}
-              />
               <SideBar
                 project={project}
                 results={results}
@@ -130,6 +125,11 @@ class PlotContainer extends React.Component {
                 onChartDownloadStatusUpdate={this.props.updateChartDownloadStatus}
                 onResultSelect={this.props.updateResultSelect}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
+              />
+              <ResultTypeSelector
+                projectId={projectId}
+                value={projectConfig.resultType}
+                onChange={this.props.updateTargetResultType}
               />
               <ExperimentsTable
                 project={project}
