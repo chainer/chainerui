@@ -23,7 +23,6 @@ if (!versionMatches) {
 }
 
 const version = versionMatches[1];
-const targetBrowser = 'last 2 versions';
 
 module.exports = {
   entry: {
@@ -64,9 +63,7 @@ module.exports = {
             options: {
               parser: 'postcss-scss',
               plugins: [
-                require('autoprefixer')({
-                  browsers: targetBrowser,
-                }),
+                require('autoprefixer')(),
               ],
             },
           },
