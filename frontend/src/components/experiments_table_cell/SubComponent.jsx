@@ -7,6 +7,7 @@ import * as uiPropTypes from '../../store/uiPropTypes';
 import SnapshotTakeForm from '../result/SnapshotTakeForm';
 import StopForm from '../result/StopForm';
 import UnregisterButton from './UnregisterButton';
+import RestoreButton from './RestoreButton';
 import {
   urlForResultDetail,
 } from '../../utils';
@@ -59,13 +60,24 @@ const SubComponent = (props) => {
         </div>
 
         <small className="text-muted mr-2">{`result_id: ${id}`}</small>
-
-        <UnregisterButton
-          project={project}
-          result={original}
-          onResultUpdate={onResultUpdate}
-          onResultUnregistered={onResultUnregistered}
-        />
+        { original.isUnregistered
+          ? (
+            <RestoreButton
+              project={project}
+              result={original}
+              onResultUpdate={onResultUpdate}
+              onResultUnregistered={onResultUnregistered}
+            />
+          )
+          : (
+            <UnregisterButton
+              project={project}
+              result={original}
+              onResultUpdate={onResultUpdate}
+              onResultUnregistered={onResultUnregistered}
+            />
+          )
+        }
       </div>
     </div>
   );

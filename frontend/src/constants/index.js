@@ -97,11 +97,25 @@ export const defaultAxisConfig = {
   },
 };
 
+export const fetchResultTypes = [
+  {
+    id: 'FETCH_REGISTERED_RESULTS',
+    name: 'Registered results',
+    value: 'FETCH_REGISTERED_RESULTS',
+  },
+  {
+    id: 'FETCH_UNREGISTERED_RESULTS',
+    name: 'Unregistered results',
+    value: 'FETCH_UNREGISTERED_RESULTS',
+  },
+];
+
 export const defaultProjectConfig = {
   axes: defaultAxisConfig,
   resultsConfig: {},
   lines: {},
   tableState: {},
+  resultType: fetchResultTypes[0].id,
 };
 
 export const CHART_DOWNLOAD_STATUS = {
