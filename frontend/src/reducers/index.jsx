@@ -5,7 +5,7 @@ import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
 import {
-  chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, CHART_DOWNLOAD_STATUS, keyOptions,
+  chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, CHART_DOWNLOAD_STATUS, keyOptions, fetchResultTypes,
 } from '../constants';
 
 
@@ -109,7 +109,7 @@ const resultsReducer = (state = {}, action) => {
     case ActionTypes.RESULT_UPDATE_SUCCESS:
       if (action.response && action.response.result) {
         const { result } = action.response;
-        if (result.isUnregistered) {
+        if (result.isUnregistered !== state[result.id].isUnregistered) {
           return removePartialState(state, result.id);
         }
         return {
@@ -447,11 +447,21 @@ const tableStateReducer = (state = {}, action) => {
   }
 };
 
+const targetResultTypeReducer = (state = fetchResultTypes[0].id, action) => {
+  switch (action.type) {
+    case ActionTypes.TARGET_RESULT_TYPE_UPDATE:
+      return action.resultType;
+    default:
+      return state;
+  }
+};
+
 const projectConfigReducer = combineReducers({
   axes: axesConfigReducer,
   resultsConfig: resultsConfigReducer,
   lines: linesConfigReducer,
   tableState: tableStateReducer,
+  resultType: targetResultTypeReducer,
 });
 
 const projectsConfigReducer = (state = {}, action) => {

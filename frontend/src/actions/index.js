@@ -1,4 +1,5 @@
 import { CALL_API } from '../middleware/api';
+import { fetchResultTypes } from '../constants/index';
 
 
 // projects API
@@ -78,12 +79,16 @@ export const RESULT_ASSET_REQUEST = 'RESULT_ASSET_REQUEST';
 export const RESULT_ASSET_SUCCESS = 'RESULT_ASSET_SUCCESS';
 export const RESULT_ASSET_FAILURE = 'RESULT_ASSET_FAILURE';
 
-export const getResultList = (projectId, logsLimit = -1) => ({
-  [CALL_API]: {
-    types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILURE],
-    endpoint: `projects/${projectId}/results?logs_limit=${logsLimit}`,
-  },
-});
+export const getResultList = (projectId, logsLimit = -1, resultType) => {
+  const resultTypeQuery = resultType === fetchResultTypes[0].id ? '' : '&is_unregistered=1';
+
+  return {
+    [CALL_API]: {
+      types: [RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILURE],
+      endpoint: `projects/${projectId}/results?logs_limit=${logsLimit}${resultTypeQuery}`,
+    },
+  };
+};
 
 export const getResult = (projectId, resultId, logsLimit = -1) => ({
   [CALL_API]: {
@@ -164,6 +169,13 @@ export const PROJECT_CONFIG_RESET = 'PROJECT_CONFIG_RESET';
 export const resetProjectConfig = (projectId) => ({
   type: PROJECT_CONFIG_RESET,
   projectId,
+});
+
+export const TARGET_RESULT_TYPE_UPDATE = 'TARGET_RESULT_TYPE_UPDATE';
+export const updateTargetResultType = (projectId, resultType) => ({
+  type: TARGET_RESULT_TYPE_UPDATE,
+  projectId,
+  resultType,
 });
 
 
