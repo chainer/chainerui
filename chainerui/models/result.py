@@ -6,10 +6,12 @@ from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.expression import asc
 from sqlalchemy import String
 
 from chainerui import database
 from chainerui.database import db
+from chainerui.models.log import Log
 from chainerui.tasks.crawl_result import crawl_result
 
 
@@ -22,7 +24,8 @@ class Result(database.BASE):
     path_name = Column(String(512), unique=True)
     name = Column(String(512))
     is_unregistered = Column(Boolean(), default=False)
-    logs = relationship('Log', cascade='all, delete-orphan')
+    logs = relationship(
+        'Log', cascade='all, delete-orphan', order_by=lambda: asc(Log.id))
     args = relationship(
         'Argument', uselist=False, cascade='all, delete-orphan')
     commands = relationship('Command', cascade='all, delete-orphan')
