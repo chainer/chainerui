@@ -8,15 +8,10 @@ import SnapshotTakeForm from '../result/SnapshotTakeForm';
 import StopForm from '../result/StopForm';
 import UnregisterButton from './UnregisterButton';
 import RestoreButton from './RestoreButton';
-import {
-  urlForResultDetail,
-} from '../../utils';
-
+import { urlForResultDetail } from '../../utils';
 
 const SubComponent = (props) => {
-  const {
-    original, project, onResultUpdate, onResultUnregistered, onCommandSubmit,
-  } = props;
+  const { original, project, onResultUpdate, onResultUnregistered, onCommandSubmit } = props;
   const { id } = original;
   const style = {
     padding: '1rem',
@@ -52,32 +47,25 @@ const SubComponent = (props) => {
         </div>
 
         <div className="mb-2">
-          <StopForm
-            projectId={project.id}
-            resultId={id}
-            onCommandSubmit={onCommandSubmit}
-          />
+          <StopForm projectId={project.id} resultId={id} onCommandSubmit={onCommandSubmit} />
         </div>
 
         <small className="text-muted mr-2">{`result_id: ${id}`}</small>
-        { original.isUnregistered
-          ? (
-            <RestoreButton
-              project={project}
-              result={original}
-              onResultUpdate={onResultUpdate}
-              onResultUnregistered={onResultUnregistered}
-            />
-          )
-          : (
-            <UnregisterButton
-              project={project}
-              result={original}
-              onResultUpdate={onResultUpdate}
-              onResultUnregistered={onResultUnregistered}
-            />
-          )
-        }
+        {original.isUnregistered ? (
+          <RestoreButton
+            project={project}
+            result={original}
+            onResultUpdate={onResultUpdate}
+            onResultUnregistered={onResultUnregistered}
+          />
+        ) : (
+          <UnregisterButton
+            project={project}
+            result={original}
+            onResultUpdate={onResultUpdate}
+            onResultUnregistered={onResultUnregistered}
+          />
+        )}
       </div>
     </div>
   );

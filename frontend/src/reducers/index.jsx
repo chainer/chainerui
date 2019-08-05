@@ -5,9 +5,14 @@ import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
 import {
-  chartSizeOptions, pollingOptions, logsLimitOptions, defaultAxisConfig, CHART_DOWNLOAD_STATUS, keyOptions, fetchResultTypes,
+  chartSizeOptions,
+  pollingOptions,
+  logsLimitOptions,
+  defaultAxisConfig,
+  CHART_DOWNLOAD_STATUS,
+  keyOptions,
+  fetchResultTypes,
 } from '../constants';
-
 
 const updatePartialState = (state, action, keyId, fn) => {
   const partialState = fn(state[keyId], action);
@@ -143,7 +148,6 @@ const resultsReducer = (state = {}, action) => {
   }
 };
 
-
 const assetsReducer = (state = [], action) => {
   switch (action.type) {
     case ActionTypes.RESULT_ASSET_SUCCESS:
@@ -157,13 +161,11 @@ const assetsReducer = (state = [], action) => {
   }
 };
 
-
 const entitiesReducer = combineReducers({
   projects: projectsReducer,
   results: resultsReducer,
   assets: assetsReducer,
 });
-
 
 const fetchStateReducer = (state = {}, action) => {
   switch (action.type) {
@@ -191,7 +193,6 @@ const fetchStateReducer = (state = {}, action) => {
       return state;
   }
 };
-
 
 const chartDownloadStatusReducer = (state = CHART_DOWNLOAD_STATUS.NONE, action) => {
   switch (action.type) {
@@ -246,7 +247,9 @@ const statsReducer = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, actio
         const argKeySet = {};
         const logKeySet = {};
         resultsList.forEach((result) => {
-          result.args.forEach((arg) => { argKeySet[arg.key] = true; });
+          result.args.forEach((arg) => {
+            argKeySet[arg.key] = true;
+          });
           result.logs.forEach((log) => {
             Object.keys(log.logDict).forEach((key) => {
               logKeySet[key] = true;
@@ -279,15 +282,8 @@ const statusReducer = combineReducers({
   stats: statsReducer,
 });
 
-
 const axisConfigReducer = (state = {}, action) => {
-  const {
-    logKey,
-    scale = 'linear',
-    xAxisKey,
-    rangeType = 'auto',
-    isMin, rangeNumber,
-  } = action;
+  const { logKey, scale = 'linear', xAxisKey, rangeType = 'auto', isMin, rangeNumber } = action;
   const { logKeysConfig = {}, scaleRange = {} } = state;
   const idx = isMin ? 0 : 1;
   const rangeConfig = scaleRange[scale] || {};
@@ -353,7 +349,6 @@ const axesConfigReducer = (state = defaultAxisConfig, action) => {
   return state;
 };
 
-
 const resultsConfigReducer = (state = {}, action) => {
   const { resultId } = action;
   switch (action.type) {
@@ -379,10 +374,7 @@ const resultsConfigReducer = (state = {}, action) => {
       return state;
     case ActionTypes.ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE:
       if (resultId) {
-        const {
-          knownTrainInfoKeysConfig = {},
-          knownContentKeysConfig = {},
-        } = action;
+        const { knownTrainInfoKeysConfig = {}, knownContentKeysConfig = {} } = action;
         const resultConfig = state[resultId] || { hidden: false };
         const { assetsTableState = {} } = resultConfig;
         return {
@@ -404,7 +396,6 @@ const resultsConfigReducer = (state = {}, action) => {
       return state;
   }
 };
-
 
 const linesConfigReducer = (state = {}, action) => {
   const { line, lineKey } = action;
@@ -469,7 +460,9 @@ const projectsConfigReducer = (state = {}, action) => {
   if (projectId) {
     switch (action.type) {
       case ActionTypes.PROJECT_CONFIG_RESET:
-        return updatePartialState(state, action, projectId, () => projectConfigReducer(undefined, action));
+        return updatePartialState(state, action, projectId, () =>
+          projectConfigReducer(undefined, action)
+        );
       default:
         return updatePartialState(state, action, projectId, projectConfigReducer);
     }
@@ -477,7 +470,6 @@ const projectsConfigReducer = (state = {}, action) => {
 
   return state;
 };
-
 
 const defaultGlobalState = {
   pollingRate: pollingOptions[1].value,
@@ -489,7 +481,11 @@ const defaultGlobalState = {
 
 const globalConfigReducer = (state = defaultGlobalState, action) => {
   const {
-    pollingRate, chartSize, logsLimit, isResultNameAlignRight, highlightTableAndChart,
+    pollingRate,
+    chartSize,
+    logsLimit,
+    isResultNameAlignRight,
+    highlightTableAndChart,
   } = action;
   switch (action.type) {
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
@@ -522,12 +518,10 @@ const globalConfigReducer = (state = defaultGlobalState, action) => {
   }
 };
 
-
 const configReducer = combineReducers({
   projectsConfig: projectsConfigReducer,
   global: globalConfigReducer,
 });
-
 
 const currentStoreVersion = 20190516.0;
 
@@ -538,7 +532,7 @@ const persistConfig = {
   migrate: (restoredState) => {
     // eslint-disable-next-line no-underscore-dangle
     const persist = restoredState ? restoredState._persist : {};
-    const restoredVersion = (persist.version === undefined) ? -1 : persist.version;
+    const restoredVersion = persist.version === undefined ? -1 : persist.version;
     if (restoredVersion < currentStoreVersion) {
       // ignore any restored state whoes version is older than currentStoreVersion
       return Promise.resolve(undefined);

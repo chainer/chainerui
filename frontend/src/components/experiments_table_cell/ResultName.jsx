@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 import { Input } from 'reactstrap';
 
 import * as uiPropTypes from '../../store/uiPropTypes';
-import {
-  getRelativeResultPathName,
-  displayResultNameFull,
-} from '../../utils';
+import { getRelativeResultPathName, displayResultNameFull } from '../../utils';
 
 class ResultName extends React.Component {
   constructor(props) {

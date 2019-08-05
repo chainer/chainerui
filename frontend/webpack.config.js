@@ -62,9 +62,7 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
               parser: 'postcss-scss',
-              plugins: [
-                require('autoprefixer')(),
-              ],
+              plugins: [require('autoprefixer')()],
             },
           },
         ],
@@ -118,19 +116,22 @@ module.exports = {
       title: 'ChainerUI',
       template: 'template.ejs',
       favicon: 'src/favicon.ico',
-      minify: NODE_ENV === 'production' ? {
-        collapseBooleanAttributes: true,
-        collapseInlineTagWhitespace: true,
-        collapseWhitespace: true,
-        minifyCSS: true,
-        minifyJS: true,
-        removeComments: true,
-        removeScriptTypeAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        sortAttributes: true,
-        sortClassName: true,
-        useShortDoctype: true,
-      } : null,
+      minify:
+        NODE_ENV === 'production'
+          ? {
+              collapseBooleanAttributes: true,
+              collapseInlineTagWhitespace: true,
+              collapseWhitespace: true,
+              minifyCSS: true,
+              minifyJS: true,
+              removeComments: true,
+              removeScriptTypeAttributes: true,
+              removeStyleLinkTypeAttributes: true,
+              sortAttributes: true,
+              sortClassName: true,
+              useShortDoctype: true,
+            }
+          : null,
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',

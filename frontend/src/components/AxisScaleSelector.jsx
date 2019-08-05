@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Select from './FormControl/Select';
 
-
 const scaleOptions = ['linear', 'log'];
 
 const AxisScaleSelector = (props) => {
@@ -11,13 +10,7 @@ const AxisScaleSelector = (props) => {
   const handleChangeAxisKey = (e) => {
     onChange(e.target.value);
   };
-  return (
-    <Select
-      value={scale}
-      onChange={handleChangeAxisKey}
-      values={scaleOptions}
-    />
-  );
+  return <Select value={scale} onChange={handleChangeAxisKey} values={scaleOptions} />;
 };
 
 AxisScaleSelector.propTypes = {

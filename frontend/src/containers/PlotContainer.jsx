@@ -6,14 +6,18 @@ import { Container } from 'reactstrap';
 import * as uiPropTypes from '../store/uiPropTypes';
 import {
   getProject,
-  getResultList, updateResult, clearResultList,
+  getResultList,
+  updateResult,
+  clearResultList,
   resetProjectConfig,
   updateLineInAxis,
-  updateAxisScale, toggleLogKeySelect,
+  updateAxisScale,
+  toggleLogKeySelect,
   updateResultSelect,
   updateResultsConfigSelect,
   updateXAxisKey,
-  updateAxisScaleRangeType, updateAxisScaleRangeNumber,
+  updateAxisScaleRangeType,
+  updateAxisScaleRangeNumber,
   createCommand,
   updateTableExpanded,
   updateTableColumnsVisibility,
@@ -30,7 +34,6 @@ import ResultTypeSelector from '../components/ResultTypeSelector';
 import { defaultProjectStatus, defaultProjectConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
 
-
 class PlotContainer extends React.Component {
   componentDidMount() {
     const { projectId, globalConfig, projectConfig } = this.props;
@@ -39,8 +42,16 @@ class PlotContainer extends React.Component {
 
     this.props.clearResultList();
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(this.props.getResultList, pollingRate, projectId, logsLimit, resultType);
-    this.handleExperimentsTableColumnsVisibilityUpdate = this.handleExperimentsTableColumnsVisibilityUpdate.bind(this);
+    this.resultsPollingTimer = startPolling(
+      this.props.getResultList,
+      pollingRate,
+      projectId,
+      logsLimit,
+      resultType
+    );
+    this.handleExperimentsTableColumnsVisibilityUpdate = this.handleExperimentsTableColumnsVisibilityUpdate.bind(
+      this
+    );
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,9 +63,19 @@ class PlotContainer extends React.Component {
     const nextResultType = nextProps.projectConfig.resultType;
     const currentResultType = projectConfig.resultType;
 
-    if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit || currentResultType !== nextResultType) {
+    if (
+      currentPollingRate !== nextPollingRate ||
+      currentLogsLimit !== nextLogsLimit ||
+      currentResultType !== nextResultType
+    ) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.getResultList, nextPollingRate, projectId, nextLogsLimit, nextResultType);
+      this.resultsPollingTimer = startPolling(
+        this.props.getResultList,
+        nextPollingRate,
+        projectId,
+        nextLogsLimit,
+        nextResultType
+      );
     }
   }
 
@@ -63,19 +84,11 @@ class PlotContainer extends React.Component {
   }
 
   handleExperimentsTableColumnsVisibilityUpdate(hiddenLogKeys, hiddenArgKeys) {
-    const {
-      projectId,
-      projectConfig,
-    } = this.props;
+    const { projectId, projectConfig } = this.props;
     const { tableState } = projectConfig;
     const { isGrouped = false } = tableState;
 
-    this.props.updateTableColumnsVisibility(
-      projectId,
-      hiddenLogKeys,
-      hiddenArgKeys,
-      isGrouped
-    );
+    this.props.updateTableColumnsVisibility(projectId, hiddenLogKeys, hiddenArgKeys, isGrouped);
   }
 
   render() {
@@ -95,10 +108,7 @@ class PlotContainer extends React.Component {
         <Container fluid>
           <div className="row">
             <div className="col-md-4 col-lg-3 order-12 order-md-1">
-              <BreadcrumbLink
-                globalConfig={globalConfig}
-                project={project}
-              />
+              <BreadcrumbLink globalConfig={globalConfig} project={project} />
               <SideBar
                 project={project}
                 results={results}
@@ -189,11 +199,7 @@ PlotContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   const projectId = Number(ownProps.params.projectId);
-  const {
-    entities,
-    status,
-    config,
-  } = state;
+  const { entities, status, config } = state;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId] || { id: projectId };
   const projectStatus = status.projectsStatus[projectId] || defaultProjectStatus;
@@ -211,23 +217,26 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  getProject,
-  getResultList,
-  updateResult,
-  clearResultList,
-  createCommand,
-  resetProjectConfig,
-  updateLineInAxis,
-  updateAxisScale,
-  toggleLogKeySelect,
-  updateResultSelect,
-  updateResultsConfigSelect,
-  updateXAxisKey,
-  updateAxisScaleRangeType,
-  updateAxisScaleRangeNumber,
-  updateTableExpanded,
-  updateTableColumnsVisibility,
-  updateChartDownloadStatus,
-  updateTargetResultType,
-})(PlotContainer);
+export default connect(
+  mapStateToProps,
+  {
+    getProject,
+    getResultList,
+    updateResult,
+    clearResultList,
+    createCommand,
+    resetProjectConfig,
+    updateLineInAxis,
+    updateAxisScale,
+    toggleLogKeySelect,
+    updateResultSelect,
+    updateResultsConfigSelect,
+    updateXAxisKey,
+    updateAxisScaleRangeType,
+    updateAxisScaleRangeNumber,
+    updateTableExpanded,
+    updateTableColumnsVisibility,
+    updateChartDownloadStatus,
+    updateTargetResultType,
+  }
+)(PlotContainer);

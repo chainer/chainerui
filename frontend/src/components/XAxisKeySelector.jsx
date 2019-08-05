@@ -4,22 +4,13 @@ import PropTypes from 'prop-types';
 import * as uiPropTypes from '../store/uiPropTypes';
 import Select from './FormControl/Select';
 
-
 const XAxisKeySelector = (props) => {
-  const {
-    projectId, stats, value, onChange,
-  } = props;
+  const { projectId, stats, value, onChange } = props;
   const { xAxisKeys } = stats;
   const handleChangeXAxisKey = (e) => {
     onChange(projectId, e.target.value);
   };
-  return (
-    <Select
-      value={value}
-      onChange={handleChangeXAxisKey}
-      values={xAxisKeys}
-    />
-  );
+  return <Select value={value} onChange={handleChangeXAxisKey} values={xAxisKeys} />;
 };
 
 XAxisKeySelector.propTypes = {

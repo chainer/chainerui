@@ -4,7 +4,6 @@ import { FormGroup, Label, Input } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 
-
 class YAxisLogKeySelectorRow extends React.Component {
   constructor(props) {
     super(props);
@@ -32,8 +31,7 @@ class YAxisLogKeySelectorRow extends React.Component {
             type="checkbox"
             checked={logKeyLeftConfig.selected}
             onChange={this.handleSelectLeftToggle}
-          />
-          {' '}
+          />{' '}
           {logKey}
         </Label>
         <Input

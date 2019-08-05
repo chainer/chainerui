@@ -1,7 +1,6 @@
 import { CALL_API } from '../middleware/api';
 import { fetchResultTypes } from '../constants/index';
 
-
 // projects API
 
 export const PROJECT_LIST_REQUEST = 'PROJECT_LIST_REQUEST';
@@ -58,7 +57,6 @@ export const deleteProject = (projectId) => {
     },
   };
 };
-
 
 // results API
 
@@ -142,7 +140,13 @@ export const COMMAND_CREATE_REQUEST = 'COMMAND_CREATE_REQUEST';
 export const COMMAND_CREATE_SUCCESS = 'COMMAND_CREATE_SUCCESS';
 export const COMMAND_CREATE_FAILURE = 'COMMAND_CREATE_FAILURE';
 
-export const createCommand = (projectId, resultId, commandName, requestBody = null, schedule = null) => {
+export const createCommand = (
+  projectId,
+  resultId,
+  commandName,
+  requestBody = null,
+  schedule = null
+) => {
   if (!Number.isInteger(resultId)) {
     throw new Error('Result id is invalid.');
   }
@@ -161,7 +165,6 @@ export const createCommand = (projectId, resultId, commandName, requestBody = nu
   };
 };
 
-
 // config
 
 export const PROJECT_CONFIG_RESET = 'PROJECT_CONFIG_RESET';
@@ -177,7 +180,6 @@ export const updateTargetResultType = (projectId, resultType) => ({
   projectId,
   resultType,
 });
-
 
 // axis config
 
@@ -201,7 +203,13 @@ export const updateXAxisKey = (projectId, xAxisKey) => ({
   xAxisKey,
 });
 
-export const updateAxisScaleRangeType = (projectId, axisName, scale, isMin, rangeType = 'auto') => ({
+export const updateAxisScaleRangeType = (
+  projectId,
+  axisName,
+  scale,
+  isMin,
+  rangeType = 'auto'
+) => ({
   type: AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE,
   projectId,
   axisName,
@@ -225,7 +233,6 @@ export const toggleLogKeySelect = (projectId, axisName, logKey) => ({
   axisName,
   logKey,
 });
-
 
 // results config
 
@@ -267,7 +274,12 @@ export const updateTableExpanded = (projectId, expanded) => ({
 });
 
 export const TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
-export const updateTableColumnsVisibility = (projectId, knownLogKeysConfig, knownArgKeysConfig, isGrouped) => ({
+export const updateTableColumnsVisibility = (
+  projectId,
+  knownLogKeysConfig,
+  knownArgKeysConfig,
+  isGrouped
+) => ({
   type: TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
   projectId,
   knownLogKeysConfig,
@@ -275,8 +287,14 @@ export const updateTableColumnsVisibility = (projectId, knownLogKeysConfig, know
   isGrouped,
 });
 
-export const ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
-export const updateAssetsTableColumnsVisibility = (projectId, resultId, knownTrainInfoKeysConfig, knownContentKeysConfig) => ({
+export const ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE =
+  'ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
+export const updateAssetsTableColumnsVisibility = (
+  projectId,
+  resultId,
+  knownTrainInfoKeysConfig,
+  knownContentKeysConfig
+) => ({
   type: ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
   projectId,
   resultId,
@@ -289,7 +307,8 @@ export const updateAssetsTableColumnsVisibility = (projectId, resultId, knownTra
 export const GLOBAL_CONFIG_POLLING_RATE_UPDATE = 'GLOBAL_CONFIG_POLLING_RATE_UPDATE';
 export const GLOBAL_CONFIG_CHART_SIZE_UPDATE = 'GLOBAL_CONFIG_CHART_SIZE_UPDATE';
 export const GLOBAL_CONFIG_LOGS_LIMIT_UPDATE = 'GLOBAL_CONFIG_LOGS_LIMIT_UPDATE';
-export const GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE = 'GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE';
+export const GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE =
+  'GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE';
 export const GLOBAL_CONFIG_HIGHLIGHT_TABLE_AND_CHART = 'GLOBAL_CONFIG_HIGHLIGHT_TABLE_AND_CHART';
 
 export const updateGlobalPollingRate = (pollingRate) => ({

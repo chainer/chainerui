@@ -4,13 +4,10 @@ import { connect } from 'react-redux';
 import { Container, Row, Col } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
-import {
-  getProjectList, updateProject, deleteProject,
-} from '../actions';
+import { getProjectList, updateProject, deleteProject } from '../actions';
 import NavigationBar from './NavigationBar';
 import NoProjects from '../components/projects/NoProjects';
 import Projects from '../components/projects/Projects';
-
 
 class ProjectsContainer extends React.Component {
   componentDidMount() {
@@ -18,9 +15,7 @@ class ProjectsContainer extends React.Component {
   }
 
   render() {
-    const {
-      projects,
-    } = this.props;
+    const { projects } = this.props;
     return (
       <div className="chainerui-container">
         <NavigationBar />
@@ -52,17 +47,18 @@ ProjectsContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  const {
-    entities,
-  } = state;
+  const { entities } = state;
   const { projects } = entities;
   return {
     projects,
   };
 };
 
-export default connect(mapStateToProps, {
-  getProjectList,
-  updateProject,
-  deleteProject,
-})(ProjectsContainer);
+export default connect(
+  mapStateToProps,
+  {
+    getProjectList,
+    updateProject,
+    deleteProject,
+  }
+)(ProjectsContainer);

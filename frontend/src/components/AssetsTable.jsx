@@ -6,16 +6,11 @@ import * as uiPropTypes from '../store/uiPropTypes';
 
 import TableConfigurator from './TableConfigurator';
 
-import {
-  sortKeys,
-} from '../utils';
+import { sortKeys } from '../utils';
 
 const AssetsTable = (props) => {
   const { assets, onAssetsTableColumnsVisibilityUpdate, tableState } = props;
-  const {
-    knownTrainInfoKeysConfig = {},
-    knownContentKeysConfig = {},
-  } = tableState;
+  const { knownTrainInfoKeysConfig = {}, knownContentKeysConfig = {} } = tableState;
 
   const trainInfoKeys = assets.map((asset) => Object.keys(asset.train_info)).flat();
   const uniqueTrainInfoKeys = Array.from(new Set(trainInfoKeys));
@@ -46,22 +41,9 @@ const AssetsTable = (props) => {
         return null;
       }
       if (selectedContent.name.endsWith('.wav')) {
-        return (
-          <audio
-            src={selectedContent.uri}
-            alt={selectedContent.tag}
-            controls
-          />
-        );
+        return <audio src={selectedContent.uri} alt={selectedContent.tag} controls />;
       }
-      return (
-        <img
-          src={selectedContent.uri}
-          alt={selectedContent.tag}
-          width="80%"
-          height="auto"
-        />
-      );
+      return <img src={selectedContent.uri} alt={selectedContent.tag} width="80%" height="auto" />;
     },
     show: !(knownContentKeysConfig[k] || {}).hidden,
   }));
@@ -94,10 +76,7 @@ const AssetsTable = (props) => {
 
       <TableConfigurator
         columnHeaders={columnHeaders}
-        keyConfigs={[
-          knownTrainInfoKeysConfig,
-          knownContentKeysConfig,
-        ]}
+        keyConfigs={[knownTrainInfoKeysConfig, knownContentKeysConfig]}
         onTableColumnsVisibilityUpdate={onAssetsTableColumnsVisibilityUpdate}
       />
     </div>
