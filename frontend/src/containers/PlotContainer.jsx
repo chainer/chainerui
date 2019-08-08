@@ -204,10 +204,13 @@ const mapStateToProps = (state, ownProps) => {
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
   const globalConfig = config.global;
   const { stats } = status;
+
+  const filteredResults = { ...results }; // TODO: filtering
+
   return {
     projectId,
     project,
-    results,
+    results: filteredResults,
     projectStatus,
     projectConfig,
     globalConfig,
