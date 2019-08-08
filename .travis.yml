@@ -8,14 +8,17 @@ matrix:
     - name: "Ubuntu16.04 Py35"
       dist: xenial
       python: "3.5"
-    - name: "Ubuntu16.04 Py36, plain install"
-      dist: xenial
-      python: "3.6"
-      env:
-        - CHAINERUI_PLAIN_INSTALL=1
     - name: "Ubuntu16.04 Py36"
       dist: xenial
       python: "3.6"
+    - name: "Ubuntu16.04 Py37, plain install"
+      dist: xenial
+      python: "3.7"
+      env:
+        - CHAINERUI_PLAIN_INSTALL=1
+    - name: "Ubuntu16.04 Py37"
+      dist: xenial
+      python: "3.7"
       env:
         - CHAINERUI_COVERAGE_REPORT=1
         - CHAINERUI_DEPLOY_JOB=1

@@ -299,7 +299,13 @@ def log_reporter():
     with new one.
 
     The callback function is expected to use with ``postprocess``
-    option of Chainer ``LogReport`` extension.
+    option of Chainer ``LogReport`` extension::
+
+       >>> chainerui.init()
+       >>>
+       >>> trainer = chainer.training.Trainer(...)
+       >>> trainer.extend(
+       >>>     extensions.LogReport(postprocess=chainerui.log_reporter()))
 
     Returns:
         func: function.
@@ -313,3 +319,26 @@ def log_reporter():
             _client.post_log([stats_cpu])
 
     return PostProcess()
+
+
+def log(value):
+    """Send log
+
+    Send log data and will be shown ad training log on web browser.
+
+    Example::
+
+       >>> chainerui.init()
+       >>> # ...
+       >>> stats = {
+       >>>     'epoch': epoch,
+       >>>     'train/loss': loss,
+       >>>     }
+       >>> chainerui.log(stats)
+
+    Args:
+        value (dict): target log.
+    """
+    if _client is None:
+        return
+    _client.post_log([value])

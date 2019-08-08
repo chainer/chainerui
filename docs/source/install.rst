@@ -6,7 +6,7 @@ Installation Guide
 Dependencies
 ------------
 
-ChainerUI is developed under Python 2.7+, 3.5+, 3.6+. For other requirements, see ``requirements.txt``.
+ChainerUI is developed under Python 2.7+, 3.5+, 3.6+, 3.7+. For other requirements, see ``requirements.txt``.
 
 .. literalinclude:: ../../requirements.txt
   :caption: requirements.txt

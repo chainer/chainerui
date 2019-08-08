@@ -43,6 +43,18 @@ Asset summaries
 .. automethod:: chainerui.summary._Reporter.text
 
 
+.. _module_web_client:
+
+Web client
+----------
+
+.. _module_web_client_log:
+
+.. autofunction:: chainerui.init
+.. autofunction:: chainerui.log_reporter
+.. autofunction:: chainerui.log
+
+
 Utilities
 ---------
 
