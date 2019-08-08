@@ -142,6 +142,7 @@ class PlotContainer extends React.Component {
                 onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
                 onResultSelect={this.props.updateResultSelect}
+                onResultFilterUpdate={this.props.updateResultFilter}
                 onCommandSubmit={this.props.createCommand}
                 onTableExpandedUpdate={this.props.updateTableExpanded}
                 onTableColumnsVisibilityUpdate={this.handleExperimentsTableColumnsVisibilityUpdate}

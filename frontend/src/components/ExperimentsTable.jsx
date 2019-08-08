@@ -32,6 +32,7 @@ const ExperimentsTable = (props) => {
     onResultsConfigSelectUpdate,
     onResultUpdate,
     onResultSelect,
+    onResultFilterUpdate,
     onCommandSubmit,
     onTableExpandedUpdate,
     onTableColumnsVisibilityUpdate,
@@ -131,7 +132,7 @@ const ExperimentsTable = (props) => {
         return null;
       },
       minWidth: 250,
-      Filter: <ResultFilter filterKey="name" />,
+      Filter: <ResultFilter projectId={project.id} filterKey="name" onResultFilterUpdate={onResultFilterUpdate} />,
     },
   ];
   if (isGrouped) {
@@ -139,7 +140,7 @@ const ExperimentsTable = (props) => {
       Header: '',
       id: 'group',
       accessor: (p) => getGrandParentDirectoryName(p),
-      Filter: <ResultFilter filterKey="group" />,
+      Filter: <ResultFilter projectId={project.id} filterKey="group" onResultFilterUpdate={onResultFilterUpdate} />,
     });
   }
   const groupedKey = isGrouped ? ['group'] : [];
@@ -270,6 +271,7 @@ ExperimentsTable.propTypes = {
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
   onResultSelect: PropTypes.func.isRequired,
+  onResultFilterUpdate: PropTypes.func.isRequired,
   onCommandSubmit: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired,
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,

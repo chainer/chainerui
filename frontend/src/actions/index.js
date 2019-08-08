@@ -252,6 +252,7 @@ export const RESULT_FILTER_UPDATE = 'RESULT_FILTER_UPDATE';
 
 export const updateResultFilter = (projectId, filterKey, filterText) => ({
   type: RESULT_FILTER_UPDATE,
+  projectId,
   filterKey,
   filterText,
 });
