@@ -12,7 +12,7 @@ export interface Projects {
 
 export type ResultId = number;
 
-interface Log {
+export interface Log {
   resultId?: ResultId;
   id?: number;
   logDict: { [k: string]: any };
@@ -122,7 +122,7 @@ export interface LogKeyConfig {
   selected: boolean;
 }
 
-interface LogKeysConfig {
+export interface LogKeysConfig {
   [k: string]: LogKeyConfig;
 }
 
@@ -137,6 +137,7 @@ export interface AxisConfig {
       rangeTypes: string[];
     };
   };
+  xAxisKey?: string;
 }
 
 interface KnownKeysConfig {
