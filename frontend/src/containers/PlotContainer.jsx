@@ -136,6 +136,7 @@ class PlotContainer extends React.Component {
                 project={project}
                 results={results}
                 resultsStatus={projectStatus.resultsStatus}
+                resultFilter={projectStatus.resultFilter}
                 stats={stats}
                 projectConfig={projectConfig}
                 globalConfig={globalConfig}

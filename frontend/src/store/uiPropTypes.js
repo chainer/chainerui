@@ -161,6 +161,8 @@ export const resultStatus = PropTypes.shape({
 
 export const resultsStatus = PropTypes.objectOf(resultStatus);
 
+export const resultFilter = PropTypes.objectOf(PropTypes.string);
+
 export const projectStatus = PropTypes.shape({
   chartDownloadStatus: PropTypes.oneOf(Object.values(CHART_DOWNLOAD_STATUS)),
   resultsStatus,

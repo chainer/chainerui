@@ -26,6 +26,7 @@ const ExperimentsTable = (props) => {
     project,
     results,
     resultsStatus,
+    resultFilter,
     stats,
     projectConfig,
     globalConfig,
@@ -132,7 +133,7 @@ const ExperimentsTable = (props) => {
         return null;
       },
       minWidth: 250,
-      Filter: <ResultFilter projectId={project.id} filterKey="name" onResultFilterUpdate={onResultFilterUpdate} />,
+      Filter: <ResultFilter projectId={project.id} filterKey="name" filterText={resultFilter.name} onResultFilterUpdate={onResultFilterUpdate} />,
     },
   ];
   if (isGrouped) {
@@ -140,7 +141,7 @@ const ExperimentsTable = (props) => {
       Header: '',
       id: 'group',
       accessor: (p) => getGrandParentDirectoryName(p),
-      Filter: <ResultFilter projectId={project.id} filterKey="group" onResultFilterUpdate={onResultFilterUpdate} />,
+      Filter: <ResultFilter projectId={project.id} filterKey="group" filterText={resultFilter.group} onResultFilterUpdate={onResultFilterUpdate} />,
     });
   }
   const groupedKey = isGrouped ? ['group'] : [];
@@ -265,6 +266,7 @@ ExperimentsTable.propTypes = {
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
   resultsStatus: uiPropTypes.resultsStatus,
+  resultFilter: uiPropTypes.resultFilter,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   stats: uiPropTypes.stats.isRequired,
@@ -279,6 +281,7 @@ ExperimentsTable.propTypes = {
 
 ExperimentsTable.defaultProps = {
   resultsStatus: {},
+  resultFilter: {},
 };
 
 export default ExperimentsTable;
