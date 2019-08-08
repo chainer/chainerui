@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/camelcase */
+
 import PropTypes from 'prop-types';
 import { CHART_DOWNLOAD_STATUS } from '../constants';
 
