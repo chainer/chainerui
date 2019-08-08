@@ -2,7 +2,7 @@ import path from 'path';
 import { lineColorGenerator } from './color';
 
 export * from './color';
-export * from './command.jsx';
+export * from './command';
 export * from './download';
 export * from './polling';
 export * from './url';
