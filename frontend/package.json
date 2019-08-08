@@ -8,6 +8,7 @@
     "build:watch": "webpack -w --progress --profile",
     "serve": "webpack-dev-server --host 0.0.0.0 --output-public-path / --hot --progress --profile",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "typecheck": "tsc --noEmit",
     "format:others": "prettier --write '**/*.{html,json,css}'",
     "format:scripts": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
     "format": "run-p format:*"
