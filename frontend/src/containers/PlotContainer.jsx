@@ -191,6 +191,16 @@ PlotContainer.propTypes = {
   updateTargetResultType: PropTypes.func.isRequired,
 };
 
+const filterResults = (results, resultFilter) => {
+  const filteredResults = Object.keys(results).reduce((pre, key) => {
+    const result = results[key];
+    // TODO: filter
+    const nextResults = { ...pre, [key]: result };
+    return nextResults;
+  }, {});
+  return filteredResults;
+};
+
 const mapStateToProps = (state, ownProps) => {
   const projectId = Number(ownProps.params.projectId);
   const {
@@ -203,9 +213,10 @@ const mapStateToProps = (state, ownProps) => {
   const projectStatus = status.projectsStatus[projectId] || defaultProjectStatus;
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
   const globalConfig = config.global;
+  const { resultFilter } = projectStatus;
   const { stats } = status;
 
-  const filteredResults = { ...results }; // TODO: filtering
+  const filteredResults = filterResults(results, resultFilter);
 
   return {
     projectId,
