@@ -4,30 +4,21 @@ import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import TruncatedResultName from './TruncatedResultName';
-import {
-  displayProjectName,
-  urlForPlot,
-  urlForResultDetail,
-} from '../utils';
-
+import { displayProjectName, urlForPlot, urlForResultDetail } from '../utils';
 
 const BreadcrumbLink = (props) => {
   const { globalConfig, project, result } = props;
   const { isResultNameAlignRight } = globalConfig;
   const items = [
-    (
-      <BreadcrumbItem key="home">
-        <IndexLink to="/">Home</IndexLink>
-      </BreadcrumbItem>
-    ),
+    <BreadcrumbItem key="home">
+      <IndexLink to="/">Home</IndexLink>
+    </BreadcrumbItem>,
   ];
 
   if (project && project.id) {
     items.push(
       <BreadcrumbItem key="plot">
-        <Link to={urlForPlot(project.id)}>
-          {displayProjectName(project)}
-        </Link>
+        <Link to={urlForPlot(project.id)}>{displayProjectName(project)}</Link>
       </BreadcrumbItem>
     );
   }
@@ -47,11 +38,7 @@ const BreadcrumbLink = (props) => {
     );
   }
 
-  return (
-    <Breadcrumb className="breadcrumb-link p-0">
-      {items}
-    </Breadcrumb>
-  );
+  return <Breadcrumb className="breadcrumb-link p-0">{items}</Breadcrumb>;
 };
 
 BreadcrumbLink.propTypes = {

@@ -1,18 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  FormGroup, Label, Input,
-} from 'reactstrap';
+import { FormGroup, Label, Input } from 'reactstrap';
 
 import * as uiPropTypes from '../../store/uiPropTypes';
 import Select from '../FormControl/Select';
 import CommandFormBase from './CommandFormBase';
 
-
 const hyperparamFromLastCommand = (commands) => {
-  const lastCommand = commands.filter((command) => (
-    command.response && command.response.body && command.response.body.hyperparam
-  ))[0];
+  const lastCommand = commands.filter(
+    (command) => command.response && command.response.body && command.response.body.hyperparam
+  )[0];
   if (lastCommand) {
     return lastCommand.response.body.hyperparam;
   }
@@ -46,7 +43,7 @@ class HyperparamsAdjustForm extends React.Component {
     this.setState({
       hyperparam: {
         ...hyperparam,
-        [name]: (value == null || value === '') ? null : Number(value),
+        [name]: value == null || value === '' ? null : Number(value),
       },
     });
   }

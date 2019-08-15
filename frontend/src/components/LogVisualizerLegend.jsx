@@ -1,15 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Row, Col, Input, FormGroup,
-} from 'reactstrap';
+import { Row, Col, Input, FormGroup } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import TruncatedResultName from './TruncatedResultName';
-import {
-  line2key,
-  line2dataKey,
-} from '../utils';
+import { line2key, line2dataKey } from '../utils';
 
 class LogVisualizerLegendItem extends React.Component {
   constructor(props) {
@@ -19,9 +14,7 @@ class LogVisualizerLegendItem extends React.Component {
   }
 
   handleLineVisibilityUpdate(e) {
-    const {
-      project, axisName, line, onAxisConfigLineUpdate,
-    } = this.props;
+    const { project, axisName, line, onAxisConfigLineUpdate } = this.props;
     const { config } = line;
     const { checked } = e.target;
     const newLine = {
@@ -37,11 +30,19 @@ class LogVisualizerLegendItem extends React.Component {
 
   render() {
     const {
-      isDisplay, project, result, resultStatus, line, isResultNameAlignRight, highlightTableAndChart,
+      isDisplay,
+      project,
+      result,
+      resultStatus,
+      line,
+      isResultNameAlignRight,
+      highlightTableAndChart,
       onResultSelect,
     } = this.props;
     const { logKey, config } = line;
-    const selected = highlightTableAndChart && (resultStatus.selected === true || resultStatus.selected === logKey);
+    const selected =
+      highlightTableAndChart &&
+      (resultStatus.selected === true || resultStatus.selected === logKey);
     const highlightEvents = {
       onMouseEnter: () => {
         onResultSelect(project.id, result.id, logKey);
@@ -62,7 +63,7 @@ class LogVisualizerLegendItem extends React.Component {
         {...highlightEvents}
       >
         <Row>
-          { isDisplay ? (
+          {isDisplay ? (
             <Col xs="auto" className="px-1">
               <FormGroup check>
                 <Input
@@ -80,9 +81,7 @@ class LogVisualizerLegendItem extends React.Component {
               isResultNameAlignRight={isResultNameAlignRight}
             />
           </Col>
-          <Col className="text-truncate px-1">
-            {logKey}
-          </Col>
+          <Col className="text-truncate px-1">{logKey}</Col>
         </Row>
       </li>
     );
@@ -110,15 +109,22 @@ LogVisualizerLegendItem.defaultProps = {
 const LogVisualizerLegend = (props) => {
   const {
     isDisplay,
-    project, results, resultsStatus, lines, maxHeight, isResultNameAlignRight, highlightTableAndChart,
-    onResultSelect, onAxisConfigLineUpdate,
+    project,
+    results,
+    resultsStatus,
+    lines,
+    maxHeight,
+    isResultNameAlignRight,
+    highlightTableAndChart,
+    onResultSelect,
+    onAxisConfigLineUpdate,
   } = props;
 
   return (
     <div className="log-visualizer-legend" style={{ maxHeight }}>
       <div className="card">
         <ul className="list-group list-group-flush small text-muted">
-          {Object.keys(lines).flatMap((axisName) => (
+          {Object.keys(lines).flatMap((axisName) =>
             lines[axisName].map((line) => (
               <LogVisualizerLegendItem
                 isDisplay={isDisplay}
@@ -134,7 +140,7 @@ const LogVisualizerLegend = (props) => {
                 onAxisConfigLineUpdate={onAxisConfigLineUpdate}
               />
             ))
-          ))}
+          )}
         </ul>
       </div>
     </div>

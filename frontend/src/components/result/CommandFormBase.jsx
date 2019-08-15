@@ -1,12 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button, Form,
-  Modal, ModalHeader, ModalBody, ModalFooter,
-} from 'reactstrap';
+import { Button, Form, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { SCHEDULE_NOW, SCHEDULE_CUSTOM } from '../../constants';
 import CommandScheduleForm from './CommandScheduleForm';
-
 
 const initialState = {
   disabled: false,
@@ -45,12 +41,9 @@ class CommandFormBase extends React.Component {
   }
 
   submitCommand() {
-    const {
-      onSubmit,
-      freezeTime,
-    } = this.props;
+    const { onSubmit, freezeTime } = this.props;
     const { scheduleType } = this.state;
-    const schedule = (scheduleType === SCHEDULE_CUSTOM) ? this.state.schedule : null;
+    const schedule = scheduleType === SCHEDULE_CUSTOM ? this.state.schedule : null;
 
     onSubmit(schedule);
     this.closeConfirmationModal();
@@ -81,24 +74,16 @@ class CommandFormBase extends React.Component {
   }
 
   render() {
-    const {
-      disabled, schedule, scheduleType, showConfirmationModal,
-    } = this.state;
-    const {
-      title, buttonLabel, children, confirmationMessage,
-    } = this.props;
+    const { disabled, schedule, scheduleType, showConfirmationModal } = this.state;
+    const { title, buttonLabel, children, confirmationMessage } = this.props;
     const confirmationTitle = this.props.confirmationTitle || title;
     return (
       <div className="card">
         <div className="card-body">
           <h5 className="card-title">{title}</h5>
           <Form onSubmit={this.handleSubmit}>
-            <Button
-              type="submit"
-              color="primary"
-              disabled={disabled}
-            >
-              { buttonLabel }
+            <Button type="submit" color="primary" disabled={disabled}>
+              {buttonLabel}
             </Button>
             <CommandScheduleForm
               schedule={schedule}
@@ -110,15 +95,16 @@ class CommandFormBase extends React.Component {
 
             <Modal isOpen={showConfirmationModal}>
               <ModalHeader>{confirmationTitle}</ModalHeader>
-              <ModalBody>
-                {confirmationMessage}
-              </ModalBody>
+              <ModalBody>{confirmationMessage}</ModalBody>
               <ModalFooter>
-                <Button color="secondary" onClick={this.closeConfirmationModal}>Cancel</Button>
-                <Button color="primary" onClick={this.submitCommand}>Submit</Button>
+                <Button color="secondary" onClick={this.closeConfirmationModal}>
+                  Cancel
+                </Button>
+                <Button color="primary" onClick={this.submitCommand}>
+                  Submit
+                </Button>
               </ModalFooter>
             </Modal>
-
           </Form>
         </div>
       </div>
@@ -134,10 +120,7 @@ CommandFormBase.propTypes = {
   confirmationMessage: PropTypes.node,
   freezeTime: PropTypes.number,
   onSubmit: PropTypes.func.isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]),
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
 };
 
 CommandFormBase.defaultProps = {

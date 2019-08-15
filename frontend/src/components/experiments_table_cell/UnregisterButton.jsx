@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button, Modal, ModalHeader, ModalBody, ModalFooter,
-} from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import * as uiPropTypes from '../../store/uiPropTypes';
-import {
-  displayResultNameFull,
-} from '../../utils';
+import { displayResultNameFull } from '../../utils';
 
 class UnregisterButton extends React.Component {
   constructor(props) {
@@ -21,9 +17,7 @@ class UnregisterButton extends React.Component {
   }
 
   handleUnregister() {
-    const {
-      project, result, onResultUpdate, onResultUnregistered,
-    } = this.props;
+    const { project, result, onResultUpdate, onResultUnregistered } = this.props;
     onResultUpdate(project.id, { ...result, isUnregistered: true });
     onResultUnregistered();
     this.toggleUnregisterModal();
@@ -40,17 +34,19 @@ class UnregisterButton extends React.Component {
     const { project, result } = this.props;
     return (
       <span>
-        <Button onClick={this.toggleUnregisterModal}>
-          Unregister
-        </Button>
+        <Button onClick={this.toggleUnregisterModal}>Unregister</Button>
         <Modal isOpen={showUnregisterModal}>
           <ModalHeader>Unregister a result</ModalHeader>
           <ModalBody>
             {`Are you sure to unregister ${displayResultNameFull(project, result)} ?`}
           </ModalBody>
           <ModalFooter>
-            <Button color="secondary" onClick={this.toggleUnregisterModal}>Cancel</Button>
-            <Button color="danger" onClick={this.handleUnregister}>Unregister</Button>
+            <Button color="secondary" onClick={this.toggleUnregisterModal}>
+              Cancel
+            </Button>
+            <Button color="danger" onClick={this.handleUnregister}>
+              Unregister
+            </Button>
           </ModalFooter>
         </Modal>
       </span>

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import * as uiPropTypes from '../store/uiPropTypes';
 import YAxisLogKeySelectorRow from './YAxisLogKeySelectorRow';
 
-
 class YAxisLogKeySelector extends React.Component {
   constructor(props) {
     super(props);
@@ -18,13 +17,8 @@ class YAxisLogKeySelector extends React.Component {
   }
 
   render() {
-    const {
-      axesConfig, stats,
-    } = this.props;
-    const {
-      yLeftAxis = {},
-      yRightAxis = {},
-    } = axesConfig;
+    const { axesConfig, stats } = this.props;
+    const { yLeftAxis = {}, yRightAxis = {} } = axesConfig;
     const { logKeysConfig: logKeysLeftConfig = {} } = yLeftAxis;
     const { logKeysConfig: logKeysRightConfig = {} } = yRightAxis;
     const { logKeys } = stats;
@@ -41,14 +35,11 @@ class YAxisLogKeySelector extends React.Component {
 
     return (
       <ul className="list-group list-group-flush">
-        <li className="list-group-item">
-          {axisLogKeySelectorRowElems}
-        </li>
+        <li className="list-group-item">{axisLogKeySelectorRowElems}</li>
       </ul>
     );
   }
 }
-
 
 YAxisLogKeySelector.propTypes = {
   projectId: uiPropTypes.projectId.isRequired,

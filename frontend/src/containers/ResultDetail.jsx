@@ -5,11 +5,7 @@ import { Link } from 'react-router';
 import { Container, Button } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
-import {
-  getProject,
-  getResult,
-  createCommand,
-} from '../actions';
+import { getProject, getResult, createCommand } from '../actions';
 import NavigationBar from './NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
 import ResultSummary from '../components/result/ResultSummary';
@@ -18,13 +14,18 @@ import Commands from '../components/result/Commands';
 import Snapshots from '../components/result/Snapshots';
 import { startPolling, stopPolling, urlForResultDetail } from '../utils';
 
-
 class ResultDetail extends React.Component {
   componentDidMount() {
     const { projectId, resultId, globalConfig } = this.props;
     const { pollingRate, logsLimit } = globalConfig;
     this.props.getProject(projectId);
-    this.resultsPollingTimer = startPolling(this.props.getResult, pollingRate, projectId, resultId, logsLimit);
+    this.resultsPollingTimer = startPolling(
+      this.props.getResult,
+      pollingRate,
+      projectId,
+      resultId,
+      logsLimit
+    );
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,7 +37,13 @@ class ResultDetail extends React.Component {
 
     if (currentPollingRate !== nextPollingRate || currentLogsLimit !== nextLogsLimit) {
       stopPolling(this.resultsPollingTimer);
-      this.resultsPollingTimer = startPolling(this.props.getResult, nextPollingRate, projectId, resultId, nextLogsLimit);
+      this.resultsPollingTimer = startPolling(
+        this.props.getResult,
+        nextPollingRate,
+        projectId,
+        resultId,
+        nextLogsLimit
+      );
     }
   }
 
@@ -45,18 +52,12 @@ class ResultDetail extends React.Component {
   }
 
   render() {
-    const {
-      projectId, project, result, globalConfig,
-    } = this.props;
+    const { projectId, project, result, globalConfig } = this.props;
     return (
       <div className="chainerui-container">
         <NavigationBar pollingKey="result" />
         <Container fluid>
-          <BreadcrumbLink
-            globalConfig={globalConfig}
-            project={project}
-            result={result}
-          />
+          <BreadcrumbLink globalConfig={globalConfig} project={project} result={result} />
           <Button
             tag={Link}
             to={`${urlForResultDetail(projectId, result.id)}/assets`}
@@ -72,16 +73,14 @@ class ResultDetail extends React.Component {
               <Args args={result.args || []} />
             </div>
             <div className="col-sm-6 p-2">
-              {
-                (result.id != null) ? (
-                  <Commands
-                    projectId={projectId}
-                    resultId={result.id}
-                    commands={result.commands || []}
-                    onCommandSubmit={this.props.createCommand}
-                  />
-                ) : null
-              }
+              {result.id != null ? (
+                <Commands
+                  projectId={projectId}
+                  resultId={result.id}
+                  commands={result.commands || []}
+                  onCommandSubmit={this.props.createCommand}
+                />
+              ) : null}
             </div>
             <div className="col-sm-6 p-2">
               <Snapshots snapshots={result.snapshots || []} />
@@ -112,10 +111,7 @@ ResultDetail.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   const projectId = Number(ownProps.params.projectId);
   const resultId = Number(ownProps.params.resultId);
-  const {
-    entities,
-    config,
-  } = state;
+  const { entities, config } = state;
   const globalConfig = config.global;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId];
@@ -129,8 +125,11 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  getProject,
-  getResult,
-  createCommand,
-})(ResultDetail);
+export default connect(
+  mapStateToProps,
+  {
+    getProject,
+    getResult,
+    createCommand,
+  }
+)(ResultDetail);

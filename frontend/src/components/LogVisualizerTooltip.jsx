@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  formatLogValue, formatLogTooltipLabel,
-} from '../utils';
-
+import { formatLogValue, formatLogTooltipLabel } from '../utils';
 
 const LogVisualizerTooltipItem = (props) => {
   const { entry, formatter, anySelected } = props;
@@ -25,11 +22,8 @@ LogVisualizerTooltipItem.propTypes = {
   anySelected: PropTypes.bool.isRequired,
 };
 
-
 const LogVisualizerTooltip = (props) => {
-  const {
-    xAxisKey, label, payload, anySelected,
-  } = props;
+  const { xAxisKey, label, payload, anySelected } = props;
 
   if (!payload || payload.length === 0) {
     return null;

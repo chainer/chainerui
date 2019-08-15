@@ -14,7 +14,9 @@ class ExperimentsTableConfigurator extends React.Component {
     const { tableState } = this.props.projectConfig;
 
     this.props.onTableColumnsVisibilityUpdate(
-      this.props.project.id, tableState.hiddenLogKeys, tableState.hiddenArgKeys,
+      this.props.project.id,
+      tableState.hiddenLogKeys,
+      tableState.hiddenArgKeys,
       event.target.checked
     );
   }
@@ -22,9 +24,7 @@ class ExperimentsTableConfigurator extends React.Component {
   render() {
     const { projectConfig } = this.props;
     const { tableState } = projectConfig;
-    const {
-      isGrouped = false,
-    } = tableState;
+    const { isGrouped = false } = tableState;
 
     return (
       <div>

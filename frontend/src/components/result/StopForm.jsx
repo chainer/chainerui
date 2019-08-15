@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import * as uiPropTypes from '../../store/uiPropTypes';
 import CommandFormBase from './CommandFormBase';
 
-
 const StopForm = (props) => {
   const { projectId, resultId, onCommandSubmit } = props;
   return (

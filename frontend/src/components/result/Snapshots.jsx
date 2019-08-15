@@ -2,14 +2,16 @@ import React from 'react';
 
 import * as uiPropTypes from '../../store/uiPropTypes';
 
-
 // sort snapshots by their iteration
-const createSnapshotRowElems = (snapshots) => snapshots.sort((a, b) => a.iteration - b.iteration).map((snapshot) => (
-  <tr className="command-row" key={snapshot.id}>
-    <td>{snapshot.iteration}</td>
-    <td>{snapshot.name}</td>
-  </tr>
-));
+const createSnapshotRowElems = (snapshots) =>
+  snapshots
+    .sort((a, b) => a.iteration - b.iteration)
+    .map((snapshot) => (
+      <tr className="command-row" key={snapshot.id}>
+        <td>{snapshot.iteration}</td>
+        <td>{snapshot.name}</td>
+      </tr>
+    ));
 
 const Snapshots = (props) => {
   const { snapshots } = props;
@@ -24,9 +26,7 @@ const Snapshots = (props) => {
               <th>name</th>
             </tr>
           </thead>
-          <tbody>
-            {createSnapshotRowElems(snapshots)}
-          </tbody>
+          <tbody>{createSnapshotRowElems(snapshots)}</tbody>
         </table>
       </div>
     </div>

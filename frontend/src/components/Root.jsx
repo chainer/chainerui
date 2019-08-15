@@ -9,7 +9,6 @@ import PlotContainer from '../containers/PlotContainer';
 import ResultDetail from '../containers/ResultDetail';
 import AssetsContainer from '../containers/AssetsContainer';
 
-
 const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
 
@@ -29,7 +28,7 @@ class Root extends React.Component {
 
   render() {
     if (!this.state.rehydrated) {
-      return (<div>loading...</div>);
+      return <div>loading...</div>;
     }
     return (
       <Provider store={store}>
@@ -37,7 +36,10 @@ class Root extends React.Component {
           <Route path="/" component={ProjectsContainer} />
           <Route path="/projects/(:projectId)" component={PlotContainer} />
           <Route path="/projects/(:projectId)/results/(:resultId)" component={ResultDetail} />
-          <Route path="/projects/(:projectId)/results/(:resultId)/assets" component={AssetsContainer} />
+          <Route
+            path="/projects/(:projectId)/results/(:resultId)/assets"
+            component={AssetsContainer}
+          />
         </Router>
       </Provider>
     );

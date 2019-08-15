@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button, Collapse,
-} from 'reactstrap';
+import { Button, Collapse } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import LinesConfigurator from './LinesConfigurator';
-
 
 class LinesConfiguratorToggle extends React.Component {
   constructor(props) {
@@ -27,13 +24,20 @@ class LinesConfiguratorToggle extends React.Component {
 
   render() {
     const {
-      project, results, stats, projectConfig, globalConfig, onAxisConfigLineUpdate,
+      project,
+      results,
+      stats,
+      projectConfig,
+      globalConfig,
+      onAxisConfigLineUpdate,
     } = this.props;
 
     return (
       <div className="list-group list-group-flush">
         <div className="list-group-item">
-          <Button size="sm" className="my-2" onClick={this.toggleLinesConfig}>Toggle lines setting</Button>
+          <Button size="sm" className="my-2" onClick={this.toggleLinesConfig}>
+            Toggle lines setting
+          </Button>
         </div>
         <Collapse isOpen={this.state.showLinesConfig}>
           <LinesConfigurator

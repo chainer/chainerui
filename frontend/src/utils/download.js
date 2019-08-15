@@ -2,9 +2,8 @@ import * as moment from 'moment';
 import html2canvas from 'html2canvas';
 import renderPyTmpl from './render.py.tmpl';
 
-export const generateDownloadFileName = (exportName, ext) => (
-  `${exportName}_${moment().format('YYYYMMDDHHmmss')}.${ext}`
-);
+export const generateDownloadFileName = (exportName, ext) =>
+  `${exportName}_${moment().format('YYYYMMDDHHmmss')}.${ext}`;
 
 export const downloadFile = (fileName, dataURL) => {
   const downloadAnchorNode = document.createElement('a');
