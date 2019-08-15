@@ -6,7 +6,7 @@ import { Container } from 'reactstrap';
 import * as uiPropTypes from '../store/uiPropTypes';
 import { getResultAsset, updateAssetsTableColumnsVisibility } from '../actions';
 import NavigationBar from './NavigationBar';
-import AssetsTable from '../components/AssetsTable';
+import AssetsTable from '../components/assets/AssetsTable';
 
 class AssetsContainer extends React.Component {
   componentDidMount() {
