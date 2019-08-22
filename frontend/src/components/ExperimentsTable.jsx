@@ -18,7 +18,6 @@ import ResultFilter from './experiments_table_cell/ResultFilter';
 import VisibilityCheckbox from './VisibilityCheckbox';
 import TableConfigurator from './TableConfigurator';
 
-
 const emptyStr = '-';
 
 const ExperimentsTable = (props) => {
@@ -134,7 +133,14 @@ const ExperimentsTable = (props) => {
         return null;
       },
       minWidth: 250,
-      Filter: <ResultFilter projectId={project.id} filterKey="name" filterText={resultFilter.name} onResultFilterUpdate={onResultFilterUpdate} />,
+      Filter: (
+        <ResultFilter
+          projectId={project.id}
+          filterKey="name"
+          filterText={resultFilter.name}
+          onResultFilterUpdate={onResultFilterUpdate}
+        />
+      ),
     },
   ];
   if (isGrouped) {
@@ -142,7 +148,14 @@ const ExperimentsTable = (props) => {
       Header: '',
       id: 'group',
       accessor: (p) => getGrandParentDirectoryName(p),
-      Filter: <ResultFilter projectId={project.id} filterKey="group" filterText={resultFilter.group} onResultFilterUpdate={onResultFilterUpdate} />,
+      Filter: (
+        <ResultFilter
+          projectId={project.id}
+          filterKey="group"
+          filterText={resultFilter.group}
+          onResultFilterUpdate={onResultFilterUpdate}
+        />
+      ),
     });
   }
   const groupedKey = isGrouped ? ['group'] : [];

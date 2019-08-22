@@ -242,24 +242,27 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  getProject,
-  getResultList,
-  updateResult,
-  clearResultList,
-  createCommand,
-  resetProjectConfig,
-  updateLineInAxis,
-  updateAxisScale,
-  toggleLogKeySelect,
-  updateResultSelect,
-  updateResultFilter,
-  updateResultsConfigSelect,
-  updateXAxisKey,
-  updateAxisScaleRangeType,
-  updateAxisScaleRangeNumber,
-  updateTableExpanded,
-  updateTableColumnsVisibility,
-  updateChartDownloadStatus,
-  updateTargetResultType,
-})(PlotContainer);
+export default connect(
+  mapStateToProps,
+  {
+    getProject,
+    getResultList,
+    updateResult,
+    clearResultList,
+    createCommand,
+    resetProjectConfig,
+    updateLineInAxis,
+    updateAxisScale,
+    toggleLogKeySelect,
+    updateResultSelect,
+    updateResultFilter,
+    updateResultsConfigSelect,
+    updateXAxisKey,
+    updateAxisScaleRangeType,
+    updateAxisScaleRangeNumber,
+    updateTableExpanded,
+    updateTableColumnsVisibility,
+    updateChartDownloadStatus,
+    updateTargetResultType,
+  }
+)(PlotContainer);

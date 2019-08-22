@@ -1,19 +1,22 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-const ResultFilter = ({
-  projectId,
-  filterKey,
-  filterText,
-  onResultFilterUpdate,
-}) => {
-  const onChange = useCallback((e) => {
-    onResultFilterUpdate(projectId, filterKey, e.target.value);
-  }, [projectId, filterKey, onResultFilterUpdate]);
+const ResultFilter = ({ projectId, filterKey, filterText, onResultFilterUpdate }) => {
+  const onChange = useCallback(
+    (e) => {
+      onResultFilterUpdate(projectId, filterKey, e.target.value);
+    },
+    [projectId, filterKey, onResultFilterUpdate]
+  );
 
   return (
     <div>
-      <input type="text" placeholder={`filter ${filterKey}`} value={filterText} onChange={onChange} />
+      <input
+        type="text"
+        placeholder={`filter ${filterKey}`}
+        value={filterText}
+        onChange={onChange}
+      />
     </div>
   );
 };
