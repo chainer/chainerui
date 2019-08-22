@@ -7,7 +7,6 @@ import LinesConfiguratorToggle from './LinesConfiguratorToggle';
 import XAxisKeySelector from './XAxisKeySelector';
 import YAxisLogKeySelector from './YAxisLogKeySelector';
 
-
 const AxesConfigurator = (props) => {
   const {
     project,
@@ -18,14 +17,11 @@ const AxesConfigurator = (props) => {
     onAxisConfigLineUpdate,
     onAxisConfigScaleUpdate,
     onAxisConfigXKeyUpdate,
-    onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate,
+    onAxisConfigScaleRangeTypeUpdate,
+    onAxisConfigScaleRangeNumberUpdate,
     onAxisConfigLogKeySelectToggle,
   } = props;
-  const {
-    xAxis = {},
-    yLeftAxis = {},
-    yRightAxis = {},
-  } = projectConfig.axes;
+  const { xAxis = {}, yLeftAxis = {}, yRightAxis = {} } = projectConfig.axes;
 
   return (
     <div className="axes-configurator">

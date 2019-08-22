@@ -13,44 +13,52 @@ export const projects = PropTypes.objectOf(project);
 
 export const resultId = PropTypes.number;
 
-export const logs = PropTypes.arrayOf(PropTypes.shape({
-  resultId,
-  id: PropTypes.number,
-  logDict: PropTypes.objectOf(PropTypes.any).isRequired,
-}));
+export const logs = PropTypes.arrayOf(
+  PropTypes.shape({
+    resultId,
+    id: PropTypes.number,
+    logDict: PropTypes.objectOf(PropTypes.any).isRequired,
+  })
+);
 
-export const args = PropTypes.arrayOf(PropTypes.shape({
-  resultId,
-  key: PropTypes.string.isRequired,
-  value: PropTypes.any.isRequired,
-}));
+export const args = PropTypes.arrayOf(
+  PropTypes.shape({
+    resultId,
+    key: PropTypes.string.isRequired,
+    value: PropTypes.any.isRequired,
+  })
+);
 
-export const commands = PropTypes.arrayOf(PropTypes.shape({
-  id: PropTypes.number,
-  name: PropTypes.string.isRequired,
-  request: PropTypes.shape({
-    created_at: PropTypes.string.isRequired,
-    schedule: PropTypes.shape({
-      key: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
+export const commands = PropTypes.arrayOf(
+  PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string.isRequired,
+    request: PropTypes.shape({
+      created_at: PropTypes.string.isRequired,
+      schedule: PropTypes.shape({
+        key: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+      body: PropTypes.object,
+    }).isRequired,
+    response: PropTypes.shape({
+      status: PropTypes.string.isRequired,
+      epoch: PropTypes.number.isRequired,
+      iteration: PropTypes.number.isRequired,
+      elapsed_time: PropTypes.number,
+      executed_at: PropTypes.string,
+      body: PropTypes.object,
     }),
-    body: PropTypes.object,
-  }).isRequired,
-  response: PropTypes.shape({
-    status: PropTypes.string.isRequired,
-    epoch: PropTypes.number.isRequired,
-    iteration: PropTypes.number.isRequired,
-    elapsed_time: PropTypes.number,
-    executed_at: PropTypes.string,
-    body: PropTypes.object,
-  }),
-}));
+  })
+);
 
-export const snapshots = PropTypes.arrayOf(PropTypes.shape({
-  id: PropTypes.number,
-  iteration: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-}));
+export const snapshots = PropTypes.arrayOf(
+  PropTypes.shape({
+    id: PropTypes.number,
+    iteration: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+  })
+);
 
 export const result = PropTypes.shape({
   id: resultId,
@@ -116,15 +124,19 @@ export const axisName = PropTypes.string;
 export const axisConfig = PropTypes.shape({
   logKeysConfig,
   scale: PropTypes.string,
-  scaleRange: PropTypes.objectOf(PropTypes.shape({
-    range: PropTypes.arrayOf(PropTypes.number).isRequired,
-    rangeTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  })),
+  scaleRange: PropTypes.objectOf(
+    PropTypes.shape({
+      range: PropTypes.arrayOf(PropTypes.number).isRequired,
+      rangeTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
+    })
+  ),
 });
 
-const knownKeysConfig = PropTypes.objectOf(PropTypes.shape({
-  hidden: PropTypes.bool.isRequired,
-}));
+const knownKeysConfig = PropTypes.objectOf(
+  PropTypes.shape({
+    hidden: PropTypes.bool.isRequired,
+  })
+);
 
 export const projectConfig = PropTypes.shape({
   axes: PropTypes.shape({
@@ -133,9 +145,7 @@ export const projectConfig = PropTypes.shape({
     yRightAxis: axisConfig,
   }).isRequired,
   tableState: PropTypes.shape({
-    expanded: PropTypes.oneOfType([
-      PropTypes.bool, PropTypes.object,
-    ]),
+    expanded: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
     knownLogKeysConfig: knownKeysConfig,
     knownArgKeysConfig: knownKeysConfig,
     isGrouped: PropTypes.bool,
@@ -150,10 +160,12 @@ export const stats = PropTypes.shape({
   xAxisKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
 });
 
-export const assets = PropTypes.arrayOf(PropTypes.shape({
-  contents: PropTypes.arrayOf(PropTypes.any),
-  trainInfo: PropTypes.objectOf(PropTypes.any),
-}));
+export const assets = PropTypes.arrayOf(
+  PropTypes.shape({
+    contents: PropTypes.arrayOf(PropTypes.any),
+    trainInfo: PropTypes.objectOf(PropTypes.any),
+  })
+);
 
 export const resultStatus = PropTypes.shape({
   selected: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),

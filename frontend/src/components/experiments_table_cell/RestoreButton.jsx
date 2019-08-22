@@ -11,19 +11,13 @@ class RestoreButton extends React.Component {
   }
 
   handleUnregister() {
-    const {
-      project, result, onResultUpdate, onResultUnregistered,
-    } = this.props;
+    const { project, result, onResultUpdate, onResultUnregistered } = this.props;
     onResultUpdate(project.id, { ...result, isUnregistered: false });
     onResultUnregistered();
   }
 
   render() {
-    return (
-      <Button onClick={this.handleUnregister}>
-        Restore
-      </Button>
-    );
+    return <Button onClick={this.handleUnregister}>Restore</Button>;
   }
 }
 

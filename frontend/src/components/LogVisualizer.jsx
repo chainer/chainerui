@@ -13,7 +13,6 @@ import {
 import { CHART_DOWNLOAD_STATUS } from '../constants';
 import LogVisualizerChart from './LogVisualizerChart';
 
-
 class LogVisualizer extends React.Component {
   constructor(props) {
     super(props);
@@ -42,9 +41,7 @@ class LogVisualizer extends React.Component {
   }
 
   handleClickDownloadCode() {
-    const {
-      project, results, stats, projectConfig,
-    } = this.props;
+    const { project, results, stats, projectConfig } = this.props;
     const data = getPlotLogData(results, stats, projectConfig);
     const exportName = getUrlSafeProjectNameFull(project);
     downloadObjectAsCode(data, exportName);
@@ -71,23 +68,24 @@ class LogVisualizer extends React.Component {
     const { resultsStatus = {} } = projectStatus;
 
     const { chartSize, isResultNameAlignRight, highlightTableAndChart } = globalConfig;
-    const tempHiddenPlot = (projectStatus.chartDownloadStatus !== CHART_DOWNLOAD_STATUS.NONE) ? (
-      <div className="plot-hidden" ref={this.chartRef}>
-        <LogVisualizerChart
-          isDisplay={false}
-          project={project}
-          results={results}
-          stats={stats}
-          projectConfig={projectConfig}
-          resultsStatus={resultsStatus}
-          chartSize={chartSize}
-          isResultNameAlignRight={isResultNameAlignRight}
-          highlightTableAndChart={highlightTableAndChart}
-          onResultSelect={onResultSelect}
-          onAxisConfigLineUpdate={onAxisConfigLineUpdate}
-        />
-      </div>
-    ) : null;
+    const tempHiddenPlot =
+      projectStatus.chartDownloadStatus !== CHART_DOWNLOAD_STATUS.NONE ? (
+        <div className="plot-hidden" ref={this.chartRef}>
+          <LogVisualizerChart
+            isDisplay={false}
+            project={project}
+            results={results}
+            stats={stats}
+            projectConfig={projectConfig}
+            resultsStatus={resultsStatus}
+            chartSize={chartSize}
+            isResultNameAlignRight={isResultNameAlignRight}
+            highlightTableAndChart={highlightTableAndChart}
+            onResultSelect={onResultSelect}
+            onAxisConfigLineUpdate={onAxisConfigLineUpdate}
+          />
+        </div>
+      ) : null;
 
     return (
       <div className="log-visualizer-root">

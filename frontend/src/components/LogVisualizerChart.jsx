@@ -12,15 +12,16 @@ import {
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import {
-  line2key, line2dataKey,
+  line2key,
+  line2dataKey,
   formatLogValue,
-  getSelectedResults, getSelectedLogKeys,
+  getSelectedResults,
+  getSelectedLogKeys,
   getLogData,
   createLine,
 } from '../utils';
 import LogVisualizerLegend from './LogVisualizerLegend';
 import LogVisualizerTooltip from './LogVisualizerTooltip';
-
 
 const getDomain = (axisConfig = {}) => {
   const { scale = 'linear', scaleRange = {} } = axisConfig;
@@ -29,7 +30,7 @@ const getDomain = (axisConfig = {}) => {
   for (let i = 0; i < 2; i += 1) {
     const rangeType = rangeTypes[i] || 'auto';
     if (rangeType === 'number') {
-      domain[i] = (range[i] == null || range[i] === '') ? 'auto' : range[i];
+      domain[i] = range[i] == null || range[i] === '' ? 'auto' : range[i];
     } else {
       domain[i] = rangeType;
     }
@@ -53,11 +54,7 @@ const LogVisualizerChart = (props) => {
   } = props;
   const { axes, resultsConfig, lines } = projectConfig;
   const { logKeys, xAxisKeys } = stats;
-  const {
-    xAxis = {},
-    yLeftAxis = {},
-    yRightAxis = {},
-  } = axes;
+  const { xAxis = {}, yLeftAxis = {}, yRightAxis = {} } = axes;
   const { xAxisKey = xAxisKeys[0] } = xAxis;
 
   const selectedResults = getSelectedResults(results, resultsConfig);
@@ -77,17 +74,19 @@ const LogVisualizerChart = (props) => {
         return;
       }
       selectedLogKeys[axisName].forEach((logKey) => {
-        const line = lines[line2key({ resultId, logKey })]
-                || createLine(resultId, logKey, results, logKeys);
+        const line =
+          lines[line2key({ resultId, logKey })] || createLine(resultId, logKey, results, logKeys);
         axisLines[axisName].push(line);
       });
     });
   });
 
-  const anySelected = highlightTableAndChart && selectedResults.some((resultId) => {
-    const resultStatus = resultsStatus[resultId];
-    return resultStatus && resultStatus.selected;
-  });
+  const anySelected =
+    highlightTableAndChart &&
+    selectedResults.some((resultId) => {
+      const resultStatus = resultsStatus[resultId];
+      return resultStatus && resultStatus.selected;
+    });
 
   const lineElems = [];
   Object.keys(axisLines).forEach((axisName) => {
@@ -97,15 +96,19 @@ const LogVisualizerChart = (props) => {
       }
       const { config = {}, resultId, logKey } = line;
       const resultStatus = resultsStatus[resultId] || {};
-      const selected = highlightTableAndChart && (resultStatus.selected === true || resultStatus.selected === logKey);
-      const highlightEvents = highlightTableAndChart ? {
-        onMouseEnter: () => {
-          onResultSelect(project.id, resultId, logKey);
-        },
-        onMouseLeave: () => {
-          onResultSelect(project.id, resultId, false);
-        },
-      } : {};
+      const selected =
+        highlightTableAndChart &&
+        (resultStatus.selected === true || resultStatus.selected === logKey);
+      const highlightEvents = highlightTableAndChart
+        ? {
+            onMouseEnter: () => {
+              onResultSelect(project.id, resultId, logKey);
+            },
+            onMouseLeave: () => {
+              onResultSelect(project.id, resultId, false);
+            },
+          }
+        : {};
       lineElems.push(
         <Line
           type="linear"
@@ -169,12 +172,11 @@ const LogVisualizerChart = (props) => {
           />
           <CartesianGrid strokeDasharray="3 3" />
           {lineElems}
-          {isDisplay
-            ? (
-              <Tooltip
-                content={<LogVisualizerTooltip xAxisKey={xAxisKey} anySelected={anySelected} />}
-              />
-            ) : null // disable tooltip when rendering for png
+          {isDisplay ? (
+            <Tooltip
+              content={<LogVisualizerTooltip xAxisKey={xAxisKey} anySelected={anySelected} />}
+            />
+          ) : null // disable tooltip when rendering for png
           }
         </LineChart>
       </ResponsiveContainer>

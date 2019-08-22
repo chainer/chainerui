@@ -1,24 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Form,
-} from 'reactstrap';
-import {
-  sortableContainer,
-  sortableElement,
-  sortableHandle,
-} from 'react-sortable-hoc';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form } from 'reactstrap';
+import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 
 import Check from './FormControl/Check';
-import {
-  sortKeys,
-  arrayMove,
-} from '../utils';
+import { sortKeys, arrayMove } from '../utils';
 
 const DragHandle = sortableHandle(() => <i className="form-check-input fas fa-bars" />);
 
@@ -92,7 +78,11 @@ class TableConfigurator extends React.Component {
 
     if (prefix === columnHeaders[0].Header) {
       const nextPrimary = {};
-      arrayMove(sortKeys(columnHeaders[0].columns, primaryKnownKeysConfig), oldIndex, newIndex).forEach((name, index) => {
+      arrayMove(
+        sortKeys(columnHeaders[0].columns, primaryKnownKeysConfig),
+        oldIndex,
+        newIndex
+      ).forEach((name, index) => {
         nextPrimary[name] = {
           hidden: false,
           ...primaryKnownKeysConfig[name],
@@ -103,7 +93,11 @@ class TableConfigurator extends React.Component {
       this.props.onTableColumnsVisibilityUpdate(nextPrimary, secondaryKnownKeysConfig);
     } else {
       const nextSecondary = {};
-      arrayMove(sortKeys(columnHeaders[1].columns, secondaryKnownKeysConfig), oldIndex, newIndex).forEach((name, index) => {
+      arrayMove(
+        sortKeys(columnHeaders[1].columns, secondaryKnownKeysConfig),
+        oldIndex,
+        newIndex
+      ).forEach((name, index) => {
         nextSecondary[name] = {
           hidden: false,
           ...secondaryKnownKeysConfig[name],
@@ -127,49 +121,49 @@ class TableConfigurator extends React.Component {
           Table settings
         </Button>
 
-        <Modal isOpen={this.state.showModal} innerRef={this.bindModalNode} toggle={this.handleModalHide}>
-          <ModalHeader>
-            Edit table columns visibility
-          </ModalHeader>
+        <Modal
+          isOpen={this.state.showModal}
+          innerRef={this.bindModalNode}
+          toggle={this.handleModalHide}
+        >
+          <ModalHeader>Edit table columns visibility</ModalHeader>
           <ModalBody>
             <Form>
-              {
-                columnHeaders.map((ch, idx) => (
-                  <div key={ch.Header}>
-                    <legend>{ ch.Header }</legend>
-                    <SortableContainer
-                      lockAxis="y"
-                      helperContainer={() => this.modalNode}
-                      onSortEnd={(...args) => this.handleSortEnd(ch.Header, ...args)}
-                      useDragHandle
-                    >
-                      {
-                        sortKeys(ch.columns, keyConfigs[idx]).map((l, i) => (
-                          <SortableItem
-                            key={`logKey.${l}`}
-                            index={i}
-                            helperContainer={() => this.modalNode}
-                          >
-                            <Check
-                              type="checkbox"
-                              name={l}
-                              checked={!(keyConfigs[idx][l] || {}).hidden}
-                              onChange={(e) => this.handleChange(ch.Header, e)}
-                            >
-                              {l}
-                            </Check>
-                          </SortableItem>
-                        ))
-                      }
-                    </SortableContainer>
-                  </div>
-                ))
-              }
+              {columnHeaders.map((ch, idx) => (
+                <div key={ch.Header}>
+                  <legend>{ch.Header}</legend>
+                  <SortableContainer
+                    lockAxis="y"
+                    helperContainer={() => this.modalNode}
+                    onSortEnd={(...args) => this.handleSortEnd(ch.Header, ...args)}
+                    useDragHandle
+                  >
+                    {sortKeys(ch.columns, keyConfigs[idx]).map((l, i) => (
+                      <SortableItem
+                        key={`logKey.${l}`}
+                        index={i}
+                        helperContainer={() => this.modalNode}
+                      >
+                        <Check
+                          type="checkbox"
+                          name={l}
+                          checked={!(keyConfigs[idx][l] || {}).hidden}
+                          onChange={(e) => this.handleChange(ch.Header, e)}
+                        >
+                          {l}
+                        </Check>
+                      </SortableItem>
+                    ))}
+                  </SortableContainer>
+                </div>
+              ))}
             </Form>
           </ModalBody>
 
           <ModalFooter>
-            <Button color="secondary" onClick={this.handleModalHide}>Close</Button>
+            <Button color="secondary" onClick={this.handleModalHide}>
+              Close
+            </Button>
           </ModalFooter>
         </Modal>
       </div>
@@ -178,14 +172,14 @@ class TableConfigurator extends React.Component {
 }
 
 TableConfigurator.propTypes = {
-  columnHeaders: PropTypes.arrayOf(PropTypes.shape({
-    Header: PropTypes.string.isRequired,
-    columns: PropTypes.array.isRequired,
-  })).isRequired,
-  keyConfigs: PropTypes.arrayOf(
-    PropTypes.object.isRequired,
-    PropTypes.object.isRequired
+  columnHeaders: PropTypes.arrayOf(
+    PropTypes.shape({
+      Header: PropTypes.string.isRequired,
+      columns: PropTypes.array.isRequired,
+    })
   ).isRequired,
+  keyConfigs: PropTypes.arrayOf(PropTypes.object.isRequired, PropTypes.object.isRequired)
+    .isRequired,
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
 };
 

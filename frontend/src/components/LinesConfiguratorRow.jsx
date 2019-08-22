@@ -7,7 +7,6 @@ import Check from './FormControl/Check';
 import TruncatedResultName from './TruncatedResultName';
 import { line2key } from '../utils';
 
-
 class LinesConfiguratorRow extends React.Component {
   constructor(props) {
     super(props);
@@ -39,9 +38,7 @@ class LinesConfiguratorRow extends React.Component {
   }
 
   render() {
-    const {
-      line, project, result, isResultNameAlignRight,
-    } = this.props;
+    const { line, project, result, isResultNameAlignRight } = this.props;
     const { config = {} } = line;
     const { color, isVisible } = config;
 
@@ -53,11 +50,7 @@ class LinesConfiguratorRow extends React.Component {
       >
         <Row>
           <Col xs="3" lg="2">
-            <Check
-              type="checkbox"
-              checked={isVisible}
-              onChange={this.handleLineVisibilityUpdate}
-            />
+            <Check type="checkbox" checked={isVisible} onChange={this.handleLineVisibilityUpdate} />
           </Col>
           <Col xs="9" lg="5" className="text-truncate">
             <a href="" className="text-dark d-block" onClick={this.handleEditClick}>
@@ -69,7 +62,9 @@ class LinesConfiguratorRow extends React.Component {
             </a>
           </Col>
           <Col xs="12" lg="5" className="text-truncate" title={line.logKey}>
-            <a href="" className="text-dark" onClick={this.handleEditClick}>{line.logKey}</a>
+            <a href="" className="text-dark" onClick={this.handleEditClick}>
+              {line.logKey}
+            </a>
           </Col>
         </Row>
       </div>

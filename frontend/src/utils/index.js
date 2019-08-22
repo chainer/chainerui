@@ -33,41 +33,31 @@ export const truncate = (string, options = {}) => {
   return str;
 };
 
-export const getRelativeResultPathName = (project = {}, result = {}) => (
-  path.relative(project.pathName || '', result.pathName || '')
-);
+export const getRelativeResultPathName = (project = {}, result = {}) =>
+  path.relative(project.pathName || '', result.pathName || '');
 
-export const getGrandParentDirectoryName = (result = {}) => (
-  path.basename(path.resolve(result.pathName, '..'))
-);
+export const getGrandParentDirectoryName = (result = {}) =>
+  path.basename(path.resolve(result.pathName, '..'));
 
-export const displayResultNameFull = (project = {}, result = {}) => (
-  result.name || getRelativeResultPathName(project, result)
-);
+export const displayResultNameFull = (project = {}, result = {}) =>
+  result.name || getRelativeResultPathName(project, result);
 
-export const displayProjectNameFull = (project = {}) => (
-  project.name || path.basename(project.pathName)
-);
+export const displayProjectNameFull = (project = {}) =>
+  project.name || path.basename(project.pathName);
 
-export const displayProjectName = (project = {}, options = {}) => (
-  truncate(displayProjectNameFull(project), options)
-);
+export const displayProjectName = (project = {}, options = {}) =>
+  truncate(displayProjectNameFull(project), options);
 
-export const getUrlSafeProjectNameFull = (project = {}) => (
-  displayProjectNameFull(project).replace(/[^a-z0-9]/gi, '_')
-);
+export const getUrlSafeProjectNameFull = (project = {}) =>
+  displayProjectNameFull(project).replace(/[^a-z0-9]/gi, '_');
 
-export const isFloat = (value) => (
-  Number.isFinite(value) && !Number.isInteger(value)
-);
+export const isFloat = (value) => Number.isFinite(value) && !Number.isInteger(value);
 
-export const formatLogValue = (precision = 4) => (value) => (
-  isFloat(value) ? value.toPrecision(precision) : value
-);
+export const formatLogValue = (precision = 4) => (value) =>
+  isFloat(value) ? value.toPrecision(precision) : value;
 
-export const formatLogTooltipLabel = (xAxisKey, precision) => (value) => (
-  `${formatLogValue(precision)(value)} ${xAxisKey === 'elapsed_time' ? 's' : xAxisKey}`
-);
+export const formatLogTooltipLabel = (xAxisKey, precision) => (value) =>
+  `${formatLogValue(precision)(value)} ${xAxisKey === 'elapsed_time' ? 's' : xAxisKey}`;
 
 export const getLastLogDict = (result = {}) => {
   const { logs = [] } = result;
@@ -81,7 +71,7 @@ export const argValue2string = (argValue) => {
   if (argValue == null) {
     return emptyStr;
   }
-  return (typeof argValue === 'object') ? JSON.stringify(argValue) : String(argValue);
+  return typeof argValue === 'object' ? JSON.stringify(argValue) : String(argValue);
 };
 
 export const isJsonString = (str) => {
@@ -93,17 +83,13 @@ export const isJsonString = (str) => {
   return true;
 };
 
-export const getSelectedResults = (results = {}, resultsConfig = {}) => (
-  Object.keys(results).filter((resultId) => (
-    !resultsConfig[resultId] || !resultsConfig[resultId].hidden
-  )).map((resultId) => (
-    Number(resultId)
-  ))
-);
+export const getSelectedResults = (results = {}, resultsConfig = {}) =>
+  Object.keys(results)
+    .filter((resultId) => !resultsConfig[resultId] || !resultsConfig[resultId].hidden)
+    .map((resultId) => Number(resultId));
 
-export const getSelectedLogKeys = (logKeysConfig = {}) => (
-  Object.keys(logKeysConfig).filter((logKey) => (logKeysConfig[logKey].selected))
-);
+export const getSelectedLogKeys = (logKeysConfig = {}) =>
+  Object.keys(logKeysConfig).filter((logKey) => logKeysConfig[logKey].selected);
 
 export const createLine = (resultId, logKey, results = {}, logKeys = []) => ({
   resultId,
@@ -134,11 +120,7 @@ export const getLogData = (results, stats, projectConfig) => {
   const { axes, resultsConfig = {}, lines = {} } = projectConfig;
   const { logKeys = [], xAxisKeys } = stats;
 
-  const {
-    xAxis = {},
-    yLeftAxis = {},
-    yRightAxis = {},
-  } = axes || {};
+  const { xAxis = {}, yLeftAxis = {}, yRightAxis = {} } = axes || {};
   const { xAxisKey = xAxisKeys[0] } = xAxis;
 
   const selectedResults = getSelectedResults(results, resultsConfig);
@@ -155,8 +137,8 @@ export const getLogData = (results, stats, projectConfig) => {
         return;
       }
       selectedLogKeys[axisName].forEach((logKey) => {
-        const line = lines[line2key({ resultId, logKey })]
-              || createLine(resultId, logKey, results, logKeys);
+        const line =
+          lines[line2key({ resultId, logKey })] || createLine(resultId, logKey, results, logKeys);
         const logs = result.logs || [];
         logs.forEach((log) => {
           const { logDict } = log;
@@ -179,11 +161,7 @@ export const getLogData = (results, stats, projectConfig) => {
 export const getPlotLogData = (results, stats, projectConfig) => {
   const { axes, resultsConfig = {} } = projectConfig;
   const { xAxisKeys } = stats;
-  const {
-    xAxis = {},
-    yLeftAxis = {},
-    yRightAxis = {},
-  } = axes || {};
+  const { xAxis = {}, yLeftAxis = {}, yRightAxis = {} } = axes || {};
   const { xAxisKey = xAxisKeys[0] } = xAxis;
 
   const selectedResults = getSelectedResults(results, resultsConfig);
@@ -223,14 +201,15 @@ export const padDigits = (num, len) => {
   return str;
 };
 
-export const sortKeys = (keys, keysConfig) => keys.slice().sort((a, b) => {
-  const aOrder = (keysConfig[a] || {}).order || Infinity;
-  const bOrder = (keysConfig[b] || {}).order || Infinity;
-  return aOrder - bOrder || 0; // Infinity - Infinity = NaN
-});
+export const sortKeys = (keys, keysConfig) =>
+  keys.slice().sort((a, b) => {
+    const aOrder = (keysConfig[a] || {}).order || Infinity;
+    const bOrder = (keysConfig[b] || {}).order || Infinity;
+    return aOrder - bOrder || 0; // Infinity - Infinity = NaN
+  });
 
 export const arrayMove = (arr, from, to) => {
   const a = arr.slice();
-  a.splice((to < 0 ? a.length + to : to), 0, a.splice(from, 1)[0]);
+  a.splice(to < 0 ? a.length + to : to, 0, a.splice(from, 1)[0]);
   return a;
 };

@@ -5,9 +5,7 @@ import * as uiPropTypes from '../store/uiPropTypes';
 import { displayResultNameFull } from '../utils';
 
 const TruncatedResultName = (props) => {
-  const {
-    project, result, isResultNameAlignRight, ...divProps
-  } = props;
+  const { project, result, isResultNameAlignRight, ...divProps } = props;
   const resultNameFull = displayResultNameFull(project, result);
 
   return (

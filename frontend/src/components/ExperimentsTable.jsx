@@ -43,8 +43,9 @@ const ExperimentsTable = (props) => {
 
   const resultKeys = Object.keys(results);
   const resultCount = resultKeys.length;
-  const visibleResultCount = resultKeys
-    .filter((resultId) => !(resultsConfig[resultId] || {}).hidden).length;
+  const visibleResultCount = resultKeys.filter(
+    (resultId) => !(resultsConfig[resultId] || {}).hidden
+  ).length;
   const isPartialSelect = visibleResultCount > 0 && visibleResultCount < resultCount;
 
   const handleResultsConfigSelectChange = (evt) => {
@@ -64,20 +65,18 @@ const ExperimentsTable = (props) => {
 
   const resultList = resultKeys.map((resultId) => results[resultId]);
   const expanded = resultList.length === 0 ? {} : tableState.expanded;
-  const {
-    knownLogKeysConfig = {},
-    knownArgKeysConfig = {},
-    isGrouped = false,
-  } = tableState;
+  const { knownLogKeysConfig = {}, knownArgKeysConfig = {}, isGrouped = false } = tableState;
 
   const nameColumns = [
     {
-      Header: <VisibilityCheckbox
-        className="fa-xs"
-        checked={visibleResultCount > 0}
-        indeterminate={isPartialSelect}
-        onChange={handleResultsConfigSelectChange}
-      />,
+      Header: (
+        <VisibilityCheckbox
+          className="fa-xs"
+          checked={visibleResultCount > 0}
+          indeterminate={isPartialSelect}
+          onChange={handleResultsConfigSelectChange}
+        />
+      ),
       Cell: (p) => {
         const { original } = p;
         if (!original) {
@@ -102,9 +101,11 @@ const ExperimentsTable = (props) => {
           const { _original } = r;
           return _original.id;
         });
-        const groupedVisibleResultCount = groupedResultKeys.filter((resultId) => !(resultsConfig[resultId] || {}).hidden).length;
-        const isGroupedPartialSelect = groupedVisibleResultCount > 0
-          && visibleResultCount < groupedResultKeys.length;
+        const groupedVisibleResultCount = groupedResultKeys.filter(
+          (resultId) => !(resultsConfig[resultId] || {}).hidden
+        ).length;
+        const isGroupedPartialSelect =
+          groupedVisibleResultCount > 0 && visibleResultCount < groupedResultKeys.length;
         return (
           <VisibilityCheckbox
             className="fa-xs"
@@ -252,10 +253,7 @@ const ExperimentsTable = (props) => {
 
       <TableConfigurator
         columnHeaders={columnHeaders}
-        keyConfigs={[
-          knownLogKeysConfig,
-          knownArgKeysConfig,
-        ]}
+        keyConfigs={[knownLogKeysConfig, knownArgKeysConfig]}
         onTableColumnsVisibilityUpdate={onTableColumnsVisibilityUpdate}
       />
     </div>

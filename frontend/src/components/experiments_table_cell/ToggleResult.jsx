@@ -11,9 +11,7 @@ class ToggleResult extends React.Component {
   }
 
   handleSelectToggle() {
-    const {
-      project, result, resultConfig, onResultsConfigSelectUpdate,
-    } = this.props;
+    const { project, result, resultConfig, onResultsConfigSelectUpdate } = this.props;
     onResultsConfigSelectUpdate(project.id, result.id, !resultConfig.hidden);
   }
 

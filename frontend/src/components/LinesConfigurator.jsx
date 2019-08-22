@@ -1,16 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button, Modal, ModalHeader, ModalBody, ModalFooter,
-} from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
-import {
-  line2key, getSelectedResults, getSelectedLogKeys, createLine,
-} from '../utils';
+import { line2key, getSelectedResults, getSelectedLogKeys, createLine } from '../utils';
 import LinesConfiguratorRow from './LinesConfiguratorRow';
 import LineConfigurator from './LineConfigurator';
-
 
 class LinesConfigurator extends React.Component {
   constructor(props) {
@@ -58,11 +53,7 @@ class LinesConfigurator extends React.Component {
   }
 
   handleAxisConfigLineSave() {
-    const {
-      project,
-      axisName,
-      onAxisConfigLineUpdate,
-    } = this.props;
+    const { project, axisName, onAxisConfigLineUpdate } = this.props;
     const { targetLineKey, editingLine } = this.state;
     onAxisConfigLineUpdate(project.id, axisName, targetLineKey, editingLine);
     this.handleModalClose();
@@ -74,9 +65,7 @@ class LinesConfigurator extends React.Component {
   }
 
   render() {
-    const {
-      axisName, project, results, stats, projectConfig, globalConfig,
-    } = this.props;
+    const { axisName, project, results, stats, projectConfig, globalConfig } = this.props;
     const { editingLine } = this.state;
     const { logKeys = [] } = stats;
     const { axes = {}, resultsConfig = {}, lines = {} } = projectConfig;
@@ -93,17 +82,19 @@ class LinesConfigurator extends React.Component {
         return;
       }
       selectedLogKeys.forEach((logKey) => {
-        const line = lines[line2key({ resultId, logKey })]
-          || createLine(resultId, logKey, results, logKeys);
-        lineConfiguratorElems.push(<LinesConfiguratorRow
-          line={line}
-          project={project}
-          result={result}
-          isResultNameAlignRight={isResultNameAlignRight}
-          onEditClick={this.handleModalOpen}
-          onVisibilityUpdate={this.handleLineVisibilityUpdate}
-          key={line2key(line)}
-        />);
+        const line =
+          lines[line2key({ resultId, logKey })] || createLine(resultId, logKey, results, logKeys);
+        lineConfiguratorElems.push(
+          <LinesConfiguratorRow
+            line={line}
+            project={project}
+            result={result}
+            isResultNameAlignRight={isResultNameAlignRight}
+            onEditClick={this.handleModalOpen}
+            onVisibilityUpdate={this.handleLineVisibilityUpdate}
+            key={line2key(line)}
+          />
+        );
       });
     });
 
@@ -123,12 +114,10 @@ class LinesConfigurator extends React.Component {
             />
           </ModalBody>
           <ModalFooter>
-            <Button color="secondary" onClick={this.handleModalToggle}>Cancel</Button>
-            {' '}
-            <Button
-              color="primary"
-              onClick={this.handleAxisConfigLineSave}
-            >
+            <Button color="secondary" onClick={this.handleModalToggle}>
+              Cancel
+            </Button>{' '}
+            <Button color="primary" onClick={this.handleAxisConfigLineSave}>
               Save
             </Button>
           </ModalFooter>

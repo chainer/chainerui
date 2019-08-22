@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button,
-  Modal, ModalHeader, ModalFooter, ModalBody,
-} from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalFooter, ModalBody } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import AxesConfigurator from './AxesConfigurator';
-
 
 class SideBar extends React.Component {
   constructor(props) {
@@ -43,15 +39,15 @@ class SideBar extends React.Component {
       onAxisConfigLineUpdate,
       onAxisConfigScaleUpdate,
       onAxisConfigXKeyUpdate,
-      onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate,
+      onAxisConfigScaleRangeTypeUpdate,
+      onAxisConfigScaleRangeNumberUpdate,
       onAxisConfigLogKeySelectToggle,
     } = this.props;
 
     return (
       <div className="side-bar">
         <AxesConfigurator
-          {
-          ...{
+          {...{
             project,
             results,
             stats,
@@ -63,20 +59,21 @@ class SideBar extends React.Component {
             onAxisConfigScaleRangeTypeUpdate,
             onAxisConfigScaleRangeNumberUpdate,
             onAxisConfigLogKeySelectToggle,
-          }
-          }
+          }}
         />
         <Button color="primary" className="m-2" onClick={this.handleModalToggle}>
-        Reset settings
+          Reset settings
         </Button>
         <Modal isOpen={this.state.showModal} toggle={this.handleModalToggle} className="">
           <ModalHeader toggle={this.handleModalToggle}>Reset settings</ModalHeader>
-          <ModalBody>
-            Are you sure to reset settings?
-          </ModalBody>
+          <ModalBody>Are you sure to reset settings?</ModalBody>
           <ModalFooter>
-            <Button color="secondary" onClick={this.handleModalToggle}>Cancel</Button>
-            <Button color="primary" className="mx-2" onClick={this.handleConfigReset}>Reset</Button>
+            <Button color="secondary" onClick={this.handleModalToggle}>
+              Cancel
+            </Button>
+            <Button color="primary" className="mx-2" onClick={this.handleConfigReset}>
+              Reset
+            </Button>
           </ModalFooter>
         </Modal>
       </div>

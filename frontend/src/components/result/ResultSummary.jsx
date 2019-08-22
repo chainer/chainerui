@@ -4,7 +4,6 @@ import * as uiPropTypes from '../../store/uiPropTypes';
 import { getLastLogDict } from '../../utils';
 import { keyOptions } from '../../constants';
 
-
 const ResultSummary = (props) => {
   const { result } = props;
   const lastLogDict = getLastLogDict(result);

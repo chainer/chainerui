@@ -7,7 +7,7 @@
   direction: ltr;
 }
 
-.text-truncate.text-right[value=""]:focus {
+.text-truncate.text-right[value='']:focus {
   text-align: left;
   direction: rtl;
 }

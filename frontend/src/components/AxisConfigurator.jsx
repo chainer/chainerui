@@ -6,7 +6,6 @@ import * as uiPropTypes from '../store/uiPropTypes';
 import AxisScaleSelector from './AxisScaleSelector';
 import AxisRangeConfigurator from './AxisRangeConfigurator';
 
-
 class AxisConfigurator extends React.Component {
   constructor(props) {
     super(props);
@@ -35,17 +34,17 @@ class AxisConfigurator extends React.Component {
       projectId,
       axisName,
       axisConfig,
-      onAxisConfigScaleRangeTypeUpdate, onAxisConfigScaleRangeNumberUpdate,
+      onAxisConfigScaleRangeTypeUpdate,
+      onAxisConfigScaleRangeNumberUpdate,
     } = this.props;
     const { scale } = axisConfig;
 
     return (
       <>
-        <AxisScaleSelector
-          scale={scale}
-          onChange={this.handleChangeScale}
-        />
-        <Button size="sm" className="my-2" onClick={this.toggleRangeConfig}>Toggle range setting</Button>
+        <AxisScaleSelector scale={scale} onChange={this.handleChangeScale} />
+        <Button size="sm" className="my-2" onClick={this.toggleRangeConfig}>
+          Toggle range setting
+        </Button>
         <Collapse isOpen={this.state.showRangeConfig}>
           <AxisRangeConfigurator
             projectId={projectId}

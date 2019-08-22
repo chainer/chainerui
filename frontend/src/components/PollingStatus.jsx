@@ -4,10 +4,13 @@ import { UncontrolledTooltip } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import {
-  RESULT_LIST_REQUEST, RESULT_LIST_SUCCESS, RESULT_LIST_FAILURE,
-  RESULT_REQUEST, RESULT_SUCCESS, RESULT_FAILURE,
+  RESULT_LIST_REQUEST,
+  RESULT_LIST_SUCCESS,
+  RESULT_LIST_FAILURE,
+  RESULT_REQUEST,
+  RESULT_SUCCESS,
+  RESULT_FAILURE,
 } from '../actions';
-
 
 const PollingStatus = ({ pollingKey, fetchState, globalConfig }) => {
   let colorClass = 'text-muted';
@@ -39,10 +42,7 @@ const PollingStatus = ({ pollingKey, fetchState, globalConfig }) => {
         <i id="polling-status-tooltip" className="fas fa-circle fa-xs" />
       </small>
       {statusMessage ? (
-        <UncontrolledTooltip
-          placement="bottom"
-          target="polling-status-tooltip"
-        >
+        <UncontrolledTooltip placement="bottom" target="polling-status-tooltip">
           {statusMessage}
         </UncontrolledTooltip>
       ) : null}

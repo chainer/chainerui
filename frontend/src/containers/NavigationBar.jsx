@@ -3,9 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Container,
-  Collapse, Navbar, NavbarBrand,
-  UncontrolledPopover, PopoverHeader, PopoverBody,
-  Form, FormGroup, Label,
+  Collapse,
+  Navbar,
+  NavbarBrand,
+  UncontrolledPopover,
+  PopoverHeader,
+  PopoverBody,
+  Form,
+  FormGroup,
+  Label,
   Button,
 } from 'reactstrap';
 
@@ -21,9 +27,11 @@ import Check from '../components/FormControl/Check';
 import Select from '../components/FormControl/Select';
 import PollingStatus from '../components/PollingStatus';
 import {
-  chartSizeOptions, pollingOptions, logsLimitOptions, CHAINERUI_VERSION,
+  chartSizeOptions,
+  pollingOptions,
+  logsLimitOptions,
+  CHAINERUI_VERSION,
 } from '../constants';
-
 
 const RESULT_NAME_ALIGN_LEFT = 'result-name-align-left';
 const RESULT_NAME_ALIGN_RIGHT = 'result-name-align-right';
@@ -55,7 +63,7 @@ class NavigationBar extends React.Component {
   }
 
   handleResultNameAlignmentChange(e) {
-    const isResultNameAlignRight = (e.target.name === RESULT_NAME_ALIGN_RIGHT);
+    const isResultNameAlignRight = e.target.name === RESULT_NAME_ALIGN_RIGHT;
     this.props.onGlobalConfigResultNameAlignmentUpdate(isResultNameAlignRight);
   }
 
@@ -91,10 +99,7 @@ class NavigationBar extends React.Component {
           </Collapse>
         </Container>
 
-        <UncontrolledPopover
-          placement="left-end"
-          target="navbar-global-setting"
-        >
+        <UncontrolledPopover placement="left-end" target="navbar-global-setting">
           <PopoverHeader className="popover-header">Global Settings</PopoverHeader>
           <PopoverBody className="popover-body">
             <Form>
@@ -190,10 +195,7 @@ NavigationBar.defaultProps = {
 };
 
 const mapStateToProps = (state) => {
-  const {
-    fetchState,
-    config,
-  } = state;
+  const { fetchState, config } = state;
   const globalConfig = config.global;
   return {
     fetchState,
@@ -201,10 +203,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  onGlobalConfigPollingRateUpdate: updateGlobalPollingRate,
-  onGlobalConfigChartSizeUpdate: updateGlobalChartSize,
-  onGlobalConfigLogsLimitUpdate: updateGlobalLogsLimit,
-  onGlobalConfigResultNameAlignmentUpdate: updateGlobalResultNameAlignment,
-  onGlobalHighlightTableAndChartUpdate: updateGlobalHighlightTableAndChart,
-})(NavigationBar);
+export default connect(
+  mapStateToProps,
+  {
+    onGlobalConfigPollingRateUpdate: updateGlobalPollingRate,
+    onGlobalConfigChartSizeUpdate: updateGlobalChartSize,
+    onGlobalConfigLogsLimitUpdate: updateGlobalLogsLimit,
+    onGlobalConfigResultNameAlignmentUpdate: updateGlobalResultNameAlignment,
+    onGlobalHighlightTableAndChartUpdate: updateGlobalHighlightTableAndChart,
+  }
+)(NavigationBar);

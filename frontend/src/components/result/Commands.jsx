@@ -7,41 +7,41 @@ import SnapshotTakeForm from './SnapshotTakeForm';
 import StopForm from './StopForm';
 import HyperparamsAdjustForm from './HyperparamsAdjustFrom';
 
-
 // sort commands in decending order
-const createCommandRowElems = (commands) => commands.sort((a, b) => b.id - a.id).map((command) => {
-  const request = command.request || {};
-  const response = command.response || {};
-  const { schedule } = request;
-  const { executed_at: executedAt } = response;
-  return (
-    <tr className="command-row" key={command.id}>
-      <td>{command.name}</td>
-      <td>{responseStatusToIcon(response.status)}</td>
-      <td>{(new Date(request.created_at)).toLocaleString()}</td>
-      <td>{schedule ? `${schedule.value} ${schedule.key}` : ''}</td>
-      <td>{executedAt ? (new Date(executedAt)).toLocaleString() : ''}</td>
-      <td>{response.epoch}</td>
-      <td>{response.iteration}</td>
-      <td>{response.elapsed_time != null ? response.elapsed_time.toFixed(2) : ''}</td>
-      <td>
-        <pre>
-          <code>{request.body ? JSON.stringify(request.body) : ''}</code>
-        </pre>
-      </td>
-      <td>
-        <pre>
-          <code>{response.body ? JSON.stringify(response.body) : ''}</code>
-        </pre>
-      </td>
-    </tr>
-  );
-});
+const createCommandRowElems = (commands) =>
+  commands
+    .sort((a, b) => b.id - a.id)
+    .map((command) => {
+      const request = command.request || {};
+      const response = command.response || {};
+      const { schedule } = request;
+      const { executed_at: executedAt } = response;
+      return (
+        <tr className="command-row" key={command.id}>
+          <td>{command.name}</td>
+          <td>{responseStatusToIcon(response.status)}</td>
+          <td>{new Date(request.created_at).toLocaleString()}</td>
+          <td>{schedule ? `${schedule.value} ${schedule.key}` : ''}</td>
+          <td>{executedAt ? new Date(executedAt).toLocaleString() : ''}</td>
+          <td>{response.epoch}</td>
+          <td>{response.iteration}</td>
+          <td>{response.elapsed_time != null ? response.elapsed_time.toFixed(2) : ''}</td>
+          <td>
+            <pre>
+              <code>{request.body ? JSON.stringify(request.body) : ''}</code>
+            </pre>
+          </td>
+          <td>
+            <pre>
+              <code>{response.body ? JSON.stringify(response.body) : ''}</code>
+            </pre>
+          </td>
+        </tr>
+      );
+    });
 
 const Commands = (props) => {
-  const {
-    projectId, resultId, commands, onCommandSubmit,
-  } = props;
+  const { projectId, resultId, commands, onCommandSubmit } = props;
   return (
     <div className="card">
       <div className="card-header">Commands</div>
@@ -54,11 +54,7 @@ const Commands = (props) => {
           />
         </div>
         <div className="mb-2">
-          <StopForm
-            projectId={projectId}
-            resultId={resultId}
-            onCommandSubmit={onCommandSubmit}
-          />
+          <StopForm projectId={projectId} resultId={resultId} onCommandSubmit={onCommandSubmit} />
         </div>
         <div className="mb-2">
           <HyperparamsAdjustForm
@@ -84,9 +80,7 @@ const Commands = (props) => {
               <th>response body</th>
             </tr>
           </thead>
-          <tbody>
-            {createCommandRowElems(commands)}
-          </tbody>
+          <tbody>{createCommandRowElems(commands)}</tbody>
         </table>
       </div>
     </div>

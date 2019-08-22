@@ -4,26 +4,21 @@ import { connect } from 'react-redux';
 import { Container } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
-import {
-  getResultAsset,
-  updateAssetsTableColumnsVisibility,
-} from '../actions';
+import { getResultAsset, updateAssetsTableColumnsVisibility } from '../actions';
 import NavigationBar from './NavigationBar';
 import AssetsTable from '../components/AssetsTable';
-
 
 class AssetsContainer extends React.Component {
   componentDidMount() {
     const { projectId, resultId } = this.props;
     this.props.getResultAsset(projectId, resultId);
-    this.handleAssetsTableColumnsVisibilityUpdate = this.handleAssetsTableColumnsVisibilityUpdate.bind(this);
+    this.handleAssetsTableColumnsVisibilityUpdate = this.handleAssetsTableColumnsVisibilityUpdate.bind(
+      this
+    );
   }
 
   handleAssetsTableColumnsVisibilityUpdate(knownTrainInfoKeysConfig, knownContentKeysConfig) {
-    const {
-      projectId,
-      resultId,
-    } = this.props;
+    const { projectId, resultId } = this.props;
     this.props.updateAssetsTableColumnsVisibility(
       projectId,
       resultId,
@@ -33,12 +28,8 @@ class AssetsContainer extends React.Component {
   }
 
   render() {
-    const {
-      assets, resultConfig,
-    } = this.props;
-    const {
-      assetsTableState = {},
-    } = resultConfig;
+    const { assets, resultConfig } = this.props;
+    const { assetsTableState = {} } = resultConfig;
     return (
       <div className="chainerui-container">
         <NavigationBar />
@@ -66,10 +57,7 @@ AssetsContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   const projectId = Number(ownProps.params.projectId);
   const resultId = Number(ownProps.params.resultId);
-  const {
-    entities,
-    config,
-  } = state;
+  const { entities, config } = state;
   const { assets } = entities;
   const projectConfig = config.projectsConfig[projectId] || {};
   const resultConfig = projectConfig.resultsConfig[resultId] || {};
@@ -81,7 +69,10 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  getResultAsset,
-  updateAssetsTableColumnsVisibility,
-})(AssetsContainer);
+export default connect(
+  mapStateToProps,
+  {
+    getResultAsset,
+    updateAssetsTableColumnsVisibility,
+  }
+)(AssetsContainer);
