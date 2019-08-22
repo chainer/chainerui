@@ -192,11 +192,18 @@ PlotContainer.propTypes = {
 };
 
 const filterResults = (results, resultFilter) => {
-  const filteredResults = Object.keys(results).reduce((pre, key) => {
-    const result = results[key];
-    // TODO: filter
-    const nextResults = { ...pre, [key]: result };
-    return nextResults;
+  const filteredResults = Object.keys(results).reduce((pre, resultId) => {
+    const result = results[resultId];
+    const isMatched = Object.keys(resultFilter).every((filterKey) => {
+      // TODO: support filtering for group
+      const filterText = resultFilter[filterKey];
+      const targetText = result[filterKey];
+      return !targetText || targetText.includes(filterText);
+    });
+    if (isMatched) {
+      return { ...pre, [resultId]: result };
+    }
+    return pre;
   }, {});
   return filteredResults;
 };
@@ -213,7 +220,7 @@ const mapStateToProps = (state, ownProps) => {
   const projectStatus = status.projectsStatus[projectId] || defaultProjectStatus;
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
   const globalConfig = config.global;
-  const { resultFilter } = projectStatus;
+  const { resultFilter = {} } = projectStatus;
   const { stats } = status;
 
   const filteredResults = filterResults(results, resultFilter);
