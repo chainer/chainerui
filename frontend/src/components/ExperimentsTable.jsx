@@ -13,6 +13,7 @@ import {
 
 import ResultName from './experiments_table_cell/ResultName';
 import ToggleResult from './experiments_table_cell/ToggleResult';
+import ResultSelectionCheckbox from './experiments_table_cell/ResultSelectionCheckbox';
 import SubComponent from './experiments_table_cell/SubComponent';
 import VisibilityCheckbox from './VisibilityCheckbox';
 import TableConfigurator from './TableConfigurator';
@@ -33,6 +34,7 @@ const ExperimentsTable = (props) => {
     onCommandSubmit,
     onTableExpandedUpdate,
     onTableColumnsVisibilityUpdate,
+    onCheckedOfResultStatusUpdate,
   } = props;
   const { argKeys, logKeys } = stats;
   const { resultsConfig, tableState } = projectConfig;
@@ -64,6 +66,25 @@ const ExperimentsTable = (props) => {
   const { knownLogKeysConfig = {}, knownArgKeysConfig = {}, isGrouped = false } = tableState;
 
   const nameColumns = [
+    {
+      Header: <div>all</div>,
+      Cell: (p) => {
+        const { original } = p;
+        if (!original) {
+          return {};
+        }
+        // const { id } = original;
+        return (
+          <ResultSelectionCheckbox
+            project={project}
+            result={original}
+            resultsStatus={resultsStatus}
+            onChange={onCheckedOfResultStatusUpdate}
+          />
+        );
+      },
+      sortable: false,
+    },
     {
       Header: (
         <VisibilityCheckbox
@@ -263,6 +284,7 @@ ExperimentsTable.propTypes = {
   onCommandSubmit: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired,
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
+  onCheckedOfResultStatusUpdate: PropTypes.func.isRequired,
 };
 
 ExperimentsTable.defaultProps = {

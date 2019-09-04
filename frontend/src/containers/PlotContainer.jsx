@@ -23,6 +23,7 @@ import {
   updateTableColumnsVisibility,
   updateChartDownloadStatus,
   updateTargetResultType,
+  updateCheckedOfResultStatus,
 } from '../actions';
 import NavigationBar from './NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
@@ -154,6 +155,7 @@ class PlotContainer extends React.Component {
                 onCommandSubmit={this.props.createCommand}
                 onTableExpandedUpdate={this.props.updateTableExpanded}
                 onTableColumnsVisibilityUpdate={this.handleExperimentsTableColumnsVisibilityUpdate}
+                onCheckedOfResultStatusUpdate={this.props.updateCheckedOfResultStatus}
               />
               <ExperimentsTableConfigurator
                 project={project}
@@ -195,6 +197,7 @@ PlotContainer.propTypes = {
   updateTableColumnsVisibility: PropTypes.func.isRequired,
   updateChartDownloadStatus: PropTypes.func.isRequired,
   updateTargetResultType: PropTypes.func.isRequired,
+  updateCheckedOfResultStatus: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -238,5 +241,6 @@ export default connect(
     updateTableColumnsVisibility,
     updateChartDownloadStatus,
     updateTargetResultType,
+    updateCheckedOfResultStatus,
   }
 )(PlotContainer);

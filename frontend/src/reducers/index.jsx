@@ -212,8 +212,18 @@ const resultSelectedReducer = (state = false, action) => {
   }
 };
 
+const resultCheckedReducer = (state = false, action) => {
+  switch (action.type) {
+    case ActionTypes.CHECKED_OF_RESULT_STATUS_UPDATE:
+      return action.checked;
+    default:
+      return state;
+  }
+};
+
 const resultStatusReducer = combineReducers({
   selected: resultSelectedReducer,
+  checked: resultCheckedReducer,
 });
 
 const resultsStatusReducer = (state = {}, action) => {
