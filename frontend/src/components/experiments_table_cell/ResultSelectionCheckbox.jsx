@@ -19,7 +19,7 @@ const ResultSelectionCheckbox = (props) => {
 ResultSelectionCheckbox.propTypes = {
   project: uiPropTypes.project.isRequired,
   result: uiPropTypes.result.isRequired,
-  resultsStatus: uiPropTypes.resultsStatus,
+  resultsStatus: uiPropTypes.resultsStatus.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 

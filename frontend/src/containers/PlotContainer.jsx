@@ -31,6 +31,7 @@ import ExperimentsTable from '../components/ExperimentsTable';
 import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigurator';
 import LogVisualizer from '../components/LogVisualizer';
 import SideBar from '../components/SideBar';
+import SelectedResultTools from '../components/SelectedResultTools';
 import ResultTypeSelector from '../components/ResultTypeSelector';
 import { defaultProjectStatus, defaultProjectConfig } from '../constants';
 import { startPolling, stopPolling } from '../utils';
@@ -142,6 +143,7 @@ class PlotContainer extends React.Component {
                 value={projectConfig.resultType}
                 onChange={this.props.updateTargetResultType}
               />
+              <SelectedResultTools resultsStatus={projectStatus.resultsStatus} />
               <ExperimentsTable
                 project={project}
                 results={results}
