@@ -4,21 +4,25 @@ import * as uiPropTypes from '../../store/uiPropTypes';
 import Check from '../FormControl/Check';
 
 const ResultSelectionCheckbox = (props) => {
-  const resultState = props.resultsStatus[props.result.id] || {};
-  const currentCheckState = resultState.checked || false;
+  const resultStateList = props.targetResults.map((result) => props.resultsStatus[result.id] || {});
+  const currentCheckState = resultStateList.every((item) => item.checked);
 
   return (
     <Check
       type="checkbox"
       checked={currentCheckState}
-      onChange={() => props.onChange(props.project.id, props.result.id, !currentCheckState)}
+      onChange={() =>
+        props.targetResults.forEach((result) =>
+          props.onChange(props.project.id, result.id, !currentCheckState)
+        )
+      }
     />
   );
 };
 
 ResultSelectionCheckbox.propTypes = {
   project: uiPropTypes.project.isRequired,
-  result: uiPropTypes.result.isRequired,
+  targetResults: PropTypes.arrayOf(uiPropTypes.result).isRequired,
   resultsStatus: uiPropTypes.resultsStatus.isRequired,
   onChange: PropTypes.func.isRequired,
 };

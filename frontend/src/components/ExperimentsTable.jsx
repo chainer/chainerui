@@ -67,23 +67,30 @@ const ExperimentsTable = (props) => {
 
   const nameColumns = [
     {
-      Header: <div>all</div>,
+      Header: (
+        <ResultSelectionCheckbox
+          project={project}
+          targetResults={resultList}
+          resultsStatus={resultsStatus}
+          onChange={onCheckedOfResultStatusUpdate}
+        />
+      ),
       Cell: (p) => {
         const { original } = p;
         if (!original) {
           return {};
         }
-        // const { id } = original;
         return (
           <ResultSelectionCheckbox
             project={project}
-            result={original}
+            targetResults={[original]}
             resultsStatus={resultsStatus}
             onChange={onCheckedOfResultStatusUpdate}
           />
         );
       },
       sortable: false,
+      minWidth: 40,
     },
     {
       Header: (
