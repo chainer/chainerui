@@ -39,6 +39,8 @@ export const getRelativeResultPathName = (project = {}, result = {}) =>
 export const getGrandParentDirectoryName = (result = {}) =>
   path.basename(path.resolve(result.pathName, '..'));
 
+export const getResultGroupName = (result = {}) => getGrandParentDirectoryName(result);
+
 export const displayResultNameFull = (project = {}, result = {}) =>
   result.name || getRelativeResultPathName(project, result);
 
