@@ -14,7 +14,10 @@ const SelectedResultTools = (props) => {
     onCheckedOfResultStatusUpdate,
     onTableExpandedUpdate,
   } = props;
-  const checkedResults = Object.keys(resultsStatus).filter((key) => resultsStatus[key].checked);
+
+  const checkedResults = Object.keys(results).filter(
+    (key) => resultsStatus[key] && resultsStatus[key].checked
+  );
 
   const handleDeleteResults = (isUnregistered) => {
     onTableExpandedUpdate(project.id, {});
