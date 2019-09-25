@@ -91,6 +91,20 @@ const ExperimentsTable = (props) => {
       },
       sortable: false,
       minWidth: 40,
+      Aggregated: (row) => {
+        const groupedResults = row.subRows.map((r) => {
+          const { _original } = r;
+          return _original;
+        });
+        return (
+          <ResultSelectionCheckbox
+            project={project}
+            targetResults={groupedResults}
+            resultsStatus={resultsStatus}
+            onChange={onCheckedOfResultStatusUpdate}
+          />
+        );
+      },
     },
     {
       Header: (
