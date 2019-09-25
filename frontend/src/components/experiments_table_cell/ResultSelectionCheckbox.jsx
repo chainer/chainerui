@@ -5,7 +5,8 @@ import Check from '../FormControl/Check';
 
 const ResultSelectionCheckbox = (props) => {
   const resultStateList = props.targetResults.map((result) => props.resultsStatus[result.id] || {});
-  const currentCheckState = resultStateList.every((item) => item.checked);
+  const currentCheckState =
+    resultStateList.every((item) => item.checked) && resultStateList.length > 0;
 
   return (
     <Check
