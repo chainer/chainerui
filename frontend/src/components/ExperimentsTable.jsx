@@ -254,13 +254,7 @@ const ExperimentsTable = (props) => {
         pivotBy={groupedKey}
         freezeWhenExpanded={expanded === {}}
         SubComponent={(p) => (
-          <SubComponent
-            original={p.original}
-            project={project}
-            onResultUpdate={onResultUpdate}
-            onResultUnregistered={() => onTableExpandedUpdate(project.id, {})}
-            onCommandSubmit={onCommandSubmit}
-          />
+          <SubComponent original={p.original} project={project} onCommandSubmit={onCommandSubmit} />
         )}
         getTrProps={(state, rowInfo) => {
           if (!globalConfig.highlightTableAndChart) {

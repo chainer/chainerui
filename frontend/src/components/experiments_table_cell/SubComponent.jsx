@@ -6,12 +6,10 @@ import { Button } from 'reactstrap';
 import * as uiPropTypes from '../../store/uiPropTypes';
 import SnapshotTakeForm from '../result/SnapshotTakeForm';
 import StopForm from '../result/StopForm';
-import UnregisterButton from './UnregisterButton';
-import RestoreButton from './RestoreButton';
 import { urlForResultDetail } from '../../utils';
 
 const SubComponent = (props) => {
-  const { original, project, onResultUpdate, onResultUnregistered, onCommandSubmit } = props;
+  const { original, project, onCommandSubmit } = props;
   const { id } = original;
   const style = {
     padding: '1rem',
@@ -51,21 +49,6 @@ const SubComponent = (props) => {
         </div>
 
         <small className="text-muted mr-2">{`result_id: ${id}`}</small>
-        {original.isUnregistered ? (
-          <RestoreButton
-            project={project}
-            result={original}
-            onResultUpdate={onResultUpdate}
-            onResultUnregistered={onResultUnregistered}
-          />
-        ) : (
-          <UnregisterButton
-            project={project}
-            result={original}
-            onResultUpdate={onResultUpdate}
-            onResultUnregistered={onResultUnregistered}
-          />
-        )}
       </div>
     </div>
   );
@@ -74,8 +57,6 @@ const SubComponent = (props) => {
 SubComponent.propTypes = {
   original: uiPropTypes.result.isRequired,
   project: uiPropTypes.project.isRequired,
-  onResultUpdate: PropTypes.func.isRequired,
-  onResultUnregistered: PropTypes.func.isRequired,
   onCommandSubmit: PropTypes.func.isRequired,
 };
 
