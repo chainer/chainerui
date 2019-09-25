@@ -33,7 +33,7 @@ import LogVisualizer from '../components/LogVisualizer';
 import SideBar from '../components/SideBar';
 import ResultTypeSelector from '../components/ResultTypeSelector';
 import { defaultProjectStatus, defaultProjectConfig } from '../constants';
-import { startPolling, stopPolling, getResultGroupName } from '../utils';
+import { startPolling, stopPolling, getResultGroupName, displayResultNameFull } from '../utils';
 
 class PlotContainer extends React.Component {
   componentDidMount() {
@@ -201,12 +201,23 @@ PlotContainer.propTypes = {
   updateTargetResultType: PropTypes.func.isRequired,
 };
 
-const filterResults = (results, resultFilter) => {
+const getTargetTextForFilter = (project, result, filterKey) => {
+  switch (filterKey) {
+    case 'group':
+      return getResultGroupName(result);
+    case 'name':
+      return displayResultNameFull(project, result);
+    default:
+      return result[filterKey];
+  }
+};
+
+const filterResults = (project, results, resultFilter) => {
   const filteredResults = Object.keys(results).reduce((pre, resultId) => {
     const result = results[resultId];
     const isMatched = Object.keys(resultFilter).every((filterKey) => {
       const filterText = resultFilter[filterKey];
-      const targetText = filterKey === 'group' ? getResultGroupName(result) : result[filterKey];
+      const targetText = getTargetTextForFilter(project, result, filterKey);
       return !targetText || targetText.includes(filterText);
     });
     if (isMatched) {
@@ -228,7 +239,7 @@ const mapStateToProps = (state, ownProps) => {
   const { resultFilter = {} } = projectStatus;
   const { stats } = status;
 
-  const filteredResults = filterResults(results, resultFilter);
+  const filteredResults = filterResults(project, results, resultFilter);
 
   return {
     projectId,
