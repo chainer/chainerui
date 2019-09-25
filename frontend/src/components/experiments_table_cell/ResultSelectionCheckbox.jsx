@@ -10,6 +10,8 @@ const ResultSelectionCheckbox = (props) => {
 
   return (
     <Check
+      inline
+      className="ml-2"
       type="checkbox"
       checked={currentCheckState}
       onChange={() =>

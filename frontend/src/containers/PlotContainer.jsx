@@ -138,20 +138,22 @@ class PlotContainer extends React.Component {
                 onResultSelect={this.props.updateResultSelect}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
               />
-              <ResultTypeSelector
-                projectId={projectId}
-                value={projectConfig.resultType}
-                onChange={this.props.updateTargetResultType}
-              />
-              <SelectedResultTools
-                project={project}
-                results={results}
-                resultTypeId={projectConfig.resultType}
-                resultsStatus={projectStatus.resultsStatus}
-                onResultUpdate={this.props.updateResult}
-                onTableExpandedUpdate={this.props.updateTableExpanded}
-                onCheckedOfResultStatusUpdate={this.props.updateCheckedOfResultStatus}
-              />
+              <div className="mt-1 mb-2">
+                <SelectedResultTools
+                  project={project}
+                  results={results}
+                  resultTypeId={projectConfig.resultType}
+                  resultsStatus={projectStatus.resultsStatus}
+                  onResultUpdate={this.props.updateResult}
+                  onTableExpandedUpdate={this.props.updateTableExpanded}
+                  onCheckedOfResultStatusUpdate={this.props.updateCheckedOfResultStatus}
+                />
+                <ResultTypeSelector
+                  projectId={projectId}
+                  value={projectConfig.resultType}
+                  onChange={this.props.updateTargetResultType}
+                />
+              </div>
               <ExperimentsTable
                 project={project}
                 results={results}
