@@ -33,7 +33,12 @@ import LogVisualizer from '../components/LogVisualizer';
 import SideBar from '../components/SideBar';
 import ResultTypeSelector from '../components/ResultTypeSelector';
 import { defaultProjectStatus, defaultProjectConfig } from '../constants';
-import { startPolling, stopPolling, getResultGroupName, displayResultNameFull } from '../utils';
+import {
+  startPolling,
+  stopPolling,
+  getGrandParentDirectoryName,
+  displayResultNameFull,
+} from '../utils';
 
 class PlotContainer extends React.Component {
   componentDidMount() {
@@ -204,7 +209,7 @@ PlotContainer.propTypes = {
 const getTargetTextForFilter = (project, result, filterKey) => {
   switch (filterKey) {
     case 'group':
-      return getResultGroupName(result);
+      return getGrandParentDirectoryName(result);
     case 'name':
       return displayResultNameFull(project, result);
     default:

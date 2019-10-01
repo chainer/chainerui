@@ -5,7 +5,7 @@ import ReactTable from 'react-table';
 import * as uiPropTypes from '../store/uiPropTypes';
 import {
   argValue2string,
-  getResultGroupName,
+  getGrandParentDirectoryName,
   getLastLogDict,
   sortMethod,
   sortKeys,
@@ -147,7 +147,7 @@ const ExperimentsTable = (props) => {
     nameColumns.unshift({
       Header: '',
       id: 'group',
-      accessor: (p) => getResultGroupName(p),
+      accessor: (p) => getGrandParentDirectoryName(p),
       Filter: (
         <ResultFilter
           projectId={project.id}
