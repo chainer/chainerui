@@ -14,6 +14,7 @@ import {
 import ResultName from './experiments_table_cell/ResultName';
 import ToggleResult from './experiments_table_cell/ToggleResult';
 import SubComponent from './experiments_table_cell/SubComponent';
+import ResultFilter from './experiments_table_cell/ResultFilter';
 import VisibilityCheckbox from './VisibilityCheckbox';
 import TableConfigurator from './TableConfigurator';
 
@@ -24,12 +25,14 @@ const ExperimentsTable = (props) => {
     project,
     results,
     resultsStatus,
+    resultFilter,
     stats,
     projectConfig,
     globalConfig,
     onResultsConfigSelectUpdate,
     onResultUpdate,
     onResultSelect,
+    onResultFilterUpdate,
     onCommandSubmit,
     onTableExpandedUpdate,
     onTableColumnsVisibilityUpdate,
@@ -90,6 +93,7 @@ const ExperimentsTable = (props) => {
       },
       className: 'text-center',
       sortable: false,
+      filterable: false,
       minWidth: 40,
       Aggregated: (row) => {
         const groupedResultKeys = row.subRows.map((r) => {
@@ -129,6 +133,14 @@ const ExperimentsTable = (props) => {
         return null;
       },
       minWidth: 250,
+      Filter: (
+        <ResultFilter
+          projectId={project.id}
+          filterKey="name"
+          filterText={resultFilter.name}
+          onResultFilterUpdate={onResultFilterUpdate}
+        />
+      ),
     },
   ];
   if (isGrouped) {
@@ -136,6 +148,14 @@ const ExperimentsTable = (props) => {
       Header: '',
       id: 'group',
       accessor: (p) => getGrandParentDirectoryName(p),
+      Filter: (
+        <ResultFilter
+          projectId={project.id}
+          filterKey="group"
+          filterText={resultFilter.group}
+          onResultFilterUpdate={onResultFilterUpdate}
+        />
+      ),
     });
   }
   const groupedKey = isGrouped ? ['group'] : [];
@@ -153,6 +173,7 @@ const ExperimentsTable = (props) => {
     style: defaultStyle,
     show: !(knownLogKeysConfig[logKey] || {}).hidden,
     aggregate: () => '',
+    filterable: false,
   }));
 
   const argsList = sortKeys(argKeys, knownArgKeysConfig).map((argKey) => ({
@@ -169,6 +190,7 @@ const ExperimentsTable = (props) => {
     style: defaultStyle,
     show: !(knownArgKeysConfig[argKey] || {}).hidden,
     aggregate: () => '',
+    filterable: false,
   }));
 
   const columns = [
@@ -203,6 +225,7 @@ const ExperimentsTable = (props) => {
         expanded={expanded}
         onExpandedChange={(nextExpanded) => onTableExpandedUpdate(project.id, nextExpanded)}
         pageSize={resultList.length}
+        filterable
         defaultSortMethod={sortMethod}
         defaultSorted={[
           {
@@ -254,12 +277,14 @@ ExperimentsTable.propTypes = {
   project: uiPropTypes.project.isRequired,
   results: uiPropTypes.results.isRequired,
   resultsStatus: uiPropTypes.resultsStatus,
+  resultFilter: uiPropTypes.resultFilter,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   globalConfig: uiPropTypes.globalConfig.isRequired,
   stats: uiPropTypes.stats.isRequired,
   onResultsConfigSelectUpdate: PropTypes.func.isRequired,
   onResultUpdate: PropTypes.func.isRequired,
   onResultSelect: PropTypes.func.isRequired,
+  onResultFilterUpdate: PropTypes.func.isRequired,
   onCommandSubmit: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired,
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
@@ -267,6 +292,7 @@ ExperimentsTable.propTypes = {
 
 ExperimentsTable.defaultProps = {
   resultsStatus: {},
+  resultFilter: {},
 };
 
 export default ExperimentsTable;

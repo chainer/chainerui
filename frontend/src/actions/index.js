@@ -253,6 +253,17 @@ export const updateResultSelect = (projectId, resultId, selected) => ({
   selected,
 });
 
+// result filter
+
+export const RESULT_FILTER_UPDATE = 'RESULT_FILTER_UPDATE';
+
+export const updateResultFilter = (projectId, filterKey, filterText) => ({
+  type: RESULT_FILTER_UPDATE,
+  projectId,
+  filterKey,
+  filterText,
+});
+
 // lines config
 
 export const LINES_CONFIG_LINE_UPDATE = 'LINES_CONFIG_LINE_UPDATE';
