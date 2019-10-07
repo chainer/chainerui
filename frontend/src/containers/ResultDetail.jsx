@@ -109,8 +109,8 @@ ResultDetail.defaultProps = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const projectId = Number(ownProps.params.projectId);
-  const resultId = Number(ownProps.params.resultId);
+  const projectId = Number(ownProps.match.params.projectId);
+  const resultId = Number(ownProps.match.params.resultId);
   const { entities, config } = state;
   const globalConfig = config.global;
   const { projects = {}, results = {} } = entities;
