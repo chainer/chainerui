@@ -1,8 +1,8 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router, Route, browserHistory } from 'react-router';
+import { Route } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
 import { persistStore } from 'redux-persist';
-import { syncHistoryWithStore } from 'react-router-redux';
 import configureStore from '../store/configureStore';
 import ProjectsContainer from '../containers/ProjectsContainer';
 import PlotContainer from '../containers/PlotContainer';
@@ -10,7 +10,6 @@ import ResultDetail from '../containers/ResultDetail';
 import AssetsContainer from '../containers/AssetsContainer';
 
 const store = configureStore();
-const history = syncHistoryWithStore(browserHistory, store);
 
 class Root extends React.Component {
   constructor(props) {
@@ -32,15 +31,12 @@ class Root extends React.Component {
     }
     return (
       <Provider store={store}>
-        <Router history={history}>
+        <BrowserRouter>
           <Route path="/" component={ProjectsContainer} />
-          <Route path="/projects/(:projectId)" component={PlotContainer} />
-          <Route path="/projects/(:projectId)/results/(:resultId)" component={ResultDetail} />
-          <Route
-            path="/projects/(:projectId)/results/(:resultId)/assets"
-            component={AssetsContainer}
-          />
-        </Router>
+          <Route path="/projects/:projectId" component={PlotContainer} />
+          <Route path="/projects/:projectId/results/:resultId" component={ResultDetail} />
+          <Route path="/projects/:projectId/results/:resultId/assets" component={AssetsContainer} />
+        </BrowserRouter>
       </Provider>
     );
   }
