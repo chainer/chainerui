@@ -32,10 +32,14 @@ class Root extends React.Component {
     return (
       <Provider store={store}>
         <BrowserRouter>
-          <Route path="/" component={ProjectsContainer} />
-          <Route path="/projects/:projectId" component={PlotContainer} />
-          <Route path="/projects/:projectId/results/:resultId" component={ResultDetail} />
-          <Route path="/projects/:projectId/results/:resultId/assets" component={AssetsContainer} />
+          <Route exact path="/" component={ProjectsContainer} />
+          <Route exact path="/projects/:projectId" component={PlotContainer} />
+          <Route exact path="/projects/:projectId/results/:resultId" component={ResultDetail} />
+          <Route
+            exact
+            path="/projects/:projectId/results/:resultId/assets"
+            component={AssetsContainer}
+          />
         </BrowserRouter>
       </Provider>
     );
