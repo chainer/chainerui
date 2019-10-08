@@ -61,12 +61,6 @@ def run(train_batch_size, val_batch_size, epochs, lr, momentum, log_interval):
                                                      'nll': Loss(F.nll_loss)},
                                             device=device)
 
-    from chainerui.contrib.ignite.handler import OutputHandler
-    from chainerui.contrib.ignite.handler import ChainerUILogger
-
-    logger = ChainerUILogger()
-    logger.attach(trainer, log_handler)
-
     desc = "ITERATION - loss: {:.2f}"
     pbar = tqdm(
         initial=0, leave=False, total=len(train_loader),
@@ -105,8 +99,18 @@ def run(train_batch_size, val_batch_size, epochs, lr, momentum, log_interval):
 
         pbar.n = pbar.last_print_n = 0
 
-    trainer.run(train_loader, max_epochs=epochs)
-    pbar.close()
+    from chainerui.contrib.ignite.handler import OutputHandler
+    from chainerui.contrib.ignite.handler import ChainerUILogger
+
+    logger = ChainerUILogger()
+    train_handler = OutputHandler('train', output_transform=lambda o: {'nll': o}, interval=10)
+    logger.attach(trainer, log_handler=train_handler, event_name=Events.ITERATION_COMPLETED)
+    val_handler = OutputHandler('val', metric_names=['accuracy', 'nll'], validation_mode=True)
+    logger.attach(evaluator, log_handler=val_handler, event_name=Events.EPOCH_COMPLETED)
+
+    with logger:
+        trainer.run(train_loader, max_epochs=epochs)
+        pbar.close()
 
 
 if __name__ == "__main__":
