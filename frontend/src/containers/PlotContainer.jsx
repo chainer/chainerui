@@ -14,6 +14,7 @@ import {
   updateAxisScale,
   toggleLogKeySelect,
   updateResultSelect,
+  updateResultFilter,
   updateResultsConfigSelect,
   updateXAxisKey,
   updateAxisScaleRangeType,
@@ -34,7 +35,12 @@ import SideBar from '../components/SideBar';
 import SelectedResultTools from '../components/SelectedResultTools';
 import ResultTypeSelector from '../components/ResultTypeSelector';
 import { defaultProjectStatus, defaultProjectConfig } from '../constants';
-import { startPolling, stopPolling } from '../utils';
+import {
+  startPolling,
+  stopPolling,
+  getGrandParentDirectoryName,
+  displayResultNameFull,
+} from '../utils';
 
 class PlotContainer extends React.Component {
   componentDidMount() {
@@ -158,12 +164,14 @@ class PlotContainer extends React.Component {
                 project={project}
                 results={results}
                 resultsStatus={projectStatus.resultsStatus}
+                resultFilter={projectStatus.resultFilter}
                 stats={stats}
                 projectConfig={projectConfig}
                 globalConfig={globalConfig}
                 onResultsConfigSelectUpdate={this.props.updateResultsConfigSelect}
                 onResultUpdate={this.props.updateResult}
                 onResultSelect={this.props.updateResultSelect}
+                onResultFilterUpdate={this.props.updateResultFilter}
                 onCommandSubmit={this.props.createCommand}
                 onTableExpandedUpdate={this.props.updateTableExpanded}
                 onTableColumnsVisibilityUpdate={this.handleExperimentsTableColumnsVisibilityUpdate}
@@ -201,6 +209,7 @@ PlotContainer.propTypes = {
   updateAxisScale: PropTypes.func.isRequired,
   toggleLogKeySelect: PropTypes.func.isRequired,
   updateResultSelect: PropTypes.func.isRequired,
+  updateResultFilter: PropTypes.func.isRequired,
   updateResultsConfigSelect: PropTypes.func.isRequired,
   updateXAxisKey: PropTypes.func.isRequired,
   updateAxisScaleRangeType: PropTypes.func.isRequired,
@@ -212,6 +221,33 @@ PlotContainer.propTypes = {
   updateCheckedOfResultStatus: PropTypes.func.isRequired,
 };
 
+const getTargetTextForFilter = (project, result, filterKey) => {
+  switch (filterKey) {
+    case 'group':
+      return getGrandParentDirectoryName(result);
+    case 'name':
+      return displayResultNameFull(project, result);
+    default:
+      return result[filterKey];
+  }
+};
+
+const filterResults = (project, results, resultFilter) => {
+  const filteredResults = Object.keys(results).reduce((pre, resultId) => {
+    const result = results[resultId];
+    const isMatched = Object.keys(resultFilter).every((filterKey) => {
+      const filterText = resultFilter[filterKey];
+      const targetText = getTargetTextForFilter(project, result, filterKey);
+      return !targetText || targetText.includes(filterText);
+    });
+    if (isMatched) {
+      return { ...pre, [resultId]: result };
+    }
+    return pre;
+  }, {});
+  return filteredResults;
+};
+
 const mapStateToProps = (state, ownProps) => {
   const projectId = Number(ownProps.params.projectId);
   const { entities, status, config } = state;
@@ -220,11 +256,15 @@ const mapStateToProps = (state, ownProps) => {
   const projectStatus = status.projectsStatus[projectId] || defaultProjectStatus;
   const projectConfig = config.projectsConfig[projectId] || defaultProjectConfig;
   const globalConfig = config.global;
+  const { resultFilter = {} } = projectStatus;
   const { stats } = status;
+
+  const filteredResults = filterResults(project, results, resultFilter);
+
   return {
     projectId,
     project,
-    results,
+    results: filteredResults,
     projectStatus,
     projectConfig,
     globalConfig,
@@ -245,6 +285,7 @@ export default connect(
     updateAxisScale,
     toggleLogKeySelect,
     updateResultSelect,
+    updateResultFilter,
     updateResultsConfigSelect,
     updateXAxisKey,
     updateAxisScaleRangeType,

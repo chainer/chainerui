@@ -235,9 +235,24 @@ const resultsStatusReducer = (state = {}, action) => {
   return state;
 };
 
+const resultFilterReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.RESULT_FILTER_UPDATE: {
+      const { filterKey, filterText } = action;
+      return {
+        ...state,
+        [filterKey]: filterText,
+      };
+    }
+    default:
+      return state;
+  }
+};
+
 const projectStatusReducer = combineReducers({
   chartDownloadStatus: chartDownloadStatusReducer,
   resultsStatus: resultsStatusReducer,
+  resultFilter: resultFilterReducer,
 });
 
 const projectsStatusReducer = (state = {}, action) => {

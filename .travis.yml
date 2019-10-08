@@ -66,6 +66,13 @@ script:
 
 after_success:
   - if [[ $CHAINERUI_COVERAGE_REPORT == 1 ]]; then COVERALLS_TOKEN=$COVERALLS_TOKEN coveralls; fi
+  - |
+    if [[ $CHAINERUI_DEPLOY_JOB == 1 ]]; then
+      pip uninstall -y chainerui
+      rm -rf build chainerui.egg-info dist
+      python setup.py sdist
+      pip install dist/* chainerui --no-cache-dir
+    fi
 
 deploy:
   - provider: pypi
