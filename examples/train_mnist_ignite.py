@@ -1,21 +1,29 @@
-# This example is based on https://github.com/pytorch/ignite/blob/v0.2.1/examples/mnist/mnist.py
+# This example is based on https://github.com/pytorch/ignite/blob/v0.2.1/examples/mnist/mnist.py  # NOQA
 # Please see [ChainerUI] commend on the below code.
 from argparse import ArgumentParser
 
+import torch
 from torch import nn
+import torch.nn.functional as F
 from torch.optim import SGD
 from torch.utils.data import DataLoader
-import torch
-import torch.nn.functional as F
-from torchvision.transforms import Compose, ToTensor, Normalize
 from torchvision.datasets import MNIST
+from torchvision.transforms import Compose
+from torchvision.transforms import Normalize
+from torchvision.transforms import ToTensor
 
-from ignite.engine import Events, create_supervised_trainer, create_supervised_evaluator
-from ignite.metrics import Accuracy, Loss
-
-import chainerui
+from ignite.contrib.handlers.base_logger import global_step_from_engine
+from ignite.engine import create_supervised_evaluator
+from ignite.engine import create_supervised_trainer
+from ignite.engine import Events
+from ignite.metrics import Accuracy
+from ignite.metrics import Loss
 
 from tqdm import tqdm
+
+import chainerui
+from chainerui.contrib.ignite.handler import ChainerUILogger
+from chainerui.contrib.ignite.handler import OutputHandler
 
 
 class Net(nn.Module):
@@ -40,16 +48,19 @@ class Net(nn.Module):
 def get_data_loaders(train_batch_size, val_batch_size):
     data_transform = Compose([ToTensor(), Normalize((0.1307,), (0.3081,))])
 
-    train_loader = DataLoader(MNIST(download=True, root=".", transform=data_transform, train=True),
-                              batch_size=train_batch_size, shuffle=True)
+    train_loader = DataLoader(
+        MNIST(download=True, root=".", transform=data_transform, train=True),
+        batch_size=train_batch_size, shuffle=True)
 
-    val_loader = DataLoader(MNIST(download=False, root=".", transform=data_transform, train=False),
-                            batch_size=val_batch_size, shuffle=False)
+    val_loader = DataLoader(
+        MNIST(download=False, root=".", transform=data_transform, train=False),
+        batch_size=val_batch_size, shuffle=False)
     return train_loader, val_loader
 
 
 def run(train_batch_size, val_batch_size, epochs, lr, momentum, log_interval):
-    train_loader, val_loader = get_data_loaders(train_batch_size, val_batch_size)
+    train_loader, val_loader = get_data_loaders(
+        train_batch_size, val_batch_size)
     model = Net()
     device = 'cpu'
 
@@ -57,7 +68,8 @@ def run(train_batch_size, val_batch_size, epochs, lr, momentum, log_interval):
         device = 'cuda'
 
     optimizer = SGD(model.parameters(), lr=lr, momentum=momentum)
-    trainer = create_supervised_trainer(model, optimizer, F.nll_loss, device=device)
+    trainer = create_supervised_trainer(
+        model, optimizer, F.nll_loss, device=device)
     evaluator = create_supervised_evaluator(model,
                                             metrics={'accuracy': Accuracy(),
                                                      'nll': Loss(F.nll_loss)},
@@ -85,7 +97,8 @@ def run(train_batch_size, val_batch_size, epochs, lr, momentum, log_interval):
         avg_accuracy = metrics['accuracy']
         avg_nll = metrics['nll']
         tqdm.write(
-            "Training Results - Epoch: {}  Avg accuracy: {:.2f} Avg loss: {:.2f}"
+            "Training Results - "
+            "Epoch: {}  Avg accuracy: {:.2f} Avg loss: {:.2f}"
             .format(engine.state.epoch, avg_accuracy, avg_nll)
         )
 
@@ -96,15 +109,13 @@ def run(train_batch_size, val_batch_size, epochs, lr, momentum, log_interval):
         avg_accuracy = metrics['accuracy']
         avg_nll = metrics['nll']
         tqdm.write(
-            "Validation Results - Epoch: {}  Avg accuracy: {:.2f} Avg loss: {:.2f}"
+            "Validation Results "
+            "- Epoch: {}  Avg accuracy: {:.2f} Avg loss: {:.2f}"
             .format(engine.state.epoch, avg_accuracy, avg_nll))
 
         pbar.n = pbar.last_print_n = 0
 
     # [ChainerUI] import logger and handler
-    from chainerui.contrib.ignite.handler import OutputHandler
-    from chainerui.contrib.ignite.handler import ChainerUILogger
-    from ignite.contrib.handlers.base_logger import global_step_from_engine
     # [ChainerUI] setup logger, this logger manages ChainerUI web client.
     logger = ChainerUILogger()
     # [ChainerUI] to ease requests of metrics posting, set interval option
@@ -138,7 +149,8 @@ if __name__ == "__main__":
     parser.add_argument('--momentum', type=float, default=0.5,
                         help='SGD momentum (default: 0.5)')
     parser.add_argument('--log_interval', type=int, default=10,
-                        help='how many batches to wait before logging training status')
+                        help='how many batches to wait before logging '
+                             'training status')
 
     args = parser.parse_args()
 
@@ -146,4 +158,6 @@ if __name__ == "__main__":
     # args will be showed as parameter of this experiment.
     chainerui.init(conditions=args)
 
-    run(args.batch_size, args.val_batch_size, args.epochs, args.lr, args.momentum, args.log_interval)
+    run(
+        args.batch_size, args.val_batch_size, args.epochs, args.lr,
+        args.momentum, args.log_interval)

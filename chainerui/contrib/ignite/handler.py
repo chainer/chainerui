@@ -112,7 +112,6 @@ class ChainerUILogger(BaseLogger):
         self.attached_tags = set()
         self.client = web_client
         self.cache = {}  # key is tag name, value is list of metrics
-        self.previous_count = {}
         self.start_at = _get_time()
 
     def attach(self, engine, log_handler, event_name):
