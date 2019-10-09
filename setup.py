@@ -37,6 +37,7 @@ requirements = {
         'Pillow',
         'matplotlib',
         'scipy',
+        'pytorch-ignite',
         'chainer',
     ]
 }

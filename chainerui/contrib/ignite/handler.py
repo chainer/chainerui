@@ -33,6 +33,7 @@ class OutputHandler(BaseOutputHandler):
         interval_step (int): interval step for posting metrics to ChainerUI
             server.
     """
+
     def __init__(
             self, tag, metric_names=None, output_transform=None,
             another_engine=None, global_step_transform=None, interval_step=-1):
@@ -45,7 +46,7 @@ class OutputHandler(BaseOutputHandler):
         if not isinstance(logger, ChainerUILogger):
             raise RuntimeError(
                 '`chainerui.contrib.ignite.handler.OutputHandler` works only '
-                'with ChainerUILogger')
+                'with ChainerUILogger, but set {}'.format(type(logger)))
 
         metrics = self._setup_output_metrics(engine)
         if not metrics:
@@ -63,7 +64,7 @@ class OutputHandler(BaseOutputHandler):
         if 'elapsed_time' not in rendered_metrics:
             rendered_metrics['elapsed_time'] = _get_time() - logger.start_at
 
-        if self.interval <= 0:
+        if self.interval <= 1:
             logger.post_log([rendered_metrics])
             return
 
@@ -102,6 +103,7 @@ class ChainerUILogger(BaseLogger):
             eval_engine, log_handler=val_handler,
             event_name=Event.EPOCH_COMPLETED)
     """
+
     def __init__(self):
         web_client = chainerui.client.client._client
         if not web_client:
