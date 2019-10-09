@@ -1,3 +1,5 @@
+# This example is based on https://github.com/pytorch/ignite/blob/v0.2.1/examples/mnist/mnist.py
+# Please see [ChainerUI] commend on the below code.
 from argparse import ArgumentParser
 
 from torch import nn
@@ -99,15 +101,25 @@ def run(train_batch_size, val_batch_size, epochs, lr, momentum, log_interval):
 
         pbar.n = pbar.last_print_n = 0
 
+    # [ChainerUI] import logger and handler
     from chainerui.contrib.ignite.handler import OutputHandler
     from chainerui.contrib.ignite.handler import ChainerUILogger
-
+    from ignite.contrib.handlers.base_logger import global_step_from_engine
+    # [ChainerUI] setup logger, this logger manages ChainerUI web client.
     logger = ChainerUILogger()
-    train_handler = OutputHandler('train', output_transform=lambda o: {'nll': o}, interval=10)
-    logger.attach(trainer, log_handler=train_handler, event_name=Events.ITERATION_COMPLETED)
-    val_handler = OutputHandler('val', metric_names=['accuracy', 'nll'], validation_mode=True)
-    logger.attach(evaluator, log_handler=val_handler, event_name=Events.EPOCH_COMPLETED)
-
+    # [ChainerUI] to ease requests of metrics posting, set interval option
+    train_handler = OutputHandler(
+        'train', output_transform=lambda o: {'nll': o}, interval_step=20)
+    logger.attach(
+        trainer, log_handler=train_handler,
+        event_name=Events.ITERATION_COMPLETED)
+    # [ChainerUI] to set same value of x axis, use global_step_transform
+    val_handler = OutputHandler(
+        'val', metric_names='all',
+        global_step_transform=global_step_from_engine(trainer))
+    logger.attach(
+        evaluator, log_handler=val_handler, event_name=Events.EPOCH_COMPLETED)
+    # [ChainerUI] to post remainder of metrics caused by interval, use "with"
     with logger:
         trainer.run(train_loader, max_epochs=epochs)
         pbar.close()
@@ -130,6 +142,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # [ChainerUI] To use ChainerUI web client, must initialize
+    # args will be showed as parameter of this experiment.
     chainerui.init(conditions=args)
 
     run(args.batch_size, args.val_batch_size, args.epochs, args.lr, args.momentum, args.log_interval)
