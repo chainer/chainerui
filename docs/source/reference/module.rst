@@ -66,3 +66,16 @@ Utilities
 .. _module_save_args:
 
 .. autofunction:: chainerui.utils.save_args
+
+
+External library support
+------------------------
+
+.. _module_ignite_output_handler:
+
+.. autoclass:: chainerui.contrib.ignite.handler.OutputHandler
+   :members:
+
+.. _module_ignite_logger:
+
+.. autoclass:: chainerui.contrib.ignite.handler.ChainerUILogger
