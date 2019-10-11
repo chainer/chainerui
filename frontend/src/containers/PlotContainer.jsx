@@ -249,7 +249,7 @@ const filterResults = (project, results, resultFilter) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const projectId = Number(ownProps.params.projectId);
+  const projectId = Number(ownProps.match.params.projectId);
   const { entities, status, config } = state;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId] || { id: projectId };

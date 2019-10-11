@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { routerReducer, LOCATION_CHANGE } from 'react-router-redux';
 import { persistReducer } from 'redux-persist';
 import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
@@ -184,7 +183,6 @@ const fetchStateReducer = (state = {}, action) => {
         result: action.type,
       };
     case ActionTypes.GLOBAL_CONFIG_POLLING_RATE_UPDATE:
-    case LOCATION_CHANGE:
       if (action.pollingRate === 0) {
         return {};
       }
@@ -572,7 +570,6 @@ const rootReducer = combineReducers({
   fetchState: fetchStateReducer,
   status: statusReducer,
   config: persistReducer(persistConfig, configReducer),
-  routing: routerReducer,
 });
 
 export default rootReducer;
