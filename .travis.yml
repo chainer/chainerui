@@ -5,6 +5,8 @@ matrix:
     - name: "Ubuntu14.04 Py27"
       dist: trusty
       python: "2.7"
+      env:
+        - CHAINERUI_PLAIN_INSTALL=1
     - name: "Ubuntu16.04 Py35"
       dist: xenial
       python: "3.5"
