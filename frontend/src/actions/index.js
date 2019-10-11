@@ -238,6 +238,7 @@ export const toggleLogKeySelect = (projectId, axisName, logKey) => ({
 
 export const RESULTS_CONFIG_SELECT_UPDATE = 'RESULTS_CONFIG_SELECT_UPDATE';
 export const RESULT_SELECT_UPDATE = 'RESULT_SELECT_UPDATE';
+export const CHECKED_OF_RESULT_STATUS_UPDATE = 'CHECKED_OF_RESULT_STATUS_UPDATE';
 
 export const updateResultsConfigSelect = (projectId, resultId, hidden) => ({
   type: RESULTS_CONFIG_SELECT_UPDATE,
@@ -251,6 +252,13 @@ export const updateResultSelect = (projectId, resultId, selected) => ({
   projectId,
   resultId,
   selected,
+});
+
+export const updateCheckedOfResultStatus = (projectId, resultId, checked) => ({
+  type: CHECKED_OF_RESULT_STATUS_UPDATE,
+  projectId,
+  resultId,
+  checked,
 });
 
 // result filter

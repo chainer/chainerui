@@ -14,22 +14,20 @@ const ResultTypeSelector = (props) => {
   };
 
   return (
-    <div className="mt-1 mb-2">
-      <ButtonGroup>
-        <Button
-          onClick={() => handleChangeFetchResultType(fetchResultTypes[0].id)}
-          active={value === fetchResultTypes[0].id}
-        >
-          {fetchResultTypes[0].name}
-        </Button>
-        <Button
-          onClick={() => handleChangeFetchResultType(fetchResultTypes[1].id)}
-          active={value === fetchResultTypes[1].id}
-        >
-          {fetchResultTypes[1].name}
-        </Button>
-      </ButtonGroup>
-    </div>
+    <ButtonGroup>
+      <Button
+        onClick={() => handleChangeFetchResultType(fetchResultTypes[0].id)}
+        active={value === fetchResultTypes[0].id}
+      >
+        {fetchResultTypes[0].name}
+      </Button>
+      <Button
+        onClick={() => handleChangeFetchResultType(fetchResultTypes[1].id)}
+        active={value === fetchResultTypes[1].id}
+      >
+        {fetchResultTypes[1].name}
+      </Button>
+    </ButtonGroup>
   );
 };
 

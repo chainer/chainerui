@@ -13,6 +13,7 @@ import {
 
 import ResultName from './experiments_table_cell/ResultName';
 import ToggleResult from './experiments_table_cell/ToggleResult';
+import ResultSelectionCheckbox from './experiments_table_cell/ResultSelectionCheckbox';
 import SubComponent from './experiments_table_cell/SubComponent';
 import ResultFilter from './experiments_table_cell/ResultFilter';
 import VisibilityCheckbox from './VisibilityCheckbox';
@@ -36,6 +37,7 @@ const ExperimentsTable = (props) => {
     onCommandSubmit,
     onTableExpandedUpdate,
     onTableColumnsVisibilityUpdate,
+    onCheckedOfResultStatusUpdate,
   } = props;
   const { argKeys, logKeys } = stats;
   const { resultsConfig, tableState } = projectConfig;
@@ -67,6 +69,46 @@ const ExperimentsTable = (props) => {
   const { knownLogKeysConfig = {}, knownArgKeysConfig = {}, isGrouped = false } = tableState;
 
   const nameColumns = [
+    {
+      Header: (
+        <ResultSelectionCheckbox
+          project={project}
+          targetResults={resultList}
+          resultsStatus={resultsStatus}
+          onChange={onCheckedOfResultStatusUpdate}
+        />
+      ),
+      Cell: (p) => {
+        const { original } = p;
+        if (!original) {
+          return {};
+        }
+        return (
+          <ResultSelectionCheckbox
+            project={project}
+            targetResults={[original]}
+            resultsStatus={resultsStatus}
+            onChange={onCheckedOfResultStatusUpdate}
+          />
+        );
+      },
+      sortable: false,
+      minWidth: 40,
+      Aggregated: (row) => {
+        const groupedResults = row.subRows.map((r) => {
+          const { _original } = r;
+          return _original;
+        });
+        return (
+          <ResultSelectionCheckbox
+            project={project}
+            targetResults={groupedResults}
+            resultsStatus={resultsStatus}
+            onChange={onCheckedOfResultStatusUpdate}
+          />
+        );
+      },
+    },
     {
       Header: (
         <VisibilityCheckbox
@@ -235,13 +277,7 @@ const ExperimentsTable = (props) => {
         pivotBy={groupedKey}
         freezeWhenExpanded={expanded === {}}
         SubComponent={(p) => (
-          <SubComponent
-            original={p.original}
-            project={project}
-            onResultUpdate={onResultUpdate}
-            onResultUnregistered={() => onTableExpandedUpdate(project.id, {})}
-            onCommandSubmit={onCommandSubmit}
-          />
+          <SubComponent original={p.original} project={project} onCommandSubmit={onCommandSubmit} />
         )}
         getTrProps={(state, rowInfo) => {
           if (!globalConfig.highlightTableAndChart) {
@@ -288,6 +324,7 @@ ExperimentsTable.propTypes = {
   onCommandSubmit: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired,
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
+  onCheckedOfResultStatusUpdate: PropTypes.func.isRequired,
 };
 
 ExperimentsTable.defaultProps = {
