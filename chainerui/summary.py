@@ -202,15 +202,20 @@ def reporter(prefix=None, out=None, subdir='', timeout=5, **kwargs):
     * :meth:`~chainerui.summary._Reporter.text`: collect text. almost same \
         as :func:`~chainerui.summary.text`
 
-    Example of how to set several assets::
+    Example of how to set several assets:
 
-       >>> from chainerui.summary import reporter
-       >>> summary.set_out('/path/to/output')  # same as 'log' file directory
+       >>> from chainerui import summary
+       >>> summary.set_out('path/to/output')  # same as 'log' file directory
        >>>
+       >>> image_array1 = np.zeros((1, 3, 224, 224))
+       >>> image_array2 = np.zeros((1, 3, 224, 224))
+       >>> audio_array = np.random.uniform(-1, 1, 16000)
+       >>>
+       >>> from chainerui.summary import reporter
        >>> with reporter(epoch=1, iteration=10) as r:
-       >>>     r.image(image_array1)
-       >>>     r.image(image_array2)
-       >>>     r.audio(audio_array, 44100)
+       ...     r.image(image_array1)
+       ...     r.image(image_array2)
+       ...     r.audio(audio_array, 44100)
        >>> # image_array1 and image_array2 are visualized on a browser
        >>> # audio_array can be listened on a browser
 
@@ -237,38 +242,32 @@ def image(images, name=None, ch_axis=1, row=0, mode=None, batched=True,
     on `assets` endpoint vertically. If need to aggregate images in a row, use
     :func:`~chainerui.summary.reporter`.
 
-    Examples of how to set arguments::
+    Examples of how to set arguments:
 
        >>> from chainerui import summary
-       >>> summary.set_out('/path/to/log')  # same as 'log' file directory
+       >>> summary.set_out('path/to/log')  # same as 'log' file directory
        >>>
-       >>> x.shape  # = [Batchsize, Channel, Height, Width]
-       (10, 3, 5, 5)
+       >>> x = np.zeros((10, 3, 5, 5))  # = [Batchsize, Channel, Height, Width]
        >>> summary.image(x, name='test')  # images are tiled as 1x10
        >>> summary.image(x, name='test', row=2)  # images are tiled as 2x5
        >>>
-       >>> x.shape  # = [C, H, W]
-       (3, 5, 5)
+       >>> x = np.zeros((3, 5, 5))  # = [C, H, W]
        >>> # need to set as a non-batched image and channel axis explicitly
        >>> summary.image(x, name='test', ch_axis=0, batched=False)
        >>>
-       >>> x.shape  # = [B, H, W, C]
-       (10, 5, 5, 3)
+       >>> x = np.zeros((10, 5, 5, 3))  # = [B, H, W, C]
        >>> # need to set channel axis explicitly
        >>> summary.image(x, name='test', ch_axis=-1, row=2)
        >>>
-       >>> x.shape  # = [H, W, C]
-       (5, 5, 3)
+       >>> x = np.zeros((5, 5, 3))  # = [H, W, C]
        >>> # need to set as a non-batched image
        >>> summary.image(x, name='test', ch_axis=-1, batched=False)
        >>>
-       >>> x.shape  # = [B, H, W], grayscale images
-       (10, 5, 5)
+       >>> x = np.zeros((10, 5, 5))  # = [B, H, W], grayscale images
        >>> summary.image(x, name='test')  # image are tiled as 1x10
        >>> summary.image(x, name='test', row=2)  # image are tiled as 2x5
        >>>
-       >>> x.shape  # = [H, W], a grayscale image
-       (5, 5)
+       >>> x = np.zeros((5, 5)) # = [H, W], a grayscale image
        >>> # need to set as a non-bathed image
        >>> summary.image(x, name='test', batched=False)
 
@@ -330,19 +329,20 @@ def audio(audio, sample_rate, name=None, out=None, subdir='', timeout=5,
     vertically. If need to aggregate audio files in row, use
     :func:`~chainerui.summary.reporter`.
 
-    Example of how to set arguments::
+    Example of how to set arguments:
 
        >>> from chainerui import summary
-       >>> summary.set_out('/path/to/output')
+       >>> summary.set_out('path/to/output')
        >>> rate = 44100
        >>>
+       >>> sampled_array = np.random.uniform(-1, 1, 16000)
        >>> summary.audio(sampled_array, rate, name='test')
        >>> # sampled_array can be listened on a browser.
 
-    Add description about the audio file::
+    Add description about the audio file:
 
-       >>> summary.image(
-       >>>     sampled_array, rate, name='test', epoch=1, iteration=100)
+       >>> summary.audio(
+       ...     sampled_array, rate, name='test', epoch=1, iteration=100)
        >>> # 'epoch' and 'iteration' column will be shown.
 
     Args:

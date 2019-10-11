@@ -299,7 +299,9 @@ def log_reporter():
     with new one.
 
     The callback function is expected to use with ``postprocess``
-    option of Chainer ``LogReport`` extension::
+    option of Chainer ``LogReport`` extension:
+
+    .. code-block:: python
 
        >>> chainerui.init()
        >>>
@@ -326,7 +328,9 @@ def log(value):
 
     Send log data and will be shown ad training log on web browser.
 
-    Example::
+    Example:
+
+    .. code-block:: python
 
        >>> chainerui.init()
        >>> # ...

@@ -63,6 +63,7 @@ script:
   - sleep 4
   - curl -f http://127.0.0.1:5051/
   - pytest --cov=chainerui
+  - if [[ $CHAINERUI_DEPLOY_JOB == 1 ]]; then pushd docs && make doctest && popd; fi
 
 after_success:
   - if [[ $CHAINERUI_COVERAGE_REPORT == 1 ]]; then COVERALLS_TOKEN=$COVERALLS_TOKEN coveralls; fi
