@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, IndexLink } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
@@ -11,7 +11,7 @@ const BreadcrumbLink = (props) => {
   const { isResultNameAlignRight } = globalConfig;
   const items = [
     <BreadcrumbItem key="home">
-      <IndexLink to="/">Home</IndexLink>
+      <Link to="/">Home</Link>
     </BreadcrumbItem>,
   ];
 

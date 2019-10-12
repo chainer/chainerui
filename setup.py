@@ -21,6 +21,9 @@ requirements = {
         'autopep8',
         'hacking',
     ],
+    'doctest': [
+        'sphinx==1.8.2',
+    ],
     'test': [
         'numpy',
         'pytest>=4.0.0,<5.0.0',
@@ -34,6 +37,7 @@ requirements = {
     ],
     'test-ci': [
         '-r test-ci-plain',
+        '-r doctest',
         'Pillow',
         'matplotlib',
         'scipy',

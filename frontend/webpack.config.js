@@ -27,7 +27,7 @@ const version = versionMatches[1];
 module.exports = {
   entry: {
     chainerui: [
-      'babel-polyfill',
+      'core-js/es',
       'whatwg-fetch',
       'bootstrap/dist/css/bootstrap.css',
       '@fortawesome/fontawesome-free/css/all.css',

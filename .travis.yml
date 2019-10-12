@@ -5,6 +5,8 @@ matrix:
     - name: "Ubuntu14.04 Py27"
       dist: trusty
       python: "2.7"
+      env:
+        - CHAINERUI_PLAIN_INSTALL=1
     - name: "Ubuntu16.04 Py35"
       dist: xenial
       python: "3.5"
@@ -63,6 +65,7 @@ script:
   - sleep 4
   - curl -f http://127.0.0.1:5051/
   - pytest --cov=chainerui
+  - if [[ $CHAINERUI_DEPLOY_JOB == 1 ]]; then pushd docs && make doctest && popd; fi
 
 after_success:
   - if [[ $CHAINERUI_COVERAGE_REPORT == 1 ]]; then COVERALLS_TOKEN=$COVERALLS_TOKEN coveralls; fi

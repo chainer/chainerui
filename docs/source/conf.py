@@ -37,6 +37,7 @@ __version__ = pkg_resources.get_distribution('chainerui').version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.doctest',
               'sphinx.ext.viewcode',
               'sphinx.ext.napoleon']
 
@@ -171,5 +172,14 @@ texinfo_documents = [
 ]
 
 # -- Own configuration for this project -----------------------------------
+
+
+doctest_global_setup = '''
+import chainer
+import numpy as np
+import scipy
+import chainerui
+'''
+
 
 html_scaled_image_link = False

@@ -24,6 +24,7 @@ import {
   updateTableColumnsVisibility,
   updateChartDownloadStatus,
   updateTargetResultType,
+  updateCheckedOfResultStatus,
 } from '../actions';
 import NavigationBar from './NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
@@ -31,6 +32,7 @@ import ExperimentsTable from '../components/ExperimentsTable';
 import ExperimentsTableConfigurator from '../components/ExperimentsTableConfigurator';
 import LogVisualizer from '../components/LogVisualizer';
 import SideBar from '../components/SideBar';
+import SelectedResultTools from '../components/SelectedResultTools';
 import ResultTypeSelector from '../components/ResultTypeSelector';
 import { defaultProjectStatus, defaultProjectConfig } from '../constants';
 import {
@@ -142,11 +144,22 @@ class PlotContainer extends React.Component {
                 onResultSelect={this.props.updateResultSelect}
                 onAxisConfigLineUpdate={this.props.updateLineInAxis}
               />
-              <ResultTypeSelector
-                projectId={projectId}
-                value={projectConfig.resultType}
-                onChange={this.props.updateTargetResultType}
-              />
+              <div className="mt-1 mb-2">
+                <SelectedResultTools
+                  project={project}
+                  results={results}
+                  resultTypeId={projectConfig.resultType}
+                  resultsStatus={projectStatus.resultsStatus}
+                  onResultUpdate={this.props.updateResult}
+                  onTableExpandedUpdate={this.props.updateTableExpanded}
+                  onCheckedOfResultStatusUpdate={this.props.updateCheckedOfResultStatus}
+                />
+                <ResultTypeSelector
+                  projectId={projectId}
+                  value={projectConfig.resultType}
+                  onChange={this.props.updateTargetResultType}
+                />
+              </div>
               <ExperimentsTable
                 project={project}
                 results={results}
@@ -162,6 +175,7 @@ class PlotContainer extends React.Component {
                 onCommandSubmit={this.props.createCommand}
                 onTableExpandedUpdate={this.props.updateTableExpanded}
                 onTableColumnsVisibilityUpdate={this.handleExperimentsTableColumnsVisibilityUpdate}
+                onCheckedOfResultStatusUpdate={this.props.updateCheckedOfResultStatus}
               />
               <ExperimentsTableConfigurator
                 project={project}
@@ -204,6 +218,7 @@ PlotContainer.propTypes = {
   updateTableColumnsVisibility: PropTypes.func.isRequired,
   updateChartDownloadStatus: PropTypes.func.isRequired,
   updateTargetResultType: PropTypes.func.isRequired,
+  updateCheckedOfResultStatus: PropTypes.func.isRequired,
 };
 
 const getTargetTextForFilter = (project, result, filterKey) => {
@@ -234,7 +249,7 @@ const filterResults = (project, results, resultFilter) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const projectId = Number(ownProps.params.projectId);
+  const projectId = Number(ownProps.match.params.projectId);
   const { entities, status, config } = state;
   const { projects = {}, results = {} } = entities;
   const project = projects[projectId] || { id: projectId };
@@ -279,5 +294,6 @@ export default connect(
     updateTableColumnsVisibility,
     updateChartDownloadStatus,
     updateTargetResultType,
+    updateCheckedOfResultStatus,
   }
 )(PlotContainer);
