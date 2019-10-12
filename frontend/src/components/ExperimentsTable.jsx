@@ -207,6 +207,9 @@ const ExperimentsTable = (props) => {
     id: `logKey${logKey}`,
     accessor: (p) => {
       const lastLogDict = getLastLogDict(p);
+      if (!lastLogDict) {
+        return '';
+      }
       if (logKey === 'elapsed_time') {
         return lastLogDict.elapsed_time == null ? emptyStr : lastLogDict.elapsed_time.toFixed(2);
       }
