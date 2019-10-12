@@ -38,7 +38,7 @@ before_install:
     if [[ $CHAINERUI_PLAIN_INSTALL == 1 ]]; then
       export CHAINERUI_TEST_DEPENDS="[test-ci-plain]";
     else
-      export CHAINERUI_TEST_DEPENDS="[test-ci]";
+      export CHAINERUI_TEST_DEPENDS="[test-ci-contrib]";
     fi
   - npm install -g npm@6
   - npm -v

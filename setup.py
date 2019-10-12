@@ -41,8 +41,11 @@ requirements = {
         'Pillow',
         'matplotlib',
         'scipy',
-        'pytorch-ignite',
         'chainer',
+    ],
+    'test-ci-contrib': [
+        '-r test-ci',
+        'pytorch-ignite',
     ]
 }
 
