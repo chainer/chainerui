@@ -91,12 +91,10 @@ def test_post_metrics(client):
 
 @pytest.mark.skipif(not _ignite_installed, reason='Ignite is not installed')
 def test_post_metrics_with_interval(client):
-    step = 0
 
     def stepper(engine, event_name):
-        nonlocal step
-        step += 1
-        return step
+        engine.state.step += 1
+        return engine.state.step
 
     handler = OutputHandler(
         'test', metric_names='all', interval_step=2,
@@ -104,6 +102,7 @@ def test_post_metrics_with_interval(client):
 
     metrics = {'loss': 0.1}
     engine = MagicMock()
+    engine.state.step = 0
     engine.state.metrics = metrics
     logger = ChainerUILogger()
 
