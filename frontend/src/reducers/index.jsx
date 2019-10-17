@@ -23,7 +23,7 @@ import {
  *                           property is set.
  * @return {Object}        The new state.
  */
-export function requestsReducer(state = {}, action) {
+const requestsReducer = (state = {}, action) => {
   if (!action.meta || !action.meta.httpRequest || !action.meta.httpRequest.url) {
     return state;
   }
@@ -35,7 +35,7 @@ export function requestsReducer(state = {}, action) {
   }
   // Add this request to the state
   return { ...state, [action.meta.httpRequest.url]: true };
-}
+};
 
 const updatePartialState = (state, action, keyId, fn) => {
   const partialState = fn(state[keyId], action);

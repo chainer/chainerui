@@ -31,7 +31,7 @@ export const CALL_API = 'Call API';
  * @param  {Function} makeRequest Function that returns a Promise object. This function performs the actual request.
  * @param  {Function} dispatch    Redux store dispatch function.
  */
-export function attemptRequest(url, actions, makeRequest, dispatch) {
+const attemptRequest = (url, actions, makeRequest, dispatch) => {
   const beginAction = { ...actions.begin() };
   beginAction.meta = beginAction.meta || {};
   beginAction.meta.httpRequest = { url, done: false };
@@ -51,7 +51,7 @@ export function attemptRequest(url, actions, makeRequest, dispatch) {
       failureAction.meta.httpRequest = { url, done: true };
       dispatch(failureAction);
     });
-}
+};
 
 export default (store) => (next) => (action) => {
   const callAPI = action[CALL_API];

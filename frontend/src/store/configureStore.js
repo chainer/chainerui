@@ -12,7 +12,7 @@ import rootReducer from '../reducers';
  *                                   action.meta.httpRequest.done property is false, and the
  *                                   meta.httpRequest.url is not already in flight.
  */
-export function createRequestMiddleware(selectorFunc = (state) => state.requests) {
+const createRequestMiddleware = (selectorFunc = (state) => state.requests) => {
   return (store) => (next) => (action) => {
     // Cancel HTTP request if there is already one pending for this URL
     if (action.meta && action.meta.httpRequest && !action.meta.httpRequest.done) {
@@ -25,7 +25,7 @@ export function createRequestMiddleware(selectorFunc = (state) => state.requests
     }
     return next(action);
   };
-}
+};
 
 const configureStore = (preloadedState) => {
   const middleware = [thunk, api, createRequestMiddleware(), createLogger()];
