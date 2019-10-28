@@ -12,6 +12,7 @@ const ResultFilter = ({ projectId, filterKey, filterText, onResultFilterUpdate }
   return (
     <div>
       <input
+        className="form-control"
         type="text"
         placeholder={`filter ${filterKey}`}
         value={filterText}
