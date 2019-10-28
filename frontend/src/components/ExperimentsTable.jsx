@@ -94,6 +94,7 @@ const ExperimentsTable = (props) => {
       },
       sortable: false,
       minWidth: 40,
+      filterable: false,
       Aggregated: (row) => {
         const groupedResults = row.subRows.map((r) => {
           const { _original } = r;
