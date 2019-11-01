@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Collapse } from 'reactstrap';
 
 import * as uiPropTypes from '../store/uiPropTypes';
+import SmoothingLinesConfigurator from './SmoothingLinesConfigurator';
 import SmoothingWeightConfigurator from './SmoothingWeightConfigurator';
 
 class SmoothingConfiguratorToggle extends React.Component {
@@ -23,7 +24,13 @@ class SmoothingConfiguratorToggle extends React.Component {
   }
 
   render() {
-    const { project, projectConfig, onSmoothingWeightUpdate } = this.props;
+    const {
+      project,
+      results,
+      projectConfig,
+      onAxisConfigLogKeySmoothingToggle,
+      onSmoothingWeightUpdate,
+    } = this.props;
 
     return (
       <div className="list-group list-group-flush">
@@ -38,6 +45,22 @@ class SmoothingConfiguratorToggle extends React.Component {
             projectConfig={projectConfig}
             onSmoothingWeightUpdate={onSmoothingWeightUpdate}
           />
+          <div className="list-group-item">
+            <SmoothingLinesConfigurator
+              project={project}
+              results={results}
+              projectConfig={projectConfig}
+              axisName="yLeftAxis"
+              onAxisConfigLogKeySmoothingToggle={onAxisConfigLogKeySmoothingToggle}
+            />
+            <SmoothingLinesConfigurator
+              project={project}
+              results={results}
+              projectConfig={projectConfig}
+              axisName="yRightAxis"
+              onAxisConfigLogKeySmoothingToggle={onAxisConfigLogKeySmoothingToggle}
+            />
+          </div>
         </Collapse>
       </div>
     );
@@ -46,7 +69,9 @@ class SmoothingConfiguratorToggle extends React.Component {
 
 SmoothingConfiguratorToggle.propTypes = {
   project: uiPropTypes.project.isRequired,
+  results: uiPropTypes.results.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
+  onAxisConfigLogKeySmoothingToggle: PropTypes.func.isRequired,
   onSmoothingWeightUpdate: PropTypes.func.isRequired,
 };
 

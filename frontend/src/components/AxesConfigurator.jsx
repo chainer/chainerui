@@ -21,6 +21,7 @@ const AxesConfigurator = (props) => {
     onAxisConfigScaleRangeTypeUpdate,
     onAxisConfigScaleRangeNumberUpdate,
     onAxisConfigLogKeySelectToggle,
+    onAxisConfigLogKeySmoothingToggle,
     onSmoothingWeightUpdate,
   } = props;
   const { xAxis = {}, yLeftAxis = {}, yRightAxis = {} } = projectConfig.axes;
@@ -37,7 +38,9 @@ const AxesConfigurator = (props) => {
         />
         <SmoothingConfiguratorToggle
           project={project}
+          results={results}
           projectConfig={projectConfig}
+          onAxisConfigLogKeySmoothingToggle={onAxisConfigLogKeySmoothingToggle}
           onSmoothingWeightUpdate={onSmoothingWeightUpdate}
         />
         <LinesConfiguratorToggle
@@ -112,6 +115,7 @@ AxesConfigurator.propTypes = {
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
   onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired,
+  onAxisConfigLogKeySmoothingToggle: PropTypes.func.isRequired,
   onSmoothingWeightUpdate: PropTypes.func.isRequired,
 };
 
