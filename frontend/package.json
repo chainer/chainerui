@@ -76,7 +76,6 @@
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-persist": "5.9.1",
-    "redux-requests": "^1.0.2",
     "redux-thunk": "2.2.0",
     "whatwg-fetch": "^3.0.0"
   },
