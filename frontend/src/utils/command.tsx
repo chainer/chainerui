@@ -6,7 +6,7 @@ export const CommandStatus = {
   RESPONSE_FAILURE: 'FAILURE',
 };
 
-export const responseStatusToIcon = (status) => {
+export const responseStatusToIcon = (status: string): JSX.Element => {
   switch (status) {
     case CommandStatus.RESPONSE_SUCCESS:
       return <i className="fas fa-check text-success" />;

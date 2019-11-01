@@ -8,6 +8,7 @@
     "build:watch": "webpack -w --progress --profile",
     "serve": "webpack-dev-server --host 0.0.0.0 --output-public-path / --hot --progress --profile",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "typecheck": "tsc --noEmit",
     "format:others": "prettier --write '**/*.{html,json,css}'",
     "format:scripts": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
     "format": "run-p format:*"
@@ -17,6 +18,10 @@
     "node": ">=8.0.0 <10"
   },
   "devDependencies": {
+    "@types/html2canvas": "0.0.35",
+    "@types/prop-types": "^15.7.1",
+    "@types/react": "^16.9.1",
+    "@types/react-dom": "^16.8.5",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "autoprefixer": "^9.6.1",

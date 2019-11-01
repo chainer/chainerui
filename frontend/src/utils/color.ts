@@ -1,4 +1,14 @@
-export const rgbFromHSV = ({ h, s, v }) => {
+import { ResultId, Results } from '../store/types';
+
+export const rgbFromHSV = ({
+  h,
+  s,
+  v,
+}: {
+  h: number;
+  s: number;
+  v: number;
+}): { r: number; b: number; g: number } => {
   let r = 0;
   let g = 0;
   let b = 0;
@@ -48,12 +58,17 @@ export const rgbFromHSV = ({ h, s, v }) => {
   };
 };
 
-export const hexFromRGB = ({ r, g, b }) =>
+export const hexFromRGB = ({ r, g, b }: { r: number; b: number; g: number }): string =>
   `#${(2 ** 24 + r * 2 ** 16 + g * 2 ** 8 + b).toString(16).slice(1)}`;
 
-export const lineColorGenerator = (resultId, logKey, results = {}, logKeys = []) => {
+export const lineColorGenerator = (
+  resultId: ResultId,
+  logKey: string,
+  results: Results = {},
+  logKeys: string[] = []
+): string => {
   const resultIds = Object.keys(results)
-    .sort((a, b) => a - b)
+    .sort((a, b) => Number(a) - Number(b))
     .map(Number);
   const resultIdx = resultIds.indexOf(resultId);
   const logKeyIdx = logKeys.indexOf(logKey);

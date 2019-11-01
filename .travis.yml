@@ -57,6 +57,7 @@ script:
   # frontend style check
   - pushd frontend
   - npm run lint
+  - npm run typecheck
   - popd
   # chainerui install test
   - chainerui db create
