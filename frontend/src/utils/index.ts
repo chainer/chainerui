@@ -111,7 +111,10 @@ export const getSelectedResults = (
   resultsConfig: ResultsConfig = {}
 ): number[] =>
   Object.keys(results)
-    .filter((resultId) => !resultsConfig[resultId] || !resultsConfig[resultId].hidden)
+    .filter(
+      (resultId) =>
+        results[resultId] != null && (!resultsConfig[resultId] || !resultsConfig[resultId].hidden)
+    )
     .map((resultId) => Number(resultId));
 
 export const getSelectedLogKeys = (logKeysConfig: LogKeysConfig = {}): string[] =>
@@ -168,9 +171,6 @@ export const getLogData = (
   (['yLeftAxis', 'yRightAxis'] as (keyof typeof selectedLogKeys)[]).forEach((axisName) => {
     selectedResults.forEach((resultId) => {
       const result = results[resultId];
-      if (result == null) {
-        return;
-      }
       selectedLogKeys[axisName].forEach((logKey) => {
         const line =
           lines[line2key({ resultId, logKey })] || createLine(resultId, logKey, results, logKeys);

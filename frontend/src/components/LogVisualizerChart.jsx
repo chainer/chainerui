@@ -69,10 +69,6 @@ const LogVisualizerChart = (props) => {
   ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {
     axisLines[axisName] = [];
     selectedResults.forEach((resultId) => {
-      const result = results[resultId];
-      if (result == null) {
-        return;
-      }
       selectedLogKeys[axisName].forEach((logKey) => {
         const line =
           lines[line2key({ resultId, logKey })] || createLine(resultId, logKey, results, logKeys);
