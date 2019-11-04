@@ -138,6 +138,36 @@ class ResultAPI(MethodView):
 
         return jsonify({'result': result.serialize})
 
+    def patch(self, project_id=None):
+        request_json = request.get_json()
+        request_results = request_json.get('results')
+        responses = []
+        
+
+        for request_item in request_results:
+            print(request_item)
+
+            id = request_item.get('id', None)
+            if id is None:
+                continue
+
+            result = db.session.query(Result).filter_by(id=id).first()
+            if result is None:
+                continue
+
+            is_unregistered = request_item.get('isUnregistered', None)
+            if is_unregistered is not None:
+                result.is_unregistered = is_unregistered
+
+            db.session.add(result)
+            responses.append({
+                'id': result.id,
+                'is_unregistered': result.is_unregistered,
+            })
+
+        db.session.commit()
+        return jsonify({'results': responses})
+
     def delete(self, id, project_id=None):
         """delete."""
         result = db.session.query(Result).filter_by(id=id).first()
