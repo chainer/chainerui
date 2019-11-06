@@ -816,7 +816,8 @@ def test_patch_results(project, app):
     assert 'results' in data
     assert len(data['results']) == len(request_json["results"])
 
-    # The API will return no response for the part of the request that id(s) is not given.
+    # The API will return no response for the part of the request
+    # that id(s) is not given.
     request_json = {
         "results": [
             {
@@ -836,7 +837,8 @@ def test_patch_results(project, app):
     assert 'results' in data
     assert len(data['results']) == len(request_json["results"]) - 1
 
-    # The API will return no response for the part of the request that couldn't find the result on the table by id.
+    # The API will return no response for the part of the request
+    # that couldn't find the result on the table by id.
     request_json = {
         "results": [
             {
