@@ -10,7 +10,7 @@ const SelectedResultTools = (props) => {
     results,
     resultsStatus,
     resultTypeId,
-    onResultUpdate,
+    onResultsPatch,
     onCheckedOfResultStatusUpdate,
     onTableExpandedUpdate,
   } = props;
@@ -22,20 +22,26 @@ const SelectedResultTools = (props) => {
   const handleDeleteResults = (isUnregistered) => {
     onTableExpandedUpdate(project.id, {});
 
-    Object.keys(resultsStatus).forEach((resultStatusId) => {
+    const targetResultKeys = Object.keys(resultsStatus).filter((resultStatusId) => {
       const result = results[resultStatusId];
       const resultStatus = resultsStatus[resultStatusId];
 
       if (!result) {
-        return;
+        return false;
       }
 
       if (!resultStatus.checked) {
-        return;
+        return false;
       }
 
-      onResultUpdate(project.id, { ...result, isUnregistered });
-      onCheckedOfResultStatusUpdate(project.id, result.id, false);
+      return true;
+    });
+
+    const requestBody = targetResultKeys.map((id) => ({ id, isUnregistered }));
+    onResultsPatch(project.id, requestBody);
+
+    targetResultKeys.forEach((resultKey) => {
+      onCheckedOfResultStatusUpdate(project.id, results[resultKey].id, false);
     });
   };
 
@@ -61,7 +67,7 @@ SelectedResultTools.propTypes = {
   results: uiPropTypes.results.isRequired,
   resultsStatus: uiPropTypes.resultsStatus,
   resultTypeId: PropTypes.string.isRequired,
-  onResultUpdate: PropTypes.func.isRequired,
+  onResultsPatch: PropTypes.func.isRequired,
   onCheckedOfResultStatusUpdate: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired,
 };

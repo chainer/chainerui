@@ -128,6 +128,16 @@ const resultsReducer = (state = {}, action) => {
         return removePartialState(state, result.id);
       }
       return state;
+    case ActionTypes.RESULTS_PATCH_SUCCESS:
+      if (action.response && action.response.results) {
+        const { results } = action.response;
+        let currentState = state;
+        results.forEach((result) => {
+          currentState = removePartialState(currentState, result.id);
+        });
+        return currentState;
+      }
+      return state;
     case ActionTypes.COMMAND_CREATE_SUCCESS:
       if (action.response && action.response.commands) {
         const result = state[action.body.resultId];
