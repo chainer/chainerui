@@ -791,3 +791,71 @@ def test_get_assets(func_dir, app):
     assert len(data) == 2
     assert isinstance(data['message'], string_types)
     assert data['asset'] is None
+
+
+# PATCH /api/v1/projects/<int:project_id>/results/
+def test_patch_results(project, app):
+    # simplest case
+    request_json = {
+        "results": [
+            {
+                "id": 1,
+                "isUnregistered": 0
+            },
+            {
+                "id": 2,
+                "isUnregistered": 1
+            }
+        ]
+    }
+    resp = app.patch(
+        '/api/v1/projects/1/results', data=json.dumps(request_json),
+        content_type='application/json')
+    data = assert_json_api(resp)
+    assert len(data) == 1
+    assert 'results' in data
+    assert len(data['results']) == len(request_json["results"])
+
+    # The API will return no response for the part of the request that id(s) is not given.
+    request_json = {
+        "results": [
+            {
+                "id": 1,
+                "isUnregistered": 0
+            },
+            {
+                "isUnregistered": 1
+            }
+        ]
+    }
+    resp = app.patch(
+        '/api/v1/projects/1/results', data=json.dumps(request_json),
+        content_type='application/json')
+    data = assert_json_api(resp)
+    assert len(data) == 1
+    assert 'results' in data
+    assert len(data['results']) == len(request_json["results"]) - 1
+
+    # The API will return no response for the part of the request that couldn't find the result on the table by id.
+    request_json = {
+        "results": [
+            {
+                "id": 1,
+                "isUnregistered": 0
+            },
+            {
+                "id": 9999,
+                "isUnregistered": 1
+            }
+        ]
+    }
+    resp = app.patch(
+        '/api/v1/projects/1/results', data=json.dumps(request_json),
+        content_type='application/json')
+    data = assert_json_api(resp)
+    assert len(data) == 1
+    assert 'results' in data
+    assert len(data['results']) == len(request_json["results"]) - 1
+
+    # not raise an exception
+    #   when PATCH /api/v1/projects/12345/results/
