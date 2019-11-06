@@ -142,11 +142,8 @@ class ResultAPI(MethodView):
         request_json = request.get_json()
         request_results = request_json.get('results')
         responses = []
-        
 
         for request_item in request_results:
-            print(request_item)
-
             id = request_item.get('id', None)
             if id is None:
                 continue
