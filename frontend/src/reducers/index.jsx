@@ -222,7 +222,7 @@ const resultSelectedReducer = (state = false, action) => {
 
 const resultCheckedReducer = (state = false, action) => {
   switch (action.type) {
-    case ActionTypes.CHECKED_OF_RESULT_STATUS_UPDATE:
+    case ActionTypes.CHECK_OF_RESULT_STATUS_LIST_UPDATE:
       return action.checked;
     default:
       return state;
@@ -235,9 +235,14 @@ const resultStatusReducer = combineReducers({
 });
 
 const resultsStatusReducer = (state = {}, action) => {
-  const { resultId } = action;
-  if (resultId) {
-    return updatePartialState(state, action, resultId, resultStatusReducer);
+  const { results } = action;
+  if (results) {
+    let tmpState = state;
+    results.forEach((result) => {
+      const currentAction = { type: action.type, checked: result.checked };
+      tmpState = updatePartialState(tmpState, currentAction, result.id, resultStatusReducer);
+    });
+    return tmpState;
   }
 
   return state;

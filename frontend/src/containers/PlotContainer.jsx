@@ -25,7 +25,7 @@ import {
   updateTableColumnsVisibility,
   updateChartDownloadStatus,
   updateTargetResultType,
-  updateCheckedOfResultStatus,
+  updateCheckOfResultStatusList,
 } from '../actions';
 import NavigationBar from './NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
@@ -153,7 +153,7 @@ class PlotContainer extends React.Component {
                   resultsStatus={projectStatus.resultsStatus}
                   onResultsPatch={this.props.patchResults}
                   onTableExpandedUpdate={this.props.updateTableExpanded}
-                  onCheckedOfResultStatusUpdate={this.props.updateCheckedOfResultStatus}
+                  onCheckOfResultStatusListUpdate={this.props.updateCheckOfResultStatusList}
                 />
                 <ResultTypeSelector
                   projectId={projectId}
@@ -176,7 +176,7 @@ class PlotContainer extends React.Component {
                 onCommandSubmit={this.props.createCommand}
                 onTableExpandedUpdate={this.props.updateTableExpanded}
                 onTableColumnsVisibilityUpdate={this.handleExperimentsTableColumnsVisibilityUpdate}
-                onCheckedOfResultStatusUpdate={this.props.updateCheckedOfResultStatus}
+                onCheckOfResultStatusListUpdate={this.props.updateCheckOfResultStatusList}
               />
               <ExperimentsTableConfigurator
                 project={project}
@@ -220,7 +220,7 @@ PlotContainer.propTypes = {
   updateTableColumnsVisibility: PropTypes.func.isRequired,
   updateChartDownloadStatus: PropTypes.func.isRequired,
   updateTargetResultType: PropTypes.func.isRequired,
-  updateCheckedOfResultStatus: PropTypes.func.isRequired,
+  updateCheckOfResultStatusList: PropTypes.func.isRequired,
 };
 
 const getTargetTextForFilter = (project, result, filterKey) => {
@@ -297,6 +297,6 @@ export default connect(
     updateTableColumnsVisibility,
     updateChartDownloadStatus,
     updateTargetResultType,
-    updateCheckedOfResultStatus,
+    updateCheckOfResultStatusList,
   }
 )(PlotContainer);
