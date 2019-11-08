@@ -375,6 +375,7 @@ const axisConfigReducer = (state = {}, action) => {
         logKeysConfig: {
           ...logKeysConfig,
           [logKey]: {
+            smoothing: false,
             ...logKeyConfig,
             selected: !logKeyConfig.selected,
           },
@@ -388,6 +389,7 @@ const axisConfigReducer = (state = {}, action) => {
         logKeysConfig: {
           ...logKeysConfig,
           [logKey]: {
+            selected: false,
             ...logKeyConfig,
             smoothing: !logKeyConfig.smoothing,
           },

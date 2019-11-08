@@ -120,6 +120,7 @@ export interface ResultsConfig {
 
 export interface LogKeyConfig {
   selected: boolean;
+  smoothing: boolean;
 }
 
 export interface LogKeysConfig {
