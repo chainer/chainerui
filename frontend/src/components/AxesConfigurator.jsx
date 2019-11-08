@@ -38,7 +38,6 @@ const AxesConfigurator = (props) => {
         />
         <SmoothingConfiguratorToggle
           project={project}
-          results={results}
           projectConfig={projectConfig}
           onAxisConfigLogKeySmoothingToggle={onAxisConfigLogKeySmoothingToggle}
           onSmoothingWeightUpdate={onSmoothingWeightUpdate}

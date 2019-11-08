@@ -26,7 +26,6 @@ class SmoothingConfiguratorToggle extends React.Component {
   render() {
     const {
       project,
-      results,
       projectConfig,
       onAxisConfigLogKeySmoothingToggle,
       onSmoothingWeightUpdate,
@@ -48,14 +47,12 @@ class SmoothingConfiguratorToggle extends React.Component {
           <div className="list-group-item">
             <SmoothingLinesConfigurator
               project={project}
-              results={results}
               projectConfig={projectConfig}
               axisName="yLeftAxis"
               onAxisConfigLogKeySmoothingToggle={onAxisConfigLogKeySmoothingToggle}
             />
             <SmoothingLinesConfigurator
               project={project}
-              results={results}
               projectConfig={projectConfig}
               axisName="yRightAxis"
               onAxisConfigLogKeySmoothingToggle={onAxisConfigLogKeySmoothingToggle}
@@ -69,7 +66,6 @@ class SmoothingConfiguratorToggle extends React.Component {
 
 SmoothingConfiguratorToggle.propTypes = {
   project: uiPropTypes.project.isRequired,
-  results: uiPropTypes.results.isRequired,
   projectConfig: uiPropTypes.projectConfig.isRequired,
   onAxisConfigLogKeySmoothingToggle: PropTypes.func.isRequired,
   onSmoothingWeightUpdate: PropTypes.func.isRequired,
