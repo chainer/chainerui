@@ -42,6 +42,8 @@ class SideBar extends React.Component {
       onAxisConfigScaleRangeTypeUpdate,
       onAxisConfigScaleRangeNumberUpdate,
       onAxisConfigLogKeySelectToggle,
+      onAxisConfigLogKeySmoothingToggle,
+      onSmoothingWeightUpdate,
     } = this.props;
 
     return (
@@ -59,6 +61,8 @@ class SideBar extends React.Component {
             onAxisConfigScaleRangeTypeUpdate,
             onAxisConfigScaleRangeNumberUpdate,
             onAxisConfigLogKeySelectToggle,
+            onAxisConfigLogKeySmoothingToggle,
+            onSmoothingWeightUpdate,
           }}
         />
         <Button color="primary" className="m-2" onClick={this.handleModalToggle}>
@@ -94,6 +98,8 @@ SideBar.propTypes = {
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
   onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired,
+  onAxisConfigLogKeySmoothingToggle: PropTypes.func.isRequired,
+  onSmoothingWeightUpdate: PropTypes.func.isRequired,
 };
 
 export default SideBar;

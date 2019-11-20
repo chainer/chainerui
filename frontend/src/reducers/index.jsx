@@ -385,8 +385,23 @@ const axisConfigReducer = (state = {}, action) => {
         logKeysConfig: {
           ...logKeysConfig,
           [logKey]: {
+            smoothing: false,
             ...logKeyConfig,
             selected: !logKeyConfig.selected,
+          },
+        },
+      };
+    }
+    case ActionTypes.AXIS_CONFIG_LOG_KEY_SMOOTHING_TOGGLE: {
+      const logKeyConfig = logKeysConfig[logKey] || {};
+      return {
+        ...state,
+        logKeysConfig: {
+          ...logKeysConfig,
+          [logKey]: {
+            selected: false,
+            ...logKeyConfig,
+            smoothing: !logKeyConfig.smoothing,
           },
         },
       };
@@ -503,12 +518,22 @@ const targetResultTypeReducer = (state = fetchResultTypes[0].id, action) => {
   }
 };
 
+const smoothingWeightReducer = (state = 0.8, action) => {
+  switch (action.type) {
+    case ActionTypes.PROJECT_CONFIG_SMOOTHING_WEIGHT_UPDATE:
+      return action.smoothingWeight;
+    default:
+      return state;
+  }
+};
+
 const projectConfigReducer = combineReducers({
   axes: axesConfigReducer,
   resultsConfig: resultsConfigReducer,
   lines: linesConfigReducer,
   tableState: tableStateReducer,
   resultType: targetResultTypeReducer,
+  smoothingWeight: smoothingWeightReducer,
 });
 
 const projectsConfigReducer = (state = {}, action) => {
@@ -579,7 +604,7 @@ const configReducer = combineReducers({
   global: globalConfigReducer,
 });
 
-const currentStoreVersion = 20190516.0;
+const currentStoreVersion = 20190802.0;
 
 const persistConfig = {
   key: 'config',
