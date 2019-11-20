@@ -42,6 +42,10 @@ requirements = {
         'matplotlib',
         'scipy',
         'chainer',
+    ],
+    'test-ci-contrib': [
+        '-r test-ci',
+        'pytorch-ignite',
     ]
 }
 
