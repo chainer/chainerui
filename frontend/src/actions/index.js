@@ -72,6 +72,9 @@ export const RESULT_UPDATE_FAILURE = 'RESULT_UPDATE_FAILURE';
 export const RESULT_DELETE_REQUEST = 'RESULT_DELETE_REQUEST';
 export const RESULT_DELETE_SUCCESS = 'RESULT_DELETE_SUCCESS';
 export const RESULT_DELETE_FAILURE = 'RESULT_DELETE_FAILURE';
+export const RESULTS_PATCH_REQUEST = 'RESULTS_PATCH_REQUEST';
+export const RESULTS_PATCH_SUCCESS = 'RESULTS_PATCH_SUCCESS';
+export const RESULTS_PATCH_FAILURE = 'RESULTS_PATCH_FAILURE';
 export const RESULT_LIST_CLEAR = 'RESULT_LIST_CLEAR';
 export const RESULT_ASSET_REQUEST = 'RESULT_ASSET_REQUEST';
 export const RESULT_ASSET_SUCCESS = 'RESULT_ASSET_SUCCESS';
@@ -119,6 +122,17 @@ export const deleteResult = (projectId, resultId) => {
       types: [RESULT_DELETE_REQUEST, RESULT_DELETE_SUCCESS, RESULT_DELETE_FAILURE],
       endpoint: `projects/${projectId}/results/${resultId}`,
       method: 'DELETE',
+    },
+  };
+};
+
+export const patchResults = (projectId, results = []) => {
+  return {
+    [CALL_API]: {
+      types: [RESULTS_PATCH_REQUEST, RESULTS_PATCH_SUCCESS, RESULTS_PATCH_FAILURE],
+      endpoint: `projects/${projectId}/results`,
+      method: 'PATCH',
+      body: { results },
     },
   };
 };

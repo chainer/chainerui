@@ -8,6 +8,7 @@ import {
   getProject,
   getResultList,
   updateResult,
+  patchResults,
   clearResultList,
   resetProjectConfig,
   updateLineInAxis,
@@ -150,7 +151,7 @@ class PlotContainer extends React.Component {
                   results={results}
                   resultTypeId={projectConfig.resultType}
                   resultsStatus={projectStatus.resultsStatus}
-                  onResultUpdate={this.props.updateResult}
+                  onResultsPatch={this.props.patchResults}
                   onTableExpandedUpdate={this.props.updateTableExpanded}
                   onCheckedOfResultStatusUpdate={this.props.updateCheckedOfResultStatus}
                 />
@@ -202,6 +203,7 @@ PlotContainer.propTypes = {
   getProject: PropTypes.func.isRequired,
   getResultList: PropTypes.func.isRequired,
   updateResult: PropTypes.func.isRequired,
+  patchResults: PropTypes.func.isRequired,
   clearResultList: PropTypes.func.isRequired,
   createCommand: PropTypes.func.isRequired,
   resetProjectConfig: PropTypes.func.isRequired,
@@ -278,6 +280,7 @@ export default connect(
     getProject,
     getResultList,
     updateResult,
+    patchResults,
     clearResultList,
     createCommand,
     resetProjectConfig,
