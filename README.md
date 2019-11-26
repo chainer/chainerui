@@ -59,7 +59,7 @@ $ # run ChainerUI server
 $ chainerui server
 ```
 
-Open http://localhost:5000/ and select "example-project", shown example results.
+Open http://localhost:5000/ and select "example-project", then shown a chart of training logs.
 
 For more detailed usage, see [getting started](http://chainerui.readthedocs.io/en/latest/getstart.html)
 
@@ -76,7 +76,7 @@ $ # then ChainerUI server is running
 
 Open http://localhost:5000/, shown empty project list. `examples/web-api/train_mnist.py` is an example to setup project and send logs via web API.
 
-For more detailed usage, see [getting started](http://chainerui.readthedocs.io/en/latest/getstart.html)
+For more detailed usage, see [getting started](http://chainerui.readthedocs.io/en/latest/getstart.html) or [web API](http://chainerui.readthedocs.io/en/latest/webapi.html)
 
 ## Browser compatibility
 
