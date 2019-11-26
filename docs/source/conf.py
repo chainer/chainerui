@@ -181,7 +181,5 @@ import scipy
 import chainerui
 '''
 
-autodoc_mock_imports = ['ignite']
-
 
 html_scaled_image_link = False
