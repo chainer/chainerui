@@ -173,6 +173,7 @@ texinfo_documents = [
 
 # -- Own configuration for this project -----------------------------------
 
+autodoc_mock_imports = ['ignite']
 
 doctest_global_setup = '''
 import chainer
@@ -180,7 +181,5 @@ import numpy as np
 import scipy
 import chainerui
 '''
-autodoc_mock_imports = ['ignite']
-
 
 html_scaled_image_link = False
