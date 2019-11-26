@@ -12,12 +12,3 @@ htmlcov/
 
 # frontend
 chainerui/static/dist
-
-# working directory
-examples/result
-examples/mlp.model
-examples/mlp.state
-
-# IDE
-.idea/
-.vscode/
