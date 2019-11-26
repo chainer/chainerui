@@ -111,6 +111,7 @@ def main():
                    trigger=(frequency, 'epoch'))
 
     # Write a log of evaluation statistics for each epoch
+    # [ChainerUI] set log reporter on the extention
     trainer.extend(extensions.LogReport(
         postprocess=chainerui.log_reporter()))
 
