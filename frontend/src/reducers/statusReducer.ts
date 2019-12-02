@@ -9,13 +9,14 @@ import {
   ChartDownloadStatusAction,
   ResultSelectedAction,
   ResultCheckedAction,
+  ResultFilterAction,
 } from '../actions/status';
 import { updatePartialState } from './utils';
 
 type ChartDownloadStatusState = CHART_DOWNLOAD_STATUS;
-const chartDownloadStatusReducer: Reducer<ChartDownloadStatusState> = (
+const chartDownloadStatusReducer: Reducer<ChartDownloadStatusState, ChartDownloadStatusAction> = (
   state = CHART_DOWNLOAD_STATUS.NONE,
-  action: ChartDownloadStatusAction
+  action
 ) => {
   switch (action.type) {
     case CHART_DOWNLOAD_STATUS_UPDATE:
@@ -25,7 +26,11 @@ const chartDownloadStatusReducer: Reducer<ChartDownloadStatusState> = (
   }
 };
 
-const resultSelectedReducer = (state = false, action: ResultSelectedAction) => {
+type ResultSelectedState = boolean;
+const resultSelectedReducer: Reducer<ResultSelectedState, ResultSelectedAction> = (
+  state = false,
+  action
+) => {
   switch (action.type) {
     case RESULT_SELECT_UPDATE:
       return action.selected;
@@ -34,7 +39,11 @@ const resultSelectedReducer = (state = false, action: ResultSelectedAction) => {
   }
 };
 
-const resultCheckedReducer = (state = false, action: ResultCheckedAction) => {
+type ResultCheckedState = boolean;
+const resultCheckedReducer: Reducer<ResultCheckedState, ResultCheckedAction> = (
+  state = false,
+  action
+) => {
   switch (action.type) {
     case CHECK_OF_RESULT_STATUS_LIST_UPDATE:
       return action.checked;
@@ -47,6 +56,7 @@ const resultStatusReducer = combineReducers({
   selected: resultSelectedReducer,
   checked: resultCheckedReducer,
 });
+type ResultStatusState = ReturnType<typeof resultStatusReducer>;
 
 const resultsStatusReducer = (state = {}, action) => {
   const { results } = action;
@@ -66,7 +76,13 @@ const resultsStatusReducer = (state = {}, action) => {
   }
 };
 
-const resultFilterReducer = (state = {}, action) => {
+type ResultFilterState = {
+  [filterKey: string]: string;
+};
+const resultFilterReducer: Reducer<ResultFilterState, ResultFilterAction> = (
+  state = {},
+  action
+) => {
   switch (action.type) {
     case RESULT_FILTER_UPDATE: {
       const { filterKey, filterText } = action;
@@ -85,8 +101,16 @@ const projectStatusReducer = combineReducers({
   resultsStatus: resultsStatusReducer,
   resultFilter: resultFilterReducer,
 });
+type ProjectStatusState = ReturnType<typeof projectStatusReducer>;
 
-const projectsStatusReducer = (state = {}, action) => {
+type ProjectsStatusState = {
+  [projectId: number]: ProjectStatusState;
+};
+type ProjectsStatusAction = ChartDownloadStatusAction | ResultsStatusAction | ResultFilterAction;
+const projectsStatusReducer: Reducer<ProjectsStatusState, ProjectsStatusAction> = (
+  state = {},
+  action
+) => {
   const { projectId } = action;
   if (projectId) {
     return updatePartialState(state, action, projectId, projectStatusReducer);
@@ -95,34 +119,45 @@ const projectsStatusReducer = (state = {}, action) => {
   return state;
 };
 
-const statsReducer = (state = { argKeys: [], logKeys: [], xAxisKeys: [] }, action) => {
+type StatsState = {
+  argKeys: string[];
+  logKeys: string[];
+  xAxisKeys: string[];
+};
+// TODO: use ResultListAction
+// TODO: remove any
+const statsReducer: Reducer<StatsState> = (
+  state = { argKeys: [], logKeys: [], xAxisKeys: [] },
+  action
+) => {
   switch (action.type) {
     case RESULT_LIST_SUCCESS:
       if (action.response && action.response.results) {
         const resultsList = action.response.results;
-        const argKeySet = {};
-        const logKeySet = {};
-        resultsList.forEach((result) => {
-          result.args.forEach((arg) => {
+        const argKeySet: { [argKey: string]: boolean } = {};
+        const logKeySet: { [logKey: string]: boolean } = {};
+        resultsList.forEach((result: any) => {
+          result.args.forEach((arg: any) => {
             argKeySet[arg.key] = true;
           });
-          result.logs.forEach((log) => {
+          result.logs.forEach((log: any) => {
             Object.keys(log.logDict).forEach((key) => {
               logKeySet[key] = true;
             });
           });
         });
-        const newStats = {
+        const newStats: StatsState = {
           argKeys: Object.keys(argKeySet),
           logKeys: Object.keys(logKeySet).sort(),
           xAxisKeys: keyOptions.filter((key) => key in logKeySet),
         };
-        Object.keys(newStats).forEach((key) => {
+        const statsKeys = Object.keys(newStats) as (keyof StatsState)[];
+        statsKeys.forEach((key) => {
           if (`${newStats[key]}` === `${state[key]}`) {
             newStats[key] = state[key];
           }
         });
-        if (Object.keys(newStats).some((k) => newStats[k] !== state[k])) {
+        if (statsKeys.some((key) => newStats[key] !== state[key])) {
           return newStats;
         }
         return state;
@@ -137,5 +172,6 @@ const statusReducer = combineReducers({
   projectsStatus: projectsStatusReducer,
   stats: statsReducer,
 });
+export type StatusState = ReturnType<typeof statusReducer>;
 
 export default statusReducer;

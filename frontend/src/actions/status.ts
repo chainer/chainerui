@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { CHART_DOWNLOAD_STATUS } from '../constants';
 
 export const CHART_DOWNLOAD_STATUS_UPDATE = 'CHART_DOWNLOAD_STATUS_UPDATE';
@@ -40,3 +42,4 @@ export const updateResultFilter = (projectId: number, filterKey: string, filterT
   filterKey,
   filterText,
 });
+export type ResultFilterAction = ReturnType<typeof updateResultFilter>;
