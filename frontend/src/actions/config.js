@@ -138,3 +138,43 @@ export const updateGlobalHighlightTableAndChart = (highlightTableAndChart) => ({
   type: GLOBAL_CONFIG_HIGHLIGHT_TABLE_AND_CHART,
   highlightTableAndChart,
 });
+
+// results table
+
+export const TABLE_STATE_EXPANDED_UPDATE = 'TABLE_STATE_EXPANDED_UPDATE';
+export const updateTableExpanded = (projectId, expanded) => ({
+  type: TABLE_STATE_EXPANDED_UPDATE,
+  projectId,
+  expanded,
+});
+
+export const TABLE_STATE_COLUMNS_VISIBILITY_UPDATE = 'TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
+export const updateTableColumnsVisibility = (
+  projectId,
+  knownLogKeysConfig,
+  knownArgKeysConfig,
+  isGrouped
+) => ({
+  type: TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
+  projectId,
+  knownLogKeysConfig,
+  knownArgKeysConfig,
+  isGrouped,
+});
+
+// assets table
+
+export const ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE =
+  'ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE';
+export const updateAssetsTableColumnsVisibility = (
+  projectId,
+  resultId,
+  knownTrainInfoKeysConfig,
+  knownContentKeysConfig
+) => ({
+  type: ASSETS_TABLE_STATE_COLUMNS_VISIBILITY_UPDATE,
+  projectId,
+  resultId,
+  knownTrainInfoKeysConfig,
+  knownContentKeysConfig,
+});
