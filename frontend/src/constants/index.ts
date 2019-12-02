@@ -119,11 +119,11 @@ export const defaultProjectConfig = {
   resultType: fetchResultTypes[0].id,
 };
 
-export const CHART_DOWNLOAD_STATUS = {
-  NONE: 'NONE',
-  REQUESTED: 'REQUESTED',
-  CONVERTING: 'CONVERTING',
-};
+export enum CHART_DOWNLOAD_STATUS {
+  NONE = 'NONE',
+  REQUESTED = 'REQUESTED',
+  CONVERTING = 'CONVERTING',
+}
 
 export const defaultProjectStatus = {
   chartDownloadStatus: CHART_DOWNLOAD_STATUS.NONE,
