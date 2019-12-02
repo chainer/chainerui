@@ -54,9 +54,11 @@ YAxisLogKeySelectorRow.propTypes = {
 YAxisLogKeySelectorRow.defaultProps = {
   logKeyLeftConfig: {
     selected: false,
+    smoothing: false,
   },
   logKeyRightConfig: {
     selected: false,
+    smoothing: false,
   },
 };
 

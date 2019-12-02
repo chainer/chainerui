@@ -1,11 +1,13 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import html2canvas from 'html2canvas';
-import renderPyTmpl from './render.py.tmpl';
 
-export const generateDownloadFileName = (exportName, ext) =>
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const renderPyTmpl = require('./render.py.tmpl').default;
+
+export const generateDownloadFileName = (exportName: string, ext: string): string =>
   `${exportName}_${moment().format('YYYYMMDDHHmmss')}.${ext}`;
 
-export const downloadFile = (fileName, dataURL) => {
+export const downloadFile = (fileName: string, dataURL: string): void => {
   const downloadAnchorNode = document.createElement('a');
   downloadAnchorNode.setAttribute('href', dataURL);
   downloadAnchorNode.setAttribute('download', fileName);
@@ -14,14 +16,17 @@ export const downloadFile = (fileName, dataURL) => {
   downloadAnchorNode.remove();
 };
 
-export const downloadObjectAsCode = (exportObj, exportName) => {
+export const downloadObjectAsCode = (exportObj: object, exportName: string): void => {
   const fileName = generateDownloadFileName(exportName, 'py');
   const renderPy = renderPyTmpl.replace(/\${rendered_log}/, JSON.stringify(exportObj, null, '  '));
   const blobUrl = URL.createObjectURL(new Blob([renderPy], { type: 'text/plain' }));
   downloadFile(fileName, blobUrl);
 };
 
-export const downloadChartAsPng = async (chartDOMNode, exportName) => {
+export const downloadChartAsPng = async (
+  chartDOMNode: HTMLElement,
+  exportName: string
+): Promise<void> => {
   const ext = 'png';
   const imageType = `image/${ext}`;
   const fileName = generateDownloadFileName(exportName, ext);

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import * as uiPropTypes from '../store/uiPropTypes';
 import AxisConfigurator from './AxisConfigurator';
+import SmoothingConfiguratorToggle from './SmoothingConfiguratorToggle';
 import LinesConfiguratorToggle from './LinesConfiguratorToggle';
 import XAxisKeySelector from './XAxisKeySelector';
 import YAxisLogKeySelector from './YAxisLogKeySelector';
@@ -20,6 +21,8 @@ const AxesConfigurator = (props) => {
     onAxisConfigScaleRangeTypeUpdate,
     onAxisConfigScaleRangeNumberUpdate,
     onAxisConfigLogKeySelectToggle,
+    onAxisConfigLogKeySmoothingToggle,
+    onSmoothingWeightUpdate,
   } = props;
   const { xAxis = {}, yLeftAxis = {}, yRightAxis = {} } = projectConfig.axes;
 
@@ -32,6 +35,12 @@ const AxesConfigurator = (props) => {
           axesConfig={projectConfig.axes}
           stats={stats}
           onAxisConfigLogKeySelectToggle={onAxisConfigLogKeySelectToggle}
+        />
+        <SmoothingConfiguratorToggle
+          project={project}
+          projectConfig={projectConfig}
+          onAxisConfigLogKeySmoothingToggle={onAxisConfigLogKeySmoothingToggle}
+          onSmoothingWeightUpdate={onSmoothingWeightUpdate}
         />
         <LinesConfiguratorToggle
           project={project}
@@ -105,6 +114,8 @@ AxesConfigurator.propTypes = {
   onAxisConfigScaleRangeTypeUpdate: PropTypes.func.isRequired,
   onAxisConfigScaleRangeNumberUpdate: PropTypes.func.isRequired,
   onAxisConfigLogKeySelectToggle: PropTypes.func.isRequired,
+  onAxisConfigLogKeySmoothingToggle: PropTypes.func.isRequired,
+  onSmoothingWeightUpdate: PropTypes.func.isRequired,
 };
 
 export default React.memo(AxesConfigurator);

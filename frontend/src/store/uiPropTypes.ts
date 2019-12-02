@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/camelcase */
+
 import PropTypes from 'prop-types';
 import { CHART_DOWNLOAD_STATUS } from '../constants';
 
@@ -115,6 +117,7 @@ export const resultsConfig = PropTypes.objectOf(resultConfig);
 
 export const logKeyConfig = PropTypes.shape({
   selected: PropTypes.bool.isRequired,
+  smoothing: PropTypes.bool.isRequired,
 });
 
 const logKeysConfig = PropTypes.objectOf(logKeyConfig);

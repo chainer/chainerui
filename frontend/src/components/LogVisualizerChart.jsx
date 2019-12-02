@@ -19,6 +19,7 @@ import {
   getSelectedLogKeys,
   getLogData,
   createLine,
+  SmoothedLinear,
 } from '../utils';
 import LogVisualizerLegend from './LogVisualizerLegend';
 import LogVisualizerTooltip from './LogVisualizerTooltip';
@@ -52,7 +53,7 @@ const LogVisualizerChart = (props) => {
     onResultSelect,
     onAxisConfigLineUpdate,
   } = props;
-  const { axes, resultsConfig, lines } = projectConfig;
+  const { axes, resultsConfig, lines, smoothingWeight = 0.8 } = projectConfig;
   const { logKeys, xAxisKeys } = stats;
   const { xAxis = {}, yLeftAxis = {}, yRightAxis = {} } = axes;
   const { xAxisKey = xAxisKeys[0] } = xAxis;
@@ -69,10 +70,6 @@ const LogVisualizerChart = (props) => {
   ['yLeftAxis', 'yRightAxis'].forEach((axisName) => {
     axisLines[axisName] = [];
     selectedResults.forEach((resultId) => {
-      const result = results[resultId];
-      if (result == null) {
-        return;
-      }
       selectedLogKeys[axisName].forEach((logKey) => {
         const line =
           lines[line2key({ resultId, logKey })] || createLine(resultId, logKey, results, logKeys);
@@ -99,43 +96,64 @@ const LogVisualizerChart = (props) => {
       const selected =
         highlightTableAndChart &&
         (resultStatus.selected === true || resultStatus.selected === logKey);
-      const highlightEvents = highlightTableAndChart
-        ? {
-            onMouseEnter: () => {
-              onResultSelect(project.id, resultId, logKey);
-            },
-            onMouseLeave: () => {
-              onResultSelect(project.id, resultId, false);
-            },
-          }
-        : {};
+      const { smoothing } = axes[axisName].logKeysConfig[logKey];
+
       lineElems.push(
         <Line
           type="linear"
           dataKey={line2dataKey(line, axisName)}
           yAxisId={axisName}
           stroke={config.color}
-          strokeOpacity={!anySelected || selected ? 1 : 0.1}
+          strokeOpacity={(!anySelected || selected ? 1 : 0.1) * (smoothing ? 0.5 : 1)}
           connectNulls
           isAnimationActive={false}
           dot={false}
           key={line2dataKey(line, axisName)}
-        />,
-        <Line
-          type="linear"
-          dataKey={line2dataKey(line, axisName)}
-          yAxisId={axisName}
-          stroke={config.color}
-          strokeWidth="10"
-          strokeOpacity="0"
-          connectNulls
-          isAnimationActive={false}
-          dot={false}
-          activeDot={false}
-          key={`${line2dataKey(line, axisName)}-events`}
-          {...highlightEvents}
         />
       );
+
+      if (smoothing) {
+        lineElems.push(
+          <Line
+            type={(context) => new SmoothedLinear(context, smoothingWeight)}
+            dataKey={line2dataKey(line, axisName)}
+            yAxisId={axisName}
+            stroke={config.color}
+            strokeOpacity={!anySelected || selected ? 1 : 0.1}
+            connectNulls
+            isAnimationActive={false}
+            dot={false}
+            activeDot={false}
+            name={`${line2dataKey(line, axisName)}-smoothed`}
+            key={`${line2dataKey(line, axisName)}-smoothed`}
+          />
+        );
+      }
+
+      if (highlightTableAndChart) {
+        lineElems.push(
+          <Line
+            type="linear"
+            dataKey={line2dataKey(line, axisName)}
+            yAxisId={axisName}
+            stroke={config.color}
+            strokeWidth="10"
+            strokeOpacity="0"
+            connectNulls
+            isAnimationActive={false}
+            dot={false}
+            activeDot={false}
+            onMouseEnter={() => {
+              onResultSelect(project.id, resultId, logKey);
+            }}
+            onMouseLeave={() => {
+              onResultSelect(project.id, resultId, false);
+            }}
+            name={`${line2dataKey(line, axisName)}-events`}
+            key={`${line2dataKey(line, axisName)}-events`}
+          />
+        );
+      }
     });
   });
 

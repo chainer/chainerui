@@ -92,6 +92,7 @@ export const defaultAxisConfig = {
     logKeysConfig: {
       'main/loss': {
         selected: true,
+        smoothing: false,
       },
     },
   },

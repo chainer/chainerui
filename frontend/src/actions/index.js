@@ -182,10 +182,17 @@ export const createCommand = (
 // config
 
 export const PROJECT_CONFIG_RESET = 'PROJECT_CONFIG_RESET';
+export const PROJECT_CONFIG_SMOOTHING_WEIGHT_UPDATE = 'PROJECT_CONFIG_SMOOTHING_WEIGHT_UPDATE';
 
 export const resetProjectConfig = (projectId) => ({
   type: PROJECT_CONFIG_RESET,
   projectId,
+});
+
+export const updateSmoothingWeight = (projectId, smoothingWeight) => ({
+  type: PROJECT_CONFIG_SMOOTHING_WEIGHT_UPDATE,
+  projectId,
+  smoothingWeight,
 });
 
 export const TARGET_RESULT_TYPE_UPDATE = 'TARGET_RESULT_TYPE_UPDATE';
@@ -202,6 +209,7 @@ export const AXIS_CONFIG_X_KEY_UPDATE = 'AXIS_CONFIG_X_KEY_UPDATE';
 export const AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_TYPE_UPDATE';
 export const AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE = 'AXIS_CONFIG_SCALE_RANGE_NUMBER_UPDATE';
 export const AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE = 'AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE';
+export const AXIS_CONFIG_LOG_KEY_SMOOTHING_TOGGLE = 'AXIS_CONFIG_LOG_KEY_SMOOTHING_TOGGLE';
 
 export const updateAxisScale = (projectId, axisName, scale) => ({
   type: AXIS_CONFIG_SCALE_UPDATE,
@@ -243,6 +251,13 @@ export const updateAxisScaleRangeNumber = (projectId, axisName, scale, isMin, ra
 
 export const toggleLogKeySelect = (projectId, axisName, logKey) => ({
   type: AXIS_CONFIG_LOG_KEY_SELECT_TOGGLE,
+  projectId,
+  axisName,
+  logKey,
+});
+
+export const toggleLogKeySmoothing = (projectId, axisName, logKey) => ({
+  type: AXIS_CONFIG_LOG_KEY_SMOOTHING_TOGGLE,
   projectId,
   axisName,
   logKey,

@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
-import { requestsReducer } from 'redux-requests';
 import storage from 'redux-persist/es/storage';
 import * as ActionTypes from '../actions';
 import {
@@ -12,6 +11,30 @@ import {
   keyOptions,
   fetchResultTypes,
 } from '../constants';
+
+/**
+ * Reducer function to handle pending requests.
+ * @param  {Object} state  Existing state object.
+ * @param  {Object} action Incoming action:
+ *                         - Actions with the meta.httpRequest property are examined.
+ *                         - The meta.httpRequest.url property is added or removed
+ *                           from the current state depending on if the meta.httpRequest.done
+ *                           property is set.
+ * @return {Object}        The new state.
+ */
+const requestsReducer = (state = {}, action) => {
+  if (!action.meta || !action.meta.httpRequest || !action.meta.httpRequest.url) {
+    return state;
+  }
+  if (action.meta.httpRequest.done) {
+    // Remove this request from the state
+    const newState = { ...state };
+    delete newState[action.meta.httpRequest.url];
+    return newState;
+  }
+  // Add this request to the state
+  return { ...state, [action.meta.httpRequest.url]: true };
+};
 
 const updatePartialState = (state, action, keyId, fn) => {
   const partialState = fn(state[keyId], action);
@@ -367,8 +390,23 @@ const axisConfigReducer = (state = {}, action) => {
         logKeysConfig: {
           ...logKeysConfig,
           [logKey]: {
+            smoothing: false,
             ...logKeyConfig,
             selected: !logKeyConfig.selected,
+          },
+        },
+      };
+    }
+    case ActionTypes.AXIS_CONFIG_LOG_KEY_SMOOTHING_TOGGLE: {
+      const logKeyConfig = logKeysConfig[logKey] || {};
+      return {
+        ...state,
+        logKeysConfig: {
+          ...logKeysConfig,
+          [logKey]: {
+            selected: false,
+            ...logKeyConfig,
+            smoothing: !logKeyConfig.smoothing,
           },
         },
       };
@@ -485,12 +523,22 @@ const targetResultTypeReducer = (state = fetchResultTypes[0].id, action) => {
   }
 };
 
+const smoothingWeightReducer = (state = 0.8, action) => {
+  switch (action.type) {
+    case ActionTypes.PROJECT_CONFIG_SMOOTHING_WEIGHT_UPDATE:
+      return action.smoothingWeight;
+    default:
+      return state;
+  }
+};
+
 const projectConfigReducer = combineReducers({
   axes: axesConfigReducer,
   resultsConfig: resultsConfigReducer,
   lines: linesConfigReducer,
   tableState: tableStateReducer,
   resultType: targetResultTypeReducer,
+  smoothingWeight: smoothingWeightReducer,
 });
 
 const projectsConfigReducer = (state = {}, action) => {
@@ -561,7 +609,7 @@ const configReducer = combineReducers({
   global: globalConfigReducer,
 });
 
-const currentStoreVersion = 20190516.0;
+const currentStoreVersion = 20190802.0;
 
 const persistConfig = {
   key: 'config',
