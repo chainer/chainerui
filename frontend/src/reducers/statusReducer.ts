@@ -104,7 +104,7 @@ const projectStatusReducer = combineReducers({
 type ProjectStatusState = ReturnType<typeof projectStatusReducer>;
 
 type ProjectsStatusState = {
-  [projectId: number]: ProjectStatusState;
+  [projectId: string]: ProjectStatusState;
 };
 type ProjectsStatusAction = ChartDownloadStatusAction | ResultsStatusAction | ResultFilterAction;
 const projectsStatusReducer: Reducer<ProjectsStatusState, ProjectsStatusAction> = (
