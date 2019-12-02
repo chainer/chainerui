@@ -259,16 +259,20 @@ const resultStatusReducer = combineReducers({
 
 const resultsStatusReducer = (state = {}, action) => {
   const { results } = action;
-  if (results) {
-    let tmpState = state;
-    results.forEach((result) => {
-      const currentAction = { type: action.type, checked: result.checked };
-      tmpState = updatePartialState(tmpState, currentAction, result.id, resultStatusReducer);
-    });
-    return tmpState;
+  switch (action.type) {
+    case ActionTypes.CHECK_OF_RESULT_STATUS_LIST_UPDATE:
+      if (results) {
+        let tmpState = state;
+        results.forEach((result) => {
+          const currentAction = { type: action.type, checked: result.checked };
+          tmpState = updatePartialState(tmpState, currentAction, result.id, resultStatusReducer);
+        });
+        return tmpState;
+      }
+      return state;
+    default:
+      return state;
   }
-
-  return state;
 };
 
 const resultFilterReducer = (state = {}, action) => {
