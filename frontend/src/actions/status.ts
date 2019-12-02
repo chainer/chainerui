@@ -9,6 +9,7 @@ export const updateChartDownloadStatus = (
   projectId,
   chartDownloadStatus,
 });
+export type ChartDownloadStatusAction = ReturnType<typeof updateChartDownloadStatus>;
 
 export const RESULT_SELECT_UPDATE = 'RESULT_SELECT_UPDATE';
 export const updateResultSelect = (projectId: number, resultId: number, selected: boolean) => ({
@@ -17,6 +18,7 @@ export const updateResultSelect = (projectId: number, resultId: number, selected
   resultId,
   selected,
 });
+export type ResultSelectedAction = ReturnType<typeof updateResultSelect>;
 
 export const CHECKED_OF_RESULT_STATUS_UPDATE = 'CHECKED_OF_RESULT_STATUS_UPDATE';
 export const updateCheckedOfResultStatus = (
@@ -29,10 +31,11 @@ export const updateCheckedOfResultStatus = (
   resultId,
   checked,
 });
+export type ResultCheckedAction = ReturnType<typeof updateCheckedOfResultStatus>;
 
 export const RESULT_FILTER_UPDATE = 'RESULT_FILTER_UPDATE';
 export const updateResultFilter = (projectId: number, filterKey: string, filterText: string) => ({
-  type: RESULT_FILTER_UPDATE,
+  type: RESULT_FILTER_UPDATE as typeof RESULT_FILTER_UPDATE,
   projectId,
   filterKey,
   filterText,

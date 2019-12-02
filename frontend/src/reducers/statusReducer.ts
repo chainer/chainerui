@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers, Reducer } from 'redux';
 import { CHART_DOWNLOAD_STATUS, keyOptions } from '../constants';
 import { RESULT_LIST_SUCCESS } from '../actions/entities';
 import {
@@ -6,10 +6,17 @@ import {
   RESULT_SELECT_UPDATE,
   CHECK_OF_RESULT_STATUS_LIST_UPDATE,
   RESULT_FILTER_UPDATE,
+  ChartDownloadStatusAction,
+  ResultSelectedAction,
+  ResultCheckedAction,
 } from '../actions/status';
 import { updatePartialState } from './utils';
 
-const chartDownloadStatusReducer = (state = CHART_DOWNLOAD_STATUS.NONE, action) => {
+type ChartDownloadStatusState = CHART_DOWNLOAD_STATUS;
+const chartDownloadStatusReducer: Reducer<ChartDownloadStatusState> = (
+  state = CHART_DOWNLOAD_STATUS.NONE,
+  action: ChartDownloadStatusAction
+) => {
   switch (action.type) {
     case CHART_DOWNLOAD_STATUS_UPDATE:
       return action.chartDownloadStatus;
@@ -18,7 +25,7 @@ const chartDownloadStatusReducer = (state = CHART_DOWNLOAD_STATUS.NONE, action) 
   }
 };
 
-const resultSelectedReducer = (state = false, action) => {
+const resultSelectedReducer = (state = false, action: ResultSelectedAction) => {
   switch (action.type) {
     case RESULT_SELECT_UPDATE:
       return action.selected;
@@ -27,7 +34,7 @@ const resultSelectedReducer = (state = false, action) => {
   }
 };
 
-const resultCheckedReducer = (state = false, action) => {
+const resultCheckedReducer = (state = false, action: ResultCheckedAction) => {
   switch (action.type) {
     case CHECK_OF_RESULT_STATUS_LIST_UPDATE:
       return action.checked;
