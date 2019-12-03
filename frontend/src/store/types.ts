@@ -1,3 +1,5 @@
+import { CHART_DOWNLOAD_STATUS } from '../constants';
+
 export type ProjectId = number;
 
 export interface Project {
@@ -177,16 +179,22 @@ interface Asset {
 export type Assets = Asset[];
 
 export interface ResultStatus {
-  selected?: boolean | string;
+  selected: boolean | string | undefined;
+  checked: boolean | string | undefined;
 }
 
 export interface ResultsStatus {
   [k: string]: ResultStatus;
 }
 
+export interface ResultFilter {
+  [filterKey: string]: string;
+}
+
 export interface ProjectStatus {
-  chartDownloadStatus?: 'NONE' | 'REQUESTED' | 'CONVERTING';
-  resultsStatus?: ResultsStatus;
+  chartDownloadStatus: CHART_DOWNLOAD_STATUS;
+  resultsStatus: ResultsStatus;
+  resultFilter: ResultFilter;
 }
 
 export interface ProjectsStatus {
@@ -194,5 +202,6 @@ export interface ProjectsStatus {
 }
 
 export interface Status {
-  projectsStatus?: ProjectsStatus;
+  projectsStatus: ProjectsStatus;
+  stats: Stats;
 }

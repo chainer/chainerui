@@ -1,5 +1,15 @@
 import { combineReducers, Reducer } from 'redux';
 import { CHART_DOWNLOAD_STATUS, keyOptions } from '../constants';
+import {
+  ResultStatus,
+  ResultsStatus,
+  ResultFilter,
+  ProjectStatus,
+  ProjectsStatus,
+  Stats,
+  Result,
+  Status,
+} from '../store/types';
 import { RESULT_LIST_SUCCESS } from '../actions/entities';
 import {
   CHART_DOWNLOAD_STATUS_UPDATE,
@@ -13,8 +23,7 @@ import {
 } from '../actions/status';
 import { updatePartialState } from './utils';
 
-type ChartDownloadStatusState = CHART_DOWNLOAD_STATUS;
-const chartDownloadStatusReducer: Reducer<ChartDownloadStatusState, ChartDownloadStatusAction> = (
+const chartDownloadStatusReducer: Reducer<CHART_DOWNLOAD_STATUS, ChartDownloadStatusAction> = (
   state = CHART_DOWNLOAD_STATUS.NONE,
   action
 ) => {
@@ -26,8 +35,7 @@ const chartDownloadStatusReducer: Reducer<ChartDownloadStatusState, ChartDownloa
   }
 };
 
-type ResultSelectedState = boolean;
-const resultSelectedReducer: Reducer<ResultSelectedState, ResultSelectedAction> = (
+const resultSelectedReducer: Reducer<ResultStatus['selected'], ResultSelectedAction> = (
   state = false,
   action
 ) => {
@@ -39,8 +47,7 @@ const resultSelectedReducer: Reducer<ResultSelectedState, ResultSelectedAction> 
   }
 };
 
-type ResultCheckedState = boolean;
-const resultCheckedReducer: Reducer<ResultCheckedState, ResultCheckedAction> = (
+const resultCheckedReducer: Reducer<ResultStatus['checked'], ResultCheckedAction> = (
   state = false,
   action
 ) => {
@@ -52,11 +59,10 @@ const resultCheckedReducer: Reducer<ResultCheckedState, ResultCheckedAction> = (
   }
 };
 
-const resultStatusReducer = combineReducers({
+const resultStatusReducer: Reducer<ResultStatus> = combineReducers({
   selected: resultSelectedReducer,
   checked: resultCheckedReducer,
 });
-type ResultStatusState = ReturnType<typeof resultStatusReducer>;
 
 const resultsStatusReducer = (state = {}, action) => {
   const { results } = action;
@@ -76,13 +82,7 @@ const resultsStatusReducer = (state = {}, action) => {
   }
 };
 
-type ResultFilterState = {
-  [filterKey: string]: string;
-};
-const resultFilterReducer: Reducer<ResultFilterState, ResultFilterAction> = (
-  state = {},
-  action
-) => {
+const resultFilterReducer: Reducer<ResultFilter, ResultFilterAction> = (state = {}, action) => {
   switch (action.type) {
     case RESULT_FILTER_UPDATE: {
       const { filterKey, filterText } = action;
@@ -96,18 +96,14 @@ const resultFilterReducer: Reducer<ResultFilterState, ResultFilterAction> = (
   }
 };
 
-const projectStatusReducer = combineReducers({
+const projectStatusReducer: Reducer<ProjectStatus> = combineReducers({
   chartDownloadStatus: chartDownloadStatusReducer,
   resultsStatus: resultsStatusReducer,
   resultFilter: resultFilterReducer,
 });
-type ProjectStatusState = ReturnType<typeof projectStatusReducer>;
 
-type ProjectsStatusState = {
-  [projectId: string]: ProjectStatusState;
-};
 type ProjectsStatusAction = ChartDownloadStatusAction | ResultsStatusAction | ResultFilterAction;
-const projectsStatusReducer: Reducer<ProjectsStatusState, ProjectsStatusAction> = (
+const projectsStatusReducer: Reducer<ProjectsStatus, ProjectsStatusAction> = (
   state = {},
   action
 ) => {
@@ -119,39 +115,37 @@ const projectsStatusReducer: Reducer<ProjectsStatusState, ProjectsStatusAction> 
   return state;
 };
 
-type StatsState = {
-  argKeys: string[];
-  logKeys: string[];
-  xAxisKeys: string[];
-};
 // TODO: use ResultListAction
-// TODO: remove any
-const statsReducer: Reducer<StatsState> = (
+const statsReducer: Reducer<Stats> = (
   state = { argKeys: [], logKeys: [], xAxisKeys: [] },
   action
 ) => {
   switch (action.type) {
     case RESULT_LIST_SUCCESS:
       if (action.response && action.response.results) {
-        const resultsList = action.response.results;
+        const resultsList: Result[] = action.response.results;
         const argKeySet: { [argKey: string]: boolean } = {};
         const logKeySet: { [logKey: string]: boolean } = {};
-        resultsList.forEach((result: any) => {
-          result.args.forEach((arg: any) => {
-            argKeySet[arg.key] = true;
-          });
-          result.logs.forEach((log: any) => {
-            Object.keys(log.logDict).forEach((key) => {
-              logKeySet[key] = true;
+        resultsList.forEach((result) => {
+          if (result.args) {
+            result.args.forEach((arg) => {
+              argKeySet[arg.key] = true;
             });
-          });
+          }
+          if (result.logs) {
+            result.logs.forEach((log) => {
+              Object.keys(log.logDict).forEach((key) => {
+                logKeySet[key] = true;
+              });
+            });
+          }
         });
-        const newStats: StatsState = {
+        const newStats: Stats = {
           argKeys: Object.keys(argKeySet),
           logKeys: Object.keys(logKeySet).sort(),
           xAxisKeys: keyOptions.filter((key) => key in logKeySet),
         };
-        const statsKeys = Object.keys(newStats) as (keyof StatsState)[];
+        const statsKeys = Object.keys(newStats) as (keyof Stats)[];
         statsKeys.forEach((key) => {
           if (`${newStats[key]}` === `${state[key]}`) {
             newStats[key] = state[key];
@@ -168,10 +162,9 @@ const statsReducer: Reducer<StatsState> = (
   }
 };
 
-const statusReducer = combineReducers({
+const statusReducer: Reducer<Status> = combineReducers({
   projectsStatus: projectsStatusReducer,
   stats: statsReducer,
 });
-export type StatusState = ReturnType<typeof statusReducer>;
 
 export default statusReducer;

@@ -1,9 +1,9 @@
 export const updatePartialState = <S, A>(
-  state: { [keyId: string]: S },
+  state: { [keyId: number]: S },
   action: A,
-  keyId: string,
+  keyId: number,
   childReducer: (state: S, action: A) => S
-): { [keyId: string]: S } => {
+): { [keyId: number]: S } => {
   const partialState = childReducer(state[keyId], action);
   if (state[keyId] !== partialState) {
     return {
@@ -15,9 +15,9 @@ export const updatePartialState = <S, A>(
 };
 
 export const removePartialState = <S>(
-  state: { [keyId: string]: S },
-  keyId: string
-): { [keyId: string]: S } => {
+  state: { [keyId: number]: S },
+  keyId: number
+): { [keyId: number]: S } => {
   if (keyId in state) {
     const newState = { ...state };
     delete newState[keyId];
