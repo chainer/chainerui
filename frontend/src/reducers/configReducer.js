@@ -27,7 +27,7 @@ import {
   GLOBAL_CONFIG_RESULT_NAME_ALIGNMENT_UPDATE,
   GLOBAL_CONFIG_HIGHLIGHT_TABLE_AND_CHART,
 } from '../actions/config';
-import { RESULT_UPDATE_SUCCESS, RESULT_DELETE_SUCCESS } from '../actions/entities';
+import { RESULT_UPDATE_SUCCESS, RESULTS_PATCH_SUCCESS } from '../actions/entities';
 import { updatePartialState, removePartialState } from './utils';
 
 const axisConfigReducer = (state = {}, action) => {
@@ -113,7 +113,7 @@ const axesConfigReducer = (state = defaultAxisConfig, action) => {
 };
 
 const resultsConfigReducer = (state = {}, action) => {
-  const { resultId } = action;
+  const { resultId, response } = action;
   switch (action.type) {
     case RESULTS_CONFIG_SELECT_UPDATE:
       if (resultId) {
@@ -153,8 +153,18 @@ const resultsConfigReducer = (state = {}, action) => {
         };
       }
       return state;
-    case RESULT_DELETE_SUCCESS:
-      return removePartialState(state, resultId);
+    case RESULTS_PATCH_SUCCESS:
+      if (response.results) {
+        let tmpState = state;
+        const targetResult = response.results.filter(
+          (result) => result.is_unregistered && result.is_unregistered === true
+        );
+        targetResult.forEach((result) => {
+          tmpState = removePartialState(tmpState, result.id);
+        });
+        return tmpState;
+      }
+      return state;
     default:
       return state;
   }
@@ -229,18 +239,21 @@ const projectConfigReducer = combineReducers({
 });
 
 const projectsConfigReducer = (state = {}, action) => {
-  const { projectId } = action;
-  if (projectId) {
+  const { projectId: projectIdA, body = {} } = action;
+  const { projectId: projectIdB } = body;
+  const targetProjectId = projectIdA || projectIdB;
+  if (targetProjectId) {
     switch (action.type) {
       case PROJECT_CONFIG_RESET:
-        return updatePartialState(state, action, projectId, () =>
+        return updatePartialState(state, action, targetProjectId, () =>
           projectConfigReducer(undefined, action)
         );
+      case RESULTS_PATCH_SUCCESS:
+        return updatePartialState(state, action, targetProjectId, projectConfigReducer);
       default:
-        return updatePartialState(state, action, projectId, projectConfigReducer);
+        return updatePartialState(state, action, targetProjectId, projectConfigReducer);
     }
   }
-
   return state;
 };
 

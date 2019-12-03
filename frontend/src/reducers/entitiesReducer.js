@@ -7,7 +7,6 @@ import {
   RESULT_LIST_SUCCESS,
   RESULT_SUCCESS,
   RESULT_UPDATE_SUCCESS,
-  RESULT_DELETE_SUCCESS,
   RESULTS_PATCH_SUCCESS,
   COMMAND_CREATE_SUCCESS,
   RESULT_LIST_CLEAR,
@@ -102,12 +101,6 @@ const resultsReducer = (state = {}, action) => {
           ...state,
           [result.id]: result,
         };
-      }
-      return state;
-    case RESULT_DELETE_SUCCESS:
-      if (action.response && action.response.result) {
-        const { result } = action.response;
-        return removePartialState(state, result.id);
       }
       return state;
     case RESULTS_PATCH_SUCCESS:
