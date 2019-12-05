@@ -36,6 +36,8 @@ export const updateResultCheckBulk = (
 });
 export type ResultCheckBulkAction = ReturnType<typeof updateResultCheckBulk>;
 
+export type ResultStatusAction = ResultSelectAction | ResultCheckAction | ResultCheckBulkAction;
+
 export const RESULT_FILTER_UPDATE = 'RESULT_FILTER_UPDATE';
 export const updateResultFilter = (
   projectId: ProjectId,

@@ -20,7 +20,7 @@ import {
   ChartDownloadStatusAction,
   ResultSelectAction,
   ResultCheckAction,
-  ResultCheckBulkAction,
+  ResultStatusAction,
   ResultFilterAction,
 } from '../actions/status';
 import { updatePartialState } from './utils';
@@ -66,16 +66,13 @@ const resultStatusReducer: Reducer<ResultStatus> = combineReducers({
   checked: resultCheckedReducer,
 });
 
-const resultsStatusReducer: Reducer<ResultsStatus, ResultCheckBulkAction> = (
-  state = {},
-  action
-) => {
-  const { projectId, results } = action;
+const resultsStatusReducer: Reducer<ResultsStatus, ResultStatusAction> = (state = {}, action) => {
+  const { projectId } = action;
   switch (action.type) {
     case RESULT_CHECK_BULK_UPDATE:
-      if (results) {
+      if (action.results) {
         let tmpState = state;
-        results.forEach((result) => {
+        action.results.forEach((result) => {
           const currentAction: ResultCheckAction = {
             type: RESULT_CHECK_UPDATE,
             projectId,
@@ -87,6 +84,9 @@ const resultsStatusReducer: Reducer<ResultsStatus, ResultCheckBulkAction> = (
         return tmpState;
       }
       return state;
+    case RESULT_SELECT_UPDATE:
+    case RESULT_CHECK_UPDATE:
+      return updatePartialState(state, action, action.resultId, resultStatusReducer);
     default:
       return state;
   }
@@ -112,12 +112,7 @@ const projectStatusReducer: Reducer<ProjectStatus> = combineReducers({
   resultFilter: resultFilterReducer,
 });
 
-type ProjectsStatusAction =
-  | ChartDownloadStatusAction
-  | ResultSelectAction
-  | ResultCheckAction
-  | ResultCheckBulkAction
-  | ResultFilterAction;
+type ProjectsStatusAction = ChartDownloadStatusAction | ResultStatusAction | ResultFilterAction;
 const projectsStatusReducer: Reducer<ProjectsStatus, ProjectsStatusAction> = (
   state = {},
   action
