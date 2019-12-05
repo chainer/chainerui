@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import { CHART_DOWNLOAD_STATUS } from '../constants';
-import { ProjectId, ResultId, Result } from '../store/types';
+import { ProjectId, ResultId } from '../store/types';
 
 export const RESULT_SELECT_UPDATE = 'RESULT_SELECT_UPDATE';
 export const updateResultSelect = (
@@ -16,29 +16,25 @@ export const updateResultSelect = (
 });
 export type ResultSelectAction = ReturnType<typeof updateResultSelect>;
 
-export const CHECKED_OF_RESULT_STATUS_UPDATE = 'CHECKED_OF_RESULT_STATUS_UPDATE';
-export const updateCheckedOfResultStatus = (
-  projectId: ProjectId,
-  resultId: ResultId,
-  checked: boolean
-) => ({
-  type: CHECKED_OF_RESULT_STATUS_UPDATE as typeof CHECKED_OF_RESULT_STATUS_UPDATE,
+export const RESULT_CHECK_UPDATE = 'RESULT_CHECK_UPDATE';
+export const updateResultCheck = (projectId: ProjectId, resultId: ResultId, checked: boolean) => ({
+  type: RESULT_CHECK_UPDATE as typeof RESULT_CHECK_UPDATE,
   projectId,
   resultId,
   checked,
 });
-export type ResultCheckAction = ReturnType<typeof updateCheckedOfResultStatus>;
+export type ResultCheckAction = ReturnType<typeof updateResultCheck>;
 
-export const CHECK_OF_RESULT_STATUS_LIST_UPDATE = 'CHECK_OF_RESULT_STATUS_LIST_UPDATE';
-export const updateCheckOfResultStatusList = (
+export const RESULT_CHECK_BULK_UPDATE = 'RESULT_CHECK_BULK_UPDATE';
+export const updateResultCheckBulk = (
   projectId: ProjectId,
   results: { id: ResultId; checked: boolean }[]
 ) => ({
-  type: CHECK_OF_RESULT_STATUS_LIST_UPDATE as typeof CHECK_OF_RESULT_STATUS_LIST_UPDATE,
+  type: RESULT_CHECK_BULK_UPDATE as typeof RESULT_CHECK_BULK_UPDATE,
   projectId,
   results,
 });
-export type ResultsStatusAction = ReturnType<typeof updateCheckOfResultStatusList>;
+export type ResultCheckBulkAction = ReturnType<typeof updateResultCheckBulk>;
 
 export const RESULT_FILTER_UPDATE = 'RESULT_FILTER_UPDATE';
 export const updateResultFilter = (

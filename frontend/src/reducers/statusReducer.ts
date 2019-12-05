@@ -14,13 +14,13 @@ import { RESULT_LIST_SUCCESS } from '../actions/entities';
 import {
   CHART_DOWNLOAD_STATUS_UPDATE,
   RESULT_SELECT_UPDATE,
-  CHECKED_OF_RESULT_STATUS_UPDATE,
-  CHECK_OF_RESULT_STATUS_LIST_UPDATE,
+  RESULT_CHECK_UPDATE,
+  RESULT_CHECK_BULK_UPDATE,
   RESULT_FILTER_UPDATE,
   ChartDownloadStatusAction,
   ResultSelectAction,
   ResultCheckAction,
-  ResultsStatusAction,
+  ResultCheckBulkAction,
   ResultFilterAction,
 } from '../actions/status';
 import { updatePartialState } from './utils';
@@ -54,7 +54,7 @@ const resultCheckedReducer: Reducer<ResultStatus['checked'], ResultCheckAction> 
   action
 ) => {
   switch (action.type) {
-    case CHECKED_OF_RESULT_STATUS_UPDATE:
+    case RESULT_CHECK_UPDATE:
       return action.checked;
     default:
       return state;
@@ -66,14 +66,22 @@ const resultStatusReducer: Reducer<ResultStatus> = combineReducers({
   checked: resultCheckedReducer,
 });
 
-const resultsStatusReducer: Reducer<ResultsStatus, ResultsStatusAction> = (state = {}, action) => {
-  const { results } = action;
+const resultsStatusReducer: Reducer<ResultsStatus, ResultCheckBulkAction> = (
+  state = {},
+  action
+) => {
+  const { projectId, results } = action;
   switch (action.type) {
-    case CHECK_OF_RESULT_STATUS_LIST_UPDATE:
+    case RESULT_CHECK_BULK_UPDATE:
       if (results) {
         let tmpState = state;
         results.forEach((result) => {
-          const currentAction = { type: action.type, checked: result.checked };
+          const currentAction: ResultCheckAction = {
+            type: RESULT_CHECK_UPDATE,
+            projectId,
+            resultId: result.id,
+            checked: result.checked,
+          };
           tmpState = updatePartialState(tmpState, currentAction, result.id, resultStatusReducer);
         });
         return tmpState;
@@ -104,7 +112,12 @@ const projectStatusReducer: Reducer<ProjectStatus> = combineReducers({
   resultFilter: resultFilterReducer,
 });
 
-type ProjectsStatusAction = ChartDownloadStatusAction | ResultsStatusAction | ResultFilterAction;
+type ProjectsStatusAction =
+  | ChartDownloadStatusAction
+  | ResultSelectAction
+  | ResultCheckAction
+  | ResultCheckBulkAction
+  | ResultFilterAction;
 const projectsStatusReducer: Reducer<ProjectsStatus, ProjectsStatusAction> = (
   state = {},
   action

@@ -27,7 +27,7 @@ import {
   updateTableColumnsVisibility,
   updateChartDownloadStatus,
   updateTargetResultType,
-  updateCheckOfResultStatusList,
+  updateResultCheckBulk,
 } from '../actions';
 import NavigationBar from './NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
@@ -305,6 +305,6 @@ export default connect(
     updateTableColumnsVisibility,
     updateChartDownloadStatus,
     updateTargetResultType,
-    updateCheckOfResultStatusList,
+    updateCheckOfResultStatusList: updateResultCheckBulk,
   }
 )(PlotContainer);
