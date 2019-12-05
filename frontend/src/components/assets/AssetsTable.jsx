@@ -2,11 +2,11 @@ import React from 'react';
 import ReactTable from 'react-table';
 
 import PropTypes from 'prop-types';
-import * as uiPropTypes from '../store/uiPropTypes';
+import * as uiPropTypes from '../../store/uiPropTypes';
 
-import TableConfigurator from './TableConfigurator';
+import TableConfigurator from '../TableConfigurator';
 
-import { sortKeys } from '../utils';
+import { sortKeys } from '../../utils';
 
 const AssetsTable = (props) => {
   const { assets, onAssetsTableColumnsVisibilityUpdate, tableState } = props;
