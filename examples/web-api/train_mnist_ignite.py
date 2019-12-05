@@ -155,7 +155,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # [ChainerUI] To use ChainerUI web client, must initialize
-    # args will be showed as parameter of this experiment.
+    # args will be shown as parameter of this experiment.
     chainerui.init(conditions=args)
 
     run(

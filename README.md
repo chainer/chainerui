@@ -31,6 +31,12 @@ $ pip install -e .
     - On Ubuntu, "libsqlite3-dev" must be installed before building Python (`$ apt-get install libsqlite3-dev`).
     - On Windows, install Visual C++ Build Tools with the Default Install setting before building Python.
 
+## Usage
+
+1. output `log` file with `LogReport` extension, see `examples/log-file/train_mnist.py`
+1. output `log` file manually, see `examples/log-file/train_mnist_custom_loop.py`
+1. post training logs via web API, see `examples/web-api/train_mnist.py`
+
 ## Quick start
 
 Initialize ChainerUI database.
@@ -46,14 +52,14 @@ Clone examples of train log and create a project.
 $ git clone https://github.com/chainer/chainerui.git
 $ cd chainerui
 
-$ # create your first project
-$ chainerui project create -d examples -n example-project
+$ # create example project
+$ chainerui project create -d examples/log-file -n example-project
 
 $ # run ChainerUI server
 $ chainerui server
 ```
 
-Open http://localhost:5000/ and select "example-project".
+Open http://localhost:5000/ and select "example-project", then shown a chart of training logs.
 
 For more detailed usage, see [getting started](http://chainerui.readthedocs.io/en/latest/getstart.html)
 
@@ -62,21 +68,15 @@ For more detailed usage, see [getting started](http://chainerui.readthedocs.io/e
 Get Docker container from [DockerHub](https://hub.docker.com/r/chainer/chainerui/) and start ChainerUI server. The container has installed ChainerUI module, setup a DB and a command to start the server.
 
 ```sh
-$ git clone https://github.com/chainer/chainerui.git
-$ cd chainerui
-
 $ # replace tag to the latest version number
-$ docker pull chainer/chainerui:v0.4.0
-$ docker run -d -p 5000:5000 -v $PWD:/projects --name chainerui chainer/chainerui:v0.4.0
-
+$ docker pull chainer/chainerui:latest
+$ docker run -d -p 5000:5000 --name chainerui chainer/chainerui:latest
 $ # then ChainerUI server is running
-$ # create project via HTTP
-$ curl http://localhost:5000/api/v1/projects -X POST -H "Content-Type: application/json" -d '{"project":{"name":"example-project","path_name":"/projects/examples"}}'
 ```
 
-Open http://localhost:5000/ and select "example-project".
+Open http://localhost:5000/, shown empty project list. `examples/web-api/train_mnist.py` is an example to setup project and send logs via web API.
 
-For more detailed usage, see [docker start](http://chainerui.readthedocs.io/en/latest/docker.html)
+For more detailed usage, see [getting started](http://chainerui.readthedocs.io/en/latest/getstart.html) or [web API](http://chainerui.readthedocs.io/en/latest/webapi.html)
 
 ## Browser compatibility
 

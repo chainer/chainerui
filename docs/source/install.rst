@@ -1,4 +1,4 @@
-.. _install-guilde:
+.. _install_guide:
 
 Installation Guide
 ==================
@@ -50,17 +50,19 @@ Clone examples of train log and create a project::
   $ git clone https://github.com/chainer/chainerui.git
   $ cd chainerui
 
-  $ # create your first project
-  $ chainerui project create -d examples -n example-project
+  $ # create example project project
+  $ chainerui project create -d examples/log-file -n example-project
 
 Run ChainerUI server::
 
   $ chainerui server
 
-Open http://localhost:5000/ and select "example-project", then show a chart of training logs.
+Open http://localhost:5000/ and select "example-project", then shown a chart of training logs.
 
 For more detailed usage, see :ref:`getstart`.
 
+
+.. _install_guide_docker:
 
 Docker start
 ------------
@@ -71,15 +73,13 @@ Get Docker container from `DockerHub <https://hub.docker.com/r/chainer/chainerui
   $ cd chainerui
 
   $ # replace tag to the latest version number
-  $ docker pull chainer/chainerui:v0.4.0
-  $ docker run -d -p 5000:5000 -v $PWD:/projects --name chainerui chainer/chainerui:v0.4.0
+  $ docker pull chainer/chainerui:latest
+  $ docker run -d -p 5000:5000 --name chainerui chainer/chainerui:latest
   $ # then ChainerUI server is running
-  $ # create project via HTTP
-  $ curl http://localhost:5000/api/v1/projects -X POST -H "Content-Type: application/json" -d '{"project":{"name":"example-project","path_name":"/projects/examples"}}'
 
-Open http://localhost:5000/ and select "example-project", then show a chart of training logs.
+Open http://localhost:5000/ shown empty project list.
 
-Form more detailed usage, see :ref:`use_docker`.
+Form more detailed usage, see :ref:`getstart` or :ref:`web_api`.
 
 
 Browser compatibility

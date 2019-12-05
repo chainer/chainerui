@@ -3,6 +3,8 @@
 Getting started
 ===============
 
+Output ``log`` files during training phase, and ChainerUI collects them. When send training logs via web API, see :ref:`web API<web_api>` section.
+
 Create a database
 -----------------
 
@@ -62,11 +64,11 @@ ChainerUI basically supports the `Trainer module <https://docs.chainer.org/en/st
 
 .. note::
 
-   `examples/train_mnist.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__, based on `chainer/examples/mnist/train_mnist.py <https://github.com/chainer/chainer/blob/4de98cf90e747940f1dd7f7f4cdf1fcc0b4b4786/examples/mnist/train_mnist.py>`__, is a useful example to see how to set training loops with ChainerUI.
+   `examples/log-file/train_mnist.py <https://github.com/chainer/chainerui/blob/master/examples/log-file/train_mnist.py>`__, based on `chainer/examples/mnist/train_mnist.py <https://github.com/chainer/chainer/blob/4de98cf90e747940f1dd7f7f4cdf1fcc0b4b4786/examples/mnist/train_mnist.py>`__, is a useful example to see how to set training loops with ChainerUI.
 
 .. note::
 
-   `examples/train_mnist_custom_loop.py <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__ is an example, basaed on `chainer/examples/mnist/train_mnist_custom_loop <https://github.com/chainer/chainer/blob/e2fe6f8023e635f8c1fc9c89e85d075ebd50c529/examples/mnist/train_mnist_custom_loop.py>`__, which does not use the training loop from ``Trainer``. However, this example will not use the training loop from :ref:`getstart_operate_training_loop`.
+   `examples/log-file/train_mnist_custom_loop.py <https://github.com/chainer/chainerui/blob/master/examples/log-file/train_mnist_custom_loop.py>`__ is an example, basaed on `chainer/examples/mnist/train_mnist_custom_loop <https://github.com/chainer/chainer/blob/e2fe6f8023e635f8c1fc9c89e85d075ebd50c529/examples/mnist/train_mnist_custom_loop.py>`__, which does not use the training loop from ``Trainer``. However, this example will not use the training loop from :ref:`getstart_operate_training_loop`.
 
 Training log
 ~~~~~~~~~~~~
@@ -86,7 +88,7 @@ ChainerUI plots training log values read from  the ``log`` files and shows the t
 
    When retrying a training job with a same directory, ``log`` file will be truncated and created, then the job overwrites logs the file. But ChainerUI cannot distinguish whether the ``log`` file is updated or recreated. ChainerUI recommends to create another directory for output result on retrying.
 
-Setup example from a brief  `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
+Setup example from a brief  `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/log-file/train_mnist.py>`__:
 
 .. code-block:: python
 
@@ -129,7 +131,7 @@ Created ``log`` file example::
       ...
   ]
 
-A example without ``Trainer`` code, from a short extract of the `MNIST custom loop example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist_custom_loop.py>`__:
+A example without ``Trainer`` code, from a short extract of the `MNIST custom loop example <https://github.com/chainer/chainerui/blob/master/examples/log-file/train_mnist_custom_loop.py>`__:
 
 .. code-block:: python
 
@@ -162,7 +164,7 @@ Experimental conditions
 
 ChainerUI shows the training job with experimental conditions read from the ``args`` file. ``args`` file is a JSON file, which includes key-value pairs. See :ref:`save_args <module_save_args>`, util function to dump command line arguments or dictionaries to ``args`` file.
 
-Setup example of a brief `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
+Setup example of a brief `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/log-file/train_mnist.py>`__:
 
 .. code-block:: python
 
@@ -211,7 +213,7 @@ Operation buttons are in result table row, click ``▼`` button to expand, or in
 
    commands pane of result page
 
-Setup example of a brief extract `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/train_mnist.py>`__:
+Setup example of a brief extract `MNIST example <https://github.com/chainer/chainerui/blob/master/examples/log-file/train_mnist.py>`__:
 
 .. code-block:: python
 
