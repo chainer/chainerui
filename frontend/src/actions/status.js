@@ -6,12 +6,11 @@ export const updateResultSelect = (projectId, resultId, selected) => ({
   selected,
 });
 
-export const CHECKED_OF_RESULT_STATUS_UPDATE = 'CHECKED_OF_RESULT_STATUS_UPDATE';
-export const updateCheckedOfResultStatus = (projectId, resultId, checked) => ({
-  type: CHECKED_OF_RESULT_STATUS_UPDATE,
+export const CHECK_OF_RESULT_STATUS_LIST_UPDATE = 'CHECK_OF_RESULT_STATUS_LIST_UPDATE';
+export const updateCheckOfResultStatusList = (projectId, results) => ({
+  type: CHECK_OF_RESULT_STATUS_LIST_UPDATE,
   projectId,
-  resultId,
-  checked,
+  results,
 });
 
 export const RESULT_FILTER_UPDATE = 'RESULT_FILTER_UPDATE';

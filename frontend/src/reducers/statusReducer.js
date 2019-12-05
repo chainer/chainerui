@@ -4,7 +4,7 @@ import { RESULT_LIST_SUCCESS } from '../actions/entities';
 import {
   CHART_DOWNLOAD_STATUS_UPDATE,
   RESULT_SELECT_UPDATE,
-  CHECKED_OF_RESULT_STATUS_UPDATE,
+  CHECK_OF_RESULT_STATUS_LIST_UPDATE,
   RESULT_FILTER_UPDATE,
 } from '../actions/status';
 import { updatePartialState } from './utils';
@@ -29,7 +29,7 @@ const resultSelectedReducer = (state = false, action) => {
 
 const resultCheckedReducer = (state = false, action) => {
   switch (action.type) {
-    case CHECKED_OF_RESULT_STATUS_UPDATE:
+    case CHECK_OF_RESULT_STATUS_LIST_UPDATE:
       return action.checked;
     default:
       return state;
@@ -42,12 +42,21 @@ const resultStatusReducer = combineReducers({
 });
 
 const resultsStatusReducer = (state = {}, action) => {
-  const { resultId } = action;
-  if (resultId) {
-    return updatePartialState(state, action, resultId, resultStatusReducer);
+  const { results } = action;
+  switch (action.type) {
+    case CHECK_OF_RESULT_STATUS_LIST_UPDATE:
+      if (results) {
+        let tmpState = state;
+        results.forEach((result) => {
+          const currentAction = { type: action.type, checked: result.checked };
+          tmpState = updatePartialState(tmpState, currentAction, result.id, resultStatusReducer);
+        });
+        return tmpState;
+      }
+      return state;
+    default:
+      return state;
   }
-
-  return state;
 };
 
 const resultFilterReducer = (state = {}, action) => {

@@ -69,9 +69,6 @@ export const RESULT_FAILURE = 'RESULT_FAILURE';
 export const RESULT_UPDATE_REQUEST = 'RESULT_UPDATE_REQUEST';
 export const RESULT_UPDATE_SUCCESS = 'RESULT_UPDATE_SUCCESS';
 export const RESULT_UPDATE_FAILURE = 'RESULT_UPDATE_FAILURE';
-export const RESULT_DELETE_REQUEST = 'RESULT_DELETE_REQUEST';
-export const RESULT_DELETE_SUCCESS = 'RESULT_DELETE_SUCCESS';
-export const RESULT_DELETE_FAILURE = 'RESULT_DELETE_FAILURE';
 export const RESULTS_PATCH_REQUEST = 'RESULTS_PATCH_REQUEST';
 export const RESULTS_PATCH_SUCCESS = 'RESULTS_PATCH_SUCCESS';
 export const RESULTS_PATCH_FAILURE = 'RESULTS_PATCH_FAILURE';
@@ -113,26 +110,13 @@ export const updateResult = (projectId, result = {}) => {
   };
 };
 
-export const deleteResult = (projectId, resultId) => {
-  if (!Number.isInteger(resultId)) {
-    throw new Error('Result id is invalid.');
-  }
-  return {
-    [CALL_API]: {
-      types: [RESULT_DELETE_REQUEST, RESULT_DELETE_SUCCESS, RESULT_DELETE_FAILURE],
-      endpoint: `projects/${projectId}/results/${resultId}`,
-      method: 'DELETE',
-    },
-  };
-};
-
 export const patchResults = (projectId, results = []) => {
   return {
     [CALL_API]: {
       types: [RESULTS_PATCH_REQUEST, RESULTS_PATCH_SUCCESS, RESULTS_PATCH_FAILURE],
       endpoint: `projects/${projectId}/results`,
       method: 'PATCH',
-      body: { results },
+      body: { projectId, results },
     },
   };
 };

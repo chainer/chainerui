@@ -37,7 +37,7 @@ const ExperimentsTable = (props) => {
     onCommandSubmit,
     onTableExpandedUpdate,
     onTableColumnsVisibilityUpdate,
-    onCheckedOfResultStatusUpdate,
+    onCheckOfResultStatusListUpdate,
   } = props;
   const { argKeys, logKeys } = stats;
   const { resultsConfig, tableState } = projectConfig;
@@ -75,7 +75,7 @@ const ExperimentsTable = (props) => {
           project={project}
           targetResults={resultList}
           resultsStatus={resultsStatus}
-          onChange={onCheckedOfResultStatusUpdate}
+          onChange={onCheckOfResultStatusListUpdate}
         />
       ),
       Cell: (p) => {
@@ -88,7 +88,7 @@ const ExperimentsTable = (props) => {
             project={project}
             targetResults={[original]}
             resultsStatus={resultsStatus}
-            onChange={onCheckedOfResultStatusUpdate}
+            onChange={onCheckOfResultStatusListUpdate}
           />
         );
       },
@@ -105,7 +105,7 @@ const ExperimentsTable = (props) => {
             project={project}
             targetResults={groupedResults}
             resultsStatus={resultsStatus}
-            onChange={onCheckedOfResultStatusUpdate}
+            onChange={onCheckOfResultStatusListUpdate}
           />
         );
       },
@@ -328,7 +328,7 @@ ExperimentsTable.propTypes = {
   onCommandSubmit: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired,
   onTableColumnsVisibilityUpdate: PropTypes.func.isRequired,
-  onCheckedOfResultStatusUpdate: PropTypes.func.isRequired,
+  onCheckOfResultStatusListUpdate: PropTypes.func.isRequired,
 };
 
 ExperimentsTable.defaultProps = {

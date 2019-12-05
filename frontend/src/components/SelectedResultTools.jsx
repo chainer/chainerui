@@ -11,7 +11,7 @@ const SelectedResultTools = (props) => {
     resultsStatus,
     resultTypeId,
     onResultsPatch,
-    onCheckedOfResultStatusUpdate,
+    onCheckOfResultStatusListUpdate,
     onTableExpandedUpdate,
   } = props;
 
@@ -39,10 +39,8 @@ const SelectedResultTools = (props) => {
 
     const requestBody = targetResultKeys.map((id) => ({ id, isUnregistered }));
     onResultsPatch(project.id, requestBody);
-
-    targetResultKeys.forEach((resultKey) => {
-      onCheckedOfResultStatusUpdate(project.id, results[resultKey].id, false);
-    });
+    const resultStatusList = targetResultKeys.map((id) => ({ id, checked: false }));
+    onCheckOfResultStatusListUpdate(project.id, resultStatusList);
   };
 
   return (
@@ -68,7 +66,7 @@ SelectedResultTools.propTypes = {
   resultsStatus: uiPropTypes.resultsStatus,
   resultTypeId: PropTypes.string.isRequired,
   onResultsPatch: PropTypes.func.isRequired,
-  onCheckedOfResultStatusUpdate: PropTypes.func.isRequired,
+  onCheckOfResultStatusListUpdate: PropTypes.func.isRequired,
   onTableExpandedUpdate: PropTypes.func.isRequired,
 };
 

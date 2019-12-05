@@ -15,8 +15,12 @@ const ResultSelectionCheckbox = (props) => {
       type="checkbox"
       checked={currentCheckState}
       onChange={() =>
-        props.targetResults.forEach((result) =>
-          props.onChange(props.project.id, result.id, !currentCheckState)
+        props.onChange(
+          props.project.id,
+          props.targetResults.map((result) => ({
+            id: result.id,
+            checked: !currentCheckState,
+          }))
         )
       }
     />
