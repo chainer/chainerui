@@ -184,7 +184,7 @@ export interface ResultStatus {
 }
 
 export interface ResultsStatus {
-  [k: string]: ResultStatus;
+  [k: number]: ResultStatus;
 }
 
 export interface ResultFilter {
@@ -198,7 +198,7 @@ export interface ProjectStatus {
 }
 
 export interface ProjectsStatus {
-  [k: string]: ProjectStatus;
+  [k: number]: ProjectStatus;
 }
 
 export interface Status {

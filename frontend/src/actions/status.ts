@@ -1,18 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import { CHART_DOWNLOAD_STATUS } from '../constants';
-import { ProjectId, ResultId } from '../store/types';
-
-export const CHART_DOWNLOAD_STATUS_UPDATE = 'CHART_DOWNLOAD_STATUS_UPDATE';
-export const updateChartDownloadStatus = (
-  projectId: ProjectId,
-  chartDownloadStatus: CHART_DOWNLOAD_STATUS
-) => ({
-  type: CHART_DOWNLOAD_STATUS_UPDATE as typeof CHART_DOWNLOAD_STATUS_UPDATE,
-  projectId,
-  chartDownloadStatus,
-});
-export type ChartDownloadStatusAction = ReturnType<typeof updateChartDownloadStatus>;
+import { ProjectId, ResultId, Result } from '../store/types';
 
 export const RESULT_SELECT_UPDATE = 'RESULT_SELECT_UPDATE';
 export const updateResultSelect = (
@@ -25,7 +14,7 @@ export const updateResultSelect = (
   resultId,
   selected,
 });
-export type ResultSelectedAction = ReturnType<typeof updateResultSelect>;
+export type ResultSelectAction = ReturnType<typeof updateResultSelect>;
 
 export const CHECKED_OF_RESULT_STATUS_UPDATE = 'CHECKED_OF_RESULT_STATUS_UPDATE';
 export const updateCheckedOfResultStatus = (
@@ -38,7 +27,18 @@ export const updateCheckedOfResultStatus = (
   resultId,
   checked,
 });
-export type ResultCheckedAction = ReturnType<typeof updateCheckedOfResultStatus>;
+export type ResultCheckAction = ReturnType<typeof updateCheckedOfResultStatus>;
+
+export const CHECK_OF_RESULT_STATUS_LIST_UPDATE = 'CHECK_OF_RESULT_STATUS_LIST_UPDATE';
+export const updateCheckOfResultStatusList = (
+  projectId: ProjectId,
+  results: { id: ResultId; checked: boolean }[]
+) => ({
+  type: CHECK_OF_RESULT_STATUS_LIST_UPDATE as typeof CHECK_OF_RESULT_STATUS_LIST_UPDATE,
+  projectId,
+  results,
+});
+export type ResultsStatusAction = ReturnType<typeof updateCheckOfResultStatusList>;
 
 export const RESULT_FILTER_UPDATE = 'RESULT_FILTER_UPDATE';
 export const updateResultFilter = (
@@ -52,3 +52,14 @@ export const updateResultFilter = (
   filterText,
 });
 export type ResultFilterAction = ReturnType<typeof updateResultFilter>;
+
+export const CHART_DOWNLOAD_STATUS_UPDATE = 'CHART_DOWNLOAD_STATUS_UPDATE';
+export const updateChartDownloadStatus = (
+  projectId: ProjectId,
+  chartDownloadStatus: CHART_DOWNLOAD_STATUS
+) => ({
+  type: CHART_DOWNLOAD_STATUS_UPDATE as typeof CHART_DOWNLOAD_STATUS_UPDATE,
+  projectId,
+  chartDownloadStatus,
+});
+export type ChartDownloadStatusAction = ReturnType<typeof updateChartDownloadStatus>;
