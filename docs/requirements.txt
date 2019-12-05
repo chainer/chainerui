@@ -1,2 +1,1 @@
 chainer>=3.0.0
-pytorch-ignite>=0.2.1
