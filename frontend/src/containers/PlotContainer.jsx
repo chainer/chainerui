@@ -157,7 +157,7 @@ class PlotContainer extends React.Component {
                   resultsStatus={projectStatus.resultsStatus}
                   onResultsPatch={this.props.patchResults}
                   onTableExpandedUpdate={this.props.updateTableExpanded}
-                  onCheckOfResultStatusListUpdate={this.props.updateCheckOfResultStatusList}
+                  onResultCheckBulkUpdate={this.props.updateResultCheckBulk}
                 />
                 <ResultTypeSelector
                   projectId={projectId}
@@ -180,7 +180,7 @@ class PlotContainer extends React.Component {
                 onCommandSubmit={this.props.createCommand}
                 onTableExpandedUpdate={this.props.updateTableExpanded}
                 onTableColumnsVisibilityUpdate={this.handleExperimentsTableColumnsVisibilityUpdate}
-                onCheckOfResultStatusListUpdate={this.props.updateCheckOfResultStatusList}
+                onResultCheckBulkUpdate={this.props.updateResultCheckBulk}
               />
               <ExperimentsTableConfigurator
                 project={project}
@@ -226,7 +226,7 @@ PlotContainer.propTypes = {
   updateTableColumnsVisibility: PropTypes.func.isRequired,
   updateChartDownloadStatus: PropTypes.func.isRequired,
   updateTargetResultType: PropTypes.func.isRequired,
-  updateCheckOfResultStatusList: PropTypes.func.isRequired,
+  updateResultCheckBulk: PropTypes.func.isRequired,
 };
 
 const getTargetTextForFilter = (project, result, filterKey) => {
@@ -305,6 +305,6 @@ export default connect(
     updateTableColumnsVisibility,
     updateChartDownloadStatus,
     updateTargetResultType,
-    updateCheckOfResultStatusList: updateResultCheckBulk,
+    updateResultCheckBulk,
   }
 )(PlotContainer);
