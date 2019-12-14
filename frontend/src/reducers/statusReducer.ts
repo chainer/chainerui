@@ -132,8 +132,8 @@ const statsReducer: Reducer<Stats> = (
 ) => {
   switch (action.type) {
     case RESULT_LIST_SUCCESS:
-      if (action.response && action.response.results) {
-        const resultsList: Result[] = action.response.results;
+      if (action.payload && action.payload.results) {
+        const resultsList: Result[] = action.payload.results;
         const argKeySet: { [argKey: string]: boolean } = {};
         const logKeySet: { [logKey: string]: boolean } = {};
         resultsList.forEach((result) => {

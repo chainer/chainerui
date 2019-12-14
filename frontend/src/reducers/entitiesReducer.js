@@ -17,8 +17,8 @@ import { removePartialState } from './utils';
 const projectsReducer = (state = {}, action) => {
   switch (action.type) {
     case PROJECT_LIST_SUCCESS:
-      if (action.response && action.response.projects) {
-        const projectList = action.response.projects;
+      if (action.payload && action.payload.projects) {
+        const projectList = action.payload.projects;
         const projects = {};
         projectList.forEach((project) => {
           projects[project.id] = project;
@@ -28,8 +28,8 @@ const projectsReducer = (state = {}, action) => {
       return state;
     case PROJECT_SUCCESS:
     case PROJECT_UPDATE_SUCCESS:
-      if (action.response && action.response.project) {
-        const { project } = action.response;
+      if (action.payload && action.payload.project) {
+        const { project } = action.payload;
         return {
           ...state,
           [project.id]: project,
@@ -37,8 +37,8 @@ const projectsReducer = (state = {}, action) => {
       }
       return state;
     case PROJECT_DELETE_SUCCESS:
-      if (action.response && action.response.project) {
-        const { project } = action.response;
+      if (action.payload && action.payload.project) {
+        const { project } = action.payload;
         return removePartialState(state, project.id);
       }
       return state;
@@ -67,8 +67,8 @@ const mergeResult = (result, oldResult) => {
 const resultsReducer = (state = {}, action) => {
   switch (action.type) {
     case RESULT_LIST_SUCCESS:
-      if (action.response && action.response.results) {
-        const resultList = action.response.results;
+      if (action.payload && action.payload.results) {
+        const resultList = action.payload.results;
         const resultIds = resultList.map((result) => result.id);
         let modified = Object.keys(state).length !== resultIds.length;
         const results = {};
@@ -83,8 +83,8 @@ const resultsReducer = (state = {}, action) => {
       }
       return state;
     case RESULT_SUCCESS:
-      if (action.response && action.response.result) {
-        const { result } = action.response;
+      if (action.payload && action.payload.result) {
+        const { result } = action.payload;
         return {
           ...state,
           [result.id]: result,
@@ -92,8 +92,8 @@ const resultsReducer = (state = {}, action) => {
       }
       return state;
     case RESULT_UPDATE_SUCCESS:
-      if (action.response && action.response.result) {
-        const { result } = action.response;
+      if (action.payload && action.payload.result) {
+        const { result } = action.payload;
         if (result.isUnregistered !== state[result.id].isUnregistered) {
           return removePartialState(state, result.id);
         }
@@ -104,8 +104,8 @@ const resultsReducer = (state = {}, action) => {
       }
       return state;
     case RESULTS_PATCH_SUCCESS:
-      if (action.response && action.response.results) {
-        const { results } = action.response;
+      if (action.payload && action.payload.results) {
+        const { results } = action.payload;
         let currentState = state;
         results.forEach((result) => {
           currentState = removePartialState(currentState, result.id);
@@ -114,13 +114,13 @@ const resultsReducer = (state = {}, action) => {
       }
       return state;
     case COMMAND_CREATE_SUCCESS:
-      if (action.response && action.response.commands) {
-        const result = state[action.body.resultId];
+      if (action.payload && action.payload.commands) {
+        const result = state[action.body.resultId]; // TODO: fix body
         return {
           ...state,
           [action.body.resultId]: {
             ...result,
-            commands: action.response.commands,
+            commands: action.payload.commands,
           },
         };
       }
@@ -135,8 +135,8 @@ const resultsReducer = (state = {}, action) => {
 const assetsReducer = (state = [], action) => {
   switch (action.type) {
     case RESULT_ASSET_SUCCESS:
-      if (action.response && action.response.assets) {
-        const assetList = action.response.assets;
+      if (action.payload && action.payload.assets) {
+        const assetList = action.payload.assets;
         return assetList;
       }
       return state;
