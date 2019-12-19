@@ -191,10 +191,18 @@ export interface ResultFilter {
   [filterKey: string]: string;
 }
 
+export interface LastBulkUpdateTarget {
+  [k: number]: {
+    id: ResultId;
+    isUnregistered: boolean;
+  };
+}
+
 export interface ProjectStatus {
   chartDownloadStatus: CHART_DOWNLOAD_STATUS;
   resultsStatus: ResultsStatus;
   resultFilter: ResultFilter;
+  lastBulkUpdateTarget: LastBulkUpdateTarget;
 }
 
 export interface ProjectsStatus {
