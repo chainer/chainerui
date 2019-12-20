@@ -26,18 +26,21 @@ type Meta = RSAACall & {
 
 export interface RSAARequestAction {
   type: string;
+  meta: Meta;
   payload?: Payload;
-  meta?: Meta;
+  error?: boolean;
 }
 export interface RSAASuccessAction {
   type: string;
+  meta: Meta;
   payload?: Payload;
-  meta?: Meta;
+  error?: boolean;
 }
 export interface RSAAFailureAction {
   type: string;
+  meta: Meta;
   payload?: Payload;
-  meta?: Meta;
+  error?: boolean;
 }
 
 export type RSAARequestType = string;
@@ -49,8 +52,11 @@ export type RSAAActions = RSAARequestAction | RSAASuccessAction | RSAAFailureAct
 const isPlainObject = (obj: any): boolean =>
   obj && typeof obj === 'object' && Object.getPrototypeOf(obj) === Object.prototype;
 
-const isRSAA = (action: any): action is RSAAAction =>
+const isRSAAAction = (action: any): action is RSAAAction =>
   isPlainObject(action) && Object.prototype.hasOwnProperty.call(action, RSAA);
+
+export const isRSAAActions = (action: any): action is RSAAActions =>
+  action.meta && action.meta.httpRequest && action.meta.httpRequest.endpoint;
 
 const getJSON = async (res: Response): Promise<any | void> => {
   const contentType = res.headers.get('Content-Type');
@@ -92,7 +98,7 @@ const normalizeActions = (
 
 // TODO: use RootState type
 export const apiMiddleware: Middleware = (store) => (next) => (action): any => {
-  if (!isRSAA(action)) {
+  if (!isRSAAAction(action)) {
     return next(action);
   }
 
