@@ -1,31 +1,6 @@
-/* eslint max-classes-per-file: off */
-
 import { Middleware } from 'redux';
-
-class RequestError extends Error {
-  constructor(message: string) {
-    super();
-    this.name = 'RequestError';
-    this.message = message;
-  }
-}
-
-class ApiError<R = any> extends Error {
-  status: number;
-
-  statusText: string;
-
-  response: R;
-
-  constructor(status: number, statusText: string, response: R) {
-    super();
-    this.name = 'ApiError';
-    this.status = status;
-    this.statusText = statusText;
-    this.response = response;
-    this.message = `${status} - ${statusText}`;
-  }
-}
+import ApiError from './apiErrors/apiError';
+import RequestError from './apiErrors/requestError';
 
 export const RSAA = '@@chainerui/RSAA';
 
