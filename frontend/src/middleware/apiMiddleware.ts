@@ -19,7 +19,7 @@ type Payload = any;
 
 type Meta = RSAACall & {
   httpRequest: {
-    url: string;
+    endpoint: string;
     requesting: boolean;
   };
 };
@@ -72,19 +72,19 @@ const normalizeActions = (
   callAPI: RSAACall
 ): [RSAARequestAction, RSAASuccessAction, RSAAFailureAction] => {
   const [requestType, successType, failureType] = types;
-  const url = getUrl(callAPI.endpoint);
+  const { endpoint } = callAPI;
 
   const requestAction = {
     type: requestType,
-    meta: { ...callAPI, httpRequest: { url, requesting: true } },
+    meta: { ...callAPI, httpRequest: { endpoint, requesting: true } },
   };
   const successAction = {
     type: successType,
-    meta: { ...callAPI, httpRequest: { url, requesting: false } },
+    meta: { ...callAPI, httpRequest: { endpoint, requesting: false } },
   };
   const failureAction = {
     type: failureType,
-    meta: { ...callAPI, httpRequest: { url, requesting: false } },
+    meta: { ...callAPI, httpRequest: { endpoint, requesting: false } },
     error: true,
   };
   return [requestAction, successAction, failureAction];
@@ -99,11 +99,9 @@ export const apiMiddleware: Middleware = (store) => (next) => (action): any => {
   const callAPI = action[RSAA];
   const { endpoint, method, types, body } = callAPI;
 
-  const url = getUrl(endpoint);
-
   // Cancel HTTP request if there is already one pending for this URL
   const { requests } = store.getState();
-  if (requests[url]) {
+  if (requests[endpoint]) {
     // There is a request for this URL in flight already!
     // (Ignore the action)
     return undefined;
@@ -114,6 +112,8 @@ export const apiMiddleware: Middleware = (store) => (next) => (action): any => {
   next(requestAction);
 
   return (async (): Promise<any> => {
+    const url = getUrl(endpoint);
+
     let res;
     try {
       res = await fetch(url, {
