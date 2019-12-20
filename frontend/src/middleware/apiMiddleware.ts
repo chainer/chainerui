@@ -104,7 +104,7 @@ export const apiMiddleware: Middleware = (store) => (next) => (action): any => {
 
   const requestAction = {
     type: requestType,
-    meta: { httpRequest: { url, requesting: true } },
+    meta: { ...callAPI, httpRequest: { url, requesting: true } },
   };
   next(requestAction);
 
@@ -122,7 +122,7 @@ export const apiMiddleware: Middleware = (store) => (next) => (action): any => {
       const failureAction = {
         type: failureType,
         payload: new RequestError(e.message),
-        meta: { httpRequest: { url, requesting: false } },
+        meta: { ...callAPI, httpRequest: { url, requesting: false } },
         error: true,
       };
       return next(failureAction);
@@ -135,7 +135,7 @@ export const apiMiddleware: Middleware = (store) => (next) => (action): any => {
       const failureAction = {
         type: failureType,
         payload: new ApiError(res.status, res.statusText, json),
-        meta: { httpRequest: { url, requesting: false } },
+        meta: { ...callAPI, httpRequest: { url, requesting: false } },
         error: true,
       };
       return next(failureAction);
@@ -144,7 +144,7 @@ export const apiMiddleware: Middleware = (store) => (next) => (action): any => {
     const successAction = {
       type: successType,
       payload: json,
-      meta: { httpRequest: { url, requesting: false } },
+      meta: { ...callAPI, httpRequest: { url, requesting: false } },
     };
     return next(successAction);
   })();

@@ -115,10 +115,11 @@ const resultsReducer = (state = {}, action) => {
       return state;
     case COMMAND_CREATE_SUCCESS:
       if (action.payload && action.payload.commands) {
-        const result = state[action.body.resultId]; // TODO: fix body
+        const { resultId } = action.meta.body;
+        const result = state[resultId];
         return {
           ...state,
-          [action.body.resultId]: {
+          [resultId]: {
             ...result,
             commands: action.payload.commands,
           },
