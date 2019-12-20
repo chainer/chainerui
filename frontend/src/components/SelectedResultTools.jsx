@@ -98,12 +98,12 @@ const SelectedResultTools = (props) => {
           <Toast className="bg-dark text-white">
             <ToastBody>
               Selected results removed/restored.
-              <Button color="link" size="sm" onClick={() => handleUndo()}>
+              <Button className="ml-1 mb-1" color="link" size="sm" onClick={() => handleUndo()}>
                 Undo
               </Button>
               <Button
-                size="sm"
-                className="ml-2 text-white"
+                className="ml-1 text-white"
+                style={{ 'margin-top': '0.1em' }}
                 onClick={() => handleCloseToast()}
                 close
               />
