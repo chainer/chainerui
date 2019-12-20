@@ -34,9 +34,6 @@ export interface RSAACall<State = any, Payload = any, Meta = any> {
   method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS';
   types: [RSAARequestType, RSAASuccessType, RSAAFailureType];
   body?: BodyInit | null;
-  headers?: HeadersInit;
-  options?: RequestInit;
-  credentials?: RequestCredentials;
 }
 
 export interface RSAAAction<State = any, Payload = any, Meta = any> {
@@ -92,7 +89,7 @@ export const apiMiddleware: Middleware = (store) => (next) => (action): any => {
   }
 
   const callAPI = action[RSAA];
-  const { endpoint, method, types, body, headers, options = {}, credentials } = callAPI;
+  const { endpoint, method, types, body } = callAPI;
   const [requestType, successType, failureType] = types;
 
   const url = getUrl(endpoint);
@@ -115,11 +112,11 @@ export const apiMiddleware: Middleware = (store) => (next) => (action): any => {
     let res;
     try {
       res = await fetch(url, {
-        ...options,
         method,
-        body: body || undefined,
-        credentials,
-        headers: headers || {},
+        body: body ? JSON.stringify(body) : undefined,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
     } catch (e) {
       const failureAction = {
