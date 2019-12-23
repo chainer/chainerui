@@ -4,6 +4,7 @@ import {
   ResultStatus,
   ResultsStatus,
   ResultFilter,
+  LastBulkUpdateTarget,
   ProjectStatus,
   ProjectsStatus,
   Stats,
@@ -17,11 +18,13 @@ import {
   RESULT_CHECK_UPDATE,
   RESULT_CHECK_BULK_UPDATE,
   RESULT_FILTER_UPDATE,
+  LAST_BULK_UPDATE_TARGET_UPDATE,
   ChartDownloadStatusAction,
   ResultSelectAction,
   ResultCheckAction,
   ResultStatusAction,
   ResultFilterAction,
+  LastBulkUpdateTargetAction,
 } from '../actions/status';
 import { updatePartialState } from './utils';
 
@@ -106,13 +109,31 @@ const resultFilterReducer: Reducer<ResultFilter, ResultFilterAction> = (state = 
   }
 };
 
+const lastBulkUpdateTargetReducer: Reducer<LastBulkUpdateTarget, LastBulkUpdateTargetAction> = (
+  state = {},
+  action
+) => {
+  const { results } = action;
+  switch (action.type) {
+    case LAST_BULK_UPDATE_TARGET_UPDATE:
+      return { ...results };
+    default:
+      return state;
+  }
+};
+
 const projectStatusReducer: Reducer<ProjectStatus> = combineReducers({
   chartDownloadStatus: chartDownloadStatusReducer,
   resultsStatus: resultsStatusReducer,
   resultFilter: resultFilterReducer,
+  lastBulkUpdateTarget: lastBulkUpdateTargetReducer,
 });
 
-type ProjectsStatusAction = ChartDownloadStatusAction | ResultStatusAction | ResultFilterAction;
+type ProjectsStatusAction =
+  | ChartDownloadStatusAction
+  | ResultStatusAction
+  | ResultFilterAction
+  | LastBulkUpdateTargetAction;
 const projectsStatusReducer: Reducer<ProjectsStatus, ProjectsStatusAction> = (
   state = {},
   action

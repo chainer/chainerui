@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import { CHART_DOWNLOAD_STATUS } from '../constants';
-import { ProjectId, ResultId } from '../store/types';
+import { ProjectId, ResultId, LastBulkUpdateTarget } from '../store/types';
 
 export const RESULT_SELECT_UPDATE = 'RESULT_SELECT_UPDATE';
 export const updateResultSelect = (
@@ -61,3 +61,14 @@ export const updateChartDownloadStatus = (
   chartDownloadStatus,
 });
 export type ChartDownloadStatusAction = ReturnType<typeof updateChartDownloadStatus>;
+
+export const LAST_BULK_UPDATE_TARGET_UPDATE = 'LAST_BULK_UPDATE_TARGET_UPDATE';
+export const updateLastBulkUpdateTarget = (
+  projectId: ProjectId,
+  results: LastBulkUpdateTarget
+) => ({
+  type: LAST_BULK_UPDATE_TARGET_UPDATE as typeof LAST_BULK_UPDATE_TARGET_UPDATE,
+  projectId,
+  results,
+});
+export type LastBulkUpdateTargetAction = ReturnType<typeof updateLastBulkUpdateTarget>;

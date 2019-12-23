@@ -188,3 +188,10 @@ export const projectsStatus = PropTypes.objectOf(projectStatus);
 export const status = PropTypes.shape({
   projectsStatus,
 });
+
+export const lastBulkUpdateTarget = PropTypes.objectOf(
+  PropTypes.shape({
+    id: resultId,
+    isUnregistered: PropTypes.bool,
+  })
+);

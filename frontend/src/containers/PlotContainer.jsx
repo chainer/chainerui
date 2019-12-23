@@ -28,6 +28,7 @@ import {
   updateChartDownloadStatus,
   updateTargetResultType,
   updateResultCheckBulk,
+  updateLastBulkUpdateTarget,
 } from '../actions';
 import NavigationBar from './NavigationBar';
 import BreadcrumbLink from '../components/BreadcrumbLink';
@@ -63,6 +64,7 @@ class PlotContainer extends React.Component {
     this.handleExperimentsTableColumnsVisibilityUpdate = this.handleExperimentsTableColumnsVisibilityUpdate.bind(
       this
     );
+    this.handleGetResultList = this.handleGetResultList.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -100,6 +102,15 @@ class PlotContainer extends React.Component {
     const { isGrouped = false } = tableState;
 
     this.props.updateTableColumnsVisibility(projectId, hiddenLogKeys, hiddenArgKeys, isGrouped);
+  }
+
+  handleGetResultList() {
+    const { projectId, globalConfig, projectConfig } = this.props;
+    const { logsLimit } = globalConfig;
+    const { resultType } = projectConfig;
+
+    this.props.clearResultList();
+    this.props.getResultList(projectId, logsLimit, resultType);
   }
 
   render() {
@@ -155,9 +166,12 @@ class PlotContainer extends React.Component {
                   results={results}
                   resultTypeId={projectConfig.resultType}
                   resultsStatus={projectStatus.resultsStatus}
+                  lastBulkUpdateTarget={projectStatus.lastBulkUpdateTarget}
                   onResultsPatch={this.props.patchResults}
                   onTableExpandedUpdate={this.props.updateTableExpanded}
                   onResultCheckBulkUpdate={this.props.updateResultCheckBulk}
+                  onLastBulkUpdateTargetUpdate={this.props.updateLastBulkUpdateTarget}
+                  onHandleGetResultList={this.handleGetResultList}
                 />
                 <ResultTypeSelector
                   projectId={projectId}
@@ -227,6 +241,7 @@ PlotContainer.propTypes = {
   updateChartDownloadStatus: PropTypes.func.isRequired,
   updateTargetResultType: PropTypes.func.isRequired,
   updateResultCheckBulk: PropTypes.func.isRequired,
+  updateLastBulkUpdateTarget: PropTypes.func.isRequired,
 };
 
 const getTargetTextForFilter = (project, result, filterKey) => {
@@ -306,5 +321,6 @@ export default connect(
     updateChartDownloadStatus,
     updateTargetResultType,
     updateResultCheckBulk,
+    updateLastBulkUpdateTarget,
   }
 )(PlotContainer);
