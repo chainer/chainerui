@@ -113,7 +113,7 @@ const axesConfigReducer = (state = defaultAxisConfig, action) => {
 };
 
 const resultsConfigReducer = (state = {}, action) => {
-  const { resultId, response } = action;
+  const { resultId } = action;
   switch (action.type) {
     case RESULTS_CONFIG_SELECT_UPDATE:
       if (resultId) {
@@ -128,8 +128,8 @@ const resultsConfigReducer = (state = {}, action) => {
       }
       return state;
     case RESULT_UPDATE_SUCCESS:
-      if (action.response && action.response.result) {
-        const { result } = action.response;
+      if (action.payload && action.payload.result) {
+        const { result } = action.payload;
         if (result.isUnregistered) {
           return removePartialState(state, result.id);
         }
@@ -154,9 +154,9 @@ const resultsConfigReducer = (state = {}, action) => {
       }
       return state;
     case RESULTS_PATCH_SUCCESS:
-      if (response.results) {
+      if (action.payload && action.payload.results) {
         let tmpState = state;
-        const targetResult = response.results.filter(
+        const targetResult = action.payload.results.filter(
           (result) => result.is_unregistered && result.is_unregistered === true
         );
         targetResult.forEach((result) => {
