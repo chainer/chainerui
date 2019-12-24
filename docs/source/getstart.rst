@@ -73,7 +73,7 @@ ChainerUI basically supports the `Trainer module <https://docs.chainer.org/en/st
 Training log
 ~~~~~~~~~~~~
 
-.. image:: ../images/chart_with_y_sample.png
+.. image:: ../images/project_main.png
 
 ChainerUI plots training log values read from  the ``log`` files and shows the training job. The ``log`` file is a JSON file created by `LogReport <https://docs.chainer.org/en/stable/reference/generated/chainer.training.extensions.LogReport.html>`__ extension or :ref:`chainerui's LogReport <module_log_report>`, which is registered automatically and created under the project path. If ``log`` files are updated, the chart and results table are also updated continuously.
 
