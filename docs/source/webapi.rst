@@ -15,7 +15,7 @@ Start ChainerUI server
 
 Open http://localhost:5000/ . To stop, press ``Ctrl+C`` on the console. When use original host or port, see :ref:`command option <cmd_server>`. 
 
-Or, use ChainerUI's docker container to run ChainerUI server, see :ref:`docker start <install_guide_docker>`
+Or, use ChainerUI's docker container to run ChainerUI server, see :ref:`docker start <install_guide_docker>`.
 
 
 Customize training loop

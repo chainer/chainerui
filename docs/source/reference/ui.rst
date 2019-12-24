@@ -52,6 +52,10 @@ Max log count is the maximum number of logs per result that the ChainerUI server
 
 Result name alignment controls which side of a result name to be truncated when it is too long to be displayed.
 
+**Highlight table and chart**
+
+Enable highlighting linked betwheen a table row and a log chart. ``Enabled`` on default.
+
 
 .. _ui_home_project_list:
 
@@ -62,6 +66,7 @@ Home: Project list
 
 From the list of registered projects, select a project to transition to the project page. When registering a project within running server, refresh the page and it will show the project on the list. See :ref:`getstart_customize_training_loop`.
 
+* ``Desc`` / ``Asc``: select order of project list.
 * ``Edit``: edit the project name.
 * ``Delete``: delete the project from list.
 
@@ -77,14 +82,19 @@ Show training logs and experimental conditions.
     * ``epoch``, ``iteration``, ``episode``, ``step`` and ``elapsed_time`` are assumed as x-axis.
     * Drop-down list shows only keys existed in ``log`` files.
 
-* Select values by ``yLeftAxis`` and ``yRightAxis`` panes.
+* Select values by ``yAxis`` pane.
 
+    * Left checkboxes are visibility of left axis, right ones are right axis.
     * Line color is selected automatically. To change color, click a job name or a key name, see :ref:`ui_edit_line`.
 
-* Select training job to show on a chart.
 * Reset setting button
 
     * Along with axis settings and selected checkboxes, log keys like ``main/loss`` are also cached on browser storage. The reset button restores cached key, too.
+
+* Save log chart
+
+    * ``PNG``: Save log chart as PNG
+    * ``Code``: Download Python script. Run the downloaded script then get a chart image using Matplotlib. Lines plotted or not are followed by configuration on Web UI. The script has all log data as JSON.
 
 
 .. _ui_highlight:
@@ -101,13 +111,13 @@ Result table and a log chart are linked each other. A selected result is highlig
 
 .. _ui_save_log_chart:
 
-Save log chart
-~~~~~~~~~~~~~~
+Smoothing
+~~~~~~~~~
 
-.. image:: ../../images/chart_save.png
+.. image:: ../../images/chart_smoothing.png
+   :scale: 50%
 
-* ``PNG``: Save log chart as PNG
-* ``Code``: Download Python script. Run the downloaded script then get a chart image using Matplotlib. Lines plotted or not are followed by configuration on Web UI. The script has all log data as JSON.
+Add smoothing line to help desplaying the overall of trend. Exponential smoothing is used.
 
 .. _ui_edit_line:
 
@@ -116,7 +126,7 @@ Edit a line
 
 .. image:: ../../images/chart_edit_line.png
 
-Show detail information about the line, and enable to change the line color. To show this modal, click a job name or a key name on ``yLeftAxis`` (``yRightAxis``).
+Show detail information about the line, and enable to change the line color. To show this modal, click ``Toggle lines setting`` >  a job name or a key name on ``yAxis``.
 
 
 .. _ui_training_job_table:
@@ -126,17 +136,25 @@ Training job table
 
 .. image:: ../../images/result_table.png
 
-.. figure:: ../../images/result_table_expand_row.png
+.. figure:: ../../images/result_table_expand_row_operation_block.png
+   :width: 50%
 
    expanded the second row to show sub components.
 
 The training job table shows brief log information and experimental conditions. Job names are set to the directory name by default. The name can be edit directly on the table. To unregister a result, click ``Unregister`` button in the expanded row. Expanded row has some operation buttons. These buttons operate similarly to buttons in :ref:`Commands pane <ui_result_page_commands>`.
 
-.. note::
+* ``Registered results`` / ``Unregistered results`` : These buttons behavior as tab. When need to show unregistered results, select ``Unregistered result`` tab to show them.
+* ``Delete results``: When remove results from the result table, check and click ``Delete result`` button. Deleted resutls are showed on ``Unregistered results`` tab.
+* ``Restore results``: When restore deleted result, check the target results on ``Unregistered results`` tab and click ``Restore results`` button. Restored results are showed again on ``Registered results`` tab.
 
-   [Known problem] Once a result is unregistered, a result with the same name cannot be restored on the result table. This will be fixed in future.
+.. image:: ../../images/result_delete.png
+   :scale: 40%
+.. image:: ../../images/result_restore.png
+   :scale: 40%
 
-* ``Table Settings``: Customize visibility of table columns
+* ``filter name``: Filter results by text.
+* ``Grouping``: Group results by grandparent directory.
+* ``Table Settings``: Customize visibility and order of table columns.
 
 .. image:: ../../images/result_table_setting.png
 
