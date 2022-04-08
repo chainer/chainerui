@@ -60,7 +60,7 @@
     "core-js": "^3.2.1",
     "html2canvas": "^1.0.0-rc.3",
     "jquery": "^3.4.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "popper.js": "^1.15.0",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
